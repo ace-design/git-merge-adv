@@ -1,3 +1,4 @@
+#Ignored files
 .DS_Store
-*. csv
+scripts/__pycache__/*.pyc
 .vscode/
