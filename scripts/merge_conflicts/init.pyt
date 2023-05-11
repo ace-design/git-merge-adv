@@ -9,6 +9,8 @@ from conflict_identifier import identify_conflict
 
 #Parts of code given by Richard Li
 
+#Format: `python3 init.pyt --url <Clone URL> --output <Output file name>``
+
 home_directory = os.getcwd()
 
 def generate(url):
@@ -64,7 +66,7 @@ def genCSV(filename, all_merges):
 def main():
     url=parsing().url
     filename=parsing().output
-    
+
     conflict_merges=generate(url)
     genCSV(filename, conflict_merges)
 
