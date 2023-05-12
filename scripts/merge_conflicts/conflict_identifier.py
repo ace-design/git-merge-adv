@@ -31,8 +31,6 @@ def identify_conflict(all_merges):
             messages=re.findall('Merge conflict in [a-zA-Z0-9]+.*', ' '.join(output))
             message=[sub.replace('Merge conflict in ','') for sub in messages]
             copy_merges.remove(merge)
-
-            print(message)
             for inst in message:
                 temp=copy.deepcopy(merge)
                 temp['file']=inst
