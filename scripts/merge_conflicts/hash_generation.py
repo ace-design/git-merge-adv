@@ -14,7 +14,12 @@ def getInformation(hash):
     left_parent=parent[0]
     right_parent=parent[1]
 
-    information={"hash":hash, "left":left_parent, "right":right_parent}
+    try:
+        ancestor = subprocess.check_output(f"git merge-base {left_parent} {right_parent}", shell=True).decode('utf-8').strip('\n')[:8]
+    except subprocess.CalledProcessError:
+        ancestor="N/A"
+
+    information={"hash":hash, "left":left_parent, "right":right_parent, "ancestor": ancestor}
     return information
 
 

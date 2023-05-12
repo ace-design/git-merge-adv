@@ -27,6 +27,13 @@ def identify_conflict(all_merges):
 
         if 'Automatic merge went well; stopped before committing as requested' in output:
             copy_merges.remove(merge)
+        else:
+            messages=re.findall('Merge conflict in [a-zA-Z0-9]+.*', ' '.join(output))
+            message=[sub.replace('Merge conflict in ','') for sub in messages]
+            copy_merges.remove(merge)
+            for inst in message:
+                merge['file']=inst
+                copy_merges.append(merge)
     
     return copy_merges
 
