@@ -11,7 +11,6 @@ def getHashes():
 
 def getInformation(hash):
     parent = subprocess.check_output(f"git log --pretty=%p -n 1 {hash} --abbrev=8", shell=True).decode('utf-8').strip('\n').split(' ')
-    print(parent,"\n",hash)
     left_parent=parent[0]
     right_parent=parent[1]
     #there are cases when the merge base might not exist or one of the commit is actually the closest comment ancestor of other 
