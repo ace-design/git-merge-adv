@@ -5,3 +5,8 @@ This script will automatically extract the left , right and base version of a fi
  - Clone the repository in the current folder
  - Copy the `<merge-conflicts.csv>` file from the `../merge-conflicts` folder into current directory
  - Run `python3 init.py --filename <merge-conflicts.csv> --line <line-number in CSV> --repo <name of Clone repo>`
+
+
+## References and Acknowledgement
+
+Jar file for spork has been taken from [https://github.com/KTH/spork](https://github.com/KTH/spork)

@@ -34,6 +34,12 @@ def extactfiles(info,repo):
 
 
 
+def runSpork():
+        os.chdir(str(os.getcwd())+"/../"+"results")
+        spk_res = subprocess.run(['java', '-jar', str(os.getcwd())+'/../spork-0.5.1.jar', 'left.java', 'base.java', 'right.java'],capture_output=True, text=True)
+        with open("spork_result.java", "w") as res:
+             res.write(spk_res.stdout)
+        print(spk_res.stdout)
 
 def main():
     parser = argparse.ArgumentParser(description="For taking file of Conflict Hashes")
@@ -51,7 +57,8 @@ def main():
     subprocess.run(["mkdir", "results"])
 
     info = getinfo(file_name,line_num)
-    extactfiles(info,"jdime")
+    extactfiles(info,repo)
+    runSpork()
 
 
 
