@@ -57,7 +57,7 @@ def main():
     subprocess.run(["mkdir", "results"])
 
     info = getinfo(file_name,line_num)
-    extactfiles(info,"jdime")
+    extactfiles(info,repo)
     runSpork()
 
 
