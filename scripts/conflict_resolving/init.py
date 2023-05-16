@@ -39,11 +39,25 @@ def runSpork():
         spk_res = subprocess.run(['java', '-jar', str(os.getcwd())+'/../spork-0.5.1.jar', 'left.java', 'base.java', 'right.java'],capture_output=True, text=True)
         with open("spork_result.java", "w") as res:
              res.write(spk_res.stdout)
-        git_rest=subprocess.run(['git', 'merge-file', '-p','left.java', 'base.java','right.java'],capture_output=True, text=True)
-        with open("git.java","w") as res2:
-             res2.write(git_rest.stdout)
         print(spk_res.stdout)
-        print(git_rest.stdout)
+
+def runGit():
+    os.chdir(str(os.getcwd())+"/../"+"results")
+    git_rest=subprocess.run(['git', 'merge-file', '-p','left.java', 'base.java','right.java'],capture_output=True, text=True)
+    with open("git.java","w") as res2:
+        res2.write(git_rest.stdout)
+    print(git_rest.stdout)
+
+def runJDime():
+    os.chdir(str(os.getcwd())+"/../"+"results")
+    subprocess.run(['cp', '../JDime.properties', 'JDime.properties'])
+    subprocess.run(['cp', '../JDimeLogging.properties', 'JDimeLogging.properties'])
+    with open("jdime.java", "w") as res:
+        res.write("")
+    subprocess.run(['sudo','docker','run','--rm', '-v',os.getcwd()+':/wkdir', 'acedesign/jdimew', '-mode', 'structured','--output','jdime.java','left.java', 'base.java', 'right.java','-f'])
+    subprocess.run(['rm','JDimeLogging.properties'])
+    subprocess.run(['rm','JDime.properties'])
+
 
 def main():
     parser = argparse.ArgumentParser(description="For taking file of Conflict Hashes")
@@ -63,6 +77,8 @@ def main():
     info = getinfo(file_name,line_num)
     extactfiles(info,repo)
     runSpork()
+    runGit()
+    runJDime()
 
 
 
