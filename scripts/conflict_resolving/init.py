@@ -39,7 +39,11 @@ def runSpork():
         spk_res = subprocess.run(['java', '-jar', str(os.getcwd())+'/../spork-0.5.1.jar', 'left.java', 'base.java', 'right.java'],capture_output=True, text=True)
         with open("spork_result.java", "w") as res:
              res.write(spk_res.stdout)
+        git_rest=subprocess.run(['git', 'merge-file', '-p','left.java', 'base.java','right.java'],capture_output=True, text=True)
+        with open("git.java","w") as res2:
+             res2.write(git_rest.stdout)
         print(spk_res.stdout)
+        print(git_rest.stdout)
 
 def main():
     parser = argparse.ArgumentParser(description="For taking file of Conflict Hashes")
