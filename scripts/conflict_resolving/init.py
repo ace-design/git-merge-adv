@@ -41,12 +41,14 @@ def runSpork():
              res.write(spk_res.stdout)
         print(spk_res.stdout)
 
-def runGit():
-    os.chdir(str(os.getcwd())+"/../"+"results")
-    git_rest=subprocess.run(['git', 'merge-file', '-p','left.java', 'base.java','right.java'],capture_output=True, text=True)
-    with open("git.java","w") as res2:
-        res2.write(git_rest.stdout)
-    print(git_rest.stdout)
+def runGit(repo, info):
+    os.chdir(str(os.getcwd())+"/../"+repo)
+    subprocess.run(['git', 'checkout', info[1]])
+    subprocess.run(['git', 'merge', '--no-commit', '--no-ff',info[2]], capture_output=False)
+    subprocess.run(['cp', info[4],'../results/git.java'])
+    subprocess.run(['git', 'merge', '--abort'])
+    subprocess.run(['git', 'checkout', 'main'])
+
 
 def runJDime():
     os.chdir(str(os.getcwd())+"/../"+"results")
@@ -55,8 +57,8 @@ def runJDime():
     with open("jdime.java", "w") as res:
         res.write("")
     subprocess.run(['sudo','docker','run','--rm', '-v',os.getcwd()+':/wkdir', 'acedesign/jdimew', '-mode', 'structured','--output','jdime.java','left.java', 'base.java', 'right.java','-f'])
-    subprocess.run(['rm','JDimeLogging.properties'])
     subprocess.run(['rm','JDime.properties'])
+    subprocess.run(['rm','JDimeLogging.properties'])
 
 
 def main():
@@ -77,7 +79,7 @@ def main():
     info = getinfo(file_name,line_num)
     extactfiles(info,repo)
     runSpork()
-    runGit()
+    runGit(repo,info)
     runJDime()
 
 
