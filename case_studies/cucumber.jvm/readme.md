@@ -12,6 +12,7 @@
 C1| 83 | `817f9292d` | Conflict | Handled | Handled
 C2 | 191 | `f601fc15d` | Conflict | Handled Incorrectly | Handled
 C3 | 193 | `f601fc15d` | Conflict | Conflict & Incorrect | Handled (import)
+C4 | 255 | `6803d2839` | Conflict | Handled | Handled
 
 ### Interesting Cases:
  Case | Line | Commmit Hash | Odd Case
