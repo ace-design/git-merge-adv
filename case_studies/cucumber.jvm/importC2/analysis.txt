@@ -1,0 +1,13 @@
+Commit Hash: f601fc15d
+Left Parent Hash: 05f50330
+Right Parent Hash: e8839877
+Base Hash: 54d4e48b 
+File Name: core/src/main/java/io/cucumber/core/options/RuntimeOptions.java
+
+Analysis:
+- Merge conflict with same package name, and different path.
+- JDime correctly merges this section, as aligned with the desired java file.
+- Spork includes two packages with same name: Causes error.
+    `io.cucumber.core.feature.FeatureWithLines`
+    `io.cucumber.core.model.FeatureWithLines;`
+- Git creates merge conflict
