@@ -1,0 +1,14 @@
+Commit Hash: 6803d2839
+Left Parent Hash: b671a9a4
+Right Parent Hash: 37e20ae0
+Base Hash: c671ccc9
+File Name: junit/src/main/java/io/cucumber/junit/Cucumber.java
+
+Analysis:
+- Very big structure change. Program goes from mainly using packages from `runtime` and `runner` to `core`.
+    - Desired action is to switch everything to core, as shown in the left parent. 
+- Of course, git's algorithm doesn't recognize which version to use, and causes merge conflict.
+- Interestingly, spork and jdime recognize which version to use, and choose left parent changes.
+    - Since Spork and JDime are Java based, its possible the algorithm checks which one compiles. 
+    - Highly unlikely that both packages offer the same services, so compilation error may let algorithm know which to choose.
+- Uncertain how we would select without a compilation. 
