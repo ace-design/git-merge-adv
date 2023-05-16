@@ -1,0 +1,11 @@
+Commit Hash:817f9292d
+Left Parent Hash:cd2e0197
+Right Parent Hash:80df4b06
+Base Hash: 632a8579
+File Name: core/src/main/java/io/cucumber/core/plugin/TestNGFormatter.java
+
+Analysis:
+- Git's merge conflict with OutputStream in left parent. OutputStream doesn't exist in right parent or base parent, and does in LeftParent.
+- Removing OutputStream doesn't cause conflict despite right parent removing StringWriter and PrintWriter. Git's algorithm just accepts Right parent changes.
+- Initial Assumption: Git causes merge conflcit, when different package is added to same line. Doesn't cause conflict, when existing package is removed.
+    - Revised Assumption: Git causes merge conflict when any package is added to the same line. Even if package is the same duplicate one.
