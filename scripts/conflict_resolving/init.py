@@ -47,7 +47,10 @@ def runGit(repo, info):
     subprocess.run(['git', 'merge', '--no-commit', '--no-ff',info[2]], capture_output=False)
     subprocess.run(['cp', info[4],'../results/git.java'])
     subprocess.run(['git', 'merge', '--abort'])
-    subprocess.run(['git', 'checkout', 'main'])
+    try:
+        subprocess.run(['git', 'reset','--hard','master'])
+    except:
+        subprocess.run(['git', 'reset','--hard','main'])
 
 
 def runJDime():
