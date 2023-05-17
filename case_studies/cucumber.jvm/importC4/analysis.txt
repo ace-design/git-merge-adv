@@ -11,4 +11,5 @@ Analysis:
 - Interestingly, spork and jdime recognize which version to use, and choose left parent changes.
     - Since Spork and JDime are Java based, its possible the algorithm checks which one compiles. 
     - Highly unlikely that both packages offer the same services, so compilation error may let algorithm know which to choose.
-- Uncertain how we would select without a compilation. 
+- Update: The incoming branch has a file structure change. Both paths refer to the same file, just in different structures.
+    - Assumption: Choose the incoming branch's changes when choosing between identical packages, with different paths.
