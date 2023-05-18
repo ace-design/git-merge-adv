@@ -19,8 +19,7 @@ def extactfiles(info,repo):
 
         os.chdir(str(os.getcwd())+"/"+str(repo))
         subprocess.run(['git','checkout', info[1]])
-        subprocess.run(['cat', info[4]])
-        subprocess.run(['sudo','cp', info[4],'../results/left.java'])
+        subprocess.run(['cp', info[4],'../results/left.java'])
         subprocess.run(['git','checkout', info[2]])
         subprocess.run(['cp', info[4],'../results/right.java'])
         subprocess.run(['git','checkout', info[3]])
