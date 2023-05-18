@@ -1,0 +1,21 @@
+Commit Hash:1e3c8b26
+Left Parent Hash:f28ad2d3
+Right Parent Hash:ea5b9c56
+Base Hash: d6e50866
+File Name: servlet/src/test/java/com/twelvemonkeys/servlet/image/ImageServletResponseImplTestCase.java
+
+Analysis:
+- There were changes in left and right version of import statements , git , jdime and spork algorithms gave out the same resolution to the difference during the merges
+, in my opinion surprising thing is that git should have given conflicts in the merge statements but it didn't it automatically merged
+
+- Jdime do changes the formatting , like it coupled all the inport statements
+- Important takeaway is that none of them matched the desired result which was diffrent 
+-  The final desired resoluton contained 
+
+"
+import javax.swing.*;
+import com.twelvemonkeys.image.BufferedImageIcon;
+"
+
+These both statements were somehow part of the right version but were not included in merge done by Jdime/git/spork
+
