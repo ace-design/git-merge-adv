@@ -1,0 +1,13 @@
+Commit Hash: f601fc15d
+Left Parent Hash: 05f50330
+Right Parent Hash: e8839877
+Base Hash: 54d4e48b 
+File Name: core/src/main/java/io/cucumber/core/options/RuntimeOptionsBuilder.java
+
+Analysis:
+- Merge conflict with added 'java.util.Set' package, and keeping existing package.
+- User wanted to keep both packages.
+- JDime seems to discard the imported Set package since it isn't used anywhere in code.
+    - By analysis of code, this makes sense and JDime is correct. But not what user wanted.
+- Spork causes a conflict forcing user to choose between the two. Doesn't want to keep both.
+    - Analysis of code shows Pattern is used. So it would be wrong to delete it. Spork handles this wrong.

@@ -1,0 +1,19 @@
+Commit Hash:ef058729
+Left Parent Hash:1ddab866
+Right Parent Hash:ce997a69
+Base Hash: 564778f4
+File Name: imageio/imageio-metadata/src/main/java/com/twelvemonkeys/imageio/metadata/tiff/TIFFWriter.java
+
+Analysis:
+- The base and left version used the java.util.* to get all the import from utils but the right
+version individually called  
+"
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List; "
+- there were changes in formatting too in the right version
+this caused conflict , the git accepted the right version and the conflict is caused due to changed formatting.
+ 
+- In the desired.java the developer maintains the original base formatting and usees .util.*  instead of adding individual imports
