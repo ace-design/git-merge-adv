@@ -19,7 +19,8 @@ def extactfiles(info,repo):
 
         os.chdir(str(os.getcwd())+"/"+str(repo))
         subprocess.run(['git','checkout', info[1]])
-        subprocess.run(['cp', info[4],'../results/left.java'])
+        subprocess.run(['cat', info[4]])
+        subprocess.run(['sudo','cp', info[4],'../results/left.java'])
         subprocess.run(['git','checkout', info[2]])
         subprocess.run(['cp', info[4],'../results/right.java'])
         subprocess.run(['git','checkout', info[3]])
@@ -74,9 +75,9 @@ def main():
     line_num = args.line
     repo = args.repo
     try:
-        subprocess.run("rm -r results")
-    except:
-         pass
+        subprocess.run(['sudo','rm', '-r', 'results'])
+    except Exception as e:
+         print("exception is ",e)
     subprocess.run(["mkdir", "results"])
 
     info = getinfo(file_name,line_num)
