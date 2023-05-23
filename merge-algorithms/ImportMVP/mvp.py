@@ -47,7 +47,7 @@ def main():
     base_import,base_content=extractImports(subprocess.check_output(f"cat "+base_parent, shell=True).decode('utf-8').split('\n'))
 
 
-    common_import=(set(left_import).intersection(right_import,base_import)).union(set(left_import).difference(right_import,base_import)).union(set(right_import).difference(left_import,base_import)).union(set(base_import).difference(right_import,left_import))
+    common_import=(set(left_import).intersection(right_import,base_import)).union(set(left_import).difference(base_import)).union(set(right_import).difference(base_import))
 
     
 
