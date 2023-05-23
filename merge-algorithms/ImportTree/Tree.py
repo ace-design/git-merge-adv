@@ -35,7 +35,7 @@ class Tree:
         else:
             for item in node.get_children():
                 dup=copy.deepcopy(string)
-                if (item.get_dir()=="import" or item.get_dir()=="static"):
+                if (item.get_dir()=="import" or item.get_dir()=="static" or item.get_dir()=="package"):
                     dup+=item.get_dir()+" "
                 else:
                     dup+=item.get_dir()+"."
