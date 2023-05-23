@@ -1,4 +1,4 @@
-package.io.cucumber.core.plugin;
+package io.cucumber.core.plugin;
 import io.cucumber.core.exception.CucumberException;
 import io.cucumber.core.feature.FeatureParser;
 import io.cucumber.plugin.EventListener;
