@@ -64,22 +64,17 @@ def main():
 
     merge_import=tree.output()
 
-
+    writefile(output,merge_import)
 
     writefile("base_content.java",base_content)
     writefile("right_content.java",right_content)
     writefile("left_content.java",left_content)
-
-    writefile(output,merge_import)
     
     git_merge(output)
 
     subprocess.run(['rm', 'base_content.java'])
     subprocess.run(['rm', 'left_content.java'])
     subprocess.run(['rm', 'right_content.java'])
-
-    print(merge_import)
-
 
     
 
