@@ -2,7 +2,9 @@
 class Node:
 
     def __init__(self,dir):
+        #name of given package/directory.
         self.directory=dir
+        #List of all subdirectories.
         self.children=[]
     
     def get_children(self):

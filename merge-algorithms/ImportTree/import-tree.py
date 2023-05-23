@@ -19,6 +19,7 @@ def extractImports(content):
     other=copy.deepcopy(content)
 
     for line in content:
+        # Narrowing search to 'import' or 'package' keyword.
         if (line[0:6]=="import" or line[0:7]=="package"):
             other.remove(line)
             line=line.replace(" ",".")
@@ -33,24 +34,28 @@ def writefile(name, content):
             output.write(line+'\n')
 
 
-def git_merge(output):
+def git_merge(output,base,right,left):
+
+    #Temporary files to perform git 3-way merge algorithm.
+
+    writefile("base_content.java",base)
+    writefile("right_content.java",right)
+    writefile("left_content.java",left)
+
     git_rest=subprocess.run(['git', 'merge-file', '-p','left_content.java', 'base_content.java','right_content.java'],capture_output=True, text=True)
+
+    #Appends output to given output file.
     with open(output,"a") as res2:
         res2.write(git_rest.stdout)
 
 
-def main():
-    left=parsing().left
-    right=parsing().right
-    base=parsing().base
-    output=parsing().output
 
-    left_import,left_content=extractImports(subprocess.check_output(f"cat "+left, shell=True).decode('utf-8').split('\n'))
-    right_import,right_content=extractImports(subprocess.check_output(f"cat "+right, shell=True).decode('utf-8').split('\n'))
-    base_import,base_content=extractImports(subprocess.check_output(f"cat "+base, shell=True).decode('utf-8').split('\n'))
+def merge_import(output, base_import, right_import, left_import):
 
     root=Node("")
     tree=Tree(root)
+
+    #Adds all imports to the tree. Tree structure ensures no duplicates.
 
     for imports in left_import:
         tree.add(imports.split("."))
@@ -61,20 +66,33 @@ def main():
     for imports in base_import:
         tree.add(imports.split("."))
 
-
-    merge_import=tree.output()
-
-    writefile(output,merge_import)
-
-    writefile("base_content.java",base_content)
-    writefile("right_content.java",right_content)
-    writefile("left_content.java",left_content)
+    #Writes imports in tree to given output file.
+    writefile(output,tree.output())
     
-    git_merge(output)
 
+def clean():
+    #Removes uncessary files that were created.
     subprocess.run(['rm', 'base_content.java'])
     subprocess.run(['rm', 'left_content.java'])
     subprocess.run(['rm', 'right_content.java'])
+
+
+def main():
+
+    left=parsing().left
+    right=parsing().right
+    base=parsing().base
+    output=parsing().output
+
+    left_import,left_content=extractImports(subprocess.check_output(f"cat "+left, shell=True).decode('utf-8').split('\n'))
+    right_import,right_content=extractImports(subprocess.check_output(f"cat "+right, shell=True).decode('utf-8').split('\n'))
+    base_import,base_content=extractImports(subprocess.check_output(f"cat "+base, shell=True).decode('utf-8').split('\n'))
+
+    merge_import(output,base_import,right_import,left_import)
+    
+    git_merge(output,base_content,right_content,left_content)
+
+    clean()
 
     
 
