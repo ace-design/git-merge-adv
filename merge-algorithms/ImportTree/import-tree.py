@@ -4,6 +4,7 @@ import subprocess
 from Tree import Tree
 from Node import Node
 
+
 def parsing():
     parser = argparse.ArgumentParser(description='Enter left and right parent files.')
     parser.add_argument('--left', type=str, help='path to left parent java file')
@@ -33,6 +34,11 @@ def writefile(name, content):
         for line in content:
             output.write(line+'\n')
 
+def appendfile(name, content):
+    with open(name,"a") as res2:
+        res2.write(content)
+    
+
 
 def git_merge(output,base,right,left):
 
@@ -43,14 +49,13 @@ def git_merge(output,base,right,left):
     writefile("left_content.java",left)
 
     git_rest=subprocess.run(['git', 'merge-file', '-p','left_content.java', 'base_content.java','right_content.java'],capture_output=True, text=True)
-
-    #Appends output to given output file.
-    with open(output,"a") as res2:
-        res2.write(git_rest.stdout)
+    
+    return git_rest
 
 
 
-def merge_import(output, base_import, right_import, left_import):
+
+def merge_import(output, base_import, right_import, left_import, result):
 
     root=Node("")
     tree=Tree(root)
@@ -58,13 +63,25 @@ def merge_import(output, base_import, right_import, left_import):
     #Adds all imports to the tree. Tree structure ensures no duplicates.
 
     for imports in left_import:
-        tree.add(imports.split("."))
+        dict=imports.split(".")
+        package=dict[-1].strip(";")
+        if package in result or package=="*":
+            tree.add(dict)
+
     
     for imports in right_import:
-        tree.add(imports.split("."))
+        dict=imports.split(".")
+        package=dict[-1].strip(";")
+        if package in result or package=="*":
+            tree.add(dict)
+
 
     for imports in base_import:
-        tree.add(imports.split("."))
+        dict=imports.split(".")
+        package=dict[-1].strip(";")
+        if package in result or package=="*":
+            tree.add(dict)
+
 
     #Writes imports in tree to given output file.
     writefile(output,tree.output())
@@ -88,9 +105,14 @@ def main():
     right_import,right_content=extractImports(subprocess.check_output(f"cat "+right, shell=True).decode('utf-8').split('\n'))
     base_import,base_content=extractImports(subprocess.check_output(f"cat "+base, shell=True).decode('utf-8').split('\n'))
 
-    merge_import(output,base_import,right_import,left_import)
+
+    result=git_merge(output,base_content,right_content,left_content)
+
+
+    merge_import(output,base_import,right_import,left_import,result.stdout)
+
+    appendfile(output,result.stdout)
     
-    git_merge(output,base_content,right_content,left_content)
 
     clean()
 
