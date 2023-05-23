@@ -13,3 +13,11 @@
 * Test Run:
 
     `python3 mvp.py --left test/left.java --right test/right.java --base test/base.java --output result.java`
+
+
+    * Test case files obtained from [https://github.com/cucumber/cucumber-jvm]
+        * Commit Hash: 817f9292d
+        * Left Parent Hash: cd2e0197
+        * Right Parent Hash: 80df4b06
+        * Base Hash: 632a8579
+        * File Name: core/src/main/java/io/cucumber/core/plugin/TestNGFormatter.java
