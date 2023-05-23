@@ -72,7 +72,7 @@ As such, our purpose is to develop a new 3-way merge algorithm that takes both a
 ## Contacts
 
 * Sebastien Mosser - mossers@mcmaster.ca
-* Madhur Jain - 21112002@gmail.com
+* Madhur Jain - 21112002mj@gmail.com
 * Nirmal Chaudhari - chaudn12@mcmaster.ca
 
 
