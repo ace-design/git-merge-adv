@@ -76,7 +76,8 @@ As such, our purpose is to develop a new 3-way merge algorithm that takes both a
     </li>
     </li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
-
+    </li>
+    <li><a href="#licence">Licence</a></li>
   </ol>
 </details>
 
