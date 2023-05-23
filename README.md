@@ -26,7 +26,8 @@
     </li>
     </li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
-
+    </li>
+    <li><a href="#licence">Licence</a></li>
   </ol>
 </details>
 
@@ -53,6 +54,14 @@ As such, our purpose is to develop a new 3-way merge algorithm that takes both a
 
 ### Script Prerequisites
 
+* Run ImportMVP:
+
+    `python3 mvp.py --left <left parent path> --right <right parent path> --base <base file path> --out <output file>`
+
+* Run ImportTree:
+
+    `python3 import-tree.py --left <left parent path> --right <right parent path> --base <base file path> --out <output file>`
+
 * Run Merge Conflict Script:
 
     `python3 init.pyt --url <Clone URL> --output <Output file name>`
@@ -75,5 +84,11 @@ As such, our purpose is to develop a new 3-way merge algorithm that takes both a
 * Cucumber Test Cases [https://github.com/cucumber/cucumber-jvm]
 * TwelveMonkeys Test Cases [https://github.com/haraldk/TwelveMonkeys]
 * OpenHTMLtoPDF Test cases [https://github.com/danfickle/openhtmltopdf]
+
+
+## Licence
+Distributed under the MIT License. See LICENSE.txt for more information.
+
+
 
 
