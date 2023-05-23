@@ -7,6 +7,7 @@ class Tree:
         self.root=root
 
     def add_traverse(self,node,path,i):
+        # Traverses the tree using path, and adds paths that don't already exist. 
         if (i<len(path)):
             status=False
             for item in node.get_children():
@@ -16,20 +17,14 @@ class Tree:
             if (status==False):
                 new=Node(path[i])
                 node.add_child(new)
-                self.add_extra(new,path,i+1)
+                self.add_traverse(new,path,i+1)
         else:
             return
     
 
-    def add_extra(self,node,path,i):
-        if (i<len(path)):
-            new=Node(path[i])
-            node.add_child(new)
-            self.add_extra(new,path,i+1)
-
-
     
     def output_traverse(self,node,string,all_imports):
+        # Simply traverses tree, and adds all imports to a list with necessary convention.
         if (len(node.get_children())==0):
             all_imports.append(string[:-1])
         else:
@@ -47,9 +42,6 @@ class Tree:
         all_imports=[]
         self.output_traverse(self.root,"", all_imports)
         return all_imports
-
-
-
 
     def add(self,path):
         self.add_traverse(self.root,path,0)
