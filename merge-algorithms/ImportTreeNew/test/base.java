@@ -1,50 +1,51 @@
-import io.cucumber.plugin.event.TestCaseFinished;
-import io.cucumber.plugin.EventListener;
-import javax.xml.transform.OutputKeys;
-import io.cucumber.plugin.event.TestStepFinished;
-import io.cucumber.plugin.StrictAware;
-import java.time.Duration;
-import io.cucumber.plugin.event.TestSourceRead;
-import java.time.Instant;
-import org.w3c.dom.Node;
-import static java.time.format.DateTimeFormatter.ISO_INSTANT;
-import io.cucumber.plugin.event.PickleStepTestStep;
-import io.cucumber.plugin.event.Status;
-import io.cucumber.plugin.event.TestRunFinished;
-import java.net.URI;
-import java.util.List;
-import static io.cucumber.core.exception.ExceptionUtils.printStackTrace;
-import io.cucumber.core.feature.FeatureParser;
-import javax.xml.transform.stream.StreamResult;
-import java.util.HashMap;
-import org.w3c.dom.Document;
-import io.cucumber.plugin.event.TestCaseStarted;
-import javax.xml.parsers.ParserConfigurationException;
 package io.cucumber.core.plugin;
-import io.cucumber.plugin.event.Result;
-import javax.xml.transform.dom.DOMSource;
-import static java.util.Locale.ROOT;
-import javax.xml.transform.TransformerFactory;
+
 import io.cucumber.core.exception.CucumberException;
-import org.w3c.dom.Element;
-import java.util.UUID;
-import java.io.IOException;
-import javax.xml.transform.Transformer;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.util.Map;
-import static java.time.Duration.ZERO;
-import io.cucumber.plugin.event.TestRunStarted;
-import java.io.Closeable;
+import io.cucumber.core.feature.FeatureParser;
+import io.cucumber.plugin.EventListener;
+import io.cucumber.plugin.StrictAware;
 import io.cucumber.plugin.event.EventPublisher;
-import javax.xml.transform.TransformerException;
-import java.util.ArrayList;
+import io.cucumber.plugin.event.PickleStepTestStep;
+import io.cucumber.plugin.event.Result;
+import io.cucumber.plugin.event.Status;
+import io.cucumber.plugin.event.TestCaseFinished;
+import io.cucumber.plugin.event.TestCaseStarted;
+import io.cucumber.plugin.event.TestRunFinished;
+import io.cucumber.plugin.event.TestRunStarted;
+import io.cucumber.plugin.event.TestSourceRead;
+import io.cucumber.plugin.event.TestStepFinished;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
-import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Node;
+
 import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URI;
+import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-
-
+import static java.time.Duration.ZERO;
+import static java.time.format.DateTimeFormatter.ISO_INSTANT;
+import static java.util.Locale.ROOT;
 
 public final class TestNGFormatter implements EventListener, StrictAware {
 
@@ -64,8 +65,9 @@ public final class TestNGFormatter implements EventListener, StrictAware {
     private final Map<URI, String> featuresNames = new HashMap<>();
     private final FeatureParser parser = new FeatureParser(UUID::randomUUID);
 
-    public TestNGFormatter(OutputStream out) {
-        this.writer = new UTF8OutputStreamWriter(out);
+    @SuppressWarnings("WeakerAccess") // Used by plugin factory
+    public TestNGFormatter(URL url) throws IOException {
+        this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             results = document.createElement("testng-results");
@@ -234,7 +236,7 @@ public final class TestNGFormatter implements EventListener, StrictAware {
             }
             if (failed != null) {
                 element.setAttribute("status", "FAIL");
-                String stacktrace = printStackTrace(failed.getError());
+                String stacktrace = printStrackTrace(failed);
                 Element exception = createException(doc, failed.getError().getClass().getName(), stringBuilder.toString(), stacktrace);
                 element.appendChild(exception);
             } else if (skipped != null) {
@@ -248,6 +250,12 @@ public final class TestNGFormatter implements EventListener, StrictAware {
             } else {
                 element.setAttribute("status", "PASS");
             }
+        }
+
+        private String printStrackTrace(Result failed) {
+            StringWriter stringWriter = new StringWriter();
+            failed.getError().printStackTrace(new PrintWriter(stringWriter));
+            return stringWriter.toString();
         }
 
         private String calculateTotalDurationString() {
@@ -296,4 +304,3 @@ public final class TestNGFormatter implements EventListener, StrictAware {
         }
     }
 }
-
