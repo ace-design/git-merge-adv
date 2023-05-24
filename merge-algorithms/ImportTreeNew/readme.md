@@ -1,12 +1,13 @@
-# Import Tree
+# Import Tree New
 
-* Defined Tree structure allows imports to be compared based on its path, rather than a character-by-character basis. 
-    * Aligns more closely with the business logic. 
+* Works off structure of ImportTree.
+* Rather than uioning the 3 versions, this uses the technique git does when comparing which version to use although at a higher level. 
+    * Instead of comparing at a textual basis, it compares based on the path. 
+
 
 
 ### Future Development:
-* Traverse entire tree to see whether package of same name already exists before adding.
-* Before adding package, check whether it is even used in the code body. Check for package substring in code base. 
+* Develop a better algorithm to determine which file version to use for import statements.
 
 ### Script Pre-Requisites
 
