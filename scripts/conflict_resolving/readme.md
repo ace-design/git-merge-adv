@@ -4,7 +4,7 @@ This script will automatically extract the left , right and base version of a fi
 
  - Clone the repository in the current folder
  - Copy the `<merge-conflicts.csv>` file from the `../merge-conflicts` folder into current directory
- - Run `python3 init.py --filename <merge-conflicts.csv> --line <line-number in CSV> --repo <name of Clone repo>`
+ - Run `python3 init.py --filename <merge-conflicts.csv> --line <line-number in CSV> --repo <name of Clone repo> --lang <Programming Language>`
 
 
 ## References and Acknowledgement
