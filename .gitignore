@@ -5,4 +5,3 @@ merge-algorithms/ImportMVP/__pycache__/*.pyc
 merge-algorithms/ImportTree/__pycache__/*.pyc
 merge-algorithms/ImportTreeNew/__pycache__/*.pyc
 .vscode/
-./scripts/conflict_resolving/results/*.*
