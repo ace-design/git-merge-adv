@@ -1,5 +1,8 @@
 #Ignored files
 .DS_Store
 scripts/__pycache__/*.pyc
+merge-algorithms/ImportMVP/__pycache__/*.pyc
+merge-algorithms/ImportTree/__pycache__/*.pyc
+merge-algorithms/ImportTreeNew/__pycache__/*.pyc
 .vscode/
 ./scripts/conflict_resolving/results/*.*
