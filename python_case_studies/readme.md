@@ -1,10 +1,10 @@
-# Java Merge Case Studies
+# Python Merge Case Studies
 
 ## Rationale
 
 Analysis of case studies from credible, and well-developed projects help us obtain quality results that we can use to further support our project development.
 
-Our focus on Java will provide us with specific syntax that we can use to develop a lower level algorithm. 
+Our secondary focus on Python will provide us with specific syntax that we can use to develop a slightly higher level algorithm than our previous Java one. 
 
 ## Pre-requisites:
 
