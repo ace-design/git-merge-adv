@@ -1,0 +1,13 @@
+Commit Hash:c9f65b3
+Left Parent Hash:d05237bc
+Right Parent Hash:0d3b951d
+Base Hash: f81bb05d
+File Name: maths/test_maths.py
+
+Observations:
+- Base and right versions are the exact same for import statements.
+- Base and Left have the same content, however the order of imports is changed.
+
+Analysis:
+- Git still causes conflict despite the base and right versions being the same. 
+    - 
