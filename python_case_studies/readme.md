@@ -13,10 +13,8 @@ Our secondary focus on Python will provide us with specific syntax that we can u
 * `right.java`: Right parent of merge
 * `desired.java`: Version of file after user manually handled.
 *  `git.java`: Version of file after git algorithm tried to handle.
-* `spork_result.java`: Version of file after spork tried to handle.
-* `jdime.java`: Version of file after jdime tried to handle.
 
 
 ### References and Acknowledgements:
 
-* All projects chosen from Java Awesome List: [https://github.com/akullpp/awesome-java]
+* All projects chosen from Python Awesome List: [https://github.com/vinta/awesome-python]
