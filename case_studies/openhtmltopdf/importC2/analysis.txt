@@ -1,8 +1,0 @@
-Commit Hash:554a3d98
-Left Parent Hash:fe55d727
-Right Parent Hash:ff947447
-Base Hash: e44fb864
-File Name: openhtmltopdf-objects/src/main/java/com/openhtmltopdf/objects/pdf/MergeBackgroundPdfDrawer.java
-
-Analysis:
-- git failed to solve the import conflicts but the JDime and Spork handled them easily
