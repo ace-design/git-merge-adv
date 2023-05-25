@@ -68,7 +68,7 @@ As such, our purpose is to develop a new 3-way merge algorithm that takes both a
 
 * Run Conflict Resolving Script:
 
-    `python3 init.py --filename <merge-conflicts.csv> --line <line-number in CSV> --repo <name of Clone repo>`
+    `python3 init.py --filename <merge-conflicts.csv> --line <line-number in CSV> --repo <name of Clone repo> --lang <Programming Language>`
 
 
 ## Contacts
