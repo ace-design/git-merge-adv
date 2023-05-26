@@ -1,0 +1,13 @@
+Commit Hash: ebd5a98e9
+Left Parent Hash: 9f601497
+Right Parent Hash: 47b40a77
+Base Hash: b3bc75cb
+File Name: setup.py
+
+Observations:
+- Base and left versions have different mypy.myunit imports. Left version imports one less thing than the base version.
+- Base and right versions import same mypy.myunit methods. However right version also imports an additional `defaults` method from mypy. 
+
+Analysis:
+- Although Base and Right version have the same method imports from mypy.myunit, Git doesn't go with the left version for that line. 
+- Also, the right version is the only one that imports `defaults`  from mypy, but git still causes conflict with that line. 
