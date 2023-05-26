@@ -1,0 +1,9 @@
+Commit Hash:55df542f
+Left Parent Hash:5b1484e3
+Right Parent Hash:bd4bd78b
+Base Hash: 4ae99b77
+File Name: blaze/tests/test_interactive.py
+
+Analysis:
+- The base and left version were entirely same but there was a slight modification in the right version and git caused a conflict.
+- Interstingly git didn't caused a conflict in another case where there were similar additions and code was moved here and there but git was able to solve it without any issues
