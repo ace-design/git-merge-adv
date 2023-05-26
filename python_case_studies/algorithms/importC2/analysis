@@ -10,4 +10,4 @@ Observations:
 
 Analysis:
 - Git still causes conflict despite the base and right versions being the same. 
-    - 
+    - Assumption: Git's 3-way merge algorithm doesn't only rely on the base, right and left version. It may rely on Git's past history as well. 
