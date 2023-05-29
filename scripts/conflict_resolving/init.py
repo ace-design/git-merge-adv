@@ -71,12 +71,13 @@ def runJDime():
     subprocess.run(['rm','JDimeLogging.properties'])
 
 def getAnalysis(info):
+    os.chdir(str(os.getcwd())+"/../"+"results")
     with open("analysis", "w") as res:
-         res.write("Commit Hash: "+info[0])
-         res.write("Left Parent Hash: "+info[1])
-         res.write("Right Parent Hash: "+info[2])
-         res.write("Base Hash: "+info[3])
-         res.write("File Name: "+info[4])
+         res.write("Commit Hash: "+info[0]+'\n')
+         res.write("Left Parent Hash: "+info[1]+'\n')
+         res.write("Right Parent Hash: "+info[2]+'\n')
+         res.write("Base Hash: "+info[3]+'\n')
+         res.write("File Name: "+info[4]+'\n')
      
 
 
