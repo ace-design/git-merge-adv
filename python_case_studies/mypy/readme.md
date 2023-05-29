@@ -11,6 +11,7 @@
  Case | Line | Commmit Hash | Git 
 --- | --- | --- | ---
 C1 | 3 | b45d56a1f | Conflict
+C2 | 9 | ebd5a98e9 | Conflict
 
 
 ### Interesting Cases:
