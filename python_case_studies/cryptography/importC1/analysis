@@ -1,0 +1,16 @@
+Commit Hash: a201a2f73
+Left Parent Hash: 6f386b90
+Right Parent Hash: 0ed7f565
+Base Hash: 4365b12f
+File Name: tests/hazmat/primitives/test_cmac.py
+
+Observations:
+- Left version has an additional import that base and right version don't. This is what causes conflict.
+- package changes from `tests.utl` in base to `...utils` in right and left. Git handles this merge.
+
+Analysis:
+- Although the package that is imported in the left version is extra, it is added before the common cases. 
+  - We know from before that git relies on the ordering of packages at a line-by-line basis. 
+- Weirdly however, the name change from `tests.utils` to `...utils` happens after the conflict, and git handles it.
+  - This is not consistent with importC2 in the `thefuck` repository. 
+
