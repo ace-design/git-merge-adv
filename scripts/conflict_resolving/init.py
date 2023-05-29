@@ -22,19 +22,18 @@ def extactfiles(info,repo,lang= None):
         elif lang == "java":
              suffix = "java"
         os.chdir(str(os.getcwd())+"/"+str(repo))
-        subprocess.run(['git','checkout', info[1]])
-        subprocess.run(['cp', info[4],f'../results/left.{suffix}'])
-        subprocess.run(['git','checkout', info[2]])
-        subprocess.run(['cp', info[4],f'../results/right.{suffix}'])
-        subprocess.run(['git','checkout', info[3]])
-        subprocess.run(['cp', info[4],f'../results/base.{suffix}'])
-        subprocess.run(['git','checkout', info[0]])
-        subprocess.run(['cp', info[4],f'../results/desired.{suffix}'])
-        try:
-            subprocess.run(['git', 'reset','--hard','master'])
-        except:
-            subprocess.run(['git', 'reset','--hard','main'])
+        main_b=subprocess.run(['git','rev-parse','--abbrev-ref','HEAD'],capture_output=True,text=True).stdout.strip('\n')
 
+        subprocess.run(['git','checkout', info[1],'--quiet'])
+        subprocess.run(['cp', info[4],f'../results/left.{suffix}'])
+        subprocess.run(['git','checkout', info[2],'--quiet'])
+        subprocess.run(['cp', info[4],f'../results/right.{suffix}'])
+        subprocess.run(['git','checkout', info[3],'--quiet'])
+        subprocess.run(['cp', info[4],f'../results/base.{suffix}'])
+        subprocess.run(['git','checkout', info[0],'--quiet'])
+        subprocess.run(['cp', info[4],f'../results/desired.{suffix}'])
+        subprocess.run(['git', 'reset','--hard'])
+        subprocess.run(['git', 'checkout',main_b])
 
 
 
@@ -53,14 +52,13 @@ def runGit(repo, info,lang = None):
          suffix = 'java'
 
     os.chdir(str(os.getcwd())+"/../"+repo)
-    subprocess.run(['git', 'checkout', info[1]])
-    subprocess.run(['git', 'merge', '--no-commit', '--no-ff',info[2]], capture_output=False)
+    main_b=subprocess.run(['git','rev-parse','--abbrev-ref','HEAD'],capture_output=True,text=True).stdout.strip('\n')
+    subprocess.run(['git', 'checkout', info[1],'--quiet'])
+    subprocess.run(['git', 'merge', '--no-commit', '--no-ff',info[2],'--quiet'], capture_output=False)
     subprocess.run(['cp', info[4],f'../results/git.{suffix}'])
     subprocess.run(['git', 'merge', '--abort'])
-    try:
-        subprocess.run(['git', 'reset','--hard','master'])
-    except:
-        subprocess.run(['git', 'reset','--hard','main'])
+    subprocess.run(['git','reset','--hard'])
+    subprocess.run(['git', 'checkout',main_b])
 
 
 def runJDime():
@@ -72,6 +70,15 @@ def runJDime():
     subprocess.run(['sudo','docker','run','--rm', '-v',os.getcwd()+':/wkdir', 'acedesign/jdimew', '-mode', 'structured','--output','jdime.java','left.java', 'base.java', 'right.java','-f'])
     subprocess.run(['rm','JDime.properties'])
     subprocess.run(['rm','JDimeLogging.properties'])
+
+def getAnalysis(info):
+    with open("analysis", "w") as res:
+         res.write("Commit Hash: "+info[0])
+         res.write("Left Parent Hash: "+info[1])
+         res.write("Right Parent Hash: "+info[2])
+         res.write("Base Hash: "+info[3])
+         res.write("File Name: "+info[4])
+     
 
 
 def main():
@@ -98,7 +105,7 @@ def main():
         runSpork()
         runJDime()
     runGit(repo,info,file_language)
-        
+    getAnalysis(info)
 
 
 
