@@ -1,0 +1,15 @@
+hash,left,right,base,file
+725ef27,d2f8cebf,2fea1f38,7d3ddfc8,thefuck/system/unix.py
+725ef27,d2f8cebf,2fea1f38,7d3ddfc8,thefuck/system/win32.py
+cf006da,cf3acbfa,5b535077,4d714994,thefuck/rules/git_push.py
+3c1cce6,5d3a727d,bb5c7c57,9660ec78,README.md
+488c1da,c3fe7e5e,3d56204f,8bf4182f,tests/rules/test_dirty_untar.py
+488c1da,c3fe7e5e,3d56204f,8bf4182f,tests/rules/test_dirty_unzip.py
+ff8d61a,8b62959f,6dcf9a3a,61937e9e,thefuck/corrector.py
+8b62959,27c14a44,61937e9e,7be71a01,thefuck/corrector.py
+73bc6c0,0296a4a4,b1da6a88,718cadb8,README.md
+881967f,5f2b2433,51800afc,d41b1d48,thefuck/rules/pacman.py
+9f9c536,50ab7429,55cfdda2,b4cbcd7a,thefuck/rules/sudo.py
+d09238a,c6c3756c,275574be,bd5f5045,thefuck/rules/sudo.py
+aca04c2,0e84f33a,21953467,ef20a68d,README.md
+1ed4e96,b0d353c6,652073ae,9518416a,thefuck/rules/sudo.py

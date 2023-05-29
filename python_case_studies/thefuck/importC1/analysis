@@ -1,0 +1,18 @@
+Commit Hash: 8b62959
+Left Parent Hash: 27c14a44
+Right Parent Hash: 61937e9e
+Base Hash: 7be71a01
+File Name: thefuck/corrector.py
+
+Observations:
+- Base and right version have one line that is common between them and not left version. `from . import conf, types, logs`.
+  - Base version also has an additional `eager` package that is imported that is present in the left version, but not right. 
+- Left version also has 2 new pacakges imported from `thefuck.types` on a new line. 
+- Git also causes conflict with import sys which is present in all 3. This error may be the result of the inconsistent ordering. 
+- Ordering for the import stakements are not consistent between all 3. 
+
+Analysis:
+- Since Base and Right are common for conf, types and logs I would expect git to choose the left version for that. 
+  - Assumption: Since ordering is not consistent, git identifies a conflict for that line. 
+- I would also assume git would choose to add the packages from `thefuck` to the merged files. However it still causes conflict.
+  - Assumption: Possibly the inconsistent ordering is what caused this conflict. 
