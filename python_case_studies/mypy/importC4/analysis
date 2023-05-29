@@ -1,0 +1,13 @@
+Commit Hash: 3f8ca8834
+Left Parent Hash: 7928d772
+Right Parent Hash: ff16eee1
+Base Hash: 74363382
+File Name: mypy/stats.py
+
+
+Observations:
+- One line of imports from mypy.nodes is different across all file versions.
+
+Analysis:
+- Logically makes sense why git causes this conflict, since git merges based on textual basis. 
+  - Structural tree diagrams, like the one we created for merge-algorithms would prevent this issue from occuring. 
