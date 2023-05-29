@@ -12,7 +12,7 @@
 --- | --- | --- | ---
 C1 | 10 | a201a2f73 | Conflict
 C2 | 23 | cdd0d2f04 | Conflict
-C2 | 26 | 8b347932f | Conflict
+C3 | 26 | 8b347932f | Conflict
 
 ### Interesting Cases:
  Case | Line | Commmit Hash | Odd Case
