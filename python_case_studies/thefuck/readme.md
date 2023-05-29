@@ -1,6 +1,6 @@
 # The Fuck
 
-### Source: [https://github.com/sightmachine/SimpleCV]
+### Source: [https://github.com/nvbn/thefuck]
 
 
 ## Rationale:
@@ -14,6 +14,7 @@
  Case | Line | Commmit Hash | Git 
 --- | --- | --- | ---
 C1 | 9 | 8b62959 | Conflict
+C2 | 11 | 881967f | Conflict
 
 
 ### Interesting Cases:

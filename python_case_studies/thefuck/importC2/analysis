@@ -1,0 +1,14 @@
+Commit Hash: 881967f
+Left Parent Hash: 5f2b2433
+Right Parent Hash: 51800afc
+Base Hash: d41b1d48
+File Name: thefuck/rules/pacman.py
+
+Observations:
+- Base and Right version import the same things from `thefuck.utils`. 
+  - Left version imports an additional thing from that package.
+- Right version imports shells which base doesn't. 
+
+Analysis:
+- Since right version imports shells on line 2, the base, left and right version have different things on line 2. 
+  - Logically makes sense since Git's textual comparison takes into consideration lines as well. 
