@@ -7,6 +7,9 @@
 * There is a larger sample space for python code than mypy and algorithm repositories. 
 * Possibly more import conflicts because of this. 
 
+## Result:
+* Not many merge conflicts with import statements. 
+
 
 ### Good Import Conflicts:
  Case | Line | Commmit Hash | Git 
