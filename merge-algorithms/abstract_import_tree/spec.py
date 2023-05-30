@@ -4,6 +4,7 @@ from Node import Node
 from Tree import Tree
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
+# It acts as the adapter to the import algorithm.
 
 class Language(ABC):
     # Used to generate string path for particular target from tree. 
