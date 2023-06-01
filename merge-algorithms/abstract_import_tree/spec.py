@@ -1,5 +1,6 @@
 from abc import ABC,abstractmethod
 import copy
+import re
 from Node import Node
 from Tree import Tree
 
@@ -38,16 +39,22 @@ class Java(Language):
                 self.output_traverse(item,dup,all_imports,target)
 
     def extractImports(self,content):
+        dict={
+            'import':re.compile(r'import *'),
+            'package':re.compile(r'package *')
+            }
+
         imports=[]
         other=copy.deepcopy(content)
-
+        
         for line in content:
-            # Narrowing search to 'import' or 'package' keyword.
-            if (line[0:6]=="import" or line[0:7]=="package"):
-                other.remove(line)
-                line=line.replace(" ",".")
-                line=line.replace("/",".")
-                imports.append(line)
+            for key,rx in dict.items():
+                match=rx.search(line)
+                if (match):
+                    other.remove(line)
+                    line=line.replace(" ",".")
+                    line=line.replace("/",".")                
+                    imports.append(line)
         return imports,other
     
     def gen_tree(self,base_import, right_import, left_import):
@@ -74,3 +81,4 @@ class Java(Language):
 
         #Writes imports in tree to given output file.
         return tree
+
