@@ -49,3 +49,12 @@ class Java(Language):
                     imports.append([lstring,rstring])
         return imports,other
 
+
+
+class Python(Language):
+    def sayhi(self):
+        print("Hi , I am a python code!")
+    def extractImports(self,content):
+        return super().extractImports()
+    
+
