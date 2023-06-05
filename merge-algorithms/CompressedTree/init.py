@@ -1,5 +1,5 @@
 import argparse
-from spec import Java,Language
+from spec import Java,Language,Python
 import merger
 import subprocess
 
@@ -25,6 +25,8 @@ def main():
     match type:
         case "java":
             lang=Java()
+        case "python":
+            lang=Python()
         case _:
             print("Language Not Supported")
             exit(0)
