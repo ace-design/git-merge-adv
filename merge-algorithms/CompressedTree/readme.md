@@ -5,22 +5,36 @@
 
 
 
-### Future Development:
+### <u>Future Development:</u>
 * Reorganize code, and make it more readable. 
 
-### Script Pre-Requisites
+### <u>Script Pre-Requisites:</u>
 
-* Run ImportMVP:
+* Run Compressed Import Tree:
 
     `python3 init.py --left <left parent path> --right <right parent path> --base <base file path> --out <output file>`
 
-* Test Run:
 
-    `python3 init.py --left test2/left.java --right test2/right.java --base test2/base.java --output result.java`
+### <u>Demos/Case Studies</u>
 
-    * Test case files obtained from [https://github.com/cucumber/cucumber-jvm]
-        * Commit Hash: 817f9292d
-        * Left Parent Hash: cd2e0197
-        * Right Parent Hash: 80df4b06
-        * Base Hash: 632a8579
-        * File Name: core/src/main/java/io/cucumber/core/plugin/TestNGFormatter.java
+* Test case files obtained from [https://github.com/cucumber/cucumber-jvm]
+* Analysis of demos, and pictures obtained from [https://github.com/GumTreeDiff/gumtree]
+
+
+#### <b>ImportC1-Cucumber-jvm</b>
+![My Image](images/importC1.png)
+
+#### <b>ImportC2-Cucumber-jvm</b>
+![My Image](images/importC2.png)
+
+#### <b>ImportC3-Cucumber-jvm</b>
+![My Image](images/importC3.png)
+
+#### <b>ImportC4-Cucumber-jvm</b>
+![My Image](images/importC4.png)
+
+#### <b>ImportC5-Cucumber-jvm</b>
+![My Image](images/importC5.png)
+
+#### <b>ImportC6-Cucumber-jvm</b>
+![My Image](images/importC6.png)
