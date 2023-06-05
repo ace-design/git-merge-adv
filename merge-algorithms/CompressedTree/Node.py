@@ -1,28 +1,4 @@
 
-# class Node:
-
-#     def __init__(self,dir):
-#         #name of given package/directory.
-#         self.directory=dir
-#         #List of all subdirectories.
-#         self.children=[]
-#         self.versions=[]
-    
-#     def get_children(self):
-#         return self.children
-    
-#     def add_child(self,node):
-#         self.children.append(node)
-
-#     def get_dir(self):
-#         return self.directory
-    
-#     def add_version(self,version):
-#         self.versions.append(version)
-
-#     def get_version(self):
-#         return self.versions
-    
 class End:
     def __init__(self,dir):
         if (" as " in dir):
@@ -31,7 +7,7 @@ class End:
         else:
             self.real_name=dir
             self.rename=""
-        self.versions=[]
+        self.versions=set()
     
     def get_dir(self):
         return self.rename
@@ -43,7 +19,7 @@ class End:
             return (self.real_name+" as "+self.rename)
     
     def add_version(self,version):
-        self.versions.append(version)
+        self.versions.add(version)
     
     def get_version(self):
         return self.versions
@@ -56,12 +32,12 @@ class Pack:
     def get_children(self):
         return self.children
 
-    def add_child(self,end,version):
+    def add_child(self,end):
         for child in self.children:
             if (child.get_full_dir()==end.get_full_dir()):
-                child.add_version(version)
-                return -1
+                return child
         self.children.append(end)
+        return end
     
     def get_full_dir(self):
         return self.path
