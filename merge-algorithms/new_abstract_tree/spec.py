@@ -1,8 +1,7 @@
 from abc import ABC,abstractmethod
 import copy
 import re
-from Node import Pack,End
-from Tree import Tree
+from Node import Pack
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
@@ -27,7 +26,6 @@ class Java(Language):
             if (type(item)==Pack):
                 self.output_traverse(item,dup,all_imports,target)
             elif (item==target):
-                print(target.get_full_dir())
                 all_imports.append(dup+";")
  
 
@@ -48,7 +46,6 @@ class Java(Language):
                     index=line.rfind(".")
                     lstring=line[0:index+1]
                     rstring=line[index+1:-1]
-                    print(lstring+rstring)             
                     imports.append([lstring,rstring])
         return imports,other
 

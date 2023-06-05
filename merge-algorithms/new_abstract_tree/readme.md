@@ -1,13 +1,12 @@
-# Abstract Import Tree
+# Compressed Import Tree
 
-* Works off structure of ImportTreeNew.
-* Abstract in the sense that the merge algorithm defined in the Tree object is independant of the language.
-    * Extraction and output format is dependant on the language defined in spec.py.
+* Works off structure of Abstract Import Tree.
+* Tree strucutre is more compressed, to allow more focus on the end desired packages, instead of entire path. Less computation time. 
 
 
 
 ### Future Development:
-* Develop a better algorithm to determine which file version to use for import statements.
+* Reorganize code, and make it more readable. 
 
 ### Script Pre-Requisites
 
