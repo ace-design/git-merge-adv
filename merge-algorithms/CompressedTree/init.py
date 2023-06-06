@@ -54,7 +54,7 @@ def main():
     appendfile(output,result.stdout)
     
 
-    clean()
+    clean(type)
 
 
 def writefile(name, content):
@@ -67,11 +67,11 @@ def appendfile(name, content):
         res2.write(content)
 
 
-def clean():
+def clean(type):
     #Removes uncessary files that were created.
-    subprocess.run(['rm', 'base_content.java'])
-    subprocess.run(['rm', 'left_content.java'])
-    subprocess.run(['rm', 'right_content.java'])
+    subprocess.run(['rm', f'base_content.{type}'])
+    subprocess.run(['rm', f'left_content.{type}'])
+    subprocess.run(['rm', f'right_content.{type}'])
 
 
 

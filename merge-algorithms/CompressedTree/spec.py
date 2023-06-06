@@ -94,8 +94,15 @@ class Python(Language):
                     else :
                         formatted_imports.append([f"from {nod.module} import",f'{alias.name} as {alias.asname}',nod.lineno,nod.end_lineno])
 
-        print(formatted_imports,'\n\n',restofCode)
         return formatted_imports,restofCode
 
-    def output_traverse(node, string, all_imports):
-        return super().output_traverse(string, all_imports)
+    def output_traverse(self,node,string,all_imports,target):
+        # Finds the specified target node in the tree
+        for item in node.get_children():
+            dup=copy.deepcopy(string)
+            dup+=item.get_full_dir()
+            if (type(item)==Pack):
+                dup+=" "
+                self.output_traverse(item,dup,all_imports,target)
+            elif (item==target):
+                all_imports.append(dup)
