@@ -24,3 +24,5 @@
         * Right Parent Hash: 80df4b06
         * Base Hash: 632a8579
         * File Name: core/src/main/java/io/cucumber/core/plugin/TestNGFormatter.java
+* Test Run for Python Test Case:
+    ` python3 init.py --left pythontest/left.py --right pythontest/right.py --base pythontest/base.py --output result.py`

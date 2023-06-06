@@ -17,7 +17,7 @@ class Tree:
                 break
         if status==False:
             node.add_child(parent,version)
-        for new_end in path[1]:
+        for new_end in [path[1]]:
             new=End(new_end)
             exit=parent.add_child(new,version)
             if (exit!=-1):
