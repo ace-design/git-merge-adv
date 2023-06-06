@@ -1,5 +1,5 @@
 import argparse
-from spec import Java,Language
+from spec import Java,Language,Python
 import merger
 import subprocess
 
@@ -25,13 +25,23 @@ def main():
     match type:
         case "java":
             lang=Java()
+        case "py":
+            lang=Python()
         case _:
             print("Language Not Supported")
             exit(0)
 
-    left_import,left_content=lang.extractImports(subprocess.check_output(f"cat "+left, shell=True).decode('utf-8').split('\n'))
-    right_import,right_content=lang.extractImports(subprocess.check_output(f"cat "+right, shell=True).decode('utf-8').split('\n'))
-    base_import,base_content=lang.extractImports(subprocess.check_output(f"cat "+base, shell=True).decode('utf-8').split('\n'))
+    # this is a temporaray resolution , this abstaraction needs to be moved to class-fucntion  defination
+    if type == "py":
+        left_import,left_content=lang.extractImports(subprocess.check_output(f"cat "+left, shell=True).decode('utf-8'))
+        right_import,right_content=lang.extractImports(subprocess.check_output(f"cat "+right, shell=True).decode('utf-8'))
+        base_import,base_content=lang.extractImports(subprocess.check_output(f"cat "+base, shell=True).decode('utf-8'))
+    else :
+        left_import,left_content=lang.extractImports(subprocess.check_output(f"cat "+left, shell=True).decode('utf-8').split('\n'))
+        right_import,right_content=lang.extractImports(subprocess.check_output(f"cat "+right, shell=True).decode('utf-8').split('\n'))
+        base_import,base_content=lang.extractImports(subprocess.check_output(f"cat "+base, shell=True).decode('utf-8').split('\n'))
+
+        
 
 
     result=merger.git_merge(base_content,right_content,left_content,type)
@@ -44,7 +54,7 @@ def main():
     appendfile(output,result.stdout)
     
 
-    clean()
+    clean(type)
 
 
 def writefile(name, content):
@@ -57,11 +67,11 @@ def appendfile(name, content):
         res2.write(content)
 
 
-def clean():
+def clean(type):
     #Removes uncessary files that were created.
-    subprocess.run(['rm', 'base_content.java'])
-    subprocess.run(['rm', 'left_content.java'])
-    subprocess.run(['rm', 'right_content.java'])
+    subprocess.run(['rm', f'base_content.{type}'])
+    subprocess.run(['rm', f'left_content.{type}'])
+    subprocess.run(['rm', f'right_content.{type}'])
 
 
 

@@ -8,9 +8,10 @@ class Tree:
         self.map={}
 
     def add_traverse(self,node,path,version):
+
         parent=node.add_child(Pack(path[0]))
 
-        for new_end in path[1:]:
+        for new_end in [path[1]]:
             child=parent.add_child(End(new_end))
             child.add_version(version)
 
@@ -19,7 +20,6 @@ class Tree:
             else:
                 self.map[new_end]=set()
                 self.map[new_end].add(child)
-    
     
 
     def find_paths(self,lang):
