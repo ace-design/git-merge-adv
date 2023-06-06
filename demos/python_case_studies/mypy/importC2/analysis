@@ -1,0 +1,13 @@
+Commit Hash: 4eb5417ac
+Left Parent Hash: 6f841172
+Right Parent Hash: b3bc75cb
+Base Hash: dcff596b
+File Name: mypy/test/testparse.py
+
+Observations:
+- Base and left versions have different mypy.myunit imports. Left version imports one less thing than the base version.
+- Base and right versions import same mypy.myunit methods. However right version also imports an additional `defaults` method from mypy. 
+
+Analysis:
+- Although Base and Right version have the same method imports from mypy.myunit, Git doesn't go with the left version for that line. 
+- Also, the right version is the only one that imports `defaults`  from mypy, but git still causes conflict with that line. 
