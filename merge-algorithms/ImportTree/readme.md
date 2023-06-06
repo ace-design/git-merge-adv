@@ -12,11 +12,11 @@
 
 * Run ImportMVP:
 
-    `python3 import-tree.py --left <left parent path> --right <right parent path> --base <base file path> --out <output file>`
+    `python3 init.py --left <left parent path> --right <right parent path> --base <base file path> --out <output file>`
 
 * Test Run:
 
-    `python3 import-tree.py --left test/left.java --right test/right.java --base test/base.java --output result.java`
+    `python3 init.py --left test/left.java --right test/right.java --base test/base.java --output result.java`
 
     * Test case files obtained from [https://github.com/cucumber/cucumber-jvm]
         * Commit Hash: 817f9292d
