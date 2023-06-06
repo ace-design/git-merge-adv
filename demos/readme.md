@@ -15,3 +15,15 @@ Execute run_algo.py:
 
 * All quantitative measurements, and visuals obtained from [https://github.com/GumTreeDiff/gumtree]
 
+Run GumTree:
+
+`java -jar gumtree.jar webdiff python_case_studies/mypy/importC1/desired.py python_case_studies/mypy/importC1/demo_result/CompressedTree.py`
+
+* Important Note: When trying to use Gumtree for python files, make sure you add the pythonparser to your local computer path from [https://github.com/GumTreeDiff/pythonparser]
+
+    1. Clone the repository
+    2. cd pythonparser/
+    3. pip install -r requirements.txt
+    4. cp pythonparser /tmp
+    5. PATH=$PATH/tmp
+
