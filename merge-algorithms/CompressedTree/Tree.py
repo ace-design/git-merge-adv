@@ -10,15 +10,14 @@ class Tree:
     def add_traverse(self,node,path,version):
         parent=node.add_child(Pack(path[0]))
 
-        for new_end in path[1:]:
-            child=parent.add_child(End(new_end))
-            child.add_version(version)
+        child=parent.add_child(End(path[1]))
+        child.add_version(version)
 
-            if (new_end in self.map.keys()):
-                self.map[new_end].add(child)
-            else:
-                self.map[new_end]=set()
-                self.map[new_end].add(child)
+        if (path[1] in self.map.keys()):
+                self.map[path[1]].add(child)
+        else:
+                self.map[path[1]]=set()
+                self.map[path[1]].add(child)
     
     
 
