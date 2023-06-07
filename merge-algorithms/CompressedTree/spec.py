@@ -1,8 +1,8 @@
-from abc import ABC,abstractmethod
 import copy
 import re
 import ast
 from Node import Pack, End
+from abc import ABC,abstractmethod
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
@@ -34,6 +34,7 @@ class Java(Language):
  
 
     def extractImports(self,content):
+        content = content.split('\n')
         dict={
             'import':re.compile(r'import *'),
             'package':re.compile(r'package *')
@@ -70,8 +71,8 @@ class Python(Language):
             elif isinstance(nod, ast.ImportFrom):
                 import_nodes.append(nod)
         return import_nodes
+    # The extraction is done in specific format to convert the list of imports into a common tree like structure that for python as well as JAVA
     def extractImports(self,content):
-        importlineno = []
         formatted_imports = []
         codeTree = self.generateAST(content)
         import_nodes = self.getImportNodes(codeTree)
@@ -94,7 +95,6 @@ class Python(Language):
                         formatted_imports.append([f"from {nod.module} import",alias.name,nod.lineno,nod.end_lineno])
                     else :
                         formatted_imports.append([f"from {nod.module} import",f'{alias.name} as {alias.asname}',nod.lineno,nod.end_lineno])
-
 
         return formatted_imports,restofCode
 
