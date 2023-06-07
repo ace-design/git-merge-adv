@@ -1,14 +1,11 @@
-import os.path
-import typing
-from mypy.myunit import Suite
-from mypy.myunit import AssertionFailure
+import os.path,typing
+from mypy.myunit import Suite,AssertionFailure,run_test
 from mypy.test.helpers import assert_string_arrays_equal
 from mypy.test.data import parse_test_cases
 from mypy.test import config
 from mypy.parse import parse
 from mypy.errors import CompileError
 from mypy import defaults
-from mypy.myunit import run_test
 """Tests for the mypy parser
 
 Test case descriptions are in files test/data/parse[-errors].test."""
