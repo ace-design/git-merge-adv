@@ -25,5 +25,5 @@ Run GumTree:
     2. cd pythonparser/
     3. pip install -r requirements.txt
     4. cp pythonparser /tmp
-    5. PATH=$PATH/tmp
+    5. PATH=$PATH:/tmp
 
