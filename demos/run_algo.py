@@ -62,6 +62,11 @@ def run_gumtree(output_path,lang,algo):
     # with open(new, 'w') as devnull:
     #     subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],stdout=devnull)
 
+    if (len(result)==1 and result[0]==''):
+        print("PythonParser cannot be detected.")
+        exit(0)
+
+
     dict={
     'deletions':re.compile(r'\ndelete-(tree|node)\n---\n(i|I)mport*'),
     'moves':re.compile(r'\nmove-(tree|node)\n---\n(i|I)mport*'),
@@ -70,12 +75,14 @@ def run_gumtree(output_path,lang,algo):
 
     data={'deletions':0,'insertions':0,'moves':0}
 
+    print(result)
 
     for val in result:
         for key,rx in dict.items():
             match=rx.search(val)
             if (match):
                 data[key]+=1
+    print(data)
 
     with open(new,'w') as writer:
         for key in data.keys():
