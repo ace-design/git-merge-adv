@@ -2,7 +2,7 @@ from abc import ABC,abstractmethod
 import copy
 import re
 import ast
-from Node import Pack
+from Node import Pack, End
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
@@ -56,6 +56,7 @@ class Java(Language):
 
 
 class Python(Language):
+    done=[]
     def sayhi(self):
         print("Hi , I am a python code!")
     def generateAST(self,content):
@@ -94,15 +95,25 @@ class Python(Language):
                     else :
                         formatted_imports.append([f"from {nod.module} import",f'{alias.name} as {alias.asname}',nod.lineno,nod.end_lineno])
 
+
         return formatted_imports,restofCode
 
     def output_traverse(self,node,string,all_imports,target):
         # Finds the specified target node in the tree
         for item in node.get_children():
+            # print(item.get_full_dir())
             dup=copy.deepcopy(string)
             dup+=item.get_full_dir()
             if (type(item)==Pack):
                 dup+=" "
-                self.output_traverse(item,dup,all_imports,target)
-            elif (item==target):
-                all_imports.append(dup)
+                if (type(item.get_children()[0])==End):
+                    added=False
+                    for kid in item.get_children():
+                        if (kid.get_full_dir() not in self.done):
+                            added=True
+                            dup=dup+kid.get_full_dir()+","
+                            self.done.append(kid.get_full_dir())
+                    if (added):
+                        all_imports.append(dup[:-1])
+                else:
+                    self.output_traverse(item,dup,all_imports,target)
