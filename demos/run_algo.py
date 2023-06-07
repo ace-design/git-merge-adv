@@ -1,5 +1,6 @@
 import argparse
 import subprocess
+import re
 
 def parsing():
     parser = argparse.ArgumentParser(description='Enter path to case study, which merge algorithm and language of case study')
@@ -17,6 +18,7 @@ def main():
     output_path=case_study.strip("../")
     get_case_study(case_study,output_path)
     exec_algo(algo,output_path,lang)
+    run_gumtree(output_path,lang,algo)
 
 
 def get_suffix(lang):
@@ -50,6 +52,38 @@ def get_case_study(case_study,output_path):
     except:
         print("path not found")
         exit(0)
+
+
+def run_gumtree(output_path,lang,algo):
+    desired=output_path+"/desired."+lang
+    result=output_path+"/demo_result/"+algo+"."+lang
+    new=output_path+"/demo_result/"+algo+"_diff.txt"
+    result=subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
+    # with open(new, 'w') as devnull:
+    #     subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],stdout=devnull)
+
+    dict={
+    'deletions':re.compile(r'\ndelete-(tree|node)\n---\n(i|I)mport*'),
+    'moves':re.compile(r'\nmove-(tree|node)\n---\n(i|I)mport*'),
+    'insertions':re.compile(r'\ninsert-(tree|node)\n---\n(i|I)mport*'),
+    }
+
+    data={'deletions':0,'insertions':0,'moves':0}
+
+
+    for val in result:
+        for key,rx in dict.items():
+            match=rx.search(val)
+            if (match):
+                data[key]+=1
+
+    with open(new,'w') as writer:
+        for key in data.keys():
+            writer.write(key+": "+str(data[key])+"\n")
+    
+
+
+
 
 
 if __name__=="__main__":
