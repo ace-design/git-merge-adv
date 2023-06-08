@@ -10,8 +10,10 @@ class Tree:
     def add_traverse(self,node,path,version):
 
         parent=node.add_child(Pack(path[0]))
-
-        child=parent.add_child(End(path[1]))
+        if path[2]:
+            child=parent.add_child(End(path[1],path[2],path[3]))
+        else:     
+            child=parent.add_child(End(path[1]))
         child.add_version(version)
 
         if (path[1] in self.map.keys()):
