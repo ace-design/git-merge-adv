@@ -11,6 +11,10 @@ Execute run_algo.py:
 
 `python3 run_algo.py --cs <path to case study folder> --algo <name of desired algorithm> --lang <language used in case study>`
 
+Execute run_analysis.py:
+
+`python3 run_analysis.py --algo <DesiredAlgorithm> --dir <path to case study>`
+
 ## Acknowledgements
 
 * All quantitative measurements, and visuals obtained from [https://github.com/GumTreeDiff/gumtree]

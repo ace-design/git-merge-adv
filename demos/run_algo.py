@@ -68,10 +68,10 @@ def run_gumtree(output_path,lang,algo):
 
 
     dict={
-    'deletions':re.compile(r'\ndelete-(tree|node)\n---\n(i|I)mport*'),
-    'moves':re.compile(r'\nmove-(tree|node)\n---\n(i|I)mport*'),
-    'insertions':re.compile(r'\ninsert-(tree|node)\n---\n(i|I)mport*'),
-    'diff_path':re.compile(r'\nupdate-(tree|node)\n---\nQualifiedName*')
+    'deletions':re.compile(r'\ndelete-(tree|node)'),
+    'moves':re.compile(r'\nmove-(tree|node)'),
+    'insertions':re.compile(r'\ninsert-(tree|node)'),
+    'diff_path':re.compile(r'\nupdate-(tree|node)\n---\n*QualifiedName*')
     }
 
     data={'deletions':0,'insertions':0,'moves':0,'diff_path':0}
@@ -81,7 +81,8 @@ def run_gumtree(output_path,lang,algo):
         for key,rx in dict.items():
             match=rx.search(val)
             if (match):
-                data[key]+=1
+                if (key=='diff_path' or 'import' in val or "Import" in val):
+                    data[key]+=1
 
     with open(new,'w') as writer:
         for key in data.keys():
