@@ -71,18 +71,17 @@ def run_gumtree(output_path,lang,algo):
     'deletions':re.compile(r'\ndelete-(tree|node)\n---\n(i|I)mport*'),
     'moves':re.compile(r'\nmove-(tree|node)\n---\n(i|I)mport*'),
     'insertions':re.compile(r'\ninsert-(tree|node)\n---\n(i|I)mport*'),
+    'diff_path':re.compile(r'\nupdate-(tree|node)\n---\nQualifiedName*')
     }
 
-    data={'deletions':0,'insertions':0,'moves':0}
+    data={'deletions':0,'insertions':0,'moves':0,'diff_path':0}
 
-    print(result)
 
     for val in result:
         for key,rx in dict.items():
             match=rx.search(val)
             if (match):
                 data[key]+=1
-    print(data)
 
     with open(new,'w') as writer:
         for key in data.keys():
