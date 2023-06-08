@@ -51,6 +51,10 @@ class Java(Language):
                     index=line.rfind(".")
                     lstring=line[0:index+1]
                     rstring=line[index+1:-1]
+                    if rstring=="*":
+                        new_index=lstring[0:index].rfind(".")
+                        lstring=line[0:new_index+1]
+                        rstring=line[new_index+1:-1]
                     imports.append([lstring,rstring])
         return imports,other
 
