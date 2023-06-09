@@ -29,7 +29,7 @@ def main():
     xaxis=data.keys()
     yaxis=data.values()
 
-    colors = ['green', 'blue', 'purple', 'brown']
+    colors = ['red', 'green', 'pink', 'yellow']
 
     plt.bar(xaxis,yaxis,color=colors)
     plt.title(algo+" Results")
