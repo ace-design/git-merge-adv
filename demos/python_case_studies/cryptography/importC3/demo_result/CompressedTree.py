@@ -1,13 +1,43 @@
 from __future__ import absolute_import,division,print_function
-import itertools,collections
+import itertools
 from cryptography import utils
-from cryptography.exceptions import InvalidTag,InternalError,AlreadyFinalized,UnsupportedPadding,UnsupportedCipher,UnsupportedHash,UnsupportedAlgorithm,InvalidSignature
-from cryptography.hazmat.backends.interfaces import CipherBackend,HashBackend,HMACBackend,PBKDF2HMACBackend,RSABackend
+from cryptography.exceptions import (
+    InvalidTag,
+    InternalError,
+    AlreadyFinalized,
+    UnsupportedPadding,
+    UnsupportedCipher,
+    UnsupportedHash,
+    UnsupportedAlgorithm,
+    InvalidSignature,
+)
+from cryptography.hazmat.backends.interfaces import (
+    CipherBackend,
+    HashBackend,
+    HMACBackend,
+    PBKDF2HMACBackend,
+    RSABackend,
+)
 from cryptography.hazmat.bindings.openssl.binding import Binding
 from cryptography.hazmat.primitives import interfaces,hashes
 from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives.ciphers.algorithms import AES,Blowfish,Camellia,TripleDES,ARC4,CAST5
-from cryptography.hazmat.primitives.ciphers.modes import CBC,CTR,ECB,OFB,CFB,GCM
+from cryptography.hazmat.primitives.ciphers.algorithms import (
+    AES,
+    Blowfish,
+    Camellia,
+    TripleDES,
+    ARC4,
+    CAST5,
+)
+from cryptography.hazmat.primitives.ciphers.modes import (
+    CBC,
+    CTR,
+    ECB,
+    OFB,
+    CFB,
+    GCM,
+)
+import collections
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -20,26 +50,6 @@ from cryptography.hazmat.primitives.ciphers.modes import CBC,CTR,ECB,OFB,CFB,GCM
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,24 +1,36 @@
-import cgi,os.path,re
+import cgi
+import os.path
+import re
 from typing import Any,Dict,List,cast,Tuple
 from mypy.traverser import TraverserVisitor
-from mypy.types import Type,AnyType,Instance,FunctionLike,TupleType,Void,TypeVar,TypeQuery,ANY_TYPE_STRATEGY,Callable
+from mypy.types import (
+    Type,
+    AnyType,
+    Instance,
+    FunctionLike,
+    TupleType,
+    Void,
+    TypeVar,
+    TypeQuery,
+    ANY_TYPE_STRATEGY,
+    Callable,
+)
 from mypy import nodes
-from mypy.nodes import Node,FuncDef,TypeApplication,AssignmentStmt,NameExpr,CallExpr,MemberExpr,OpExpr,IndexExpr,UnaryExpr,YieldFromExpr,ComparisonExpr
+from mypy.nodes import (
+    Node,
+    FuncDef,
+    TypeApplication,
+    AssignmentStmt,
+    NameExpr,
+    CallExpr,
+    MemberExpr,
+    OpExpr,
+    IndexExpr,
+    UnaryExpr,
+    YieldFromExpr,
+    ComparisonExpr,
+)
 """Utilities for calculating and reporting statistics about types."""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

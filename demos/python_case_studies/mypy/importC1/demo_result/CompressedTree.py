@@ -1,15 +1,18 @@
 from typing import List,Tuple,Union,cast,Optional
-from mypy.types import Type,UnboundType,TupleType,UnionType,TypeList,AnyType,CallableType,StarType,EllipsisType
+from mypy.types import (
+    Type,
+    UnboundType,
+    TupleType,
+    UnionType,
+    TypeList,
+    AnyType,
+    CallableType,
+    StarType,
+    EllipsisType,
+)
 from mypy.lex import Token,Name,StrLit,Break,lex
 from mypy import nodes
 """Type parser"""
-
-
-
-
-
-
-
 
 
 

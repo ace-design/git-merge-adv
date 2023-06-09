@@ -58,9 +58,10 @@ def run_gumtree(output_path,lang,algo):
     desired=output_path+"/desired."+lang
     result=output_path+"/demo_result/"+algo+"."+lang
     new=output_path+"/demo_result/"+algo+"_diff.txt"
-    result=subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
+    result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
     # with open(new, 'w') as devnull:
     #     subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],stdout=devnull)
+
 
     if (len(result)==1 and result[0]==''):
         print("PythonParser cannot be detected.")
@@ -71,7 +72,7 @@ def run_gumtree(output_path,lang,algo):
     'deletions':re.compile(r'\ndelete-(tree|node)'),
     'moves':re.compile(r'\nmove-(tree|node)'),
     'insertions':re.compile(r'\ninsert-(tree|node)'),
-    'diff_path':re.compile(r'\nupdate-(tree|node)\n---\n*QualifiedName*')
+    'diff_path':re.compile(r'\nupdate-(tree|node)\n---\n*(n|N)ame*')
     }
 
     data={'deletions':0,'insertions':0,'moves':0,'diff_path':0}
@@ -81,7 +82,7 @@ def run_gumtree(output_path,lang,algo):
         for key,rx in dict.items():
             match=rx.search(val)
             if (match):
-                if (key=='diff_path' or 'import' in val or "Import" in val):
+                if (key=='diff_path' or 'import' in val or "Import" in val) and ("operator: ," not in val):
                     data[key]+=1
 
     with open(new,'w') as writer:

@@ -1,11 +1,26 @@
 from __future__ import absolute_import,division,print_function
-import binascii,pretend,pytest,six
-from cryptography.exceptions import AlreadyFinalized,InvalidSignature,_Reasons
+import binascii
+import pretend
+import pytest
+import six
+from cryptography.exceptions import (
+    AlreadyFinalized,
+    InvalidSignature,
+    _Reasons,
+)
 from cryptography.hazmat.backends.interfaces import CMACBackend
-from cryptography.hazmat.primitives.ciphers.algorithms import AES,ARC4,TripleDES
+from cryptography.hazmat.primitives.ciphers.algorithms import (
+    AES,
+    ARC4,
+    TripleDES,
+)
 from cryptography.hazmat.primitives.cmac import CMAC
 from backends.test_multibackend import DummyCMACBackend
-from utils import load_nist_vectors,load_vectors_from_file,raises_unsupported_algorithm
+from utils import load_nist_vectors
+from tests.utils import (
+    load_vectors_from_file,
+    raises_unsupported_algorithm,
+)
 from cryptography import utils
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,23 +34,6 @@ from cryptography import utils
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

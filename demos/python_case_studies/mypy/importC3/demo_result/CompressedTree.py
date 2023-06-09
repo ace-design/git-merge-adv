@@ -1,12 +1,108 @@
-import itertools,mypy.checkexpr
+import itertools
 from typing import Undefined,Any,Dict,Set,List,cast,overload,Tuple,Function,typevar,Union
 from mypy.errors import Errors
-from mypy.nodes import SymbolTable,Node,MypyFile,VarDef,LDEF,Var,OverloadedFuncDef,FuncDef,FuncItem,FuncBase,TypeInfo,ClassDef,GDEF,Block,AssignmentStmt,NameExpr,MemberExpr,IndexExpr,TupleExpr,ListExpr,ParenExpr,ExpressionStmt,ReturnStmt,IfStmt,WhileStmt,OperatorAssignmentStmt,YieldStmt,WithStmt,AssertStmt,RaiseStmt,TryStmt,ForStmt,DelStmt,CallExpr,IntExpr,StrExpr,BytesExpr,UnicodeExpr,FloatExpr,OpExpr,UnaryExpr,CastExpr,SuperExpr,TypeApplication,DictExpr,SliceExpr,FuncExpr,TempNode,SymbolTableNode,Context,ListComprehension,ConditionalExpr,GeneratorExpr,Decorator,SetExpr,PassStmt,TypeVarExpr,UndefinedExpr,PrintStmt,LITERAL_TYPE,BreakStmt,ContinueStmt,ComparisonExpr,StarExpr,YieldFromExpr,YieldFromStmt,NamedTupleExpr,SetComprehension,DictionaryComprehension,function_type,method_type,ComplexExpr
-from mypy import nodes,messages
-from mypy.types import Type,AnyType,Callable,Void,FunctionLike,Overloaded,TupleType,Instance,NoneTyp,UnboundType,ErrorType,TypeTranslator,strip_type,UnionType
+from mypy.nodes import (
+    SymbolTable,
+    Node,
+    MypyFile,
+    VarDef,
+    LDEF,
+    Var,
+    OverloadedFuncDef,
+    FuncDef,
+    FuncItem,
+    FuncBase,
+    TypeInfo,
+    ClassDef,
+    GDEF,
+    Block,
+    AssignmentStmt,
+    NameExpr,
+    MemberExpr,
+    IndexExpr,
+    TupleExpr,
+    ListExpr,
+    ParenExpr,
+    ExpressionStmt,
+    ReturnStmt,
+    IfStmt,
+    WhileStmt,
+    OperatorAssignmentStmt,
+    YieldStmt,
+    WithStmt,
+    AssertStmt,
+    RaiseStmt,
+    TryStmt,
+    ForStmt,
+    DelStmt,
+    CallExpr,
+    IntExpr,
+    StrExpr,
+    BytesExpr,
+    UnicodeExpr,
+    FloatExpr,
+    OpExpr,
+    UnaryExpr,
+    CastExpr,
+    SuperExpr,
+    TypeApplication,
+    DictExpr,
+    SliceExpr,
+    FuncExpr,
+    TempNode,
+    SymbolTableNode,
+    Context,
+    ListComprehension,
+    ConditionalExpr,
+    GeneratorExpr,
+    Decorator,
+    SetExpr,
+    PassStmt,
+    TypeVarExpr,
+    UndefinedExpr,
+    PrintStmt,
+    LITERAL_TYPE,
+    BreakStmt,
+    ContinueStmt,
+    ComparisonExpr,
+    StarExpr,
+    YieldFromExpr,
+    YieldFromStmt,
+    NamedTupleExpr,
+    SetComprehension,
+    DictionaryComprehension,
+    function_type,
+    method_type,
+    ComplexExpr,
+)
+from mypy import nodes
+from mypy.types import (
+    Type,
+    AnyType,
+    Callable,
+    Void,
+    FunctionLike,
+    Overloaded,
+    TupleType,
+    Instance,
+    NoneTyp,
+    UnboundType,
+    ErrorType,
+    TypeTranslator,
+    strip_type,
+    UnionType,
+)
 from mypy.sametypes import is_same_type
 from mypy.messages import MessageBuilder
-from mypy.subtypes import is_subtype,is_equivalent,is_proper_subtype,is_more_precise,restrict_subtype_away
+import mypy.checkexpr
+from mypy import messages
+from mypy.subtypes import (
+    is_subtype,
+    is_equivalent,
+    is_proper_subtype,
+    is_more_precise,
+    restrict_subtype_away,
+)
 from mypy.maptype import map_instance_to_supertype
 from mypy.semanal import self_type,set_callable_name,refers_to_fullname
 from mypy.erasetype import erase_typevars
@@ -16,46 +112,6 @@ from mypy.join import join_simple,join_types
 from mypy.treetransform import TransformVisitor
 from mypy.meet import meet_simple,meet_simple_away,nearest_builtin_ancestor,is_overlapping_types
 """Mypy type checker."""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
