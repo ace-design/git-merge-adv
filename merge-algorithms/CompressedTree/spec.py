@@ -36,8 +36,8 @@ class Java(Language):
     def extractImports(self,content):
         content = content.split('\n')
         dict={
-            'import':re.compile(r'import *'),
-            'package':re.compile(r'package *')
+            'import':re.compile(r'^import *'),
+            'package':re.compile(r'^package *')
             }
 
         imports=[]

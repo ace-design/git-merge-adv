@@ -58,7 +58,12 @@ def run_gumtree(output_path,lang,algo):
     desired=output_path+"/desired."+lang
     result=output_path+"/demo_result/"+algo+"."+lang
     new=output_path+"/demo_result/"+algo+"_diff.txt"
-    result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
+    match lang:
+        case "py":
+            result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
+        case "java":
+            result=subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
+
     # with open(new, 'w') as devnull:
     #     subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],stdout=devnull)
 
