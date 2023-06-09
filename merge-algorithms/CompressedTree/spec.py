@@ -84,7 +84,7 @@ class Python(Language):
 
         for nod in import_nodes :
             for i in range(nod.lineno,nod.end_lineno+1):
-                restofCode[i-1] = ''
+                restofCode[i-1] = "!!!no import anymore!!!"
 
 
             if isinstance(nod, ast.Import):
@@ -101,23 +101,81 @@ class Python(Language):
                         formatted_imports.append([f"from {nod.module} import",f'{alias.name} as {alias.asname}',nod.lineno,nod.end_lineno])
 
         return formatted_imports,restofCode
-
-    def output_traverse(self,node,string,all_imports,target):
+    
+    def output_traverse(self,node,string,all_imports,target,formatter = ""):
         # Finds the specified target node in the tree
         for item in node.get_children():
-            # print(item.get_full_dir())
+            formatter = copy.deepcopy(formatter)
+
+            if item.get_full_dir()[0:4] == "from":
+                if len(item.get_children())>1:
+                    if item.get_children()[1].leftstartline == item.get_children()[0].leftstartline :
+                        if item.get_children()[1].leftstartline == item.get_children()[1].leftendline:
+                            formatter = "oneline"
+                        else :
+                            formatter = "multiline"
+                    else:
+                        formatter = "separateline"
+
             dup=copy.deepcopy(string)
+            theprefix = dup
             dup+=item.get_full_dir()
             if (type(item)==Pack):
                 dup+=" "
-                if (type(item.get_children()[0])==End):
-                    added=False
-                    for kid in item.get_children():
-                        if (kid.get_full_dir() not in self.done):
-                            added=True
-                            dup=dup+kid.get_full_dir()+","
-                            self.done.append(kid.get_full_dir())
-                    if (added):
-                        all_imports.append(dup[:-1])
+                self.output_traverse(item,dup,all_imports,target,formatter)
+                formatter = ''
+            elif (item==target):
+                # print(theprefix)
+                if formatter == "":
+
+                    all_imports.append(dup)
                 else:
-                    self.output_traverse(item,dup,all_imports,target)
+                    for i,imp in enumerate(all_imports):
+                        if theprefix in imp:
+                            match formatter:
+                                case "oneline":
+                                    all_imports[i] = all_imports[i] + ',' + target.get_full_dir()
+                                case "multiline":
+                                    
+                                    temparray = all_imports[i].split('\n')
+                                    if len(temparray)==1:
+                                        temimp = imp.replace(theprefix,'')
+                                        all_imports[i] = theprefix+ f'(\n    {temimp},\n    {target.get_full_dir()},\n)'
+                                    else :
+                                        new_imp = temparray[0]+'\n'
+                                        temparray.pop(0)
+                                        temparray.pop()
+                                        for el in temparray:
+                                            new_imp+=el+'\n'
+                                        new_imp += f'    {target.get_full_dir()},\n)'
+                                        all_imports[i] = new_imp
+
+                                            
+                                case "separateline":
+                                    all_imports.append(dup)
+                            return
+                    
+                    all_imports.append(dup)
+                            
+
+    # def output_traverse(self,node,string,all_imports,target):
+    #     # Finds the specified target node in the tree
+    #     for item in node.get_children():
+    #         # print(item.get_full_dir())
+    #         dup=copy.deepcopy(string)
+    #         dup+=item.get_full_dir()
+    #         if (type(item)==Pack):
+    #             dup+=" "
+    #             if (type(item.get_children()[0])==End):
+    #                 added=False
+    #                 for kid in item.get_children():
+    #                     if (kid.get_full_dir() not in self.done):
+    #                         added=True
+    #                         dup=dup+kid.get_full_dir()+","
+    #                         self.done.append(kid.get_full_dir())
+    #                 if (added):
+    #                     all_imports.append(dup[:-1])
+    #             else:
+    #                 self.output_traverse(item,dup,all_imports,target)
+
+

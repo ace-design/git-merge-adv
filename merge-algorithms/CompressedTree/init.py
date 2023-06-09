@@ -56,6 +56,8 @@ def main():
 def writefile(name, content):
     with open(name, 'w') as output:
         for line in content:
+            if line == "!!!no import anymore!!!":
+                continue
             output.write(line+'\n')
 
 def appendfile(name, content):

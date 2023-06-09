@@ -1,6 +1,8 @@
 
 class End:
-    def __init__(self,dir):
+    def __init__(self,dir,leftstartline=None, leftendline=None):
+        self.leftendline = leftendline
+        self.leftstartline = leftstartline
         if (" as " in dir):
             self.real_name=dir.split(" as ")[0]
             self.rename=dir.split(" as ")[1]
