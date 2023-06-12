@@ -5,6 +5,17 @@
 In order to better understand to strengths and limitations of our algorithms, it is necessary for us to perform tests as "demos". 
 * As such, the purpose of this folder is to provide a visual and quantitative representation of our current work. 
 
+
+## Results
+
+Combining the results from the java and python case studies, we get the following data:
+* 4 Deletions: Every package in desired version is present in the result.
+* 69 insertions: Extra packages present in the result that are not there in the desired.
+* 106 Moves: Number of import statements in the result that are in a different spot from desired.
+* 14 Different Paths: Number of import statements in result that are from the wrong path.
+
+![My Image](images/CompressedTree.png)
+
 ## Prerequisites
 
 Execute run_algo.py:
