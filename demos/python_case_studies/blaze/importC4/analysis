@@ -1,0 +1,22 @@
+Commit Hash: 5ccf8920
+Left Parent Hash: c9b1deba
+Right Parent Hash: aaef2437
+Base Hash: e0474f31
+File Name: blaze/compute/core.py
+
+
+Analysis:
+
+base
+from ..expr import Expr, Field, Symbol, symbol, eval_str
+
+
+left
+from ..expr import Expr, Field, Symbol, symbol
+
+
+right
+from ..expr import Expr, Field, Symbol, symbol, Join
+
+
+- git gives conflict and the right version is finally chosen by the developer , this could be solved by taking in account that the unique imports from left and right could be similar.

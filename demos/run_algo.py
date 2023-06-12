@@ -1,6 +1,7 @@
 import argparse
 import subprocess
 import re
+import os
 
 def parsing():
     parser = argparse.ArgumentParser(description='Enter path to case study, which merge algorithm and language of case study')
@@ -35,9 +36,12 @@ def get_suffix(lang):
 
 def exec_algo(algo,case_study,lang):
     try:
-        algo_path="../merge-algorithms/"+algo+'/init.py'
-        subprocess.run(['mkdir','-p',case_study+"/demo_result/"])
-        subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang])
+        if (os.path.isfile(case_study+"/demo_result/"+algo+"."+lang)):
+            pass
+        else:
+            algo_path="../merge-algorithms/"+algo+'/init.py'
+            subprocess.run(['mkdir','-p',case_study+"/demo_result/"])
+            subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang])
     except:
         print("path not found")
         exit(0)
@@ -46,9 +50,13 @@ def exec_algo(algo,case_study,lang):
 
 def get_case_study(case_study,output_path):
     try:
-        subprocess.run(['mkdir','-p',output_path])
-        adjusted=output_path.rfind("/")
-        subprocess.run(['cp','-r',case_study,output_path[:adjusted]])
+        if (os.path.exists(output_path)):
+            print("hi")
+            pass
+        else:
+            subprocess.run(['mkdir','-p',output_path])
+            adjusted=output_path.rfind("/")
+            subprocess.run(['cp','-r',case_study,output_path[:adjusted]])
     except:
         print("path not found")
         exit(0)

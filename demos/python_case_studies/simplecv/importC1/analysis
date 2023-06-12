@@ -1,0 +1,13 @@
+Commit Hash: 3e5b38c
+Left Parent Hash: ecc3ea7a
+Right Parent Hash: 85dc5f8a
+Base Hash: efb3c05a
+File Name: SimpleCV/Features/Blob.py
+
+Observation:
+- Import statement at the bottom of code is aprt of the conflict.
+- Base version does not have such import statement, but the left and right versions do. 
+- Right and left version have different line for the analysis. 
+
+Analysis:
+- Logically since the line is different across all 3 versions, there is a merge conflict when git runs its algorithm. 

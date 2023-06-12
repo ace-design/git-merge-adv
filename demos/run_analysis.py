@@ -35,6 +35,7 @@ def main():
     plt.title(algo+" Results")
     plt.xlabel('Measurement')
     plt.ylabel('Quantity')
+    plt.savefig(dir+'/images/'+algo+'.png')
     plt.show()
 
 
