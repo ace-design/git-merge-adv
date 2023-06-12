@@ -14,11 +14,18 @@ def parsing():
 def main():
     algo=parsing().algo
     dir=parsing().dir
+
+    run_cs(algo,dir)
+    run_overall(algo)
+
+
+def run_cs(algo,dir):
+
     data={'deletions':0,'insertions':0,'moves':0,'diff_path':0}
 
     for root,dirs,files in os.walk(dir):
         for file in files:
-            if file=="CompressedTree_diff.txt":
+            if file==algo+"_diff.txt":
                 with open(os.path.join(root,file),'r') as reader:
                     lines=reader.readlines()
                     for line in lines:
@@ -39,7 +46,6 @@ def main():
     plt.ylabel('Quantity')
     plt.savefig(dir+'/images/'+algo+'.png')
 
-    run_overall(algo)
 
 def run_overall(algo):
 
@@ -47,7 +53,7 @@ def run_overall(algo):
     total={'deletions':0,'insertions':0,'moves':0,'diff_path':0}
     for root,dirs,files in os.walk('.'):
         for file in files:
-            if file=="CompressedTree_diff.txt":
+            if file==algo+"_diff.txt":
                 with open(os.path.join(root,file),'r') as reader:
                     lines=reader.readlines()
                     for line in lines:
