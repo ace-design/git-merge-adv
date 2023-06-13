@@ -10,9 +10,9 @@ In order to better understand to strengths and limitations of our algorithms, it
 
 Combining the results from the java and python case studies, we get the following data:
 * 4 Deletions: Every package in desired version is present in the result.
-* 69 insertions: Extra packages present in the result that are not there in the desired.
-* 106 Moves: Number of import statements in the result that are in a different spot from desired.
-* 14 Different Paths: Number of import statements in result that are from the wrong path.
+* 91 insertions: Extra packages present in the result that are not there in the desired.
+* 127 Moves: Number of import statements in the result that are in a different spot from desired.
+* 8 Different Paths: Number of import statements in result that are from the wrong path.
 
 ![My Image](images/CompressedTree.png)
 

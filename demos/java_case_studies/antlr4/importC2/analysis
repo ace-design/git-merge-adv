@@ -1,0 +1,14 @@
+Commit Hash: b14ca5644
+Left Parent Hash: 05b0f645
+Right Parent Hash: b80ad505
+Base Hash: f7d0cacb
+File Name: tool/src/org/antlr/v4/automata/ParserATNFactory.java
+
+
+Observations:
+- Left version does not have `.ATNType` package, but has `.AbstractPredicateTransition ` package.
+- Right version has `.ATNType`. But doesn't have `AbstractPredicateTransition` package.
+- Base version has niether packages.
+
+Analysis:
+- Git conflicts makes sense since all 3 versions are different. 

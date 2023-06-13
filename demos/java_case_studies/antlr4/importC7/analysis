@@ -1,0 +1,13 @@
+Commit Hash: 9ef612798
+Left Parent Hash: c9aef6fd
+Right Parent Hash: adad53ee
+Base Hash: 9fbe9b6e
+File Name: runtime/Java/src/org/antlr/v4/runtime/atn/LexerATNSimulator.java
+
+
+
+Observations:
+- Only the right version has an additional import called `.RuleContext`.
+
+Analysis:
+- Since the added import is in the middle, this causes git to mess up with line number. Probably the cause of this merge conflict.

@@ -1,0 +1,15 @@
+Commit Hash: aed26c690
+Left Parent Hash: c2b49bd9
+Right Parent Hash: 1e88980d
+Base Hash: c7d1ea7e
+File Name: tool/src/org/antlr/v4/semantics/SemanticPipeline.java
+
+
+Observations:
+- Only left version has package imported from `.Pair`. 
+- Only right version has package imported from `.NotNull`
+
+
+Analysis:
+- Intuitively since all 3 versions are different, there is a merge conflict.
+- Desired version wants both included, logically makes sense. 

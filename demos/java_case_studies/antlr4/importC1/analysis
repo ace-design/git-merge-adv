@@ -1,0 +1,12 @@
+Commit Hash: 2f902da3d
+Left Parent Hash: 4055c241
+Right Parent Hash: df0bbf42
+Base Hash: 6d1d0e04
+File Name: tool/test/org/antlr/v4/test/BaseTest.java
+
+
+Observations:
+- Base and Left version do not have `.Pair` package, but right version does.
+
+Analysis:
+- Goes against intuition, since by default Git should include the Pair package.

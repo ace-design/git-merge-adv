@@ -6,9 +6,9 @@
 
 * 0 Deletions: 100% fewer than existing algorithms
     * 100% fewer than JDime and Spork.
-* 46 insertions
+* 68 insertions
     * 155.56% more than JDime and Spork
-* 8 Moves: 
+* 29 Moves: 
     * 33% more than JDime
     * 74% fewer than Spork
 * 5 Different Paths
@@ -19,18 +19,18 @@
 
 ### JDime Algorithm:
 
-* 5 Deletions
-* 18 insertions
-* 6 Moves
-* 2 Different Paths
+* 10 Deletions
+* 21 insertions
+* 9 Moves
+* 4 Different Paths
 
 ![My Image](images/jdime.png)
 
 ### Spork Algorithm:
 
-* 3 Deletions
-* 18 insertions
-* 31 Moves
+* 8 Deletions
+* 21 insertions
+* 86 Moves
 * 11 Different Paths
 
 ![My Image](images/spork.png)
