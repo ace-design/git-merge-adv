@@ -71,6 +71,24 @@ As such, our purpose is to develop a new 3-way merge algorithm that takes both a
     `python3 init.py --filename <merge-conflicts.csv> --line <line-number in CSV> --repo <name of Clone repo> --lang <Programming Language>`
 
 
+## Set as Custom merge for git
+
+- Create a .gitattributes file in your repo
+- add following lines to it
+  ```
+  *.java merge=gitadv
+  *.py merge=gitadv 
+  ```
+- Run command `git config --global --edit`
+- Add following lines to config file
+
+  ```
+  [merge "gitadv"]
+  name = gitadv
+  driver = python3 /path/to/repo/git-merge-adv/merge-algorithms/CompressedTree/init.py --left %A --right %B --base %O --output %A --file %P
+  ```
+- Now the custom script would be used for merge instead of the git's default.
+
 ## Contacts
 
 * Sebastien Mosser - mossers@mcmaster.ca
