@@ -1,0 +1,13 @@
+Commit Hash: 1a2094b2d
+Left Parent Hash: 7287f5a2
+Right Parent Hash: 27806dc4
+Base Hash: f426e878
+File Name: tool/test/org/antlr/v4/test/TestPerformance.java
+
+
+Observations:
+- Left has different set of imports from right and base version. 
+- Right and Base version have same set of imports. Just in a different order.
+
+Analysis:
+- Although the Right and Base version have the same set of imports, since they of different order git does not recognize this. As such, all three versions are considered different which causes merge conflict with Git. 

@@ -1,0 +1,14 @@
+Commit Hash: b14ca5644
+Left Parent Hash: 05b0f645
+Right Parent Hash: b80ad505
+Base Hash: f7d0cacb
+File Name: tool/src/org/antlr/v4/semantics/SymbolChecks.java
+
+
+Observations:
+- Left version has `.ANTLRParser`. Doesn't have `.NotNull` and `Nullable`.
+- Right version has `.NotNull` and `.Nullable`
+- Base version has niether.
+
+Analysis:
+- Following intuition, since all 3 versions are different, git causes merge conflict. 
