@@ -1,4 +1,4 @@
 deletions: 0
-insertions: 0
-moves: 6
+insertions: 3
+moves: 0
 diff_path: 0

@@ -4,34 +4,28 @@
 
 ### CompressedTree Algorithm:
 
-* 0 Deletions: 100% fewer than existing algorithms
-    * 100% fewer than JDime and Spork.
-* 68 insertions
-    * 155.56% more than JDime and Spork
-* 29 Moves: 
-    * 33% more than JDime
-    * 74% fewer than Spork
+* 3 Deletions
+* 80 insertions
+* 40 Moves
 * 5 Different Paths
-    * 150% more than JDime
-    * 55% fewer than Spork
 
 ![My Image](images/CompressedTree.png)
 
 ### JDime Algorithm:
 
-* 10 Deletions
-* 21 insertions
+* 15 Deletions
+* 24 insertions
 * 9 Moves
-* 4 Different Paths
+* 1 Different Paths
 
 ![My Image](images/jdime.png)
 
 ### Spork Algorithm:
 
-* 8 Deletions
-* 21 insertions
-* 86 Moves
-* 11 Different Paths
+* 13 Deletions
+* 24 insertions
+* 88 Moves
+* 0 Different Paths
 
 ![My Image](images/spork.png)
 

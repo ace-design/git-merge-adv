@@ -1,0 +1,15 @@
+Commit Hash: 137cbd8a9
+Left Parent Hash: 3868007b
+Right Parent Hash: 8181e7c7
+Base Hash: 39d063a4
+File Name: maven-aether-provider/src/main/java/org/apache/maven/repository/internal/DefaultVersionRangeResolver.java
+
+
+Analysis:
+
+- This is a classic case of refractoring the code , the import statements were completely refractored in left while they were same in right and base , git causes conflict , while spork and Jdime does work on refractoring but they miss out some imports that are present in desired file
+
+like
+
+import org.codehaus.plexus.component.annotations.Requirement;
+

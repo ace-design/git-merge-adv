@@ -46,7 +46,7 @@ def exec_algo(algo,case_study,lang):
         else:
             algo_path="../merge-algorithms/"+algo+'/init.py'
             subprocess.run(['mkdir','-p',case_study+"/demo_result/"])
-            subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang])
+            subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang,'--file',case_study+"/base."+lang])
     except:
         print("path not found")
         exit(0)
@@ -85,7 +85,12 @@ def search_gumtree(result,new):
         for key,rx in dict.items():
             match=rx.search(val)
             if (match):
-                if (key=='diff_path' and ("Name" or "name" in val)) or ('import' in val) or ("Import" in val) and ("operator: ," not in val):
+                if (key=='diff_path'):
+                    range=re.findall(r'\[.*?\]',val)[0]
+                    end=range.split(',')[1].strip(']')
+                    if (int(end)<2000):
+                        data[key]+=1
+                elif ('import' in val) or ("Import" in val) and ("operator: ," not in val):
                     data[key]+=1
 
     with open(new,'w') as writer:
@@ -122,6 +127,8 @@ def run_gumtree(output_path,lang,algo):
     desired=output_path+"/desired."+lang
     result=output_path+"/demo_result/"+algo+"."+lang
     new=output_path+"/demo_result/"+algo+"_diff.txt"
+    # result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
+
     match lang:
         case "py":
             result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
