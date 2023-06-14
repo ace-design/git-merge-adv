@@ -9,6 +9,7 @@ def parsing():
     parser.add_argument('--right', type=str, help='path to right parent file' )
     parser.add_argument('--base', type=str, help='path to base file' )
     parser.add_argument('--output', type=str, help='name of output file' )
+    parser.add_argument('--file', type=str, help='name of  file' )
 
     args = parser.parse_args()
     return args
@@ -19,8 +20,8 @@ def main():
     right=parsing().right
     base=parsing().base
     output=parsing().output
-
-    type=left.split(".")[-1]
+    fl = parsing().file
+    type=fl.split(".")[-1]
 
     match type:
         case "java":
@@ -30,6 +31,7 @@ def main():
         case _:
             print("Language Not Supported")
             exit(0)
+            
 
 
     left_import,left_content=lang.extractImports(subprocess.check_output(f"cat "+left, shell=True).decode('utf-8'))
