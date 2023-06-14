@@ -6,10 +6,10 @@
 
 ### CompressedTree Algorithm:
 
-* 4 Deletions: Every package in desired version is present in the result.
-* 23 insertions: Extra packages present in the result that are not there in the desired.
-* 98 Moves: Number of import statements in the result that are in a different spot from desired.
-* 9 Different Paths: Number of import statements in result that are from the wrong path.
+* 6 Deletions: Every package in desired version is present in the result.
+* 20 insertions: Extra packages present in the result that are not there in the desired.
+* 103 Moves: Number of import statements in the result that are in a different spot from desired.
+* 5 Different Paths: Number of import statements in result that are from the wrong path.
 
 ![My Image](images/CompressedTree.png)
 

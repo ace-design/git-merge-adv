@@ -86,11 +86,14 @@ def search_gumtree(result,new):
             match=rx.search(val)
             if (match):
                 if (key=='diff_path'):
-                    range=re.findall(r'\[.*?\]',val)[0]
-                    end=range.split(',')[1].strip(']')
-                    if (int(end)<2000):
-                        data[key]+=1
-                elif ('import' in val) or ("Import" in val) and ("operator: ," not in val):
+                    try:
+                        range=re.findall(r'\[.*?\]',val)[0]
+                        end=range.split(',')[1].strip(']')
+                        if (int(end)<2000):
+                            data[key]+=1
+                    except:
+                        pass
+                elif (('import' in val) or ("Import" in val)) and ("operator: ," not in val):
                     data[key]+=1
 
     with open(new,'w') as writer:
