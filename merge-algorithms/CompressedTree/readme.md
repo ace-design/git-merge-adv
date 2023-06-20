@@ -12,7 +12,7 @@
 
 1. Clone tree-sitter Java repository in directory you are running the script from
 
-    `git clone https://github.com/tree-sitter/tree-sitter-python`
+    `git clone https://github.com/tree-sitter/tree-sitter-java`
 
 
 ### Execution:
