@@ -57,12 +57,36 @@ class Java(Lang):
         tree = parser.parse(byte_rep)
 
         query = Java_Lang.query("""
-        ((scoped_identifier
-            scope: (identifier) @type)
-            (#lua-match? @type "^[A-Z]"))
+            ((package_declaration
+                (scoped_identifier
+                    scope: (scoped_identifier) @type))
+                    (#match? @type ""))
+
+        """)
+        captures= query.captures(tree.root_node)
+
+
+        query = Java_Lang.query("""
+            ((import_declaration
+                (scoped_identifier
+                    scope: (scoped_identifier) @type))
+                    (#match? @type ""))
+
         """)
 
-        captures = query.captures(tree.root_node)   
+
+        captures+= query.captures(tree.root_node)
+
+        query = Java_Lang.query("""
+            ((import_declaration
+                (scoped_identifier
+                    scope: (identifier) @type))
+                    (#match? @type ""))
+        """)
+
+        captures+= query.captures(tree.root_node)
+
+
 
         for val in captures:
             res=val[0].parent
@@ -70,10 +94,11 @@ class Java(Lang):
                 if (res.parent is None):
                     break
                 else:
-                    res=res.parent
                     if (res.parent.text.decode()[-1]!=';'):
+                        res=res.parent
+                    else:
+                        res=res.parent
                         break
-
 
             line=res.text.decode()
             other.remove(line)

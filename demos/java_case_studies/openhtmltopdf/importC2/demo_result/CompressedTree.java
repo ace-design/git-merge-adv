@@ -1,5 +1,4 @@
 package com.openhtmltopdf.objects.pdf;
-import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,6 +21,7 @@ import com.openhtmltopdf.extend.FSObjectDrawer;
 import com.openhtmltopdf.extend.OutputDevice;
 import com.openhtmltopdf.pdfboxout.PdfBoxOutputDevice;
 import com.openhtmltopdf.render.RenderingContext;
+import java.awt.*;
 import java.net.MalformedURLException;
 
 

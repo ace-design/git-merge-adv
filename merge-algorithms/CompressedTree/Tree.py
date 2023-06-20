@@ -37,7 +37,13 @@ class Tree:
                     else:
                         lang.output_traverse(self.root, "",all_import,packs[1])
                 else:
-                    lang.output_traverse(self.root, "",all_import,packs[0])
+                    # lang.output_traverse(self.root,"",all_import,packs[1])
+                    if (versions[0]=="left" or versions[0]=="right"):
+                        lang.output_traverse(self.root,"",all_import,packs[0])
+                    else:
+                        lang.output_traverse(self.root,"",all_import,packs[1])
+
+
 
 
 
