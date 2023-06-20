@@ -1,13 +1,26 @@
 import copy
 import re
 import ast
+from tree_sitter import Language, Parser
 from Node import Pack, End
 from abc import ABC,abstractmethod
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
 
-class Language(ABC):
+Language.build_library(
+  # Store the library in the `build` directory
+  'build/my-languages.so',
+
+  # Include one or more languages
+  [
+    'tree-sitter-java',
+  ]
+)
+
+Java_Lang = Language('build/my-languages.so', 'java')
+
+class Lang(ABC):
     # Used to generate string path for particular target from tree. 
     @abstractmethod
     def output_traverse(node,string,all_imports):
@@ -21,7 +34,7 @@ class Language(ABC):
     # def generateAST(content):
     #     pass
 
-class Java(Language):
+class Java(Lang):
     def output_traverse(self,node,string,all_imports,target):
         # Finds the specified target node in the tree
         for item in node.get_children():
@@ -34,33 +47,85 @@ class Java(Language):
  
 
     def extractImports(self,content):
-        content = content.split('\n')
-        dict={
-            'import':re.compile(r'^import *'),
-            'package':re.compile(r'^package *')
-            }
+
+        line_text=content.split("\n")
+        parser = Parser()
+        parser.set_language(Java_Lang)
+
+        byte_rep= str.encode(content)
+
+
+        tree = parser.parse(byte_rep)
+
+
+        query = Java_Lang.query("""
+        ((scoped_identifier
+            scope: (identifier) @type)
+            (#lua-match? @type "^[A-Z]"))
+        """)
+
+        captures = query.captures(tree.root_node)
 
         imports=[]
-        other=copy.deepcopy(content)
         
-        for line in content:
-            for key,rx in dict.items():
-                match=rx.search(line)
-                if (match):
-                    other.remove(line)
-                    index=line.rfind(".")
-                    lstring=line[0:index+1]
-                    rstring=line[index+1:-1]
-                    if rstring=="*":
-                        new_index=lstring[0:index].rfind(".")
-                        lstring=line[0:new_index+1]
-                        rstring=line[new_index+1:-1]
-                    imports.append([lstring,rstring])
-        return imports,other
+
+        for val in captures:
+            res=val[0].parent
+            while(True):
+                if (res.parent is None):
+                    break
+                else:
+                    if (res.parent.text.decode()[-1]!=';'):
+                        res=res.parent
+                    else:
+                        res=res.parent
+                        break
+
+            line=res.text.decode()
+            line_text.remove(line)
+
+            index=line.rfind(".")
+            lstring=line[0:index+1]
+            rstring=line[index+1:-1]
+            if rstring=="*":
+                new_index=lstring[0:index].rfind(".")
+                lstring=line[0:new_index+1]
+                rstring=line[new_index+1:-1]
+            imports.append([lstring,rstring])
+
+        return imports,line_text
+            # start=val[0].parent.parent.text
+            # print(start)
 
 
 
-class Python(Language):
+        # content = content.split('\n')
+        # dict={
+        #     'import':re.compile(r'^import *'),
+        #     'package':re.compile(r'^package *')
+        #     }
+
+        # imports=[]
+        # other=copy.deepcopy(content)
+        
+        # for line in content:
+        #     for key,rx in dict.items():
+        #         match=rx.search(line)
+        #         if (match):
+        #             other.remove(line)
+        #             index=line.rfind(".")
+        #             lstring=line[0:index+1]
+        #             rstring=line[index+1:-1]
+        #             if rstring=="*":
+        #                 new_index=lstring[0:index].rfind(".")
+        #                 lstring=line[0:new_index+1]
+        #                 rstring=line[new_index+1:-1]
+        #             imports.append([lstring,rstring])
+        # return imports,other
+
+
+
+class Python(Lang):
     done=[]
     def sayhi(self):
         print("Hi , I am a python code!")
