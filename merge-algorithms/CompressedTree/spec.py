@@ -7,6 +7,9 @@ from abc import ABC,abstractmethod
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
 
+
+# Dependencies required by tree-sitter for Java code. 
+## For extention to more languages, add languages in similar format, and clone language repo where you execute script from. 
 Language.build_library(
   # Store the library in the `build` directory
   'build/my-languages.so',
@@ -16,9 +19,10 @@ Language.build_library(
     'tree-sitter-java',
   ]
 )
-
 Java_Lang = Language('build/my-languages.so', 'java')
 
+
+## Abstract Class Definition (Best you can do with Python lol)
 class Lang(ABC):
     # Used to generate string path for particular target from tree. 
     @abstractmethod
@@ -30,30 +34,27 @@ class Lang(ABC):
     def extractImports(content):
         pass
 
-
+## Java Implementation to Abstract Class
 class Java(Lang):
     def output_traverse(self,node,string,all_imports,target):
         # Finds the specified target node in the tree
         for item in node.get_children():
             dup=copy.deepcopy(string)
             dup+=item.get_full_dir()
+            ## If the type is Pack, then it is not a leaf node. Recurse further.
             if (type(item)==Pack):
                 self.output_traverse(item,dup,all_imports,target)
             elif (item==target):
                 all_imports.append(dup+";")
  
-
     def extractImports(self,content):
+        imports=[]
+        other=content.split("\n")
 
-        line_text=content.split("\n")
         parser = Parser()
         parser.set_language(Java_Lang)
-
         byte_rep= str.encode(content)
-
-
         tree = parser.parse(byte_rep)
-
 
         query = Java_Lang.query("""
         ((scoped_identifier
@@ -61,10 +62,7 @@ class Java(Lang):
             (#lua-match? @type "^[A-Z]"))
         """)
 
-        captures = query.captures(tree.root_node)
-
-        imports=[]
-        
+        captures = query.captures(tree.root_node)   
 
         for val in captures:
             res=val[0].parent
@@ -72,25 +70,28 @@ class Java(Lang):
                 if (res.parent is None):
                     break
                 else:
+                    res=res.parent
                     if (res.parent.text.decode()[-1]!=';'):
-                        res=res.parent
-                    else:
-                        res=res.parent
                         break
 
-            line=res.text.decode()
-            line_text.remove(line)
 
+            line=res.text.decode()
+            other.remove(line)
+
+            #Split import statement to seperate path and desired package.
             index=line.rfind(".")
             lstring=line[0:index+1]
             rstring=line[index+1:-1]
+
+            #Case where package is wildcard, we need one path value as reference.
             if rstring=="*":
                 new_index=lstring[0:index].rfind(".")
                 lstring=line[0:new_index+1]
                 rstring=line[new_index+1:-1]
+
             imports.append([lstring,rstring])
 
-        return imports,line_text
+        return imports,other
 
 
 
@@ -162,7 +163,6 @@ class Python(Lang):
                 self.output_traverse(item,dup,all_imports,target,formatter)
                 formatter = ''
             elif (item==target):
-                # print(theprefix)
                 if formatter == "":
 
                     all_imports.append(dup)

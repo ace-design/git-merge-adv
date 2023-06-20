@@ -17,6 +17,7 @@ def main():
     lang=get_suffix(parsing().lang)
 
     output_path=case_study.strip("../")
+
     get_case_study(case_study,output_path)
     exec_algo(algo,output_path,lang)
     run_gumtree(output_path,lang,algo)
@@ -24,7 +25,6 @@ def main():
     if (lang=="java"):
         run_gumtree_spork(output_path)
         run_gumtree_jdime(output_path)
-
 
 
 def get_suffix(lang):
@@ -52,7 +52,7 @@ def exec_algo(algo,case_study,lang):
         exit(0)
 
 
-
+# Copies desired case study to demo folder.
 def get_case_study(case_study,output_path):
     try:
         if (os.path.exists(output_path)):
@@ -65,6 +65,7 @@ def get_case_study(case_study,output_path):
         print("path not found")
         exit(0)
 
+# Looks for all import deletions, moves and insertions found in gumtree textdiff output.
 def search_gumtree(result,new):
     if (len(result)==1 and result[0]==''):
         print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
@@ -78,7 +79,6 @@ def search_gumtree(result,new):
     }
 
     data={'deletions':0,'insertions':0,'moves':0,'diff_path':0}
-
 
     for val in result:
         for key,rx in dict.items():
@@ -100,6 +100,7 @@ def search_gumtree(result,new):
             writer.write(key+": "+str(data[key])+"\n")
 
 
+# Compares spork version to desired version (Java )
 def run_gumtree_spork(output_path):
     desired=output_path+"/desired.java"
     result=output_path+"/spork_result.java"
@@ -112,6 +113,7 @@ def run_gumtree_spork(output_path):
 
     search_gumtree(result,new)
     
+# Compares jdime version to desired version
 def run_gumtree_jdime(output_path):
     desired=output_path+"/desired.java"
     result=output_path+"/jdime.java"
@@ -124,7 +126,7 @@ def run_gumtree_jdime(output_path):
 
     search_gumtree(result,new)
 
-
+# Compares inputted algorithm version to desired version. 
 def run_gumtree(output_path,lang,algo):
     desired=output_path+"/desired."+lang
     result=output_path+"/demo_result/"+algo+"."+lang
@@ -138,11 +140,6 @@ def run_gumtree(output_path,lang,algo):
             result=subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
 
     search_gumtree(result,new)
-
-    
-
-
-
 
 
 if __name__=="__main__":

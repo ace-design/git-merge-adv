@@ -19,6 +19,7 @@ def main():
     run_overall(algo)
 
 
+#Find all data associated with the desired algorithm in specified case studies path.
 def run_cs(algo,dir):
 
     data={'deletions':0,'insertions':0,'moves':0,'diff_path':0}
@@ -46,7 +47,7 @@ def run_cs(algo,dir):
     plt.ylabel('Quantity')
     plt.savefig(dir+'/images/'+algo+'.png')
 
-
+# Find data associated with algorithm accross all case studies in demo.
 def run_overall(algo):
 
     print("Overall Results: \n")

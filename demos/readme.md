@@ -32,7 +32,7 @@ Execute run_analysis.py:
 
 Run GumTree:
 
-`java -jar gumtree.jar webdiff python_case_studies/mypy/importC1/desired.py python_case_studies/mypy/importC1/demo_result/CompressedTree.py`
+`java -jar gumtree.jar webdiff <Path to File1> <Path to File2>`
 
 * Important Note: When trying to use Gumtree for python files, make sure you add the pythonparser to your local computer path from [https://github.com/GumTreeDiff/pythonparser]
 
