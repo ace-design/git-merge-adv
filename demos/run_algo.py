@@ -56,7 +56,6 @@ def exec_algo(algo,case_study,lang):
 def get_case_study(case_study,output_path):
     try:
         if (os.path.exists(output_path)):
-            print("hi")
             pass
         else:
             subprocess.run(['mkdir','-p',output_path])
@@ -137,9 +136,6 @@ def run_gumtree(output_path,lang,algo):
             result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
         case "java":
             result=subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
-
-    # with open(new, 'w') as devnull:
-    #     subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],stdout=devnull)
 
     search_gumtree(result,new)
 

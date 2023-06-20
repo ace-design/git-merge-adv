@@ -1,5 +1,5 @@
 import subprocess
-from Node import Pack, End
+from Node import Pack
 from Tree import Tree
 from init import writefile
 

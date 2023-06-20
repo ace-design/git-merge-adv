@@ -1,5 +1,4 @@
 from Node import Pack, End
-import copy
 
 class Tree:
 
