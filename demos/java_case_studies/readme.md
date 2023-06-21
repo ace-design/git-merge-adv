@@ -4,9 +4,9 @@
 
 ### CompressedTree Algorithm:
 
-* 3 Deletions
-* 80 insertions
-* 40 Moves
+* 7 Deletions
+* 46 insertions
+* 43 Moves
 * 5 Different Paths
 
 ![My Image](images/CompressedTree.png)
