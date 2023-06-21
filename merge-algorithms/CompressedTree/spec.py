@@ -26,7 +26,7 @@ Java_Lang = Language('build/my-languages.so', 'java')
 class Lang(ABC):
     # Used to generate string path for particular target from tree. 
     @abstractmethod
-    def output_traverse(node,string,all_imports):
+    def output_traverse(node,string,all_imports,suspicious):
         pass
 
     # Used to parse the imports to generate a more read-friendly string for tree to split. 
@@ -34,25 +34,81 @@ class Lang(ABC):
     def extractImports(content):
         pass
 
+    @abstractmethod
+    def getUsages(git_content):
+        pass
+
 ## Java Implementation to Abstract Class
 class Java(Lang):
-    def output_traverse(self,node,string,all_imports,target):
+
+    global usages
+    usages=set()
+
+    global parser
+    parser=Parser()
+    parser.set_language(Java_Lang)
+
+    def output_traverse(self,node,string,all_imports,target,suspicious):
         # Finds the specified target node in the tree
-        for item in node.get_children():
-            dup=copy.deepcopy(string)
-            dup+=item.get_full_dir()
-            ## If the type is Pack, then it is not a leaf node. Recurse further.
-            if (type(item)==Pack):
-                self.output_traverse(item,dup,all_imports,target)
-            elif (item==target):
-                all_imports.append(dup+";")
+        # print(target.get_full_dir())
+
+        if (suspicious and (target.get_full_dir() not in usages and target.get_full_dir()!="*")):
+            pass
+        else:
+            for item in node.get_children():
+                dup=copy.deepcopy(string)
+                dup+=item.get_full_dir()
+                ## If the type is Pack, then it is not a leaf node. Recurse further.
+                if (type(item)==Pack):
+                    self.output_traverse(item,dup,all_imports,target,False)
+                elif (item==target):
+                    all_imports.append(dup+";")
+
+
+    def getUsages(self,git_content):
+        byte_rep=str.encode(git_content)
+        tree=parser.parse(byte_rep)
+
+        usage_query=Java_Lang.query("""
+            ((type_identifier) @type
+            (#match? @type ""))
+        """)
+
+        usages_byte=usage_query.captures(tree.root_node)
+
+        usage_query=Java_Lang.query("""
+            object: (identifier) @type
+            (#match? @type "")
+        """)
+
+        usages_byte+=usage_query.captures(tree.root_node)
+
+        usage_query=Java_Lang.query("""
+            type: (type_identifier) @type
+            (#match? @type "")
+        """)
+
+        usages_byte+=usage_query.captures(tree.root_node)
+
+        usage_query=Java_Lang.query("""
+        ((method_invocation
+            name: (identifier) @type)
+            (#match? @type ""))
+        """)
+
+        usages_byte+=usage_query.captures(tree.root_node)
+
+
+        for usage in usages_byte:
+            usages.add(usage[0].text.decode())
+
+        print(usages)
+
  
     def extractImports(self,content):
         imports=[]
         other=content.split("\n")
 
-        parser = Parser()
-        parser.set_language(Java_Lang)
         byte_rep= str.encode(content)
         tree = parser.parse(byte_rep)
 
@@ -85,8 +141,6 @@ class Java(Lang):
         """)
 
         captures+= query.captures(tree.root_node)
-
-
 
         for val in captures:
             res=val[0].parent

@@ -28,24 +28,26 @@ class Tree:
         for dir in self.map.keys():
             packs=list(self.map[dir])
             if len(packs)==1:
-                lang.output_traverse(self.root, "",all_import,packs[0])
+                versions=list(packs[0].get_version())
+                if (len(versions)==1 or len(versions)==2):
+                    lang.output_traverse(self.root, "",all_import,packs[0],True)
+                else:
+                    lang.output_traverse(self.root, "",all_import,packs[0],False)
             elif len(packs)==2:
                 versions=list(packs[0].get_version())
-                if (len(versions)==2):
-                    if (versions[0]=="left" and versions[1]=="right") or (versions[0]=="right" and versions[1]=="left"):
-                        lang.output_traverse(self.root, "",all_import,packs[0])
+                versions_2=list(packs[1].get_version())
+                if (len(versions)==2 or len(versions_2)==2):
+                    if (len(versions)==2):
+                        lang.output_traverse(self.root,"",all_import,packs[1],False)
                     else:
-                        lang.output_traverse(self.root, "",all_import,packs[1])
+                        lang.output_traverse(self.root,"",all_import,packs[0],False)
                 else:
-                    # lang.output_traverse(self.root,"",all_import,packs[1])
-                    if (versions[0]=="left" or versions[0]=="right"):
-                        lang.output_traverse(self.root,"",all_import,packs[0])
+                    if (versions[0]=="Base" and (versions_2[0]=="Right" or versions_2[0]=="Left")):
+                        lang.output_traverse(self.root,"",all_import,packs[1],True)
                     else:
-                        lang.output_traverse(self.root,"",all_import,packs[1])
-
-
-
-
+                        lang.output_traverse(self.root,"",all_import,packs[0],True)
+            else:
+                lang.output_traverse(self.root,"",all_import,packs[0],True)
 
         return all_import
     

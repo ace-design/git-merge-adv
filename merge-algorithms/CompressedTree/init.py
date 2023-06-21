@@ -43,6 +43,8 @@ def main():
 
 
     result=merger.git_merge(base_content,right_content,left_content,type)
+    
+    lang.getUsages(result.stdout)
 
 
     import_result=merger.import_merge(lang,base_import,right_import,left_import)
