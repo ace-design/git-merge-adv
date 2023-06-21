@@ -22,7 +22,6 @@ import com.openhtmltopdf.extend.OutputDevice;
 import com.openhtmltopdf.pdfboxout.PdfBoxOutputDevice;
 import com.openhtmltopdf.render.RenderingContext;
 import java.awt.*;
-import java.net.MalformedURLException;
 
 
 

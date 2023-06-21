@@ -39,7 +39,6 @@ import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.sonatype.aether.impl.RepositoryEventDispatcher;
 import org.eclipse.aether.impl.VersionResolver;
 import org.eclipse.aether.transfer.ArtifactNotFoundException;
-import org.sonatype.aether.util.DefaultRequestTrace;
 import org.eclipse.aether.artifact.ArtifactProperties;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.artifact.DefaultArtifactType;
@@ -57,7 +56,6 @@ import org.eclipse.aether.resolution.VersionResult;
 import org.eclipse.aether.spi.locator.Service;
 import org.eclipse.aether.spi.locator.ServiceLocator;
 import org.eclipse.aether.spi.log.Logger;
-import org.sonatype.aether.spi.log.NullLogger;
 import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -66,7 +64,6 @@ import org.eclipse.aether.resolution.ArtifactDescriptorPolicy;
 import org.eclipse.aether.resolution.ArtifactDescriptorPolicyRequest;
 import org.eclipse.aether.spi.log.LoggerFactory;
 import org.eclipse.aether.spi.log.NullLoggerFactory;
-import org.sonatype.aether.RepositoryListener;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

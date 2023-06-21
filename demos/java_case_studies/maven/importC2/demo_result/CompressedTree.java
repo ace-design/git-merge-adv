@@ -90,8 +90,6 @@ import org.eclipse.aether.util.repository.DefaultMirrorSelector;
 import org.eclipse.aether.util.repository.DefaultProxySelector;
 import org.eclipse.aether.util.repository.SimpleArtifactDescriptorPolicy;
 import org.eclipse.aether.util.repository.SimpleResolutionErrorPolicy;
-import org.apache.maven.repository.internal.MavenRepositorySystemSession;
-import org.sonatype.aether.repository.Authentication;
 import org.sonatype.aether.repository.NoLocalRepositoryManagerException;
 import org.sonatype.aether.spi.localrepo.LocalRepositoryManagerFactory;
 

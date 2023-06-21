@@ -31,8 +31,6 @@ import com.openhtmltopdf.layout.PersistentBFC;
 import com.openhtmltopdf.layout.Styleable;
 import com.openhtmltopdf.newtable.TableRowBox;
 import com.openhtmltopdf.util.ThreadCtx;
-import com.openhtmltopdf.bidi.BidiReorderer;
-import com.openhtmltopdf.bidi.BidiSplitter;
 /*
  * {{{ header & license
  * Copyright (c) 2004, 2005 Joshua Marinacci

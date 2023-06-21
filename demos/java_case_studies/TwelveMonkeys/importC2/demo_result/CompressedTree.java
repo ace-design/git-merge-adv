@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -23,7 +22,6 @@ import com.twelvemonkeys.io.FastByteArrayOutputStream;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import java.awt.image.IndexColorModel;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.*;
 
 

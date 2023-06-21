@@ -11,11 +11,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import cucumber.runtime.formatter.PluginFactory;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
 
 
 

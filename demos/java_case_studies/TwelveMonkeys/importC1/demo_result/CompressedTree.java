@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.nio.charset.Charset;
 /*
  * Copyright (c) 2013, Harald Kuhr
  * All rights reserved.

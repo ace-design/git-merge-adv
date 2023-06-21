@@ -52,7 +52,7 @@ class Java(Lang):
         # Finds the specified target node in the tree
         # print(target.get_full_dir())
 
-        if (suspicious and (target.get_full_dir() not in usages and target.get_full_dir()!="*")):
+        if (suspicious and (target.get_full_dir() not in usages) and (target.get_full_dir()[-1]!="*")):
             pass
         else:
             for item in node.get_children():
@@ -93,6 +93,22 @@ class Java(Lang):
         usage_query=Java_Lang.query("""
         ((method_invocation
             name: (identifier) @type)
+            (#match? @type ""))
+        """)
+
+        usages_byte+=usage_query.captures(tree.root_node)
+
+        usage_query=Java_Lang.query("""
+        ((marker_annotation
+            name: (identifier) @type)
+            (#match? @type ""))
+        """)
+
+        usages_byte+=usage_query.captures(tree.root_node)
+
+        usage_query=Java_Lang.query("""
+        ((method_reference
+            (identifier) @type)
             (#match? @type ""))
         """)
 

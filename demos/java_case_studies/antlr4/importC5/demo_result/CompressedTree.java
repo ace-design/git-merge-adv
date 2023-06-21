@@ -9,7 +9,6 @@ import org.antlr.v4.tool.Rule;
 import org.antlr.v4.tool.ast.GrammarAST;
 import java.util.List;
 import org.antlr.v4.runtime.misc.NotNull;
-import java.util.Map;
 /*
  [The "BSD license"]
  Copyright (c) 2011 Terence Parr

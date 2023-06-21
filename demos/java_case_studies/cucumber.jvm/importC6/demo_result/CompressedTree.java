@@ -1,6 +1,6 @@
 package io.cucumber.examples.testng;
-import io.cucumber.core.api.TypeRegistryConfigurer;
-import io.cucumber.core.api.TypeRegistry;
+import cucumber.api.TypeRegistryConfigurer;
+import cucumber.api.TypeRegistry;
 import io.cucumber.datatable.DataTableType;
 import io.cucumber.cucumberexpressions.ParameterType;
 import java.text.SimpleDateFormat;
@@ -11,7 +11,6 @@ import static io.cucumber.examples.testng.RpnCalculatorStepdefs.Entry;
 import static java.text.DateFormat.MEDIUM;
 import static java.text.DateFormat.getDateInstance;
 import static java.util.Locale.ENGLISH;
-import io.cucumber.examples.testng.ShoppingSteps.Price;
 import io.cucumber.examples.testng.ShoppingSteps.Grocery;
 
 

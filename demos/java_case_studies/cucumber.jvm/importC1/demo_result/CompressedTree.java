@@ -29,8 +29,6 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.time.Duration;
@@ -43,7 +41,6 @@ import java.util.UUID;
 import static java.time.Duration.ZERO;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static java.util.Locale.ROOT;
-import java.net.URL;
 import static io.cucumber.core.exception.ExceptionUtils.printStackTrace;
 
 
