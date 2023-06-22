@@ -35,6 +35,7 @@ import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.Exclusion;
 import org.eclipse.aether.impl.ArtifactDescriptorReader;
 import org.eclipse.aether.impl.ArtifactResolver;
+import org.sonatype.aether.impl.RepositoryEventDispatcher;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.impl.VersionResolver;
 import org.eclipse.aether.transfer.ArtifactNotFoundException;
@@ -63,7 +64,6 @@ import org.eclipse.aether.resolution.ArtifactDescriptorPolicy;
 import org.eclipse.aether.resolution.ArtifactDescriptorPolicyRequest;
 import org.eclipse.aether.spi.log.LoggerFactory;
 import org.eclipse.aether.spi.log.NullLoggerFactory;
-import org.eclipse.aether.impl.RepositoryEventDispatcher;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

@@ -3,9 +3,16 @@ import ast
 from tree_sitter import Language, Parser
 from Node import Pack
 from abc import ABC,abstractmethod
+import os
+import subprocess
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
+
+for dirpath, dirnames, filenames in os.walk('/'):
+    for name in dirnames:
+        if (name=='tree-sitter-java'):
+            path=os.path.join(dirpath,'tree-sitter-java')
 
 
 # Dependencies required by tree-sitter for Java code. 
@@ -16,7 +23,7 @@ Language.build_library(
 
   # Include one or more languages
   [
-    'tree-sitter-java',
+    path,
   ]
 )
 Java_Lang = Language('build/my-languages.so', 'java')
