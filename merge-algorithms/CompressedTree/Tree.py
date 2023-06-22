@@ -25,32 +25,87 @@ class Tree:
 
     def find_paths(self,lang):
         all_import=[]
+        version_ref={'right':0,'base':0,'left':0}
+        current_sum=0
+        extra={}
+
         for dir in self.map.keys():
-            packs=list(self.map[dir])
-            if len(packs)==1:
-                versions=list(packs[0].get_version())
+            paths=list(self.map[dir])
+            
+            if len(paths)==1:
+                versions=list(paths[0].get_version())
                 if (len(versions)==1 or len(versions)==2):
-                    lang.output_traverse(self.root, "",all_import,packs[0],True)
+                    lang.output_traverse(self.root, "",all_import,paths[0],True)
                 else:
-                    lang.output_traverse(self.root, "",all_import,packs[0],False)
-            elif len(packs)==2:
-                versions=list(packs[0].get_version())
-                versions_2=list(packs[1].get_version())
+                    lang.output_traverse(self.root, "",all_import,paths[0],False)
+                updater=versions
+
+            elif len(paths)==2:
+
+                versions=list(paths[0].get_version())
+                versions_2=list(paths[1].get_version())
                 if (len(versions)==2 or len(versions_2)==2):
                     if (len(versions)==2):
-                        lang.output_traverse(self.root,"",all_import,packs[1],False)
+                        if (versions_2[0]=="base"):
+                            lang.output_traverse(self.root,"",all_import,paths[0],False)
+                        else:
+                            lang.output_traverse(self.root,"",all_import,paths[1],False)
+                            updater=versions_2
                     else:
-                        lang.output_traverse(self.root,"",all_import,packs[0],False)
+                        lang.output_traverse(self.root,"",all_import,paths[0],False)
+                        updater=versions
                 else:
-                    if (versions[0]=="Base" and (versions_2[0]=="Right" or versions_2[0]=="Left")):
-                        lang.output_traverse(self.root,"",all_import,packs[1],True)
+                    if (versions[0]=="base"):
+                        lang.output_traverse(self.root,"",all_import,paths[1],True)
+                        updater=versions_2
+                    elif (versions_2[0]=="base"):
+                        lang.output_traverse(self.root,"",all_import,paths[0],True)
+                        updater=versions
                     else:
-                        lang.output_traverse(self.root,"",all_import,packs[0],True)
+                        extra[current_sum]=self.map[dir]
             else:
-                lang.output_traverse(self.root,"",all_import,packs[0],True)
+                extra[current_sum]=self.map[dir]
+            
+            for v in updater:
+                version_ref[v]+=1
+
+            current_sum+=1
+
+        highest=self.most_frequent(version_ref)
+
+        for conflict_dir in extra:
+
+            paths=list(extra[conflict_dir])
+
+            if (len(paths)==2):
+                versions=list(paths[0].get_version())
+                if (versions[0]==highest):
+                    lang.output_traverse(self.root,"",all_import,paths[0],True)
+                else:
+                    lang.output_traverse(self.root,"",all_import,paths[1],True)
+            else:
+                versions=list(paths[0].get_version())
+                versions_2=list(paths[1].get_version())
+                if (highest in versions):
+                    lang.output_traverse(self.root,"",all_import,paths[0],True)
+                elif (highest in versions_2):
+                    lang.output_traverse(self.root,"",all_import,paths[1],True)
+                else:
+                    lang.output_traverse(self.root,"",all_import,paths[2],True)
+
+            curr_path=all_import.pop(-1)
+            all_import.insert(conflict_dir-1,curr_path)
 
         return all_import
     
+    def most_frequent(self,ref):
+        ordered=sorted(ref)
+        if (ordered[0]=="base"):
+            highest=ordered[1]
+        else:
+            highest=ordered[0]
+        return highest
+
 
     def add(self,path,version):
         self.add_traverse(self.root,path,version)
