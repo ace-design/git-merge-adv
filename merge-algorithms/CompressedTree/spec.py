@@ -118,7 +118,6 @@ class Java(Lang):
         for usage in usages_byte:
             usages.add(usage[0].text.decode())
 
-        print(usages)
 
  
     def extractImports(self,content):
