@@ -28,6 +28,8 @@ Language.build_library(
 )
 Java_Lang = Language('build/my-languages.so', 'java')
 
+subprocess.run(['rm','-r','build'])
+
 
 ## Abstract Class Definition (Best you can do with Python lol)
 class Lang(ABC):
