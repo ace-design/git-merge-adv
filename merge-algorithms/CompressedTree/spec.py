@@ -9,26 +9,25 @@ import subprocess
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
 
-for dirpath, dirnames, filenames in os.walk('/'):
+for dirpath, dirnames, filenames in os.walk('../'):
     for name in dirnames:
         if (name=='tree-sitter-java'):
-            path=os.path.join(dirpath,'tree-sitter-java')
+            path=dirpath
 
 
 # Dependencies required by tree-sitter for Java code. 
 ## For extention to more languages, add languages in similar format, and clone language repo where you execute script from. 
 Language.build_library(
   # Store the library in the `build` directory
-  'build/my-languages.so',
+  path+'/build/my-languages.so',
 
   # Include one or more languages
   [
-    path,
+    path+'/tree-sitter-java',
   ]
 )
-Java_Lang = Language('build/my-languages.so', 'java')
+Java_Lang = Language(path+'/build/my-languages.so', 'java')
 
-subprocess.run(['rm','-r','build'])
 
 
 ## Abstract Class Definition (Best you can do with Python lol)
