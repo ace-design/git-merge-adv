@@ -8,13 +8,6 @@
 ### Future Development:
 * Improve accuracy of CompressedTree algorithm on existing case studies. 
 
-### Script Pre-Requisites:
-
-1. Clone tree-sitter Java repository in directory you are running the script from
-
-    `git clone https://github.com/tree-sitter/tree-sitter-java`
-
-
 ### Execution:
 
 * Run Compressed Import Tree:
@@ -25,3 +18,4 @@
 ### Acknowledgements:
 
 * py-tree-sitter: [https://github.com/tree-sitter/py-tree-sitter]
+* tree-sitter-java parser: [https://github.com/tree-sitter/tree-sitter-java]
