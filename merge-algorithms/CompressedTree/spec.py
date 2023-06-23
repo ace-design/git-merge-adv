@@ -4,16 +4,16 @@ from tree_sitter import Language, Parser
 from Node import Pack
 from abc import ABC,abstractmethod
 import os
-import subprocess
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
 
+
+# Obtains path to already cloned tree-sitter-java repo (from CompressedTree)
 for dirpath, dirnames, filenames in os.walk('../'):
     for name in dirnames:
         if (name=='tree-sitter-java'):
             path=dirpath
-
 
 # Dependencies required by tree-sitter for Java code. 
 ## For extention to more languages, add languages in similar format, and clone language repo where you execute script from. 
