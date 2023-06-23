@@ -296,4 +296,6 @@ class Python(Lang):
                             return
                     
                     all_imports.append(dup)
+    def getUsages(self,git_content):
+        return super().getUsages()
                             
