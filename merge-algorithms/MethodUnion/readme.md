@@ -1,12 +1,12 @@
-# Compressed Import Tree
+# MethodUnion
 
-* Works off structure of Abstract Import Tree.
-* Tree strucutre is more compressed, to allow more focus on the end desired packages, instead of entire path. Less computation time. 
+* Works off CompressedTree, additional features.
+* Unions the methods and classes in code. Merges import the same way as CompressedTree.
 
 
 
 ### Future Development:
-* Improve accuracy of CompressedTree algorithm on existing case studies. 
+* Add field declartion for classes.
 
 ### Execution:
 
