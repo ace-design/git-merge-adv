@@ -77,52 +77,42 @@ class Java(Lang):
         byte_rep=str.encode(git_content)
         tree=parser.parse(byte_rep)
 
+        # Define instances of a method usage using tree-sitter parsed text.
         usage_query=Java_Lang.query("""
             ((type_identifier) @type
             (#match? @type ""))
         """)
-
         usages_byte=usage_query.captures(tree.root_node)
-
         usage_query=Java_Lang.query("""
             object: (identifier) @type
             (#match? @type "")
         """)
-
         usages_byte+=usage_query.captures(tree.root_node)
-
         usage_query=Java_Lang.query("""
             type: (type_identifier) @type
             (#match? @type "")
         """)
-
         usages_byte+=usage_query.captures(tree.root_node)
-
         usage_query=Java_Lang.query("""
         ((method_invocation
             name: (identifier) @type)
             (#match? @type ""))
         """)
-
         usages_byte+=usage_query.captures(tree.root_node)
-
         usage_query=Java_Lang.query("""
         ((marker_annotation
             name: (identifier) @type)
             (#match? @type ""))
         """)
-
         usages_byte+=usage_query.captures(tree.root_node)
-
         usage_query=Java_Lang.query("""
         ((method_reference
             (identifier) @type)
             (#match? @type ""))
         """)
-
         usages_byte+=usage_query.captures(tree.root_node)
 
-
+        # Decode all usages into string format, and add to list.
         for usage in usages_byte:
             usages.add(usage[0].text.decode())
 
@@ -143,8 +133,6 @@ class Java(Lang):
 
         """)
         captures= query.captures(tree.root_node)
-
-
         query = Java_Lang.query("""
             ((import_declaration
                 (scoped_identifier
@@ -152,32 +140,21 @@ class Java(Lang):
                     (#match? @type ""))
 
         """)
-
-
         captures+= query.captures(tree.root_node)
-
         query = Java_Lang.query("""
             ((import_declaration
                 (scoped_identifier
                     scope: (identifier) @type))
                     (#match? @type ""))
         """)
-
         captures+= query.captures(tree.root_node)
 
-        for val in captures:
-            res=val[0].parent
-            while(True):
-                if (res.parent is None):
-                    break
-                else:
-                    if (res.parent.text.decode()[-1]!=';'):
-                        res=res.parent
-                    else:
-                        res=res.parent
-                        break
 
-            line=res.text.decode()
+
+        for val in captures:
+            res=val[0].parent.parent.text
+
+            line=res.decode()
             other.remove(line)
 
             #Split import statement to seperate path and desired package.

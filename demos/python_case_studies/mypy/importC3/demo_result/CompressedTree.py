@@ -94,7 +94,6 @@ from mypy.types import (
 )
 from mypy.sametypes import is_same_type
 from mypy.messages import MessageBuilder
-import mypy.checkexpr
 from mypy import messages
 from mypy.subtypes import (
     is_subtype,

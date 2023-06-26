@@ -1,4 +1,4 @@
-from none import conf,logs,types
+from . import conf,logs,types
 from utils import eager
 from imp import load_source
 from pathlib import Path

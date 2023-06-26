@@ -41,9 +41,16 @@ def get_suffix(lang):
 
 def exec_algo(algo,case_study,lang):
     try:
-        algo_path="../merge-algorithms/"+algo+'/init.py'
-        subprocess.run(['mkdir','-p',case_study+"/demo_result/"])
-        subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang,'--file',case_study+"/base."+lang])
+        action=input("\nEnter 0 if testing new algorithm\nEnter 1 if executing gumtree again due to previous errors.\n")
+        if (action=="0"):
+            algo_path="../merge-algorithms/"+algo+'/init.py'
+            subprocess.run(['mkdir','-p',case_study+"/demo_result/"])
+            subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang,'--file',case_study+"/base."+lang])
+        elif (action=="1"):
+            pass
+        else:
+            print("Not a valid answer. Ended program.")
+            exit(0)
     except:
         print("path not found")
         exit(0)
@@ -116,6 +123,7 @@ def run_gumtree_jdime(output_path):
     result=output_path+"/jdime.java"
     new=output_path+"/demo_result/jdime_diff.txt"
     result=subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
+
     
     if (len(result)==1 and result[0]==''):
         print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
