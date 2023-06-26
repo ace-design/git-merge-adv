@@ -188,7 +188,7 @@ class Java(Lang):
                 name: (identifier) @name)
         """)
 
-        captures=query.captures(tree.root_node)
+        class_captures=query.captures(tree.root_node)
 
         method_query = Java_Lang.query("""
             (method_declaration
@@ -196,29 +196,43 @@ class Java(Lang):
 
         """)
 
-        methodcaptures=method_query.captures(tree.root_node)
+        method_captures=method_query.captures(tree.root_node)
 
-        for val in captures:
-            base=val[0].parent.children
-            super=val[0].parent.parent.parent
-            spacing=int(base[0].start_point[1])
-            new_class_name=base[2].text.decode()
-            new_full_name=base[0].text.decode()+" "+base[1].text.decode()+" "+base[2].text.decode()
-            new_class=Class(new_class_name,new_full_name,spacing)
-            if (super is None):
+        method_query = Java_Lang.query("""
+            (constructor_declaration
+                name: (identifier) @name)
+
+        """)
+
+        method_captures+=method_query.captures(tree.root_node)
+        
+        for new_class in class_captures:
+            # Tuple of class details including modifiers and name.
+            class_details=new_class[0].parent.children
+            # Checks any potential class it is nested into
+            super_class_name=new_class[0].parent.parent.parent
+
+            indentation=int(class_details[0].start_point[1])
+            new_class_name=class_details[2].text.decode()
+            new_full_name=class_details[0].text.decode()+" "+class_details[1].text.decode()+" "+class_details[2].text.decode()
+            
+            new_class=Class(new_class_name,new_full_name,indentation)
+
+            # Checks if there exists a super/parent class
+            if (super_class_name is None):
                 classes.add(new_class)
-
             else:
+                # Searches for given super/parent class in list.
                 for new_c in classes:
-                    if (new_c.get_class_name()==super.children[2].text.decode()):
+                    if (new_c.get_class_name()==super_class_name.children[2].text.decode()):
                         new_c.add_sub_classes(new_class)
 
+        for method in method_captures:
 
-        for val2 in methodcaptures:
-            method_name=val2[0].parent.text.decode()
+            method_name=method[0].parent.text.decode()
             new_method=Method(method_name)
-            spacing=int(val2[0].parent.parent.parent.children[0].start_point[1])
-            super_class=val2[0].parent.parent.parent.children[2].text.decode()
+            indentation=int(method[0].parent.parent.parent.children[0].start_point[1])
+            super_class=method[0].parent.parent.parent.children[2].text.decode()
             self.add_method(classes,new_method,super_class)
 
         return classes
@@ -229,12 +243,6 @@ class Java(Lang):
                 new_c.add_method(new_method)
             else:
                 self.add_method(new_c.get_sub_classes(),new_method,super_class)
-
-
-
-        # for val in captures:
-        #     print(val)
-        #     print(val[0].text)
 
 
 
@@ -336,6 +344,11 @@ class Python(Lang):
                             return
                     
                     all_imports.append(dup)
+
+
     def getUsages(self,git_content):
         return super().getUsages()
+    
+    def getClasses(self,content):
+        return super().getClasses()
                             
