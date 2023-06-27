@@ -41,12 +41,8 @@ def main():
 
     result=lang.getClasses(left_content+right_content+base_content)
 
-    print(result)
-
 
     git_result=merger.git_merge(base_content,right_content,left_content,type)
-
-    print(len(git_result.stdout))
     
     lang.getUsages(git_result.stdout)
 

@@ -49,18 +49,21 @@ class Class:
         self.ranking=indent/4
         self.class_name=name
         self.full_name=full_name
-        self.methods=set()
-        self.sub_classes=set()
-        self.declarations=set()
+        self.methods=[]
+        self.sub_classes=[]
+        self.declarations=[]
     
     def add_method(self,method):
-        self.methods.add(method)
+        if (method not in self.methods):
+            self.methods.append(method)
     
     def add_sub_classes(self,new_class):
-        self.sub_classes.add(new_class)
+        if (new_class not in self.sub_classes):
+            self.sub_classes.append(new_class)
 
     def add_declaration(self,new_declaration):
-        self.declarations.add(new_declaration)
+        if (new_declaration not in self.declarations):
+            self.declarations.append(new_declaration)
 
     def get_methods(self):
         return self.methods

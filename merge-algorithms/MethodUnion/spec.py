@@ -177,7 +177,7 @@ class Java(Lang):
         return imports,other
     
     def getClasses(self,content):
-        classes=set()
+        classes=[]
         class_ref={}
         content='\n'.join(content)
 
@@ -192,22 +192,22 @@ class Java(Lang):
         class_captures=query.captures(tree.root_node)
 
         field_query = Java_Lang.query("""
-            (field_declaration
-                type: (type_identifier) @type)
+            ((field_declaration) @name )
         """)
 
         field_captures=field_query.captures(tree.root_node)
 
         method_query = Java_Lang.query("""
-            (method_declaration
+            (constructor_declaration
                 name: (identifier) @name)
 
         """)
 
+
         method_captures=method_query.captures(tree.root_node)
 
         method_query = Java_Lang.query("""
-            (constructor_declaration
+            (method_declaration
                 name: (identifier) @name)
 
         """)
@@ -232,7 +232,8 @@ class Java(Lang):
 
             # Checks if there exists a super/parent class
             if (super_class_name is None):
-                classes.add(new_class)
+                if (new_class not in classes):
+                    classes.append(new_class)
             else:
                 # Searches for given super/parent class in list.
                 super_name=super_class_name.children[0].text.decode()+" "+super_class_name.children[1].text.decode()+" "+super_class_name.children[2].text.decode()
@@ -240,9 +241,8 @@ class Java(Lang):
 
 
         for field in field_captures:
-            declaration=field[0].parent.text.decode()
-            parent_class=field[0].parent.parent.parent.children[0].text.decode()+" "+field[0].parent.parent.parent.children[1].text.decode()+" "+field[0].parent.parent.parent.children[2].text.decode()
-
+            declaration=field[0].text.decode()
+            parent_class=field[0].parent.parent.children[0].text.decode()+" "+field[0].parent.parent.children[1].text.decode()+" "+field[0].parent.parent.children[2].text.decode()
             class_ref[parent_class].add_declaration(declaration)
 
         for method in method_captures:

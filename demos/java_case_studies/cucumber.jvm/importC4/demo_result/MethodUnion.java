@@ -41,58 +41,16 @@ import java.time.Clock;
 import java.util.List;
 import java.util.function.Predicate;
 import static java.util.stream.Collectors.toList;
+
 @API(status = API.Status.STABLE)
 public final class Cucumber{
-    public Cucumber(Class clazz) throws InitializationError {
-        super(clazz);
-        Assertions.assertNoCucumberAnnotatedMethods(clazz);
 
-        ClassLoader classLoader = clazz.getClassLoader();
-        ResourceLoader resourceLoader = new MultiLoader(classLoader);
+    private final List<FeatureRunner> children;
+    private final EventBus bus;
+    private final List<CucumberFeature> features;
+    private final Plugins plugins;
+    private boolean multiThreadingAssumed = false;
 
-        // Parse the options early to provide fast feedback about invalid options
-        RuntimeOptions annotationOptions = new CucumberOptionsAnnotationParser(resourceLoader)
-            .withOptionsProvider(new JUnitCucumberOptionsProvider())
-            .parse(clazz)
-            .build();
-
-        RuntimeOptions runtimeOptions = new EnvironmentOptionsParser(resourceLoader)
-            .parse(Env.INSTANCE)
-            .build(annotationOptions);
-
-        runtimeOptions.addUndefinedStepsPrinterIfSummaryNotDefined();
-
-        JUnitOptions junitAnnotationOptions = new JUnitOptionsParser()
-            .parse(clazz)
-            .build();
-
-        JUnitOptions junitOptions = new JUnitOptionsParser()
-            .parse(runtimeOptions.getJunitOptions())
-            .setStrict(runtimeOptions.isStrict())
-            .build(junitAnnotationOptions);
-
-
-        ClassFinder classFinder = new ResourceLoaderClassFinder(resourceLoader, classLoader);
-
-        // Parse the features early. Don't proceed when there are lexer errors
-        FeatureLoader featureLoader = new FeatureLoader(resourceLoader);
-        FeaturePathFeatureSupplier featureSupplier = new FeaturePathFeatureSupplier(featureLoader, runtimeOptions);
-        this.features = featureSupplier.get();
-
-        // Create plugins after feature parsing to avoid the creation of empty files on lexer errors.
-        this.plugins = new Plugins(classLoader, new PluginFactory(), runtimeOptions);
-        this.bus = new TimeServiceEventBus(TimeService.SYSTEM);
-
-        BackendSupplier backendSupplier = new BackendModuleBackendSupplier(resourceLoader, classFinder, runtimeOptions);
-        this.runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier);
-        Filters filters = new Filters(runtimeOptions);
-        for (CucumberFeature cucumberFeature : features) {
-            FeatureRunner featureRunner = new FeatureRunner(cucumberFeature, filters, runnerSupplier, junitOptions);
-            if (!featureRunner.isEmpty()) {
-                children.add(featureRunner);
-            }
-        }
-    }
     public Cucumber(Class clazz) throws InitializationError {
         super(clazz);
         Assertions.assertNoCucumberAnnotatedMethods(clazz);
@@ -157,26 +115,55 @@ public final class Cucumber{
                 .filter(runner -> !runner.isEmpty())
                 .collect(toList());
     }
-    @Override
-    public void setScheduler(RunnerScheduler scheduler) {
-        super.setScheduler(scheduler);
-        multiThreadingAssumed = true;
-    }
-    @Override
-    protected List<FeatureRunner> getChildren() {
-        return children;
-    }
-    @Override
-    protected Description describeChild(FeatureRunner child) {
-        return child.getDescription();
-    }
-    @Override
-    protected void runChild(FeatureRunner child, RunNotifier notifier) {
-        child.run(notifier);
-    }
-    @Override
-    public List<FeatureRunner> getChildren() {
-        return children;
+    public Cucumber(Class clazz) throws InitializationError {
+        super(clazz);
+        Assertions.assertNoCucumberAnnotatedMethods(clazz);
+
+        ClassLoader classLoader = clazz.getClassLoader();
+        ResourceLoader resourceLoader = new MultiLoader(classLoader);
+
+        // Parse the options early to provide fast feedback about invalid options
+        RuntimeOptions annotationOptions = new CucumberOptionsAnnotationParser(resourceLoader)
+            .withOptionsProvider(new JUnitCucumberOptionsProvider())
+            .parse(clazz)
+            .build();
+
+        RuntimeOptions runtimeOptions = new EnvironmentOptionsParser(resourceLoader)
+            .parse(Env.INSTANCE)
+            .build(annotationOptions);
+
+        runtimeOptions.addUndefinedStepsPrinterIfSummaryNotDefined();
+
+        JUnitOptions junitAnnotationOptions = new JUnitOptionsParser()
+            .parse(clazz)
+            .build();
+
+        JUnitOptions junitOptions = new JUnitOptionsParser()
+            .parse(runtimeOptions.getJunitOptions())
+            .setStrict(runtimeOptions.isStrict())
+            .build(junitAnnotationOptions);
+
+
+        ClassFinder classFinder = new ResourceLoaderClassFinder(resourceLoader, classLoader);
+
+        // Parse the features early. Don't proceed when there are lexer errors
+        FeatureLoader featureLoader = new FeatureLoader(resourceLoader);
+        FeaturePathFeatureSupplier featureSupplier = new FeaturePathFeatureSupplier(featureLoader, runtimeOptions);
+        this.features = featureSupplier.get();
+
+        // Create plugins after feature parsing to avoid the creation of empty files on lexer errors.
+        this.plugins = new Plugins(classLoader, new PluginFactory(), runtimeOptions);
+        this.bus = new TimeServiceEventBus(TimeService.SYSTEM);
+
+        BackendSupplier backendSupplier = new BackendModuleBackendSupplier(resourceLoader, classFinder, runtimeOptions);
+        this.runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier);
+        Filters filters = new Filters(runtimeOptions);
+        for (CucumberFeature cucumberFeature : features) {
+            FeatureRunner featureRunner = new FeatureRunner(cucumberFeature, filters, runnerSupplier, junitOptions);
+            if (!featureRunner.isEmpty()) {
+                children.add(featureRunner);
+            }
+        }
     }
     public Cucumber(Class clazz) throws InitializationError {
         super(clazz);
@@ -227,11 +214,39 @@ public final class Cucumber{
         }
     }
     @Override
+    protected List<FeatureRunner> getChildren() {
+        return children;
+    }
+    @Override
+    protected Description describeChild(FeatureRunner child) {
+        return child.getDescription();
+    }
+    @Override
+    protected void runChild(FeatureRunner child, RunNotifier notifier) {
+        child.run(notifier);
+    }
+    @Override
     protected Statement childrenInvoker(RunNotifier notifier) {
         Statement runFeatures = super.childrenInvoker(notifier);
         return new RunCucumber(runFeatures);
     }
+    @Override
+    public void setScheduler(RunnerScheduler scheduler) {
+        super.setScheduler(scheduler);
+        multiThreadingAssumed = true;
+    }
+    @Override
+    public List<FeatureRunner> getChildren() {
+        return children;
+    }
+
     class RunCucumber extends Statement{
+
+        private final Statement runFeatures;
+
+        RunCucumber(Statement runFeatures) {
+            this.runFeatures = runFeatures;
+        }
         @Override
         public void evaluate() throws Throwable {
             if (multiThreadingAssumed) {
@@ -246,9 +261,6 @@ public final class Cucumber{
             }
             runFeatures.evaluate();
             bus.send(new TestRunFinished(bus.getInstant()));
-        }
-        RunCucumber(Statement runFeatures) {
-            this.runFeatures = runFeatures;
         }
         @Override
         public void evaluate() throws Throwable {
@@ -269,58 +281,17 @@ public final class Cucumber{
         }
     }
 }
+
 @API(status = API.Status.STABLE)
 public class Cucumber{
-    public Cucumber(Class clazz) throws InitializationError {
-        super(clazz);
-        Assertions.assertNoCucumberAnnotatedMethods(clazz);
 
-        ClassLoader classLoader = clazz.getClassLoader();
-        ResourceLoader resourceLoader = new MultiLoader(classLoader);
+    private final List<FeatureRunner> children = new ArrayList<>();
+    private final EventBus bus;
+    private final ThreadLocalRunnerSupplier runnerSupplier;
+    private final List<CucumberFeature> features;
+    private final Plugins plugins;
+    private boolean multiThreadingAssumed = false;
 
-        // Parse the options early to provide fast feedback about invalid options
-        RuntimeOptions annotationOptions = new CucumberOptionsAnnotationParser(resourceLoader)
-            .withOptionsProvider(new JUnitCucumberOptionsProvider())
-            .parse(clazz)
-            .build();
-
-        RuntimeOptions runtimeOptions = new EnvironmentOptionsParser(resourceLoader)
-            .parse(Env.INSTANCE)
-            .build(annotationOptions);
-
-        runtimeOptions.addUndefinedStepsPrinterIfSummaryNotDefined();
-
-        JUnitOptions junitAnnotationOptions = new JUnitOptionsParser()
-            .parse(clazz)
-            .build();
-
-        JUnitOptions junitOptions = new JUnitOptionsParser()
-            .parse(runtimeOptions.getJunitOptions())
-            .setStrict(runtimeOptions.isStrict())
-            .build(junitAnnotationOptions);
-
-
-        ClassFinder classFinder = new ResourceLoaderClassFinder(resourceLoader, classLoader);
-
-        // Parse the features early. Don't proceed when there are lexer errors
-        FeatureLoader featureLoader = new FeatureLoader(resourceLoader);
-        FeaturePathFeatureSupplier featureSupplier = new FeaturePathFeatureSupplier(featureLoader, runtimeOptions);
-        this.features = featureSupplier.get();
-
-        // Create plugins after feature parsing to avoid the creation of empty files on lexer errors.
-        this.plugins = new Plugins(classLoader, new PluginFactory(), runtimeOptions);
-        this.bus = new TimeServiceEventBus(TimeService.SYSTEM);
-
-        BackendSupplier backendSupplier = new BackendModuleBackendSupplier(resourceLoader, classFinder, runtimeOptions);
-        this.runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier);
-        Filters filters = new Filters(runtimeOptions);
-        for (CucumberFeature cucumberFeature : features) {
-            FeatureRunner featureRunner = new FeatureRunner(cucumberFeature, filters, runnerSupplier, junitOptions);
-            if (!featureRunner.isEmpty()) {
-                children.add(featureRunner);
-            }
-        }
-    }
     public Cucumber(Class clazz) throws InitializationError {
         super(clazz);
         Assertions.assertNoCucumberAnnotatedMethods(clazz);
@@ -385,26 +356,55 @@ public class Cucumber{
                 .filter(runner -> !runner.isEmpty())
                 .collect(toList());
     }
-    @Override
-    public void setScheduler(RunnerScheduler scheduler) {
-        super.setScheduler(scheduler);
-        multiThreadingAssumed = true;
-    }
-    @Override
-    protected List<FeatureRunner> getChildren() {
-        return children;
-    }
-    @Override
-    protected Description describeChild(FeatureRunner child) {
-        return child.getDescription();
-    }
-    @Override
-    protected void runChild(FeatureRunner child, RunNotifier notifier) {
-        child.run(notifier);
-    }
-    @Override
-    public List<FeatureRunner> getChildren() {
-        return children;
+    public Cucumber(Class clazz) throws InitializationError {
+        super(clazz);
+        Assertions.assertNoCucumberAnnotatedMethods(clazz);
+
+        ClassLoader classLoader = clazz.getClassLoader();
+        ResourceLoader resourceLoader = new MultiLoader(classLoader);
+
+        // Parse the options early to provide fast feedback about invalid options
+        RuntimeOptions annotationOptions = new CucumberOptionsAnnotationParser(resourceLoader)
+            .withOptionsProvider(new JUnitCucumberOptionsProvider())
+            .parse(clazz)
+            .build();
+
+        RuntimeOptions runtimeOptions = new EnvironmentOptionsParser(resourceLoader)
+            .parse(Env.INSTANCE)
+            .build(annotationOptions);
+
+        runtimeOptions.addUndefinedStepsPrinterIfSummaryNotDefined();
+
+        JUnitOptions junitAnnotationOptions = new JUnitOptionsParser()
+            .parse(clazz)
+            .build();
+
+        JUnitOptions junitOptions = new JUnitOptionsParser()
+            .parse(runtimeOptions.getJunitOptions())
+            .setStrict(runtimeOptions.isStrict())
+            .build(junitAnnotationOptions);
+
+
+        ClassFinder classFinder = new ResourceLoaderClassFinder(resourceLoader, classLoader);
+
+        // Parse the features early. Don't proceed when there are lexer errors
+        FeatureLoader featureLoader = new FeatureLoader(resourceLoader);
+        FeaturePathFeatureSupplier featureSupplier = new FeaturePathFeatureSupplier(featureLoader, runtimeOptions);
+        this.features = featureSupplier.get();
+
+        // Create plugins after feature parsing to avoid the creation of empty files on lexer errors.
+        this.plugins = new Plugins(classLoader, new PluginFactory(), runtimeOptions);
+        this.bus = new TimeServiceEventBus(TimeService.SYSTEM);
+
+        BackendSupplier backendSupplier = new BackendModuleBackendSupplier(resourceLoader, classFinder, runtimeOptions);
+        this.runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier);
+        Filters filters = new Filters(runtimeOptions);
+        for (CucumberFeature cucumberFeature : features) {
+            FeatureRunner featureRunner = new FeatureRunner(cucumberFeature, filters, runnerSupplier, junitOptions);
+            if (!featureRunner.isEmpty()) {
+                children.add(featureRunner);
+            }
+        }
     }
     public Cucumber(Class clazz) throws InitializationError {
         super(clazz);
@@ -455,11 +455,38 @@ public class Cucumber{
         }
     }
     @Override
+    protected List<FeatureRunner> getChildren() {
+        return children;
+    }
+    @Override
+    protected Description describeChild(FeatureRunner child) {
+        return child.getDescription();
+    }
+    @Override
+    protected void runChild(FeatureRunner child, RunNotifier notifier) {
+        child.run(notifier);
+    }
+    @Override
     protected Statement childrenInvoker(RunNotifier notifier) {
         Statement runFeatures = super.childrenInvoker(notifier);
         return new RunCucumber(runFeatures);
     }
+    @Override
+    public void setScheduler(RunnerScheduler scheduler) {
+        super.setScheduler(scheduler);
+        multiThreadingAssumed = true;
+    }
+    @Override
+    public List<FeatureRunner> getChildren() {
+        return children;
+    }
+
     class RunCucumber extends Statement{
+
+
+        RunCucumber(Statement runFeatures) {
+            this.runFeatures = runFeatures;
+        }
         @Override
         public void evaluate() throws Throwable {
             if (multiThreadingAssumed) {
@@ -474,9 +501,6 @@ public class Cucumber{
             }
             runFeatures.evaluate();
             bus.send(new TestRunFinished(bus.getInstant()));
-        }
-        RunCucumber(Statement runFeatures) {
-            this.runFeatures = runFeatures;
         }
         @Override
         public void evaluate() throws Throwable {
