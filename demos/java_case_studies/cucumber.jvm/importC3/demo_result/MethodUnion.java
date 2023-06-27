@@ -11,9 +11,71 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+
 public final class RuntimeOptionsBuilder{
-    public void setIsRerun(boolean isRerun) {
-        this.parsedIsRerun = isRerun;
+
+    private ParsedPluginData parsedPluginData = new ParsedPluginData();
+    private PickleOrder parsedPickleOrder = null;
+    private Integer parsedThreads = null;
+    private Boolean parsedWip = null;
+    private final ParsedPluginData parsedPluginData = new ParsedPluginData();
+    private Boolean parsedMonochrome = null;
+    private Integer parsedCount = null;
+    private Boolean parsedDryRun = null;
+    private Boolean parsedStrict = null;
+    private SnippetType parsedSnippetType = null;
+
+    public void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
+        this.parsedObjectFactoryClass = objectFactoryClass;
+    }
+    public RuntimeOptionsBuilder addFeature(FeatureWithLines featureWithLines) {
+        parsedFeaturePaths.add(featureWithLines.uri());
+        addLineFilters(featureWithLines);
+        return this;
+    }
+    public RuntimeOptionsBuilder setPickleOrder(PickleOrder pickleOrder) {
+        this.parsedPickleOrder = pickleOrder;
+        return this;
+    }
+    public RuntimeOptionsBuilder addPluginName(String name, boolean isAddPlugin) {
+        this.parsedPluginData.addPluginName(name, isAddPlugin);
+        return this;
+    }
+    public RuntimeOptionsBuilder setDryRun(boolean dryRun) {
+        this.parsedDryRun = dryRun;
+        return this;
+    }
+    public RuntimeOptionsBuilder addNameFilter(Pattern pattern) {
+        this.parsedNameFilters.add(pattern);
+        return this;
+    }
+    public RuntimeOptionsBuilder setWip(boolean wip) {
+        this.parsedWip = wip;
+        return this;
+    }
+    private RuntimeOptionsBuilder addLineFilters(FeatureWithLines featureWithLines) {
+        URI key = featureWithLines.uri();
+        Set<Integer> lines = featureWithLines.lines();
+        if (lines.isEmpty()) {
+            return null;
+        }
+        if (this.parsedLineFilters.containsKey(key)) {
+            this.parsedLineFilters.get(key).addAll(lines);
+        } else {
+            this.parsedLineFilters.put(key, new TreeSet<>(lines));
+        }
+        return this;
+    }
+    public RuntimeOptionsBuilder addRerun(Collection<FeatureWithLines> featureWithLines) {
+        if (parsedRerunPaths == null) {
+            parsedRerunPaths = new ArrayList<>();
+        }
+        parsedRerunPaths.addAll(featureWithLines);
+        return this;
+    }
+    public RuntimeOptionsBuilder addJunitOption(String junitOption) {
+        this.parsedJunitOptions.add(junitOption);
+        return this;
     }
     public RuntimeOptions build(RuntimeOptions runtimeOptions) {
         if (this.parsedThreads != null) {
@@ -73,9 +135,6 @@ public final class RuntimeOptionsBuilder{
 
         return runtimeOptions;
     }
-    public void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
-        this.parsedObjectFactoryClass = objectFactoryClass;
-    }
     private boolean hasFeaturesWithLineFilters() {
         if (parsedRerunPaths != null) {
             return true;
@@ -87,27 +146,41 @@ public final class RuntimeOptionsBuilder{
         }
         return false;
     }
+    public RuntimeOptionsBuilder addTagFilter(String tagExpression) {
+        this.parsedTagFilters.add(tagExpression);
+        return this;
+    }
     public RuntimeOptionsBuilder addFeature(FeatureWithLines featureWithLines) {
         parsedFeaturePaths.add(featureWithLines);
         return this;
     }
-    public RuntimeOptionsBuilder setThreads(int threads) {
-        this.parsedThreads = threads;
+    public RuntimeOptions build() {
+        return build(RuntimeOptions.defaultOptions());
+    }
+    public RuntimeOptionsBuilder setMonochrome(boolean monochrome) {
+        this.parsedMonochrome = monochrome;
         return this;
     }
-    public RuntimeOptionsBuilder setDryRun(boolean dryRun) {
-        this.parsedDryRun = dryRun;
+    public RuntimeOptionsBuilder setStrict() {
+        return setStrict(true);
+    }
+    public RuntimeOptionsBuilder setStrict(boolean strict) {
+        this.parsedStrict = strict;
         return this;
     }
-    public RuntimeOptionsBuilder setPickleOrder(PickleOrder pickleOrder) {
-        this.parsedPickleOrder = pickleOrder;
+    public RuntimeOptionsBuilder setDryRun() {
+        return setDryRun(true);
+    }
+    public RuntimeOptionsBuilder addDefaultFormatterIfNotPresent() {
+        parsedPluginData.addDefaultFormatterIfNotPresent();
         return this;
     }
-    public RuntimeOptionsBuilder addRerun(Collection<FeatureWithLines> featureWithLines) {
-        if (parsedRerunPaths == null) {
-            parsedRerunPaths = new ArrayList<>();
-        }
-        parsedRerunPaths.addAll(featureWithLines);
+    public RuntimeOptionsBuilder addDefaultSummaryPrinterIfNotPresent() {
+        parsedPluginData.addDefaultSummaryPrinterIfNotPresent();
+        return this;
+    }
+    public RuntimeOptionsBuilder setSnippetType(SnippetType snippetType) {
+        this.parsedSnippetType = snippetType;
         return this;
     }
     public RuntimeOptions build(RuntimeOptions runtimeOptions) {
@@ -168,21 +241,14 @@ public final class RuntimeOptionsBuilder{
 
         return runtimeOptions;
     }
+    public RuntimeOptionsBuilder setCount(int count) {
+        this.parsedCount = count;
+        return this;
+    }
     private boolean hasFeaturesWithLineFilters() {
         return parsedRerunPaths != null || !parsedFeaturePaths.stream()
             .map(FeatureWithLines::lines)
             .allMatch(Set::isEmpty);
-    }
-    public RuntimeOptionsBuilder addNameFilter(Pattern pattern) {
-        this.parsedNameFilters.add(pattern);
-        return this;
-    }
-    public RuntimeOptionsBuilder setDryRun() {
-        return setDryRun(true);
-    }
-    public RuntimeOptionsBuilder addDefaultFormatterIfNotPresent() {
-        parsedPluginData.addDefaultFormatterIfNotPresent();
-        return this;
     }
     public RuntimeOptionsBuilder setMonochrome() {
         return setMonochrome(true);
@@ -191,33 +257,12 @@ public final class RuntimeOptionsBuilder{
         parsedGlue.add(glue);
         return this;
     }
-    private RuntimeOptionsBuilder addLineFilters(FeatureWithLines featureWithLines) {
-        URI key = featureWithLines.uri();
-        Set<Integer> lines = featureWithLines.lines();
-        if (lines.isEmpty()) {
-            return null;
-        }
-        if (this.parsedLineFilters.containsKey(key)) {
-            this.parsedLineFilters.get(key).addAll(lines);
-        } else {
-            this.parsedLineFilters.put(key, new TreeSet<>(lines));
-        }
+    public RuntimeOptionsBuilder setThreads(int threads) {
+        this.parsedThreads = threads;
         return this;
     }
-    public RuntimeOptionsBuilder addTagFilter(String tagExpression) {
-        this.parsedTagFilters.add(tagExpression);
-        return this;
-    }
-    public RuntimeOptionsBuilder setStrict() {
-        return setStrict(true);
-    }
-    public RuntimeOptionsBuilder addJunitOption(String junitOption) {
-        this.parsedJunitOptions.add(junitOption);
-        return this;
-    }
-    public RuntimeOptionsBuilder setWip(boolean wip) {
-        this.parsedWip = wip;
-        return this;
+    public void setIsRerun(boolean isRerun) {
+        this.parsedIsRerun = isRerun;
     }
     public RuntimeOptions build(RuntimeOptions runtimeOptions) {
         if (this.parsedThreads != null) {
@@ -278,107 +323,20 @@ public final class RuntimeOptionsBuilder{
 
         return runtimeOptions;
     }
-    public RuntimeOptionsBuilder setStrict(boolean strict) {
-        this.parsedStrict = strict;
-        return this;
-    }
-    public RuntimeOptionsBuilder setSnippetType(SnippetType snippetType) {
-        this.parsedSnippetType = snippetType;
-        return this;
-    }
-    public RuntimeOptionsBuilder addPluginName(String name, boolean isAddPlugin) {
-        this.parsedPluginData.addPluginName(name, isAddPlugin);
-        return this;
-    }
-    public RuntimeOptionsBuilder setCount(int count) {
-        this.parsedCount = count;
-        return this;
-    }
-    public RuntimeOptionsBuilder setMonochrome(boolean monochrome) {
-        this.parsedMonochrome = monochrome;
-        return this;
-    }
-    public RuntimeOptionsBuilder addFeature(FeatureWithLines featureWithLines) {
-        parsedFeaturePaths.add(featureWithLines.uri());
-        addLineFilters(featureWithLines);
-        return this;
-    }
-    public RuntimeOptionsBuilder addDefaultSummaryPrinterIfNotPresent() {
-        parsedPluginData.addDefaultSummaryPrinterIfNotPresent();
-        return this;
-    }
-    public RuntimeOptions build() {
-        return build(RuntimeOptions.defaultOptions());
-    }
+
     private static class ParsedPluginData{
-        void updateFormatters(List<Options.Plugin> formatter) {
-            this.formatters.updateNameList(formatter);
-        }
-        void updatePluginStepDefinitionReporterNames(List<String> pluginStepDefinitionReporterNames) {
-            stepDefinitionReporterNames.updateNameList(pluginStepDefinitionReporterNames);
-        }
-        void addDefaultFormatterIfNotPresent() {
-            if (formatters.names.isEmpty()) {
-                addPluginName("progress", false);
-            }
-        }
-        void addPluginName(String name, boolean isAddPlugin) {
-            PluginOption pluginOption = PluginOption.parse(name);
-            if (pluginOption.isSummaryPrinter()) {
-                summaryPrinters.addName(pluginOption, isAddPlugin);
-            } else if (pluginOption.isFormattepublic Cucr()) {
-                formatters.addName(pluginOption, isAddPlugin);
-            } else {
-                throw new CucumberException("Unrecognized plugin: " + name);
-            }
-        }
-        void updatePluginFormatterNames(List<String> pluginFormatterNames) {
-            formatterNames.updateNameList(pluginFormatterNames);
-        }
+
+        ParsedOptionNames stepDefinitionReporterNames = new ParsedOptionNames();
+        ParsedOptionNames summaryPrinterNames = new ParsedOptionNames();
+        ParsedOptionNames formatterNames = new ParsedOptionNames();
+
         void addDefaultSummaryPrinterIfNotPresent() {
             if (summaryPrinters.names.isEmpty()) {
                 addPluginName("summary", false);
             }
         }
-        void addDefaultSummaryPrinterIfNotPresent() {
-            if (summaryPrinterNames.names.isEmpty()) {
-                summaryPrinterNames.addName("default_summary", false);
-            }
-        }
         void updateSummaryPrinters(List<Options.Plugin> pluginSummaryPrinterNames) {
             summaryPrinters.updateNameList(pluginSummaryPrinterNames);
-        }
-        void updatePluginSummaryPrinterNames(List<String> pluginSummaryPrinterNames) {
-            summaryPrinterNames.updateNameList(pluginSummaryPrinterNames);
-        }
-        void addDefaultFormatterIfNotPresent() {
-            if (formatterNames.names.isEmpty()) {
-                formatterNames.addName("progress", false);
-            }
-        }
-        void addPluginName(String name, boolean isAddPlugin) {
-            if (PluginFactory.isStepDefinitionReporterName(name)) {
-                stepDefinitionReporterNames.addName(name, isAddPlugin);
-            } else if (PluginFactory.isSummaryPrinterName(name)) {
-                summaryPrinterNames.addName(name, isAddPlugin);
-            } else if (PluginFactory.isFormatterName(name)) {
-                formatterNames.addName(name, isAddPlugin);
-            } else {
-                throw new CucumberException("Unrecognized plugin: " + name);
-            }
-        }
-    }
-    static final class ParsedPluginData{
-        void updateFormatters(List<Options.Plugin> formatter) {
-            this.formatters.updateNameList(formatter);
-        }
-        void updatePluginStepDefinitionReporterNames(List<String> pluginStepDefinitionReporterNames) {
-            stepDefinitionReporterNames.updateNameList(pluginStepDefinitionReporterNames);
-        }
-        void addDefaultFormatterIfNotPresent() {
-            if (formatters.names.isEmpty()) {
-                addPluginName("progress", false);
-            }
         }
         void addPluginName(String name, boolean isAddPlugin) {
             PluginOption pluginOption = PluginOption.parse(name);
@@ -393,19 +351,6 @@ public final class RuntimeOptionsBuilder{
         void updatePluginFormatterNames(List<String> pluginFormatterNames) {
             formatterNames.updateNameList(pluginFormatterNames);
         }
-        void addDefaultSummaryPrinterIfNotPresent() {
-            if (summaryPrinters.names.isEmpty()) {
-                addPluginName("summary", false);
-            }
-        }
-        void addDefaultSummaryPrinterIfNotPresent() {
-            if (summaryPrinterNames.names.isEmpty()) {
-                summaryPrinterNames.addName("default_summary", false);
-            }
-        }
-        void updateSummaryPrinters(List<Options.Plugin> pluginSummaryPrinterNames) {
-            summaryPrinters.updateNameList(pluginSummaryPrinterNames);
-        }
         void updatePluginSummaryPrinterNames(List<String> pluginSummaryPrinterNames) {
             summaryPrinterNames.updateNameList(pluginSummaryPrinterNames);
         }
@@ -413,6 +358,22 @@ public final class RuntimeOptionsBuilder{
             if (formatterNames.names.isEmpty()) {
                 formatterNames.addName("progress", false);
             }
+        }
+        void updateFormatters(List<Options.Plugin> formatter) {
+            this.formatters.updateNameList(formatter);
+        }
+        void addDefaultFormatterIfNotPresent() {
+            if (formatters.names.isEmpty()) {
+                addPluginName("progress", false);
+            }
+        }
+        void addDefaultSummaryPrinterIfNotPresent() {
+            if (summaryPrinterNames.names.isEmpty()) {
+                summaryPrinterNames.addName("default_summary", false);
+            }
+        }
+        void updatePluginStepDefinitionReporterNames(List<String> pluginStepDefinitionReporterNames) {
+            stepDefinitionReporterNames.updateNameList(pluginStepDefinitionReporterNames);
         }
         void addPluginName(String name, boolean isAddPlugin) {
             if (PluginFactory.isStepDefinitionReporterName(name)) {
@@ -426,19 +387,104 @@ public final class RuntimeOptionsBuilder{
             }
         }
     }
-    private static class ParsedOptionNames{
-        void addName(String name, boolean isAddOption) {
-            names.add(name);
-            if (!isAddOption) {
-                clobber = true;
+
+    static final class ParsedPluginData{
+
+        private ParsedPlugins summaryPrinters = new ParsedPlugins();
+        private ParsedPlugins formatters = new ParsedPlugins();
+
+        void addDefaultSummaryPrinterIfNotPresent() {
+            if (summaryPrinters.names.isEmpty()) {
+                addPluginName("summary", false);
             }
         }
+        void updateSummaryPrinters(List<Options.Plugin> pluginSummaryPrinterNames) {
+            summaryPrinters.updateNameList(pluginSummaryPrinterNames);
+        }
+        void addPluginName(String name, boolean isAddPlugin) {
+            PluginOption pluginOption = PluginOption.parse(name);
+            if (pluginOption.isSummaryPrinter()) {
+                summaryPrinters.addName(pluginOption, isAddPlugin);
+            } else if (pluginOption.isFormatter()) {
+                formatters.addName(pluginOption, isAddPlugin);
+            } else {
+                throw new CucumberException("Unrecognized plugin: " + name);
+            }
+        }
+        void updatePluginFormatterNames(List<String> pluginFormatterNames) {
+            formatterNames.updateNameList(pluginFormatterNames);
+        }
+        void updatePluginSummaryPrinterNames(List<String> pluginSummaryPrinterNames) {
+            summaryPrinterNames.updateNameList(pluginSummaryPrinterNames);
+        }
+        void addDefaultFormatterIfNotPresent() {
+            if (formatterNames.names.isEmpty()) {
+                formatterNames.addName("progress", false);
+            }
+        }
+        void updateFormatters(List<Options.Plugin> formatter) {
+            this.formatters.updateNameList(formatter);
+        }
+        void addDefaultFormatterIfNotPresent() {
+            if (formatters.names.isEmpty()) {
+                addPluginName("progress", false);
+            }
+        }
+        void addDefaultSummaryPrinterIfNotPresent() {
+            if (summaryPrinterNames.names.isEmpty()) {
+                summaryPrinterNames.addName("default_summary", false);
+            }
+        }
+        void updatePluginStepDefinitionReporterNames(List<String> pluginStepDefinitionReporterNames) {
+            stepDefinitionReporterNames.updateNameList(pluginStepDefinitionReporterNames);
+        }
+        void addPluginName(String name, boolean isAddPlugin) {
+            if (PluginFactory.isStepDefinitionReporterName(name)) {
+                stepDefinitionReporterNames.addName(name, isAddPlugin);
+            } else if (PluginFactory.isSummaryPrinterName(name)) {
+                summaryPrinterNames.addName(name, isAddPlugin);
+            } else if (PluginFactory.isFormatterName(name)) {
+                formatterNames.addName(name, isAddPlugin);
+            } else {
+                throw new CucumberException("Unrecognized plugin: " + name);
+            }
+        }
+
+        private static class ParsedPlugins{
+
+
+            void addName(Options.Plugin name, boolean isAddOption) {
+                names.add(name);
+                if (!isAddOption) {
+                    clobber = true;
+                }
+            }
+            void updateNameList(List<Options.Plugin> nameList) {
+                if (!names.isEmpty()) {
+                    if (clobber) {
+                        nameList.clear();
+                    }
+                    nameList.addAll(names);
+                }
+            }
+        }
+    }
+
+    private static class ParsedOptionNames{
+
+
         void updateNameList(List<String> nameList) {
             if (!names.isEmpty()) {
                 if (clobber) {
                     nameList.clear();
                 }
                 nameList.addAll(names);
+            }
+        }
+        void addName(String name, boolean isAddOption) {
+            names.add(name);
+            if (!isAddOption) {
+                clobber = true;
             }
         }
     }

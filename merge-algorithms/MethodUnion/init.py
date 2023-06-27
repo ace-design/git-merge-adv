@@ -41,8 +41,12 @@ def main():
 
     result=lang.getClasses(left_content+right_content+base_content)
 
+    print(result)
+
 
     git_result=merger.git_merge(base_content,right_content,left_content,type)
+
+    print(len(git_result.stdout))
     
     lang.getUsages(git_result.stdout)
 
@@ -62,8 +66,14 @@ def main():
 
 def write_methods(writer,class_name):
         spacing=' '*int(class_name.get_ranking()*4)
-        writer.write(spacing+class_name.get_full_name()+'{\n')
+        writer.write('\n'+spacing+class_name.get_full_name()+'{\n\n')
         method_spacing=spacing+' '*4
+
+        for declaration in class_name.get_declarations():
+            writer.write(method_spacing+declaration+'\n')
+
+        writer.write('\n')
+
         for method in class_name.get_methods():
             writer.write(method_spacing+method.get_method()+'\n')
         

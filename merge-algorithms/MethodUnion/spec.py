@@ -178,6 +178,7 @@ class Java(Lang):
     
     def getClasses(self,content):
         classes=set()
+        class_ref={}
         content='\n'.join(content)
 
         byte_rep= str.encode(content)
@@ -189,6 +190,13 @@ class Java(Lang):
         """)
 
         class_captures=query.captures(tree.root_node)
+
+        field_query = Java_Lang.query("""
+            (field_declaration
+                type: (type_identifier) @type)
+        """)
+
+        field_captures=field_query.captures(tree.root_node)
 
         method_query = Java_Lang.query("""
             (method_declaration
@@ -205,7 +213,7 @@ class Java(Lang):
         """)
 
         method_captures+=method_query.captures(tree.root_node)
-        
+
         for new_class in class_captures:
             # Tuple of class details including modifiers and name.
             class_details=new_class[0].parent.children
@@ -218,14 +226,24 @@ class Java(Lang):
             
             new_class=Class(new_class_name,new_full_name,indentation)
 
+            if (new_full_name not in class_ref.keys()):
+                class_ref[new_full_name]=new_class
+
+
             # Checks if there exists a super/parent class
             if (super_class_name is None):
                 classes.add(new_class)
             else:
                 # Searches for given super/parent class in list.
-                for new_c in classes:
-                    if (new_c.get_class_name()==super_class_name.children[2].text.decode()):
-                        new_c.add_sub_classes(new_class)
+                super_name=super_class_name.children[0].text.decode()+" "+super_class_name.children[1].text.decode()+" "+super_class_name.children[2].text.decode()
+                class_ref[super_name].add_sub_classes(new_class)
+
+
+        for field in field_captures:
+            declaration=field[0].parent.text.decode()
+            parent_class=field[0].parent.parent.parent.children[0].text.decode()+" "+field[0].parent.parent.parent.children[1].text.decode()+" "+field[0].parent.parent.parent.children[2].text.decode()
+
+            class_ref[parent_class].add_declaration(declaration)
 
         for method in method_captures:
 

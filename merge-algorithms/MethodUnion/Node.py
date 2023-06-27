@@ -51,12 +51,16 @@ class Class:
         self.full_name=full_name
         self.methods=set()
         self.sub_classes=set()
+        self.declarations=set()
     
     def add_method(self,method):
         self.methods.add(method)
     
     def add_sub_classes(self,new_class):
         self.sub_classes.add(new_class)
+
+    def add_declaration(self,new_declaration):
+        self.declarations.add(new_declaration)
 
     def get_methods(self):
         return self.methods
@@ -72,6 +76,9 @@ class Class:
     
     def get_full_name(self):
         return self.full_name
+    
+    def get_declarations(self):
+        return self.declarations
     
     def __eq__(self,obj):
         return (self.full_name==obj.get_full_name())
