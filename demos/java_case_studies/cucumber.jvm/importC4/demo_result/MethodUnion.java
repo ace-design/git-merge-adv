@@ -43,7 +43,7 @@ import java.util.function.Predicate;
 import static java.util.stream.Collectors.toList;
 
 @API(status = API.Status.STABLE)
-public final class Cucumber{
+public final class Cucumber extends ParentRunner<FeatureRunner>{
 
     private final List<FeatureRunner> children;
     private final EventBus bus;
@@ -240,7 +240,7 @@ public final class Cucumber{
         return children;
     }
 
-    class RunCucumber extends Statement{
+    class RunCucumber extends Statement {
 
         private final Statement runFeatures;
 
@@ -283,7 +283,7 @@ public final class Cucumber{
 }
 
 @API(status = API.Status.STABLE)
-public class Cucumber{
+public class Cucumber extends ParentRunner<FeatureRunner>{
 
     private final List<FeatureRunner> children = new ArrayList<>();
     private final EventBus bus;
@@ -481,7 +481,7 @@ public class Cucumber{
         return children;
     }
 
-    class RunCucumber extends Statement{
+    class RunCucumber extends Statement {
 
 
         RunCucumber(Statement runFeatures) {

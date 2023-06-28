@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public final class RuntimeOptionsBuilder{
+public final class RuntimeOptionsBuilder {
 
     private final List<String> parsedTagFilters = new ArrayList<>();
     private final List<Pattern> parsedNameFilters = new ArrayList<>();
@@ -338,7 +338,7 @@ public final class RuntimeOptionsBuilder{
         this.parsedIsRerun = isRerun;
     }
 
-    static final class ParsedPluginData{
+    static final class ParsedPluginData {
 
         private ParsedPlugins formatters = new ParsedPlugins();
         private ParsedPlugins summaryPrinters = new ParsedPlugins();
@@ -400,7 +400,7 @@ public final class RuntimeOptionsBuilder{
             }
         }
 
-        private static class ParsedPlugins{
+        private static class ParsedPlugins {
 
             private List<Options.Plugin> names = new ArrayList<>();
             private boolean clobber = false;
@@ -422,7 +422,7 @@ public final class RuntimeOptionsBuilder{
         }
     }
 
-    private static class ParsedPluginData{
+    private static class ParsedPluginData {
 
         ParsedOptionNames formatterNames = new ParsedOptionNames();
         ParsedOptionNames stepDefinitionReporterNames = new ParsedOptionNames();
@@ -486,7 +486,7 @@ public final class RuntimeOptionsBuilder{
         }
     }
 
-    private static class ParsedOptionNames{
+    private static class ParsedOptionNames {
 
         private List<String> names = new ArrayList<>();
         private boolean clobber = false;

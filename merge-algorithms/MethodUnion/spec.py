@@ -192,7 +192,8 @@ class Java(Lang):
         class_captures=query.captures(tree.root_node)
 
         field_query = Java_Lang.query("""
-            ((field_declaration) @name )
+            (field_declaration
+            	declarator: (variable_declarator) @name)
         """)
 
         field_captures=field_query.captures(tree.root_node)
@@ -222,12 +223,25 @@ class Java(Lang):
 
             indentation=int(class_details[0].start_point[1])
             new_class_name=class_details[2].text.decode()
-            new_full_name=class_details[0].text.decode()+" "+class_details[1].text.decode()+" "+class_details[2].text.decode()
+
+
+
+            if (class_details[3].text.decode()[0]!="{"):
+                superclass=" "+class_details[3].text.decode()
+            else:
+                superclass=" "
+            superclass=superclass.split('{')[0]
+
+
+
+            new_full_name=class_details[0].text.decode()+" "+class_details[1].text.decode()+" "+class_details[2].text.decode()+superclass
             
             new_class=Class(new_class_name,new_full_name,indentation)
 
             if (new_full_name not in class_ref.keys()):
                 class_ref[new_full_name]=new_class
+
+            # print(new_full_name)
 
 
             # Checks if there exists a super/parent class
@@ -236,13 +250,27 @@ class Java(Lang):
                     classes.append(new_class)
             else:
                 # Searches for given super/parent class in list.
-                super_name=super_class_name.children[0].text.decode()+" "+super_class_name.children[1].text.decode()+" "+super_class_name.children[2].text.decode()
+                if (super_class_name.children[3].text.decode()[0]!="{"):
+                    superclass=" "+super_class_name.children[3].text.decode()
+                else:
+                    superclass=" "
+                superclass=superclass.split('{')[0]
+                # if (super_class_name.children[3] is not None):
+                #     superclass=" "+super_class_name.children[3].text.decode()
+                # else:
+                #     superclass=" "
+                super_name=super_class_name.children[0].text.decode()+" "+super_class_name.children[1].text.decode()+" "+super_class_name.children[2].text.decode()+superclass
                 class_ref[super_name].add_sub_classes(new_class)
 
 
+
         for field in field_captures:
-            declaration=field[0].text.decode()
-            parent_class=field[0].parent.parent.children[0].text.decode()+" "+field[0].parent.parent.children[1].text.decode()+" "+field[0].parent.parent.children[2].text.decode()
+            declaration=field[0].parent.text.decode()
+            if (field[0].parent.parent.parent.children[3].text.decode()[0]!="{"):
+                superclass=" "+field[0].parent.parent.parent.children[3].text.decode()
+            else:
+                superclass=" "
+            parent_class=field[0].parent.parent.parent.children[0].text.decode()+" "+field[0].parent.parent.parent.children[1].text.decode()+" "+field[0].parent.parent.parent.children[2].text.decode()+superclass
             class_ref[parent_class].add_declaration(declaration)
 
         for method in method_captures:
