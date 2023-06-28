@@ -42,22 +42,16 @@ def main():
     result=lang.getClasses(left_content+right_content+base_content)
 
 
-    git_result=merger.git_merge(base_content,right_content,left_content,type)
-    
-    lang.getUsages(git_result.stdout)
-
+    lang.getUsages(result)
 
     import_result=merger.import_merge(lang,base_import,right_import,left_import)
 
     writefile(output,import_result)
 
-    with open(output,'a') as writer:
-        for class_name in result:
-            write_methods(writer,class_name)
-
+    appendfile(output,result)
     
 
-    clean(type)
+    # clean(type)
 
 
 def write_methods(writer,class_name):

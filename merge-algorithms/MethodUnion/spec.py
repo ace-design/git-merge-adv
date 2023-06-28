@@ -37,6 +37,10 @@ class Lang(ABC):
     def output_traverse(node,string,all_imports,suspicious):
         pass
 
+    @abstractmethod
+    def output_methods(writer,class_name):
+        pass
+
     # Used to parse the imports to generate a more read-friendly string for tree to split. 
     @abstractmethod
     def extractImports(content):
@@ -75,6 +79,26 @@ class Java(Lang):
                     self.output_traverse(item,dup,all_imports,target,False)
                 elif (item==target):
                     all_imports.append(dup+";")
+
+
+    def output_methods(self,body,class_name):
+        spacing=' '*int(class_name.get_ranking()*4)
+        body+='\n'+spacing+class_name.get_full_name()+'{\n\n'
+        method_spacing=spacing+' '*4
+
+        for declaration in class_name.get_declarations():
+            body+=method_spacing+declaration+'\n'
+
+        body+='\n'
+
+        for method in class_name.get_methods():
+            body+=method_spacing+method.get_method()+'\n'
+        
+        for sub_class in class_name.get_sub_classes():
+            body = self.output_methods(body,sub_class)
+        
+        body+=spacing+class_name.get_closer()+'\n'
+        return body
 
 
     def getUsages(self,git_content):
@@ -281,7 +305,11 @@ class Java(Lang):
             super_class=method[0].parent.parent.parent.children[2].text.decode()
             self.add_method(classes,new_method,super_class)
 
-        return classes
+        body=""
+        for class_name in classes:
+            body=self.output_methods(body,class_name)
+
+        return body
     
     def add_method(self,classes,new_method,super_class):
         for new_c in classes:
