@@ -236,7 +236,7 @@ class Java(Lang):
 
             new_full_name=class_details[0].text.decode()+" "+class_details[1].text.decode()+" "+class_details[2].text.decode()+superclass
             
-            new_class=Class(new_class_name,new_full_name,indentation)
+            new_class=Class(new_class_name,new_full_name,indentation,"}")
 
             if (new_full_name not in class_ref.keys()):
                 class_ref[new_full_name]=new_class

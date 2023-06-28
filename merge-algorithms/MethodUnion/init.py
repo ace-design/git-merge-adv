@@ -76,7 +76,7 @@ def write_methods(writer,class_name):
         for sub_class in class_name.get_sub_classes():
             write_methods(writer,sub_class)
             
-        writer.write(spacing+'}\n')
+        writer.write(spacing+class_name.get_closer()+'\n')
 
 
 def writefile(name, content):

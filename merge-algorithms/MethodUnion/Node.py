@@ -45,7 +45,8 @@ class Pack:
         return self.path
     
 class Class:
-    def __init__(self,name,full_name,indent):
+    def __init__(self,name,full_name,indent,closer):
+        self.closing=closer
         self.ranking=indent/4
         self.class_name=name
         self.full_name=full_name
@@ -82,6 +83,9 @@ class Class:
     
     def get_declarations(self):
         return self.declarations
+    
+    def get_closer(self):
+        return self.closing
     
     def __eq__(self,obj):
         return (self.full_name==obj.get_full_name())
