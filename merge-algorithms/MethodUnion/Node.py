@@ -45,7 +45,8 @@ class Pack:
         return self.path
     
 class Class:
-    def __init__(self,name,full_name,indent,closer):
+    def __init__(self,name,full_name,indent,closer,version):
+        self.version=[version]
         self.closing=closer
         self.ranking=indent/4
         self.class_name=name
@@ -54,9 +55,12 @@ class Class:
         self.sub_classes=[]
         self.declarations=[]
     
-    def add_method(self,method):
+    def add_method(self,method,version):
         if (method not in self.methods):
             self.methods.append(method)
+        else:
+            existing_method_idx=self.methods.index(method)
+            self.methods[existing_method_idx].add_version(version)
     
     def add_sub_classes(self,new_class):
         if (new_class not in self.sub_classes):
@@ -65,6 +69,9 @@ class Class:
     def add_declaration(self,new_declaration):
         if (new_declaration not in self.declarations):
             self.declarations.append(new_declaration)
+    
+    def add_version(self,version):
+        self.version.append(version)
 
     def get_methods(self):
         return self.methods
@@ -87,6 +94,9 @@ class Class:
     def get_closer(self):
         return self.closing
     
+    def get_versions(self):
+        return self.version
+    
     def __eq__(self,obj):
         return (self.full_name==obj.get_full_name())
     
@@ -95,11 +105,18 @@ class Class:
 
 
 class Method:
-    def __init__(self,des):
+    def __init__(self,des,version):
         self.method_name=des
+        self.version=[version]
+
+    def add_version(self,version):
+        self.version.append(version)
 
     def get_method(self):
         return self.method_name  
+    
+    def get_versions(self):
+        return self.version
 
     def __eq__(self,obj):
         return (self.method_name==obj.get_method())

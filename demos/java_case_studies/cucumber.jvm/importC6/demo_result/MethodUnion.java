@@ -11,6 +11,7 @@ import static io.cucumber.examples.testng.RpnCalculatorStepdefs.Entry;
 import static java.text.DateFormat.MEDIUM;
 import static java.text.DateFormat.getDateInstance;
 import static java.util.Locale.ENGLISH;
+import io.cucumber.examples.testng.ShoppingSteps.Price;
 import io.cucumber.examples.testng.ShoppingSteps.Grocery;
 
 public class ParameterTypes implements TypeRegistryConfigurer{
@@ -43,10 +44,10 @@ public class ParameterTypes implements TypeRegistryConfigurer{
         ));
 
         typeRegistry.defineDataTableType(new DataTableType(
-            ShoppingStepdefs.Grocery.class,
-            (Map<String, String> row) -> new ShoppingStepdefs.Grocery(
+            Grocery.class,
+            (Map<String, String> row) -> new Grocery(
                 row.get("name"),
-                ShoppingStepdefs.Price.fromString(row.get("price"))
+                Price.fromString(row.get("price"))
             )
         ));
 
@@ -82,10 +83,10 @@ public class ParameterTypes implements TypeRegistryConfigurer{
         ));
 
         typeRegistry.defineDataTableType(new DataTableType(
-            Grocery.class,
-            (Map<String, String> row) -> new Grocery(
+            ShoppingStepdefs.Grocery.class,
+            (Map<String, String> row) -> new ShoppingStepdefs.Grocery(
                 row.get("name"),
-                Price.fromString(row.get("price"))
+                ShoppingStepdefs.Price.fromString(row.get("price"))
             )
         ));
 

@@ -64,6 +64,12 @@ class Java(Lang):
     parser=Parser()
     parser.set_language(Java_Lang)
 
+    global classes
+    classes=[]
+
+    global class_ref  
+    class_ref={}
+
     def output_traverse(self,node,string,all_imports,target,suspicious):
         # Finds the specified target node in the tree
         # print(target.get_full_dir())
@@ -200,9 +206,7 @@ class Java(Lang):
 
         return imports,other
     
-    def getClasses(self,content):
-        classes=[]
-        class_ref={}
+    def getClasses(self,content,version):
         content='\n'.join(content)
 
         byte_rep= str.encode(content)
@@ -260,10 +264,12 @@ class Java(Lang):
 
             new_full_name=class_details[0].text.decode()+" "+class_details[1].text.decode()+" "+class_details[2].text.decode()+superclass
             
-            new_class=Class(new_class_name,new_full_name,indentation,"}")
+            new_class=Class(new_class_name,new_full_name,indentation,"}",version)
 
             if (new_full_name not in class_ref.keys()):
                 class_ref[new_full_name]=new_class
+            else:
+                class_ref[new_full_name].add_version(version)
 
             # print(new_full_name)
 
@@ -300,10 +306,11 @@ class Java(Lang):
         for method in method_captures:
 
             method_name=method[0].parent.text.decode()
-            new_method=Method(method_name)
+            new_method=Method(method_name,version)
             indentation=int(method[0].parent.parent.parent.children[0].start_point[1])
             super_class=method[0].parent.parent.parent.children[2].text.decode()
-            self.add_method(classes,new_method,super_class)
+            self.add_method(classes,new_method,super_class,version)
+
 
         body=""
         for class_name in classes:
@@ -311,12 +318,12 @@ class Java(Lang):
 
         return body
     
-    def add_method(self,classes,new_method,super_class):
+    def add_method(self,classes,new_method,super_class,version):
         for new_c in classes:
             if (new_c.get_class_name()==super_class):
-                new_c.add_method(new_method)
+                new_c.add_method(new_method,version)
             else:
-                self.add_method(new_c.get_sub_classes(),new_method,super_class)
+                self.add_method(new_c.get_sub_classes(),new_method,super_class,version)
 
 
 

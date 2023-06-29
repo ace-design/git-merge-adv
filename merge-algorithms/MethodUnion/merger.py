@@ -12,6 +12,17 @@ def import_merge(lang,base,right,left):
     result=import_tree.find_paths(lang)
     return result
 
+def body_merge(lang, base, right, left):
+    lang.getClasses(base,"base")
+    lang.getClasses(right,"right")
+    result=lang.getClasses(left,"left")
+
+    return result
+
+
+
+
+
 def gen_tree(base_import, right_import, left_import):
 
     root=Pack("")

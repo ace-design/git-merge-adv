@@ -39,8 +39,7 @@ def main():
     base_import,base_content=lang.extractImports(subprocess.check_output(f"cat "+base, shell=True).decode('utf-8'))
 
 
-    result=lang.getClasses(left_content+right_content+base_content)
-
+    result=merger.body_merge(lang,base_content,right_content,left_content)
 
     lang.getUsages(result)
 
