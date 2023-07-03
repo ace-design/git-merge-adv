@@ -105,7 +105,7 @@ class Class:
     def get_closer(self):
         return self.closing
     
-    def get_versions(self):
+    def get_version(self):
         return self.version
     
     def __eq__(self,obj):
@@ -126,7 +126,7 @@ class Method:
     def get_method(self):
         return self.method_name  
     
-    def get_versions(self):
+    def get_version(self):
         return self.version
 
     def __eq__(self,obj):
