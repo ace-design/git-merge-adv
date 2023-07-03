@@ -29,6 +29,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.time.Duration;
@@ -41,6 +43,7 @@ import java.util.UUID;
 import static java.time.Duration.ZERO;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static java.util.Locale.ROOT;
+import java.net.URL;
 import static io.cucumber.core.exception.ExceptionUtils.printStackTrace;
 
 public final class TestNGFormatter implements EventListener, StrictAware{
@@ -61,20 +64,6 @@ public final class TestNGFormatter implements EventListener, StrictAware{
     private final Map<URI, String> featuresNames = new HashMap<>();
     private final FeatureParser parser = new FeatureParser(UUID::randomUUID);
 
-    public TestNGFormatter(OutputStream out) {
-        this.writer = new UTF8OutputStreamWriter(out);
-        try {
-            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            results = document.createElement("testng-results");
-            suite = document.createElement("suite");
-            test = document.createElement("test");
-            suite.appendChild(test);
-            results.appendChild(suite);
-            document.appendChild(results);
-        } catch (ParserConfigurationException e) {
-            throw new CucumberException("Error initializing DocumentBuilder.", e);
-        }
-    }
     @SuppressWarnings("WeakerAccess") // Used by plugin factory
     public TestNGFormatter(URL url) throws IOException {
         this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
@@ -185,6 +174,20 @@ public final class TestNGFormatter implements EventListener, StrictAware{
         }
 
         return count;
+    }
+    public TestNGFormatter(OutputStream out) {
+        this.writer = new UTF8OutputStreamWriter(out);
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            results = document.createElement("testng-results");
+            suite = document.createElement("suite");
+            test = document.createElement("test");
+            suite.appendChild(test);
+            results.appendChild(suite);
+            document.appendChild(results);
+        } catch (ParserConfigurationException e) {
+            throw new CucumberException("Error initializing DocumentBuilder.", e);
+        }
     }
 
     final class TestCase {

@@ -1,5 +1,5 @@
 import subprocess
-from Node import Pack
+from Node import Pack,Class,MainRoot
 from Tree import Tree
 from init import writefile
 
@@ -7,43 +7,41 @@ from init import writefile
 # merger.py is used as a starting point to run different merge algorithm. 
 # Merge algorithm for import_merge is actually defined in the Tree structure. 
 
+global tree
+tree=Tree(MainRoot())
+
 def import_merge(lang,base,right,left):
-    import_tree=gen_tree(base, right, left)
-    result=import_tree.find_paths(lang)
+    gen_tree(base, right, left)
+    result=tree.find_paths(lang)
     return result
 
 def body_merge(lang, base, right, left):
-    lang.getClasses(base,"base")
-    lang.getClasses(right,"right")
-    result=lang.getClasses(left,"left")
-
+    append_tree(lang,base,right,left)
+    result=tree.find_methods(lang)
     return result
 
-
+def append_tree(lang, base, right, left):
+    tree.add_body(lang.getClasses(base,"base"))
+    tree.add_body(lang.getClasses(right,"right"))
+    tree.add_body(lang.getClasses(left,"left"))
 
 
 
 def gen_tree(base_import, right_import, left_import):
 
-    root=Pack("")
-    tree=Tree(root)
-
     #Adds all imports to the tree. Tree structure ensures no duplicates.
 
     for imports in left_import:
-        tree.add(imports,"left")
+        tree.add_import(imports,"left")
 
     
     for imports in right_import:
-        tree.add(imports,"right")
+        tree.add_import(imports,"right")
 
 
     for imports in base_import:
-        tree.add(imports,"base")
+        tree.add_import(imports,"base")
 
-
-    #Writes imports in tree to given output file.
-    return tree
 
 def git_merge(base,right,left,lang):
 

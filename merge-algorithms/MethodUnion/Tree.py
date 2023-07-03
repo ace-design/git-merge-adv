@@ -1,9 +1,11 @@
-from Node import Pack, End
+from Node import Pack, End, Class, Method
 
 class Tree:
 
     def __init__(self,root):
         self.root=root
+        self.import_root=Pack("")
+        self.root.add_child(self.import_root)
         self.map={}
 
     def add_traverse(self,node,path,version):
@@ -21,6 +23,18 @@ class Tree:
         else:
                 self.map[path[1]]=set()
                 self.map[path[1]].add(child)
+
+    def add_body(self, body):
+        for body_element in body:
+            self.root.add_child(body_element)
+
+    def find_methods(self,lang):
+        body=""
+        for branch in self.root.get_children():
+            if (type(branch) is Class):
+                body=lang.output_methods(body,branch)
+        return body
+    
     
 
     def find_paths(self,lang):
@@ -35,9 +49,9 @@ class Tree:
             if len(paths)==1:
                 versions=list(paths[0].get_version())
                 if (len(versions)==1 or len(versions)==2):
-                    lang.output_traverse(self.root, "",all_import,paths[0],True)
+                    lang.output_traverse(self.import_root, "",all_import,paths[0],True)
                 else:
-                    lang.output_traverse(self.root, "",all_import,paths[0],False)
+                    lang.output_traverse(self.import_root, "",all_import,paths[0],False)
                 updater=versions
 
             elif len(paths)==2:
@@ -47,19 +61,19 @@ class Tree:
                 if (len(versions)==2 or len(versions_2)==2):
                     if (len(versions)==2):
                         if (versions_2[0]=="base"):
-                            lang.output_traverse(self.root,"",all_import,paths[0],False)
+                            lang.output_traverse(self.import_root,"",all_import,paths[0],False)
                         else:
-                            lang.output_traverse(self.root,"",all_import,paths[1],False)
+                            lang.output_traverse(self.import_root,"",all_import,paths[1],False)
                             updater=versions_2
                     else:
-                        lang.output_traverse(self.root,"",all_import,paths[0],False)
+                        lang.output_traverse(self.import_root,"",all_import,paths[0],False)
                         updater=versions
                 else:
                     if (versions[0]=="base"):
-                        lang.output_traverse(self.root,"",all_import,paths[1],True)
+                        lang.output_traverse(self.import_root,"",all_import,paths[1],True)
                         updater=versions_2
                     elif (versions_2[0]=="base"):
-                        lang.output_traverse(self.root,"",all_import,paths[0],True)
+                        lang.output_traverse(self.import_root,"",all_import,paths[0],True)
                         updater=versions
                     else:
                         extra[current_sum]=self.map[dir]
@@ -80,18 +94,18 @@ class Tree:
             if (len(paths)==2):
                 versions=list(paths[0].get_version())
                 if (versions[0]==highest):
-                    lang.output_traverse(self.root,"",all_import,paths[0],True)
+                    lang.output_traverse(self.import_root,"",all_import,paths[0],True)
                 else:
-                    lang.output_traverse(self.root,"",all_import,paths[1],True)
+                    lang.output_traverse(self.import_root,"",all_import,paths[1],True)
             else:
                 versions=list(paths[0].get_version())
                 versions_2=list(paths[1].get_version())
                 if (highest in versions):
-                    lang.output_traverse(self.root,"",all_import,paths[0],True)
+                    lang.output_traverse(self.import_root,"",all_import,paths[0],True)
                 elif (highest in versions_2):
-                    lang.output_traverse(self.root,"",all_import,paths[1],True)
+                    lang.output_traverse(self.import_root,"",all_import,paths[1],True)
                 else:
-                    lang.output_traverse(self.root,"",all_import,paths[2],True)
+                    lang.output_traverse(self.import_root,"",all_import,paths[2],True)
 
             curr_path=all_import.pop(-1)
             all_import.insert(conflict_dir-1,curr_path)
@@ -107,6 +121,6 @@ class Tree:
         return highest
 
 
-    def add(self,path,version):
-        self.add_traverse(self.root,path,version)
+    def add_import(self,path,version):
+        self.add_traverse(self.import_root,path,version)
     

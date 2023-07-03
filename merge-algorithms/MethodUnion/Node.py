@@ -43,7 +43,18 @@ class Pack:
     
     def get_full_dir(self):
         return self.path
+
+class MainRoot:
+    def __init__(self):
+        self.children=set()
     
+    def add_child(self,child):
+        self.children.add(child)
+    
+    def get_children(self):
+        return self.children
+
+
 class Class:
     def __init__(self,name,full_name,indent,closer,version):
         self.version=[version]

@@ -70,6 +70,12 @@ class Java(Lang):
     global class_ref  
     class_ref={}
 
+    global all_classes
+    all_classes={}
+
+    global all_methods
+    all_methods={}
+
     def output_traverse(self,node,string,all_imports,target,suspicious):
         # Finds the specified target node in the tree
         # print(target.get_full_dir())
@@ -266,6 +272,11 @@ class Java(Lang):
             
             new_class=Class(new_class_name,new_full_name,indentation,"}",version)
 
+            if (new_class_name in all_classes.keys()):
+                all_classes[new_class_name].append(new_class)
+            else:
+                all_classes[new_class_name]=[new_class]
+
             if (new_full_name not in class_ref.keys()):
                 class_ref[new_full_name]=new_class
             else:
@@ -306,17 +317,22 @@ class Java(Lang):
         for method in method_captures:
 
             method_name=method[0].parent.text.decode()
+            method_declaration=method[0].parent.children[1].text.decode()+" "+(method[0].parent.children[2].text.decode())
             new_method=Method(method_name,version)
+            if (method_declaration in all_methods.keys()):
+                all_methods[method_declaration].append(new_method)
+            else:
+                all_methods[method_declaration]=[new_method]
             indentation=int(method[0].parent.parent.parent.children[0].start_point[1])
             super_class=method[0].parent.parent.parent.children[2].text.decode()
             self.add_method(classes,new_method,super_class,version)
 
 
-        body=""
-        for class_name in classes:
-            body=self.output_methods(body,class_name)
+        # body=""
+        # for class_name in classes:
+        #     body=self.output_methods(body,class_name)
 
-        return body
+        return classes
     
     def add_method(self,classes,new_method,super_class,version):
         for new_c in classes:
