@@ -4,6 +4,7 @@ from tree_sitter import Language, Parser
 from Node import Pack, Class, Method
 from abc import ABC,abstractmethod
 import os
+import copy
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
@@ -94,22 +95,23 @@ class Java(Lang):
 
 
     def output_methods(self,body,class_name):
-        spacing=' '*int(class_name.get_ranking()*4)
-        body+='\n'+spacing+class_name.get_full_name()+'{\n\n'
-        method_spacing=spacing+' '*4
+        if (class_name.is_selected()):
+            spacing=' '*int(class_name.get_ranking()*4)
+            body+='\n'+spacing+class_name.get_full_name()+'{\n\n'
+            method_spacing=spacing+' '*4
 
-        for declaration in class_name.get_declarations():
-            body+=method_spacing+declaration+'\n'
+            for declaration in class_name.get_declarations():
+                body+=method_spacing+declaration+'\n'
 
-        body+='\n'
-
-        for method in class_name.get_methods():
-            body+=method_spacing+method.get_method()+'\n'
+            body+='\n'
+            for method in class_name.get_methods():
+                if (method.is_selected()):
+                    body+=method_spacing+method.get_method()+'\n'
+            
+            for sub_class in class_name.get_sub_classes():
+                body = self.output_methods(body,sub_class)
         
-        for sub_class in class_name.get_sub_classes():
-            body = self.output_methods(body,sub_class)
-        
-        body+=spacing+class_name.get_closer()+'\n'
+            body+=spacing+class_name.get_closer()+'\n'
         return body
 
 
@@ -260,20 +262,20 @@ class Java(Lang):
 
 
 
+
             if (class_details[3].text.decode()[0]!="{"):
                 superclass=" "+class_details[3].text.decode()
             else:
                 superclass=" "
             superclass=superclass.split('{')[0]
 
-
-
             new_full_name=class_details[0].text.decode()+" "+class_details[1].text.decode()+" "+class_details[2].text.decode()+superclass
             
             new_class=Class(new_class_name,new_full_name,indentation,"}",version)
 
             if (new_class_name in all_classes.keys()):
-                all_classes[new_class_name].append(new_class)
+                if (new_class not in all_classes[new_class_name]):
+                    all_classes[new_class_name].append(new_class)
             else:
                 all_classes[new_class_name]=[new_class]
 
@@ -304,7 +306,6 @@ class Java(Lang):
                 class_ref[super_name].add_sub_classes(new_class)
 
 
-
         for field in field_captures:
             declaration=field[0].parent.text.decode()
             if (field[0].parent.parent.parent.children[3].text.decode()[0]!="{"):
@@ -317,30 +318,65 @@ class Java(Lang):
         for method in method_captures:
 
             method_name=method[0].parent.text.decode()
-            method_declaration=method[0].parent.children[1].text.decode()+" "+(method[0].parent.children[2].text.decode())
-            new_method=Method(method_name,version)
-            if (method_declaration in all_methods.keys()):
-                all_methods[method_declaration].append(new_method)
+            method_declaration=" "
+            index=-2
+
+            while ("(" not in method_declaration or method_declaration[0]=="("):
+                method_declaration=method[0].parent.children[index].text.decode()+" "+method_declaration
+                index-=1
+
+            name=method[0].parent.parent.parent.children
+            super_class=""
+            index=0
+
+            while(index<len(name) and "{" not in name[index].text.decode()):
+                super_class+=name[index].text.decode()+" "
+                index+=1
+            new_method=Method(method_name,version,super_class)
+
+            #Method declaration is referenced by its signature.
+            if (super_class+" "+method_declaration in all_methods.keys()):
+                if (new_method not in all_methods[super_class+" "+method_declaration]):
+                    all_methods[super_class+" "+method_declaration].append(new_method)
+                    self.add_method(classes,new_method,super_class,version)
+                else:
+                    index=all_methods[super_class+" "+method_declaration].index(new_method)
+                    all_methods[super_class+" "+method_declaration][index].add_version(version)
             else:
-                all_methods[method_declaration]=[new_method]
-            indentation=int(method[0].parent.parent.parent.children[0].start_point[1])
-            super_class=method[0].parent.parent.parent.children[2].text.decode()
-            self.add_method(classes,new_method,super_class,version)
+                all_methods[super_class+" "+method_declaration]=[new_method]
 
+                self.add_method(classes,new_method,super_class,version)
 
+            # indentation=int(method[0].parent.parent.parent.children[0].start_point[1])
+            # print("sent"+str(new_method))
+            # self.add_method(classes,new_method,super_class,version)
         # body=""
         # for class_name in classes:
         #     body=self.output_methods(body,class_name)
+
 
         return classes
     
     def add_method(self,classes,new_method,super_class,version):
         for new_c in classes:
-            if (new_c.get_class_name()==super_class):
+            print("Class")
+            print(repr(new_c.get_full_name()))
+            print("Super")
+            print(repr(super_class))
+            print(new_c.get_full_name()==super_class)
+            if (new_c.get_full_name().strip(" ")==super_class.strip(" ")):
+                # print(super_class)
+                # print(new_c.get_full_name())
                 new_c.add_method(new_method,version)
+                # print(new_c.get_methods())
             else:
                 self.add_method(new_c.get_sub_classes(),new_method,super_class,version)
 
+    def get_method_ref(self):
+        return dict(all_methods)
+    
+    def get_class_ref(self):
+        return dict(all_classes)
 
 
 class Python(Lang):

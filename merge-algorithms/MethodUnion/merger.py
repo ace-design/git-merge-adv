@@ -17,13 +17,18 @@ def import_merge(lang,base,right,left):
 
 def body_merge(lang, base, right, left):
     append_tree(lang,base,right,left)
+    tree.set_classes(lang)
+    tree.set_methods(lang)
     result=tree.find_methods(lang)
     return result
 
 def append_tree(lang, base, right, left):
     tree.add_body(lang.getClasses(base,"base"))
+    print("Right")
     tree.add_body(lang.getClasses(right,"right"))
+    print("Left")
     tree.add_body(lang.getClasses(left,"left"))
+    print("Done")
 
 
 

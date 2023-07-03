@@ -72,7 +72,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             results = document.createElement("testng-results");
             suite = document.createElement("suite");
             test = document.createElement("test");
-            suite.appendChild(test);
+            suite.appendChiTestNGFormatter(OutputStream out)ld(test);
             results.appendChild(suite);
             document.appendChild(results);
         } catch (ParserConfigurationException e) {
@@ -90,7 +90,8 @@ public final class TestNGFormatter implements EventListener, StrictAware{
     }
     private void handleTestRunStarted(TestRunStarted event) {
         this.started = event.getInstant();
-    }
+    }            super_class=super_class.strip(" ")
+
     @Override
     public void setStrict(boolean strict) {
         this.strict = strict;
@@ -212,43 +213,6 @@ public final class TestNGFormatter implements EventListener, StrictAware{
                 previousTestCaseName = testCaseName;
                 exampleNumber = 1;
                 return testCaseName;
-            }
-        }
-        void finish(Document doc, Element element, Instant instant) {
-            element.setAttribute("duration-ms", calculateTotalDurationString());
-            element.setAttribute("finished-at", ISO_INSTANT.format(instant));
-            StringBuilder stringBuilder = new StringBuilder();
-            addStepAndResultListing(stringBuilder);
-            Result skipped = null;
-            Result failed = null;
-            for (Result result : results) {
-                if (result.getStatus().is(Status.FAILED) || result.getStatus().is(Status.AMBIGUOUS)) {
-                    failed = result;
-                }
-                if (result.getStatus().is(Status.UNDEFINED) || result.getStatus().is(Status.PENDING)) {
-                    skipped = result;
-                }
-            }
-            for (Result result : hooks) {
-                if (failed == null && result.getStatus().is(Status.FAILED)) {
-                    failed = result;
-                }
-            }
-            if (failed != null) {
-                element.setAttribute("status", "FAIL");
-                String stacktrace = printStrackTrace(failed);
-                Element exception = createException(doc, failed.getError().getClass().getName(), stringBuilder.toString(), stacktrace);
-                element.appendChild(exception);
-            } else if (skipped != null) {
-                if (strict) {
-                    element.setAttribute("status", "FAIL");
-                    Element exception = createException(doc, "The scenario has pending or undefined step(s)", stringBuilder.toString(), "The scenario has pending or undefined step(s)");
-                    element.appendChild(exception);
-                } else {
-                    element.setAttribute("status", "SKIP");
-                }
-            } else {
-                element.setAttribute("status", "PASS");
             }
         }
         private String printStrackTrace(Result failed) {

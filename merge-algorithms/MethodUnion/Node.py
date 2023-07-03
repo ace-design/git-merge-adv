@@ -57,7 +57,8 @@ class MainRoot:
 
 class Class:
     def __init__(self,name,full_name,indent,closer,version):
-        self.version=[version]
+        self.version=set()
+        self.version.add(version)
         self.closing=closer
         self.ranking=indent/4
         self.class_name=name
@@ -65,6 +66,7 @@ class Class:
         self.methods=[]
         self.sub_classes=[]
         self.declarations=[]
+        self.selected=False
     
     def add_method(self,method,version):
         if (method not in self.methods):
@@ -72,7 +74,8 @@ class Class:
         else:
             existing_method_idx=self.methods.index(method)
             self.methods[existing_method_idx].add_version(version)
-    
+
+
     def add_sub_classes(self,new_class):
         if (new_class not in self.sub_classes):
             self.sub_classes.append(new_class)
@@ -82,7 +85,10 @@ class Class:
             self.declarations.append(new_declaration)
     
     def add_version(self,version):
-        self.version.append(version)
+        self.version.add(version)
+    
+    def set_selected(self):
+        self.selected=True
 
     def get_methods(self):
         return self.methods
@@ -108,6 +114,9 @@ class Class:
     def get_version(self):
         return self.version
     
+    def is_selected(self):
+        return self.selected
+    
     def __eq__(self,obj):
         return (self.full_name==obj.get_full_name())
     
@@ -116,21 +125,33 @@ class Class:
 
 
 class Method:
-    def __init__(self,des,version):
+    def __init__(self,des,version,super_class):
         self.method_name=des
-        self.version=[version]
+        self.super=super_class
+        self.version=set()
+        self.version.add(version)
+        self.selected=False
 
     def add_version(self,version):
-        self.version.append(version)
+        self.version.add(version)
+
+    def set_selected(self):
+        self.selected=True
 
     def get_method(self):
         return self.method_name  
     
     def get_version(self):
         return self.version
+    
+    def get_super(self):
+        return self.super
+    
+    def is_selected(self):
+        return self.selected
 
     def __eq__(self,obj):
-        return (self.method_name==obj.get_method())
+        return (self.method_name==obj.get_method() and self.super==obj.get_super())
     
     def __hash__(self):
         return hash(self.get_method()) 

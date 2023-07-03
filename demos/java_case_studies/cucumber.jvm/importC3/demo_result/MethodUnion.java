@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import cucumber.runtime.formatter.PluginFactory;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -203,68 +202,6 @@ public final class RuntimeOptionsBuilder {
         parsedRerunPaths.addAll(featureWithLines);
         return this;
     }
-    public RuntimeOptionsBuilder addFeature(FeatureWithLines featureWithLines) {
-        parsedFeaturePaths.add(featureWithLines);
-        return this;
-    }
-    public RuntimeOptions build(RuntimeOptions runtimeOptions) {
-        if (this.parsedThreads != null) {
-            runtimeOptions.setThreads(this.parsedThreads);
-        }
-
-        if (this.parsedDryRun != null) {
-            runtimeOptions.setDryRun(this.parsedDryRun);
-        }
-
-        if (this.parsedStrict != null) {
-            runtimeOptions.setStrict(this.parsedStrict);
-        }
-
-        if (this.parsedMonochrome != null) {
-            runtimeOptions.setMonochrome(this.parsedMonochrome);
-        }
-
-        if (this.parsedSnippetType != null) {
-            runtimeOptions.setSnippetType(this.parsedSnippetType);
-        }
-
-        if (this.parsedWip != null) {
-            runtimeOptions.setWip(this.parsedWip);
-        }
-
-        if (this.parsedPickleOrder != null) {
-            runtimeOptions.setPickleOrder(this.parsedPickleOrder);
-        }
-
-        if (this.parsedCount != null) {
-            runtimeOptions.setCount(this.parsedCount);
-        }
-
-        if (!this.parsedTagFilters.isEmpty() || !this.parsedNameFilters.isEmpty() || hasFeaturesWithLineFilters()) {
-            runtimeOptions.setTagFilters(this.parsedTagFilters);
-            runtimeOptions.setNameFilters(this.parsedNameFilters);
-        }
-        if (!this.parsedFeaturePaths.isEmpty() || this.parsedRerunPaths != null) {
-            List<FeatureWithLines> features = new ArrayList<>(this.parsedFeaturePaths);
-            if (parsedRerunPaths != null) {
-                features.addAll(this.parsedRerunPaths);
-            }
-            runtimeOptions.setFeaturePaths(features);
-        }
-
-        if (!this.parsedGlue.isEmpty()) {
-            runtimeOptions.setGlue(this.parsedGlue);
-        }
-        if (!this.parsedJunitOptions.isEmpty()) {
-            runtimeOptions.setJunitOptions(this.parsedJunitOptions);
-        }
-
-        this.parsedPluginData.updatePluginFormatterNames(runtimeOptions.getPluginFormatterNames());
-        this.parsedPluginData.updatePluginStepDefinitionReporterNames(runtimeOptions.getPluginStepDefinitionReporterNames());
-        this.parsedPluginData.updatePluginSummaryPrinterNames(runtimeOptions.getPluginSummaryPrinterNames());
-
-        return runtimeOptions;
-    }
     private boolean hasFeaturesWithLineFilters() {
         if (parsedRerunPaths != null) {
             return true;
@@ -276,135 +213,8 @@ public final class RuntimeOptionsBuilder {
         }
         return false;
     }
-    public RuntimeOptions build(RuntimeOptions runtimeOptions) {
-        if (this.parsedThreads != null) {
-            runtimeOptions.setThreads(this.parsedThreads);
-        }
-
-        if (this.parsedDryRun != null) {
-            runtimeOptions.setDryRun(this.parsedDryRun);
-        }
-
-        if (this.parsedStrict != null) {
-            runtimeOptions.setStrict(this.parsedStrict);
-        }
-
-        if (this.parsedMonochrome != null) {
-            runtimeOptions.setMonochrome(this.parsedMonochrome);
-        }
-
-        if (this.parsedSnippetType != null) {
-            runtimeOptions.setSnippetType(this.parsedSnippetType);
-        }
-
-        if (this.parsedWip != null) {
-            runtimeOptions.setWip(this.parsedWip);
-        }
-
-        if (this.parsedPickleOrder != null) {
-            runtimeOptions.setPickleOrder(this.parsedPickleOrder);
-        }
-
-        if (this.parsedCount != null) {
-            runtimeOptions.setCount(this.parsedCount);
-        }
-
-        if (!this.parsedTagFilters.isEmpty() || !this.parsedNameFilters.isEmpty() || hasFeaturesWithLineFilters()) {
-            runtimeOptions.setTagExpressions(this.parsedTagFilters);
-            runtimeOptions.setNameFilters(this.parsedNameFilters);
-        }
-        if (!this.parsedFeaturePaths.isEmpty() || this.parsedRerunPaths != null) {
-            List<FeatureWithLines> features = new ArrayList<>(this.parsedFeaturePaths);
-            if (parsedRerunPaths != null) {
-                features.addAll(this.parsedRerunPaths);
-            }
-            runtimeOptions.setFeaturePaths(features);
-        }
-
-        if (!this.parsedGlue.isEmpty()) {
-            runtimeOptions.setGlue(this.parsedGlue);
-        }
-
-        this.parsedPluginData.updateFormatters(runtimeOptions.getFormatters());
-        this.parsedPluginData.updateSummaryPrinters(runtimeOptions.getSummaryPrinter());
-
-        if (parsedObjectFactoryClass != null) {
-            runtimeOptions.setObjectFactoryClass(parsedObjectFactoryClass);
-        }
-
-        return runtimeOptions;
-    }
-    private boolean hasFeaturesWithLineFilters() {
-        return parsedRerunPaths != null || !parsedFeaturePaths.stream()
-            .map(FeatureWithLines::lines)
-            .allMatch(Set::isEmpty);
-    }
     public void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
         this.parsedObjectFactoryClass = objectFactoryClass;
-    }
-
-    private static class ParsedPluginData {
-
-        ParsedOptionNames formatterNames = new ParsedOptionNames();
-        ParsedOptionNames stepDefinitionReporterNames = new ParsedOptionNames();
-        ParsedOptionNames summaryPrinterNames = new ParsedOptionNames();
-
-        void addPluginName(String name, boolean isAddPlugin) {
-            if (PluginFactory.isStepDefinitionReporterName(name)) {
-                stepDefinitionReporterNames.addName(name, isAddPlugin);
-            } else if (PluginFactory.isSummaryPrinterName(name)) {
-                summaryPrinterNames.addName(name, isAddPlugin);
-            } else if (PluginFactory.isFormatterName(name)) {
-                formatterNames.addName(name, isAddPlugin);
-            } else {
-                throw new CucumberException("Unrecognized plugin: " + name);
-            }
-        }
-        void updatePluginFormatterNames(List<String> pluginFormatterNames) {
-            formatterNames.updateNameList(pluginFormatterNames);
-        }
-        void updatePluginStepDefinitionReporterNames(List<String> pluginStepDefinitionReporterNames) {
-            stepDefinitionReporterNames.updateNameList(pluginStepDefinitionReporterNames);
-        }
-        void updatePluginSummaryPrinterNames(List<String> pluginSummaryPrinterNames) {
-            summaryPrinterNames.updateNameList(pluginSummaryPrinterNames);
-        }
-        void addDefaultSummaryPrinterIfNotPresent() {
-            if (summaryPrinterNames.names.isEmpty()) {
-                summaryPrinterNames.addName("default_summary", false);
-            }
-        }
-        void addDefaultFormatterIfNotPresent() {
-            if (formatterNames.names.isEmpty()) {
-                formatterNames.addName("progress", false);
-            }
-        }
-        void addPluginName(String name, boolean isAddPlugin) {
-            PluginOption pluginOption = PluginOption.parse(name);
-            if (pluginOption.isSummaryPrinter()) {
-                summaryPrinters.addName(pluginOption, isAddPlugin);
-            } else if (pluginOption.isFormatter()) {
-                formatters.addName(pluginOption, isAddPlugin);
-            } else {
-                throw new CucumberException("Unrecognized plugin: " + name);
-            }
-        }
-        void addDefaultSummaryPrinterIfNotPresent() {
-            if (summaryPrinters.names.isEmpty()) {
-                addPluginName("summary", false);
-            }
-        }
-        void addDefaultFormatterIfNotPresent() {
-            if (formatters.names.isEmpty()) {
-                addPluginName("progress", false);
-            }
-        }
-        void updateFormatters(List<Options.Plugin> formatter) {
-            this.formatters.updateNameList(formatter);
-        }
-        void updateSummaryPrinters(List<Options.Plugin> pluginSummaryPrinterNames) {
-            summaryPrinters.updateNameList(pluginSummaryPrinterNames);
-        }
     }
 
     private static class ParsedOptionNames {

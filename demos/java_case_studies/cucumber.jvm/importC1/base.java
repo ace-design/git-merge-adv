@@ -70,7 +70,8 @@ public final class TestNGFormatter implements EventListener, StrictAware {
         this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            results = document.createElement("testng-results");
+            results = document.createElemen
+            t("testng-results");
             suite = document.createElement("suite");
             test = document.createElement("test");
             suite.appendChild(test);

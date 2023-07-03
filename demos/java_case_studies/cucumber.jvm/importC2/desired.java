@@ -65,7 +65,7 @@ public final class RuntimeOptions implements
         return summaryPrinters;
     }
 
-    public boolean isMultiThreaded() {
+    public boolean isMultiTestNGFThreaded() {
         return getThreads() > 1;
     }
 
