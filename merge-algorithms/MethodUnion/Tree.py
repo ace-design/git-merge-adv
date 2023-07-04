@@ -12,7 +12,11 @@ class Tree:
         self.class_ref={}
         self.method_ref={}
 
-    def add_traverse(self,node,path,version):
+    def add_import(self,path,version):
+        self.import_traverse(self.import_root,path,version)
+
+
+    def import_traverse(self,node,path,version):
         parent=node.add_child(Pack(path[0]))
 
         if len(path)>2:
@@ -120,7 +124,7 @@ class Tree:
 
         
 
-    def find_paths(self,lang):
+    def find_imports(self,lang):
         all_import=[]
         version_ref={'right':0,'base':0,'left':0}
         current_sum=0
@@ -171,11 +175,6 @@ class Tree:
         else:
             highest=ordered[0]
         return highest
-
-
-    def add_import(self,path,version):
-        self.add_traverse(self.import_root,path,version)
-
     
 
     def confilct_resolver(self,lang,conflicted_content):

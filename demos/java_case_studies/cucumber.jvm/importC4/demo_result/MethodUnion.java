@@ -115,34 +115,28 @@ public final class Cucumber extends ParentRunner<FeatureRunner>{
                 .filter(runner -> !runner.isEmpty())
                 .collect(toList());
     }
-
     @Override
     protected List<FeatureRunner> getChildren() {
         return children;
     }
-
     @Override
     protected Description describeChild(FeatureRunner child) {
         return child.getDescription();
     }
-
     @Override
     protected void runChild(FeatureRunner child, RunNotifier notifier) {
         child.run(notifier);
     }
-
     @Override
     protected Statement childrenInvoker(RunNotifier notifier) {
         Statement runFeatures = super.childrenInvoker(notifier);
         return new RunCucumber(runFeatures);
     }
-
     @Override
     public void setScheduler(RunnerScheduler scheduler) {
         super.setScheduler(scheduler);
         multiThreadingAssumed = true;
     }
-
 
     class RunCucumber extends Statement {
 
