@@ -11,7 +11,11 @@ class Tree:
         self.class_ref={}
         self.method_ref={}
 
-    def add_traverse(self,node,path,version):
+    def add_import(self,path,version):
+        self.import_traverse(self.import_root,path,version)
+
+
+    def import_traverse(self,node,path,version):
         parent=node.add_child(Pack(path[0]))
 
         if len(path)>2:
@@ -26,98 +30,7 @@ class Tree:
                 self.import_ref[path[1]]=set()
                 self.import_ref[path[1]].add(child)
 
-
-    def add_body(self, body):
-        for body_element in body:
-            self.root.add_child(body_element)
-
-
-    def find_methods(self,lang):
-        body=""
-        for branch in self.root.get_children():
-            if (type(branch) is Class):
-                body=lang.output_methods(body,branch)
-        return body
-    
-
-    def set_classes(self,lang):
-        self.class_ref=lang.get_class_ref()
-        extra=[]
-        for class_val in self.class_ref.keys():
-            if (len(self.class_ref[class_val])>0):
-                result,sus,versions=self.base_algorithm(self.class_ref,class_val)
-                if (type(result) is str):
-                    result=self.class_ref[class_val][0]
-                    extra.append(class_val)
-                result.set_selected()
-
-
-    def set_methods(self,lang):
-        extra=[]
-        self.method_ref=lang.get_method_ref()
-        for method_val in self.method_ref.keys():
-            result,sus,versions=self.base_algorithm(self.method_ref,method_val)
-            if (type(result) is str or sus):
-                # self.method_ref[method_val][0].set_selected()
-                extra.append(method_val)
-            else:
-                result.set_selected()
-        #Run GitMerge on the ones we are uncertain with
-        for method in extra:
-            all_versions=self.method_ref[method]
-            base=""
-            left=""
-            right=""
-            for method_version in all_versions:
-                if "base" in method_version.get_version():
-                    base=method_version.get_method().split('\n')
-                elif "right" in method_version.get_version():
-                    left=method_version.get_method().split('\n')
-                elif "left" in method_version.get_version():
-                    right=method_version.get_method().split('\n')
-            result=merger.git_merge(base,right,left,lang.get_lang())
-            self.method_ref[method][0].overwrite_method(result)
-            self.method_ref[method][0].set_selected()
-
-            
-        
-
-
-    def base_algorithm(self,references,node):
-        paths=list(references[node])
-
-        if (len(paths)==1):
-            versions=list(paths[0].get_version())
-            if (len(versions)==1 or len(versions)==2):
-                return paths[0],True,versions #updater=versions
-            else:
-                return paths[0],False,versions #False because 3 versions include same
-        elif (len(paths)==2):
-            versions=list(paths[0].get_version())
-            versions_2=list(paths[1].get_version())
-            if (len(versions)==2 or len(versions_2)==2):
-                if (len(versions)==2):
-                    if (versions_2[0]=="base"):
-                        return paths[0],False,versions
-                    else:
-                        return paths[1],False,versions_2
-                else:
-                    return paths[0],False,versions
-            else:
-                if (versions[0]=="base"):
-                    return paths[1],True,versions_2
-                elif (versions_2[0]=="base"):
-                    return paths[0],True,versions
-                else:
-                    return "Conflicting",None,None
-                    # extra[current_sum]=self.map[dir]
-        else:
-            return "Conflicting",None,None
-            # extra[current_sum]=self.map[dir]
-
-        
-
-    def find_paths(self,lang):
+    def find_imports(self,lang):
         all_import=[]
         version_ref={'right':0,'base':0,'left':0}
         current_sum=0
@@ -170,6 +83,89 @@ class Tree:
         return highest
 
 
-    def add_import(self,path,version):
-        self.add_traverse(self.import_root,path,version)
+    def add_body(self, body):
+        for body_element in body:
+            self.root.add_child(body_element)
+
+
+    def find_methods(self,lang):
+        body=""
+        for branch in self.root.get_children():
+            if (type(branch) is Class):
+                body=lang.output_methods(body,branch)
+        return body
+    
+
+    def set_classes(self,lang):
+        self.class_ref=lang.get_class_ref()
+        extra=[]
+        for class_val in self.class_ref.keys():
+            if (len(self.class_ref[class_val])>0):
+                result,sus,versions=self.base_algorithm(self.class_ref,class_val)
+                if (type(result) is str):
+                    result=self.class_ref[class_val][0]
+                    extra.append(class_val)
+                result.set_selected()
+
+
+    def set_methods(self,lang):
+        extra=[]
+        self.method_ref=lang.get_method_ref()
+        for method_val in self.method_ref.keys():
+            result,sus,versions=self.base_algorithm(self.method_ref,method_val)
+            if (type(result) is str):
+                # self.method_ref[method_val][0].set_selected()
+                extra.append(method_val)
+            else:
+                result.set_selected()
+        #Run GitMerge on the ones we are uncertain with
+        for method in extra:
+            all_versions=self.method_ref[method]
+            base=""
+            left=""
+            right=""
+            for method_version in all_versions:
+                if "base" in method_version.get_version():
+                    base=method_version.get_method().split('\n')
+                elif "right" in method_version.get_version():
+                    left=method_version.get_method().split('\n')
+                elif "left" in method_version.get_version():
+                    right=method_version.get_method().split('\n')
+            result=merger.git_merge(base,right,left,lang.get_lang())
+            self.method_ref[method][0].overwrite_method(result)
+            self.method_ref[method][0].set_selected()
+
+
+    def base_algorithm(self,references,node):
+        paths=list(references[node])
+
+        if (len(paths)==1):
+            versions=list(paths[0].get_version())
+            if (len(versions)==1 or len(versions)==2):
+                return paths[0],True,versions #updater=versions
+            else:
+                return paths[0],False,versions #False because 3 versions include same
+        elif (len(paths)==2):
+            versions=list(paths[0].get_version())
+            versions_2=list(paths[1].get_version())
+            if (len(versions)==2 or len(versions_2)==2):
+                if (len(versions)==2):
+                    if (versions_2[0]=="base"):
+                        return paths[0],False,versions
+                    else:
+                        return paths[1],False,versions_2
+                else:
+                    return paths[0],False,versions
+            else:
+                if (versions[0]=="base"):
+                    return paths[1],True,versions_2
+                elif (versions_2[0]=="base"):
+                    return paths[0],True,versions
+                else:
+                    return "Conflicting",None,None
+                    # extra[current_sum]=self.map[dir]
+        else:
+            return "Conflicting",None,None
+            # extra[current_sum]=self.map[dir]
+
     

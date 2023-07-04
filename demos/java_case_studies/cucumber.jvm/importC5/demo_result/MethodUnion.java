@@ -1,36 +1,43 @@
 package io.cucumber.testng;
+import io.cucumber.core.backend.ObjectFactoryServiceLoader;
 import io.cucumber.core.event.TestRunFinished;
 import io.cucumber.core.event.TestRunStarted;
-import io.cucumber.core.event.TestSourceRead;
 import io.cucumber.core.eventbus.EventBus;
 import io.cucumber.core.exception.CucumberException;
+import io.cucumber.core.event.TestSourceRead;
 import io.cucumber.core.feature.CucumberFeature;
 import io.cucumber.core.feature.CucumberPickle;
 import io.cucumber.core.feature.FeatureLoader;
-import io.cucumber.core.filter.Filters;
 import io.cucumber.core.io.ClassFinder;
+import io.cucumber.core.filter.Filters;
 import io.cucumber.core.io.MultiLoader;
 import io.cucumber.core.io.ResourceLoader;
 import io.cucumber.core.io.ResourceLoaderClassFinder;
 import io.cucumber.core.options.CucumberOptionsAnnotationParser;
+import io.cucumber.core.options.CucumberProperties;
+import io.cucumber.core.options.CucumberPropertiesParser;
 import io.cucumber.core.options.RuntimeOptions;
 import io.cucumber.core.plugin.PluginFactory;
 import io.cucumber.core.plugin.Plugins;
+import io.cucumber.core.runner.Runner;
+import io.cucumber.core.runtime.BackendServiceLoader;
+import io.cucumber.core.runtime.FeaturePathFeatureSupplier;
+import io.cucumber.core.runtime.ObjectFactorySupplier;
+import io.cucumber.core.runtime.ScanningTypeRegistryConfigurerSupplier;
+import io.cucumber.core.runtime.ThreadLocalObjectFactorySupplier;
+import io.cucumber.core.runtime.ThreadLocalRunnerSupplier;
+import io.cucumber.core.runtime.TimeServiceEventBus;
+import io.cucumber.core.runtime.TypeRegistryConfigurerSupplier;
 import org.apiguardian.api.API;
 import org.testng.SkipException;
+import java.time.Clock;
 import java.util.List;
-import io.cucumber.core.runner.Runner;
 import java.util.function.Predicate;
-import io.cucumber.core.runtime.FeaturePathFeatureSupplier;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import cucumber.runner.TimeService;
-import io.cucumber.core.runtime.ThreadLocalRunnerSupplier;
-import io.cucumber.core.runtime.TimeServiceEventBus;
 import cucumber.runtime.BackendModuleBackendSupplier;
-import cucumber.runtime.Env;
 import gherkin.events.PickleEvent;
-import io.cucumber.core.options.EnvironmentOptionsParser;
 import cucumber.runner.*;
 import cucumber.runtime.*;
 
@@ -46,27 +53,51 @@ public final class TestNGCucumberRunner {
     private final Predicate<CucumberPickle> filters;
 
     public TestNGCucumberRunner(Class clazz) {
+
         ClassLoader classLoader = clazz.getClassLoader();
         ResourceLoader resourceLoader = new MultiLoader(classLoader);
+        ClassFinder classFinder = new ResourceLoaderClassFinder(resourceLoader, classLoader);
 
         // Parse the options early to provide fast feedback about invalid options
+        RuntimeOptions propertiesFileOptions = new CucumberPropertiesParser(resourceLoader)
+            .parse(CucumberProperties.fromPropertiesFile())
+            .build();
+
         RuntimeOptions annotationOptions = new CucumberOptionsAnnotationParser(resourceLoader)
             .withOptionsProvider(new TestNGCucumberOptionsProvider())
             .parse(clazz)
-            .build();
-        runtimeOptions = new EnvironmentOptionsParser(resourceLoader)
-            .parse(Env.INSTANCE)
+            .build(propertiesFileOptions);
+
+        RuntimeOptions environmentOptions = new CucumberPropertiesParser(resourceLoader)
+            .parse(CucumberProperties.fromEnvironment())
             .build(annotationOptions);
+
+<<<<<<< left_content.java
+        runtimeOptions.addUndefinedStepsPrinterIfSummaryNotDefined();
 
         ClassFinder classFinder = new ResourceLoaderClassFinder(resourceLoader, classLoader);
         BackendModuleBackendSupplier backendSupplier = new BackendModuleBackendSupplier(resourceLoader, classFinder, runtimeOptions);
         bus = new TimeServiceEventBus(TimeService.SYSTEM);
         plugins = new Plugins(classLoader, new PluginFactory(), runtimeOptions);
+=======
+        runtimeOptions = new CucumberPropertiesParser(resourceLoader)
+            .parse(CucumberProperties.fromSystemProperties())
+            .build(environmentOptions);
+
+>>>>>>> right_content.java
         FeatureLoader featureLoader = new FeatureLoader(resourceLoader);
-        filters = new Filters(runtimeOptions);
-        this.runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier);
         featureSupplier = new FeaturePathFeatureSupplier(featureLoader, runtimeOptions);
+
+        this.bus = new TimeServiceEventBus(Clock.systemUTC());
+        this.plugins = new Plugins(new PluginFactory(), runtimeOptions);
+        ObjectFactoryServiceLoader objectFactoryServiceLoader = new ObjectFactoryServiceLoader(runtimeOptions);
+        ObjectFactorySupplier objectFactorySupplier = new ThreadLocalObjectFactorySupplier(objectFactoryServiceLoader);
+        BackendServiceLoader backendSupplier = new BackendServiceLoader(resourceLoader, objectFactorySupplier);
+        this.filters = new Filters(runtimeOptions);
+        TypeRegistryConfigurerSupplier typeRegistryConfigurerSupplier = new ScanningTypeRegistryConfigurerSupplier(classFinder, runtimeOptions);
+        this.runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier, objectFactorySupplier, typeRegistryConfigurerSupplier);
     }
+
     public void runScenario(PickleEvent pickle) throws Throwable {
         //Possibly invoked in a multi-threaded context
         Runner runner = runnerSupplier.get();

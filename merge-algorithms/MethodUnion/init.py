@@ -31,46 +31,22 @@ def main():
         case _:
             print("Language Not Supported")
             exit(0)
-            
-
 
     left_import,left_content=lang.extractImports(subprocess.check_output(f"cat "+left, shell=True).decode('utf-8'))
     right_import,right_content=lang.extractImports(subprocess.check_output(f"cat "+right, shell=True).decode('utf-8'))
     base_import,base_content=lang.extractImports(subprocess.check_output(f"cat "+base, shell=True).decode('utf-8'))
 
 
-    result=merger.body_merge(lang,base_content,right_content,left_content)
+    body_result=merger.body_merge(lang,base_content,right_content,left_content)
 
-    lang.getUsages(result)
+    lang.getUsages(body_result)
 
     import_result=merger.import_merge(lang,base_import,right_import,left_import)
 
     writefile(output,import_result)
 
-    appendfile(output,result)
+    appendfile(output,body_result)
     
-
-    clean(type)
-
-
-def write_methods(writer,class_name):
-        spacing=' '*int(class_name.get_ranking()*4)
-        writer.write('\n'+spacing+class_name.get_full_name()+'{\n\n')
-        method_spacing=spacing+' '*4
-
-        for declaration in class_name.get_declarations():
-            writer.write(method_spacing+declaration+'\n')
-
-        writer.write('\n')
-
-        for method in class_name.get_methods():
-            writer.write(method_spacing+method.get_method()+'\n')
-        
-        for sub_class in class_name.get_sub_classes():
-            write_methods(writer,sub_class)
-            
-        writer.write(spacing+class_name.get_closer()+'\n')
-
 
 def writefile(name, content):
     with open(name, 'w') as output:
@@ -82,14 +58,6 @@ def writefile(name, content):
 def appendfile(name, content):
     with open(name,"a") as res2:
         res2.write(content)
-
-
-def clean(type):
-    #Removes uncessary files that were created.
-    subprocess.run(['rm', f'base_content.{type}'])
-    subprocess.run(['rm', f'left_content.{type}'])
-    subprocess.run(['rm', f'right_content.{type}'])
-
 
 
 if __name__=="__main__":

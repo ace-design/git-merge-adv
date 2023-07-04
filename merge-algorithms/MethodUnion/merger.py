@@ -11,39 +11,31 @@ global tree
 tree=Tree(MainRoot())
 
 def import_merge(lang,base,right,left):
-    gen_tree(base, right, left)
-    result=tree.find_paths(lang)
+    gen_import_tree(base, right, left)
+    result=tree.find_imports(lang)
     return result
 
 def body_merge(lang, base, right, left):
-    append_tree(lang,base,right,left)
+    append_body_tree(lang,base,right,left)
     tree.set_classes(lang)
     tree.set_methods(lang)
     result=tree.find_methods(lang)
     return result
 
-def append_tree(lang, base, right, left):
+def append_body_tree(lang, base, right, left):
     tree.add_body(lang.getClasses(base,"base"))
-    print("Right")
     tree.add_body(lang.getClasses(right,"right"))
-    print("Left")
     tree.add_body(lang.getClasses(left,"left"))
-    print("Done")
 
 
-
-def gen_tree(base_import, right_import, left_import):
+def gen_import_tree(base_import, right_import, left_import):
 
     #Adds all imports to the tree. Tree structure ensures no duplicates.
 
     for imports in left_import:
         tree.add_import(imports,"left")
-
-    
     for imports in right_import:
         tree.add_import(imports,"right")
-
-
     for imports in base_import:
         tree.add_import(imports,"base")
 
@@ -57,6 +49,13 @@ def git_merge(base,right,left,lang):
     writefile("left_content."+lang,left)
 
     git_rest=subprocess.run(['git', 'merge-file', '-p','left_content.'+lang, 'base_content.'+lang,'right_content.'+lang],capture_output=True, text=True)
+    clean(lang)
     # print(git_rest.stdout.strip("\n"))
     return git_rest.stdout
     
+
+def clean(type):
+    #Removes uncessary files that were created.
+    subprocess.run(['rm', f'base_content.{type}'])
+    subprocess.run(['rm', f'left_content.{type}'])
+    subprocess.run(['rm', f'right_content.{type}'])

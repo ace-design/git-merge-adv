@@ -29,6 +29,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.time.Duration;
@@ -61,25 +63,6 @@ public final class TestNGFormatter implements EventListener, StrictAware{
     private Instant started;
     private final Map<URI, String> featuresNames = new HashMap<>();
     private final FeatureParser parser = new FeatureParser(UUID::randomUUID);
-
-    <<<<<<< left_content.java
-@SuppressWarnings("WeakerAccess") // Used by plugin factory
-    public TestNGFormatter(URL url) throws IOException {
-        this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
-        try {
-            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            results = document.createElement("testng-results");
-            suite = document.createElement("suite");
-            test = document.createElement("test");
-            suite.appendChild(test);
-            results.appendChild(suite);
-            document.appendChild(results);
-        } catch (ParserConfigurationException e) {
-            throw new CucumberException("Error initializing DocumentBuilder.", e);
-        }
-    }
-=======
->>>>>>> right_content.java
 
     @Override
     public void setEventPublisher(EventPublisher publisher) {
@@ -177,6 +160,21 @@ public final class TestNGFormatter implements EventListener, StrictAware{
 
         return count;
     }
+    @SuppressWarnings("WeakerAccess") // Used by plugin factory
+    public TestNGFormatter(URL url) throws IOException {
+        this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            results = document.createElement("testng-results");
+            suite = document.createElement("suite");
+            test = document.createElement("test");
+            suite.appendChild(test);
+            results.appendChild(suite);
+            document.appendChild(results);
+        } catch (ParserConfigurationException e) {
+            throw new CucumberException("Error initializing DocumentBuilder.", e);
+        }
+    }
     public TestNGFormatter(OutputStream out) {
         this.writer = new UTF8OutputStreamWriter(out);
         try {
@@ -191,7 +189,6 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             throw new CucumberException("Error initializing DocumentBuilder.", e);
         }
     }
-
 
     final class TestCase {
 
@@ -217,7 +214,11 @@ public final class TestNGFormatter implements EventListener, StrictAware{
                 return testCaseName;
             }
         }
-        
+        private String printStrackTrace(Result failed) {
+            StringWriter stringWriter = new StringWriter();
+            failed.getError().printStackTrace(new PrintWriter(stringWriter));
+            return stringWriter.toString();
+        }
         private String calculateTotalDurationString() {
             Duration totalDuration = ZERO;
             for (Result r : results) {
