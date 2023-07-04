@@ -55,6 +55,10 @@ class Lang(ABC):
     def getClasses(content):
         pass
 
+    @abstractmethod
+    def get_lang():
+        pass
+
 ## Java Implementation to Abstract Class
 class Java(Lang):
 
@@ -76,6 +80,9 @@ class Java(Lang):
 
     global all_methods
     all_methods={}
+
+    def get_lang(self):
+        return "java"
 
     def output_traverse(self,node,string,all_imports,target,suspicious):
         # Finds the specified target node in the tree

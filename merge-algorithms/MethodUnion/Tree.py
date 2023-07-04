@@ -1,4 +1,5 @@
 from Node import Pack, End, Class, Method
+import merger
 
 class Tree:
 
@@ -11,7 +12,6 @@ class Tree:
         self.method_ref={}
 
     def add_traverse(self,node,path,version):
-
         parent=node.add_child(Pack(path[0]))
 
         if len(path)>2:
@@ -26,9 +26,11 @@ class Tree:
                 self.import_ref[path[1]]=set()
                 self.import_ref[path[1]].add(child)
 
+
     def add_body(self, body):
         for body_element in body:
             self.root.add_child(body_element)
+
 
     def find_methods(self,lang):
         body=""
@@ -37,6 +39,7 @@ class Tree:
                 body=lang.output_methods(body,branch)
         return body
     
+
     def set_classes(self,lang):
         self.class_ref=lang.get_class_ref()
         extra=[]
@@ -49,17 +52,35 @@ class Tree:
                 result.set_selected()
 
 
-
     def set_methods(self,lang):
         extra=[]
         self.method_ref=lang.get_method_ref()
         for method_val in self.method_ref.keys():
             result,sus,versions=self.base_algorithm(self.method_ref,method_val)
-            if (type(result) is str):
-                self.method_ref[method_val][0].set_selected()
+            if (type(result) is str or sus):
+                # self.method_ref[method_val][0].set_selected()
                 extra.append(method_val)
             else:
                 result.set_selected()
+        #Run GitMerge on the ones we are uncertain with
+        for method in extra:
+            all_versions=self.method_ref[method]
+            base=""
+            left=""
+            right=""
+            for method_version in all_versions:
+                if "base" in method_version.get_version():
+                    base=method_version.get_method().split('\n')
+                elif "right" in method_version.get_version():
+                    left=method_version.get_method().split('\n')
+                elif "left" in method_version.get_version():
+                    right=method_version.get_method().split('\n')
+            result=merger.git_merge(base,right,left,lang.get_lang())
+            self.method_ref[method][0].overwrite_method(result)
+            self.method_ref[method][0].set_selected()
+
+            
+        
 
 
     def base_algorithm(self,references,node):

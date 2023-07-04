@@ -138,6 +138,9 @@ class Method:
     def set_selected(self):
         self.selected=True
 
+    def overwrite_method(self,content):
+        self.method_name=content
+
     def get_method(self):
         return self.method_name  
     

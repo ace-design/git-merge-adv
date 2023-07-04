@@ -50,7 +50,7 @@ def main():
     appendfile(output,result)
     
 
-    # clean(type)
+    clean(type)
 
 
 def write_methods(writer,class_name):

@@ -11,10 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeSet;
 
 public final class RuntimeOptionsBuilder {
 
@@ -52,23 +50,8 @@ public final class RuntimeOptionsBuilder {
         parsedGlue.add(glue);
         return this;
     }
-    public RuntimeOptionsBuilder addJunitOption(String junitOption) {
-        this.parsedJunitOptions.add(junitOption);
-        return this;
-    }
-    private RuntimeOptionsBuilder addLineFilters(FeatureWithLines featureWithLines) {
-        URI key = featureWithLines.uri();
-        Set<Integer> lines = featureWithLines.lines();
-        if (lines.isEmpty()) {
-            return null;
-        }
-        if (this.parsedLineFilters.containsKey(key)) {
-            this.parsedLineFilters.get(key).addAll(lines);
-        } else {
-            this.parsedLineFilters.put(key, new TreeSet<>(lines));
-        }
-        return this;
-    }
+    
+    
     public RuntimeOptionsBuilder addNameFilter(Pattern pattern) {
         this.parsedNameFilters.add(pattern);
         return this;
@@ -117,32 +100,36 @@ public final class RuntimeOptionsBuilder {
             runtimeOptions.setCount(this.parsedCount);
         }
 
-        if (this.parsedIsRerun || !this.parsedFeaturePaths.isEmpty()) {
-            runtimeOptions.setFeaturePaths(Collections.<URI>emptyList());
-            runtimeOptions.setLineFilters(Collections.<URI, Set<Integer>>emptyMap());
-        }
-        if (!this.parsedTagFilters.isEmpty() || !this.parsedNameFilters.isEmpty() || !this.parsedLineFilters.isEmpty()) {
+        if (!this.parsedTagFilters.isEmpty() || !this.parsedNameFilters.isEmpty() || hasFeaturesWithLineFilters()) {
+<<<<<<< left_content.java
             runtimeOptions.setTagFilters(this.parsedTagFilters);
+=======
+            runtimeOptions.setTagExpressions(this.parsedTagFilters);
+>>>>>>> right_content.java
             runtimeOptions.setNameFilters(this.parsedNameFilters);
-            runtimeOptions.setLineFilters(this.parsedLineFilters);
         }
-        if (!this.parsedFeaturePaths.isEmpty()) {
-            runtimeOptions.setFeaturePaths(this.parsedFeaturePaths);
+        if (!this.parsedFeaturePaths.isEmpty() || this.parsedRerunPaths != null) {
+            List<FeatureWithLines> features = new ArrayList<>(this.parsedFeaturePaths);
+            if (parsedRerunPaths != null) {
+                features.addAll(this.parsedRerunPaths);
+            }
+            runtimeOptions.setFeaturePaths(features);
         }
 
         if (!this.parsedGlue.isEmpty()) {
             runtimeOptions.setGlue(this.parsedGlue);
         }
-        if (!this.parsedJunitOptions.isEmpty()) {
-            runtimeOptions.setJunitOptions(this.parsedJunitOptions);
-        }
 
-        this.parsedPluginData.updatePluginFormatterNames(runtimeOptions.getPluginFormatterNames());
-        this.parsedPluginData.updatePluginStepDefinitionReporterNames(runtimeOptions.getPluginStepDefinitionReporterNames());
-        this.parsedPluginData.updatePluginSummaryPrinterNames(runtimeOptions.getPluginSummaryPrinterNames());
+        this.parsedPluginData.updateFormatters(runtimeOptions.getFormatters());
+        this.parsedPluginData.updateSummaryPrinters(runtimeOptions.getSummaryPrinter());
+
+        if (parsedObjectFactoryClass != null) {
+            runtimeOptions.setObjectFactoryClass(parsedObjectFactoryClass);
+        }
 
         return runtimeOptions;
     }
+
     public RuntimeOptionsBuilder setCount(int count) {
         this.parsedCount = count;
         return this;
@@ -154,9 +141,7 @@ public final class RuntimeOptionsBuilder {
     public RuntimeOptionsBuilder setDryRun() {
         return setDryRun(true);
     }
-    public void setIsRerun(boolean isRerun) {
-        this.parsedIsRerun = isRerun;
-    }
+    
     public RuntimeOptionsBuilder setMonochrome(boolean monochrome) {
         this.parsedMonochrome = monochrome;
         return this;
@@ -202,7 +187,9 @@ public final class RuntimeOptionsBuilder {
         parsedRerunPaths.addAll(featureWithLines);
         return this;
     }
+
     private boolean hasFeaturesWithLineFilters() {
+<<<<<<< left_content.java
         if (parsedRerunPaths != null) {
             return true;
         }
@@ -212,30 +199,25 @@ public final class RuntimeOptionsBuilder {
             }
         }
         return false;
+=======
+        return parsedRerunPaths != null || !parsedFeaturePaths.stream()
+            .map(FeatureWithLines::lines)
+            .allMatch(Set::isEmpty);
+>>>>>>> right_content.java
     }
+
     public void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
         this.parsedObjectFactoryClass = objectFactoryClass;
     }
+
 
     private static class ParsedOptionNames {
 
         private List<String> names = new ArrayList<>();
         private boolean clobber = false;
 
-        void addName(String name, boolean isAddOption) {
-            names.add(name);
-            if (!isAddOption) {
-                clobber = true;
-            }
-        }
-        void updateNameList(List<String> nameList) {
-            if (!names.isEmpty()) {
-                if (clobber) {
-                    nameList.clear();
-                }
-                nameList.addAll(names);
-            }
-        }
+        
+        
     }
 
     static final class ParsedPluginData {
@@ -253,22 +235,27 @@ public final class RuntimeOptionsBuilder {
                 throw new CucumberException("Unrecognized plugin: " + name);
             }
         }
+
         void addDefaultSummaryPrinterIfNotPresent() {
             if (summaryPrinters.names.isEmpty()) {
                 addPluginName("summary", false);
             }
         }
+
         void addDefaultFormatterIfNotPresent() {
             if (formatters.names.isEmpty()) {
                 addPluginName("progress", false);
             }
         }
+
         void updateFormatters(List<Options.Plugin> formatter) {
             this.formatters.updateNameList(formatter);
         }
+
         void updateSummaryPrinters(List<Options.Plugin> pluginSummaryPrinterNames) {
             summaryPrinters.updateNameList(pluginSummaryPrinterNames);
         }
+
 
         private static class ParsedPlugins {
 
@@ -281,6 +268,7 @@ public final class RuntimeOptionsBuilder {
                     clobber = true;
                 }
             }
+
             void updateNameList(List<Options.Plugin> nameList) {
                 if (!names.isEmpty()) {
                     if (clobber) {
@@ -289,6 +277,7 @@ public final class RuntimeOptionsBuilder {
                     nameList.addAll(names);
                 }
             }
+
         }
     }
 }
