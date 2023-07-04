@@ -96,6 +96,7 @@ class Java(Lang):
 
     def output_methods(self,body,class_name):
         if (class_name.is_selected()):
+            # print(class_name.get_full_name())
             spacing=' '*int(class_name.get_ranking()*4)
             body+='\n'+spacing+class_name.get_full_name()+'{\n\n'
             method_spacing=spacing+' '*4
@@ -104,6 +105,7 @@ class Java(Lang):
                 body+=method_spacing+declaration+'\n'
 
             body+='\n'
+            # print(class_name.get_full_name())
             for method in class_name.get_methods():
                 if (method.is_selected()):
                     body+=method_spacing+method.get_method()+'\n'
@@ -261,8 +263,6 @@ class Java(Lang):
             new_class_name=class_details[2].text.decode()
 
 
-
-
             if (class_details[3].text.decode()[0]!="{"):
                 superclass=" "+class_details[3].text.decode()
             else:
@@ -276,6 +276,9 @@ class Java(Lang):
             if (new_class_name in all_classes.keys()):
                 if (new_class not in all_classes[new_class_name]):
                     all_classes[new_class_name].append(new_class)
+                else:
+                    index=all_classes[new_class_name].index(new_class)
+                    new_class=all_classes[new_class_name][index]
             else:
                 all_classes[new_class_name]=[new_class]
 
@@ -304,8 +307,7 @@ class Java(Lang):
                 #     superclass=" "
                 super_name=super_class_name.children[0].text.decode()+" "+super_class_name.children[1].text.decode()+" "+super_class_name.children[2].text.decode()+superclass
                 class_ref[super_name].add_sub_classes(new_class)
-
-
+        
         for field in field_captures:
             declaration=field[0].parent.text.decode()
             if (field[0].parent.parent.parent.children[3].text.decode()[0]!="{"):
@@ -359,11 +361,6 @@ class Java(Lang):
     
     def add_method(self,classes,new_method,super_class,version):
         for new_c in classes:
-            print("Class")
-            print(repr(new_c.get_full_name()))
-            print("Super")
-            print(repr(super_class))
-            print(new_c.get_full_name()==super_class)
             if (new_c.get_full_name().strip(" ")==super_class.strip(" ")):
                 # print(super_class)
                 # print(new_c.get_full_name())

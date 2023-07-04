@@ -64,21 +64,6 @@ public final class TestNGFormatter implements EventListener, StrictAware{
     private final Map<URI, String> featuresNames = new HashMap<>();
     private final FeatureParser parser = new FeatureParser(UUID::randomUUID);
 
-    @SuppressWarnings("WeakerAccess") // Used by plugin factory
-    public TestNGFormatter(URL url) throws IOException {
-        this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
-        try {
-            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            results = document.createElement("testng-results");
-            suite = document.createElement("suite");
-            test = document.createElement("test");
-            suite.appendChiTestNGFormatter(OutputStream out)ld(test);
-            results.appendChild(suite);
-            document.appendChild(results);
-        } catch (ParserConfigurationException e) {
-            throw new CucumberException("Error initializing DocumentBuilder.", e);
-        }
-    }
     @Override
     public void setEventPublisher(EventPublisher publisher) {
         publisher.registerHandlerFor(TestSourceRead.class, this::handleTestSourceRead);
@@ -90,8 +75,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
     }
     private void handleTestRunStarted(TestRunStarted event) {
         this.started = event.getInstant();
-    }            super_class=super_class.strip(" ")
-
+    }
     @Override
     public void setStrict(boolean strict) {
         this.strict = strict;
@@ -175,6 +159,21 @@ public final class TestNGFormatter implements EventListener, StrictAware{
         }
 
         return count;
+    }
+    @SuppressWarnings("WeakerAccess") // Used by plugin factory
+    public TestNGFormatter(URL url) throws IOException {
+        this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            results = document.createElement("testng-results");
+            suite = document.createElement("suite");
+            test = document.createElement("test");
+            suite.appendChild(test);
+            results.appendChild(suite);
+            document.appendChild(results);
+        } catch (ParserConfigurationException e) {
+            throw new CucumberException("Error initializing DocumentBuilder.", e);
+        }
     }
     public TestNGFormatter(OutputStream out) {
         this.writer = new UTF8OutputStreamWriter(out);

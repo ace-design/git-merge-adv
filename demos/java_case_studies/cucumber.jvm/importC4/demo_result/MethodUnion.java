@@ -2,6 +2,7 @@ package io.cucumber.junit;
 import io.cucumber.core.backend.ObjectFactoryServiceLoader;
 import io.cucumber.core.event.TestRunFinished;
 import io.cucumber.core.event.TestRunStarted;
+import io.cucumber.core.event.TestSourceRead;
 import io.cucumber.core.eventbus.EventBus;
 import io.cucumber.core.feature.CucumberFeature;
 import io.cucumber.core.feature.CucumberPickle;
@@ -135,5 +136,29 @@ public final class Cucumber extends ParentRunner<FeatureRunner>{
     public void setScheduler(RunnerScheduler scheduler) {
         super.setScheduler(scheduler);
         multiThreadingAssumed = true;
+    }
+
+    class RunCucumber extends Statement {
+
+        private final Statement runFeatures;
+
+        RunCucumber(Statement runFeatures) {
+            this.runFeatures = runFeatures;
+        }
+        @Override
+        public void evaluate() throws Throwable {
+            if (multiThreadingAssumed) {
+                plugins.setSerialEventBusOnEventListenerPlugins(bus);
+            } else {
+                plugins.setEventBusOnEventListenerPlugins(bus);
+            }
+
+            bus.send(new TestRunStarted(bus.getInstant()));
+            for (CucumberFeature feature : features) {
+                bus.send(new TestSourceRead(bus.getInstant(), feature.getUri().toString(), feature.getSource()));
+            }
+            runFeatures.evaluate();
+            bus.send(new TestRunFinished(bus.getInstant()));
+        }
     }
 }

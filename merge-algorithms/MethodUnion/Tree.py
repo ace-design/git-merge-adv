@@ -41,13 +41,15 @@ class Tree:
         self.class_ref=lang.get_class_ref()
         extra=[]
         for class_val in self.class_ref.keys():
-            result,sus,versions=self.base_algorithm(self.class_ref,class_val)
-            if (type(result) is str):
-                self.class_ref[class_val][0].set_selected()
-                extra.append(class_val)
-            else:
+            if (len(self.class_ref[class_val])>0):
+                result,sus,versions=self.base_algorithm(self.class_ref,class_val)
+                if (type(result) is str):
+                    result=self.class_ref[class_val][0]
+                    extra.append(class_val)
                 result.set_selected()
-        
+
+
+
     def set_methods(self,lang):
         extra=[]
         self.method_ref=lang.get_method_ref()
