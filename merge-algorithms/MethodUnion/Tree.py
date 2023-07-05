@@ -37,13 +37,13 @@ class Tree:
             self.root.add_child(body_element)
 
 
-    def find_methods(self,lang):
+    def find_body(self,lang):
         body=""
         if isinstance(lang,Python):
-            return lang.output_methods()
+            return lang.output_body()
         for branch in self.root.get_children():
             if (type(branch) is Class):
-                body=lang.output_methods(body,branch)
+                body=lang.output_body(body,branch)
         return body
     
 
@@ -135,7 +135,7 @@ class Tree:
             if (type(result) is str):
                 extra[current_sum]=self.import_ref[dir]
             else:
-                lang.output_traverse(self.import_root,"",all_import,result,sus)
+                lang.output_imports(self.import_root,"",all_import,result,sus)
                 for v in versions:
                     version_ref[v]+=1
             current_sum+=1
@@ -149,18 +149,18 @@ class Tree:
             if (len(paths)==2):
                 versions=list(paths[0].get_version())
                 if (versions[0]==highest):
-                    lang.output_traverse(self.import_root,"",all_import,paths[0],True)
+                    lang.output_imports(self.import_root,"",all_import,paths[0],True)
                 else:
-                    lang.output_traverse(self.import_root,"",all_import,paths[1],True)
+                    lang.output_imports(self.import_root,"",all_import,paths[1],True)
             else:
                 versions=list(paths[0].get_version())
                 versions_2=list(paths[1].get_version())
                 if (highest in versions):
-                    lang.output_traverse(self.import_root,"",all_import,paths[0],True)
+                    lang.output_imports(self.import_root,"",all_import,paths[0],True)
                 elif (highest in versions_2):
-                    lang.output_traverse(self.import_root,"",all_import,paths[1],True)
+                    lang.output_imports(self.import_root,"",all_import,paths[1],True)
                 else:
-                    lang.output_traverse(self.import_root,"",all_import,paths[2],True)
+                    lang.output_imports(self.import_root,"",all_import,paths[2],True)
 
             curr_path=all_import.pop(-1)
             all_import.insert(conflict_dir-1,curr_path)
@@ -190,23 +190,5 @@ class Tree:
                 if x.selected == True:
                     with  open("methodres.py","a") as f:
                         f.write(x.method_name)
-
-
-        # conflicted_content = conflicted_content.split("\n")
-        # for lineno in range(len(conflicted_content)):
-        #     if conflicted_content[lineno][0:7] == "<<<<<<<":
-        #         conflictstart= lineno
-        #     if conflicted_content[lineno][0:7] == "=======":
-        #         conflictmid= lineno
-        #     if conflicted_content[lineno][0:7] == ">>>>>>>":
-        #         conflictend= lineno
-        #         break
-        # for line in range(conflicted_content[conflictstart+1])
-        
-            
-                
-
-
-
         return "Yup"
                     

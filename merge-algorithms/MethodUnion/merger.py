@@ -17,7 +17,7 @@ def clean(type):
     subprocess.run(['rm', f'base_content.{type}'])
     subprocess.run(['rm', f'left_content.{type}'])
     subprocess.run(['rm', f'right_content.{type}'])
-    
+
 
 def git_merge(base,right,left,language):
 
@@ -45,22 +45,22 @@ def body_merge(lang, base, right, left):
     tree.set_classes(lang)
     tree.set_methods(lang)
 
-    result=tree.find_methods(lang)
+    result=tree.find_body(lang)
     return result
 
 def append_body_tree(lang, base, right, left):
-    leftclass = lang.getClasses(left,"left")
+    leftclass = lang.extractBody(left,"left")
     if leftclass == "**to_be_handled_by_git**" :
         return "**to_be_handled_by_git**"
     tree.add_body(leftclass)
 
-    rightclass = lang.getClasses(right,"right")
+    rightclass = lang.extractBody(right,"right")
     if rightclass == "**to_be_handled_by_git**" :
         return "**to_be_handled_by_git**"
     tree.add_body(rightclass)
 
 
-    baseclass = lang.getClasses(base,"base")
+    baseclass = lang.extractBody(base,"base")
     if baseclass == "**to_be_handled_by_git**" :
         return "**to_be_handled_by_git**"
     tree.add_body(baseclass)
