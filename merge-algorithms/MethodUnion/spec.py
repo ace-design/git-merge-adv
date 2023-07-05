@@ -35,11 +35,11 @@ Java_Lang = Language(path+'/build/my-languages.so', 'java')
 class Lang(ABC):
     # Used to generate string path for particular target from tree. 
     @abstractmethod
-    def output_traverse(node,string,all_imports,suspicious):
+    def output_imports(node,string,all_imports,suspicious):
         pass
 
     @abstractmethod
-    def output_methods(writer,class_name):
+    def output_body(writer,class_name):
         pass
 
     # Used to parse the imports to generate a more read-friendly string for tree to split. 
@@ -52,7 +52,7 @@ class Lang(ABC):
         pass
 
     @abstractmethod
-    def getClasses(content):
+    def extractBody(content):
         pass
 
     @abstractmethod
@@ -69,24 +69,31 @@ class Java(Lang):
     parser=Parser()
     parser.set_language(Java_Lang)
 
+    #Used to store each main class (each object has a class tree-structure)
+    #Items in list will be directly added to overall tree
     global classes
     classes=[]
 
+    #Used for each class object reference.
+    #Key is the full class declaration, value is the associated class object
+    #Alternative to traversing entire tree to find subclass object.
     global class_ref  
     class_ref={}
 
+    #Used to store all class objects as values to a particular class name key.
+    #Similar to what was done for imports.
     global all_classes
     all_classes={}
 
+    #Same idea as all_classes, but for methods.
     global all_methods
     all_methods={}
 
     def get_lang(self):
         return "java"
 
-    def output_traverse(self,node,string,all_imports,target,suspicious):
+    def output_imports(self,node,string,all_imports,target,suspicious):
         # Finds the specified target node in the tree
-        # print(target.get_full_dir())
 
         if (suspicious and (target.get_full_dir() not in usages) and (target.get_full_dir()[-1]!="*")):
             pass
@@ -96,14 +103,13 @@ class Java(Lang):
                 dup+=item.get_full_dir()
                 ## If the type is Pack, then it is not a leaf node. Recurse further.
                 if (type(item)==Pack):
-                    self.output_traverse(item,dup,all_imports,target,False)
+                    self.output_imports(item,dup,all_imports,target,False)
                 elif (item==target):
                     all_imports.append(dup+";")
 
 
-    def output_methods(self,body,class_name):
+    def output_body(self,body,class_name):
         if (class_name.is_selected()):
-            # print(class_name.get_full_name())
             spacing=' '*int(class_name.get_ranking()*4)
             body+='\n'+spacing+class_name.get_full_name()+'{\n\n'
             method_spacing=spacing+' '*4
@@ -112,13 +118,12 @@ class Java(Lang):
                 body+=method_spacing+declaration+'\n'
 
             body+='\n'
-            # print(class_name.get_full_name())
             for method in class_name.get_methods():
                 if (method.is_selected()):
                     body+=method_spacing+method.get_method()+'\n'
             
             for sub_class in class_name.get_sub_classes():
-                body = self.output_methods(body,sub_class)
+                body = self.output_body(body,sub_class)
         
             body+=spacing+class_name.get_closer()+'\n'
         return body
@@ -223,7 +228,7 @@ class Java(Lang):
 
         return imports,other
     
-    def getClasses(self,content,version):
+    def extractBody(self,content,version):
         content='\n'.join(content)
 
         byte_rep= str.encode(content)
@@ -263,116 +268,105 @@ class Java(Lang):
         for new_class in class_captures:
             # Tuple of class details including modifiers and name.
             class_details=new_class[0].parent.children
-            # Checks any potential class it is nested into
-            super_class_name=new_class[0].parent.parent.parent
 
             indentation=int(class_details[0].start_point[1])
             new_class_name=class_details[2].text.decode()
 
-
+            #Checks whether class extends/implements another one.
             if (class_details[3].text.decode()[0]!="{"):
-                superclass=" "+class_details[3].text.decode()
+                super_class=" "+class_details[3].text.decode()
             else:
-                superclass=" "
-            superclass=superclass.split('{')[0]
+                super_class=" "
+            super_class=super_class.split('{')[0]
 
-            new_full_name=class_details[0].text.decode()+" "+class_details[1].text.decode()+" "+class_details[2].text.decode()+superclass
+            #Stores full class declaration
+            new_full_name=class_details[0].text.decode()+" "+class_details[1].text.decode()+" "+class_details[2].text.decode()+super_class
             
-            new_class=Class(new_class_name,new_full_name,indentation,"}",version)
+            class_obj=Class(new_class_name,new_full_name,indentation,"}",version)
 
+            #If object with same full class declaration is in the list of classes, then class_obj references that object.
+            #Equality relation for class is re-defined in Node.py.
             if (new_class_name in all_classes.keys()):
-                if (new_class not in all_classes[new_class_name]):
-                    all_classes[new_class_name].append(new_class)
+                if (class_obj not in all_classes[new_class_name]):
+                    all_classes[new_class_name].append(class_obj)
+                    class_ref[new_full_name]=class_obj
                 else:
-                    index=all_classes[new_class_name].index(new_class)
-                    new_class=all_classes[new_class_name][index]
+                    index=all_classes[new_class_name].index(class_obj)
+                    class_obj=all_classes[new_class_name][index]
+                    class_ref[new_full_name].add_version(version)
+
             else:
-                all_classes[new_class_name]=[new_class]
+                all_classes[new_class_name]=[class_obj]
+                class_ref[new_full_name]=class_obj
 
-            if (new_full_name not in class_ref.keys()):
-                class_ref[new_full_name]=new_class
+            # Checks if class is nested in another class. 
+            # Adds it as subclass to main class if it is.
+            nested_class_details=new_class[0].parent.parent.parent
+            if (nested_class_details is None):
+                if (class_obj not in classes):
+                    classes.append(class_obj)
             else:
-                class_ref[new_full_name].add_version(version)
-
-            # print(new_full_name)
-
-
-            # Checks if there exists a super/parent class
-            if (super_class_name is None):
-                if (new_class not in classes):
-                    classes.append(new_class)
-            else:
-                # Searches for given super/parent class in list.
-                if (super_class_name.children[3].text.decode()[0]!="{"):
-                    superclass=" "+super_class_name.children[3].text.decode()
+                if (nested_class_details.children[3].text.decode()[0]!="{"):
+                    nested_class=" "+nested_class_details.children[3].text.decode()
                 else:
-                    superclass=" "
-                superclass=superclass.split('{')[0]
-                # if (super_class_name.children[3] is not None):
-                #     superclass=" "+super_class_name.children[3].text.decode()
-                # else:
-                #     superclass=" "
-                super_name=super_class_name.children[0].text.decode()+" "+super_class_name.children[1].text.decode()+" "+super_class_name.children[2].text.decode()+superclass
-                class_ref[super_name].add_sub_classes(new_class)
+                    nested_class=" "
+                nested_class=nested_class.split('{')[0]
+                full_nested_name=nested_class_details.children[0].text.decode()+" "+nested_class_details.children[1].text.decode()+" "+nested_class_details.children[2].text.decode()+nested_class
+                class_ref[full_nested_name].add_sub_classes(class_obj)
         
+        #Adds all variable declarations to associated classes.
         for field in field_captures:
             declaration=field[0].parent.text.decode()
             if (field[0].parent.parent.parent.children[3].text.decode()[0]!="{"):
-                superclass=" "+field[0].parent.parent.parent.children[3].text.decode()
+                nested_class=" "+field[0].parent.parent.parent.children[3].text.decode()
             else:
-                superclass=" "
-            parent_class=field[0].parent.parent.parent.children[0].text.decode()+" "+field[0].parent.parent.parent.children[1].text.decode()+" "+field[0].parent.parent.parent.children[2].text.decode()+superclass
+                nested_class=" "
+            parent_class=field[0].parent.parent.parent.children[0].text.decode()+" "+field[0].parent.parent.parent.children[1].text.decode()+" "+field[0].parent.parent.parent.children[2].text.decode()+nested_class
             class_ref[parent_class].add_declaration(declaration)
 
+        #Adds all methods to associated classes
         for method in method_captures:
+            
+            #Stores method as a whole
+            method_description=method[0].parent.text.decode()
 
-            method_name=method[0].parent.text.decode()
-            method_declaration=" "
+            #Method signature used to identify equivalent methods.
+            method_signature=" "
             index=-2
-
-            while ("(" not in method_declaration or method_declaration[0]=="("):
-                method_declaration=method[0].parent.children[index].text.decode()+" "+method_declaration
+            while ("(" not in method_signature or method_signature[0]=="("):
+                method_signature=method[0].parent.children[index].text.decode()+" "+method_signature
                 index-=1
 
-            name=method[0].parent.parent.parent.children
+            #Extract which class the method belongs to.
+            super_class_details=method[0].parent.parent.parent.children
             super_class=""
             index=0
-
-            while(index<len(name) and "{" not in name[index].text.decode()):
-                super_class+=name[index].text.decode()+" "
+            while(index<len(super_class_details) and "{" not in super_class_details[index].text.decode()):
+                super_class+=super_class_details[index].text.decode()+" "
                 index+=1
-            new_method=Method(method_name,version,super_class)
 
-            #Method declaration is referenced by its signature.
-            if (super_class+" "+method_declaration in all_methods.keys()):
-                if (new_method not in all_methods[super_class+" "+method_declaration]):
-                    all_methods[super_class+" "+method_declaration].append(new_method)
-                    self.add_method(classes,new_method,super_class,version)
+            method_obj=Method(method_description,version,super_class)
+
+            #Method declaration is referenced by its signature and super class.
+            #Method signatures can be the same if declared in two different classes.
+            if (super_class+" "+method_signature in all_methods.keys()):
+                if (method_obj not in all_methods[super_class+" "+method_signature]):
+                    all_methods[super_class+" "+method_signature].append(method_obj)
+                    self.add_method(classes,method_obj,super_class,version)
                 else:
-                    index=all_methods[super_class+" "+method_declaration].index(new_method)
-                    all_methods[super_class+" "+method_declaration][index].add_version(version)
+                    index=all_methods[super_class+" "+method_signature].index(method_obj)
+                    all_methods[super_class+" "+method_signature][index].add_version(version)
             else:
-                all_methods[super_class+" "+method_declaration]=[new_method]
-
-                self.add_method(classes,new_method,super_class,version)
-
-            # indentation=int(method[0].parent.parent.parent.children[0].start_point[1])
-            # print("sent"+str(new_method))
-            # self.add_method(classes,new_method,super_class,version)
-        # body=""
-        # for class_name in classes:
-        #     body=self.output_methods(body,class_name)
-
+                all_methods[super_class+" "+method_signature]=[method_obj]
+                self.add_method(classes,method_obj,super_class,version)
 
         return classes
     
+    #Recursively finds object for super class, and adds method object to it.
     def add_method(self,classes,new_method,super_class,version):
         for new_c in classes:
             if (new_c.get_full_name().strip(" ")==super_class.strip(" ")):
-                # print(super_class)
-                # print(new_c.get_full_name())
                 new_c.add_method(new_method,version)
-                # print(new_c.get_methods())
             else:
                 self.add_method(new_c.get_sub_classes(),new_method,super_class,version)
 
@@ -385,6 +379,10 @@ class Java(Lang):
 
 class Python(Lang):
     done=[]
+
+    def get_lang(self):
+        return "python"
+
     def generateAST(self,content):
         return ast.parse(content)
     
@@ -428,7 +426,7 @@ class Python(Lang):
         return formatted_imports,restofCode
     
 
-    def output_traverse(self,node,string,all_imports,target,formatter = ""):
+    def output_imports(self,node,string,all_imports,target,formatter = ""):
         # Finds the specified target node in the tree
         for item in node.get_children():
             formatter = copy.deepcopy(formatter)
@@ -448,7 +446,7 @@ class Python(Lang):
             dup+=item.get_full_dir()
             if (type(item)==Pack):
                 dup+=" "
-                self.output_traverse(item,dup,all_imports,target,formatter)
+                self.output_imports(item,dup,all_imports,target,formatter)
                 formatter = ''
             elif (item==target):
                 if formatter == "":
@@ -486,6 +484,6 @@ class Python(Lang):
     def getUsages(self,git_content):
         return super().getUsages()
     
-    def getClasses(self,content):
-        return super().getClasses()
+    def extractBody(self,content):
+        return super().extractBody()
                             

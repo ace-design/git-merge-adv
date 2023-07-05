@@ -19,13 +19,13 @@ def body_merge(lang, base, right, left):
     append_body_tree(lang,base,right,left)
     tree.set_classes(lang)
     tree.set_methods(lang)
-    result=tree.find_methods(lang)
+    result=tree.find_body(lang)
     return result
 
 def append_body_tree(lang, base, right, left):
-    tree.add_body(lang.getClasses(base,"base"))
-    tree.add_body(lang.getClasses(right,"right"))
-    tree.add_body(lang.getClasses(left,"left"))
+    tree.add_body(lang.extractBody(base,"base"))
+    tree.add_body(lang.extractBody(right,"right"))
+    tree.add_body(lang.extractBody(left,"left"))
 
 
 def gen_import_tree(base_import, right_import, left_import):
@@ -50,7 +50,6 @@ def git_merge(base,right,left,lang):
 
     git_rest=subprocess.run(['git', 'merge-file', '-p','left_content.'+lang, 'base_content.'+lang,'right_content.'+lang],capture_output=True, text=True)
     clean(lang)
-    # print(git_rest.stdout.strip("\n"))
     return git_rest.stdout
     
 
