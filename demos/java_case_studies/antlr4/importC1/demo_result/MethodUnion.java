@@ -924,10 +924,41 @@ public abstract class BaseTest {
 								String parserName, String lexerName)
 		throws Exception
 	{
+<<<<<<< left_content.java
 		Pair<Parser, Lexer> pl = getParserAndLexer(input, parserName, lexerName);
 		Parser parser = pl.a;
 		return execStartRule(startRuleName, parser);
+=======
+		final Class<? extends Lexer> lexerClass = loadLexerClassFromTempDir(lexerName);
+		final Class<? extends Parser> parserClass = loadParserClassFromTempDir(parserName);
+
+		ANTLRInputStream in = new ANTLRInputStream(new StringReader(input));
+
+		Class<? extends Lexer> c = lexerClass.asSubclass(Lexer.class);
+		Constructor<? extends Lexer> ctor = c.getConstructor(CharStream.class);
+		Lexer lexer = ctor.newInstance(in);
+
+		Class<? extends Parser> pc = parserClass.asSubclass(Parser.class);
+		Constructor<? extends Parser> pctor = pc.getConstructor(TokenStream.class);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		Parser parser = pctor.newInstance(tokens);
+
+		Method startRule = null;
+		Object[] args = null;
+		try {
+			startRule = parserClass.getMethod(startRuleName);
+		}
+		catch (NoSuchMethodException nsme) {
+			// try with int _p arg for recursive func
+			startRule = parserClass.getMethod(startRuleName, int.class);
+			args = new Integer[] {0};
+		}
+		ParseTree result = (ParseTree)startRule.invoke(parser, args);
+		System.out.println("parse tree = "+result.toStringTree(parser));
+		return result;
+>>>>>>> right_content.java
 	}
+
     public ParseTree execStartRule(String startRuleName, Parser parser)
 		throws IllegalAccessException, InvocationTargetException,
 			   NoSuchMethodException
@@ -972,11 +1003,21 @@ public abstract class BaseTest {
 		return loader.loadClass(name);
 	}
     public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
+<<<<<<< left_content.java
 		return loadClassFromTempDir(name).asSubclass(Lexer.class);
+=======
+		return (Class<? extends Lexer>)loadClassFromTempDir(name);
+>>>>>>> right_content.java
 	}
+
     public Class<? extends Parser> loadParserClassFromTempDir(String name) throws Exception {
+<<<<<<< left_content.java
 		return loadClassFromTempDir(name).asSubclass(Parser.class);
+=======
+		return (Class<? extends Parser>)loadClassFromTempDir(name);
+>>>>>>> right_content.java
 	}
+
 
  public static class StreamVacuum implements Runnable{
 

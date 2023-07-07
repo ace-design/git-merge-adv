@@ -1,0 +1,5164 @@
+===
+match
+---
+Block [4751,4813]
+Block [5715,5777]
+===
+match
+---
+SingleVariableDeclaration [6706,6725]
+SingleVariableDeclaration [9130,9149]
+===
+match
+---
+FieldDeclaration [1244,1279]
+FieldDeclaration [1394,1429]
+===
+match
+---
+SimpleName: RuntimeOptions [2370,2384]
+SimpleName: RuntimeOptions [3418,3432]
+===
+match
+---
+Modifier: private [739,746]
+Modifier: private [1790,1797]
+===
+match
+---
+ThisExpression [5882,5886]
+ThisExpression [6927,6931]
+===
+match
+---
+ExpressionStatement [6252,6303]
+ExpressionStatement [7294,7345]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [6937,6949]
+METHOD_INVOCATION_RECEIVER [9361,9373]
+===
+match
+---
+SimpleName: name [7998,8002]
+SimpleName: name [10419,10423]
+===
+match
+---
+SimpleName: isAddOption [8081,8092]
+SimpleName: isAddOption [10502,10513]
+===
+match
+---
+Assignment [5103,5137]
+Assignment [6154,6188]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [1556,1572]
+METHOD_INVOCATION_RECEIVER [7572,7588]
+===
+match
+---
+ThisExpression [2346,2350]
+ThisExpression [3395,3399]
+===
+match
+---
+IfStatement [8246,8430]
+IfStatement [10666,10850]
+===
+match
+---
+SimpleName: RuntimeOptions [2416,2430]
+SimpleName: RuntimeOptions [3464,3478]
+===
+match
+---
+ClassInstanceCreation [6575,6594]
+ClassInstanceCreation [8999,9018]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [2222,2243]
+SimpleName: RuntimeOptionsBuilder [3271,3292]
+===
+match
+---
+SimpleName: isEmpty [8257,8264]
+SimpleName: isEmpty [10677,10684]
+===
+match
+---
+ReturnStatement [5539,5551]
+ReturnStatement [6587,6599]
+===
+match
+---
+ReturnStatement [2191,2203]
+ReturnStatement [3241,3253]
+===
+match
+---
+PrimitiveType: void [6343,6347]
+PrimitiveType: void [8201,8205]
+===
+match
+---
+ImportDeclaration [185,227]
+ImportDeclaration [184,226]
+===
+match
+---
+SimpleName: parsedSnippetType [5498,5515]
+SimpleName: parsedSnippetType [6546,6563]
+===
+match
+---
+Block [1837,1895]
+Block [2258,2316]
+===
+match
+---
+SimpleName: parsedGlue [1847,1857]
+SimpleName: parsedGlue [2268,2278]
+===
+match
+---
+SimpleName: ArrayList [720,729]
+SimpleName: ArrayList [1771,1780]
+===
+match
+---
+SimpleType [5656,5677]
+SimpleType [6702,6723]
+===
+match
+---
+ClassInstanceCreation [716,733]
+ClassInstanceCreation [1767,1784]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [1971,1993]
+METHOD_INVOCATION_RECEIVER [3022,3044]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [5012,5016]
+METHOD_INVOCATION_ARGUMENTS [5974,5978]
+===
+match
+---
+SimpleName: pattern [1952,1959]
+SimpleName: pattern [3003,3010]
+===
+match
+---
+SimpleName: Pattern [1944,1951]
+SimpleName: Pattern [2995,3002]
+===
+match
+---
+Block [7256,7320]
+Block [9679,9743]
+===
+match
+---
+ReturnStatement [1766,1778]
+ReturnStatement [2188,2200]
+===
+match
+---
+SimpleName: objectFactoryClass [6401,6419]
+SimpleName: objectFactoryClass [8259,8277]
+===
+match
+---
+Block [4874,4938]
+Block [5837,5901]
+===
+match
+---
+SimpleName: RuntimeOptions [2489,2503]
+SimpleName: RuntimeOptions [3536,3550]
+===
+match
+---
+Modifier: private [979,986]
+Modifier: private [1129,1136]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [5631,5635]
+METHOD_INVOCATION_ARGUMENTS [6678,6682]
+===
+match
+---
+SimpleName: Boolean [1164,1171]
+SimpleName: Boolean [1314,1321]
+===
+match
+---
+ParameterizedType [568,579]
+ParameterizedType [1619,1630]
+===
+match
+---
+VariableDeclarationFragment [545,581]
+VariableDeclarationFragment [1596,1632]
+===
+match
+---
+SingleVariableDeclaration [4858,4872]
+SingleVariableDeclaration [5821,5835]
+===
+match
+---
+Modifier: final [595,600]
+Modifier: final [1646,1651]
+===
+match
+---
+ExpressionStatement [5103,5138]
+ExpressionStatement [6154,6189]
+===
+match
+---
+QualifiedName: summaryPrinters.names [7223,7244]
+QualifiedName: summaryPrinters.names [9646,9667]
+===
+match
+---
+SimpleType [2047,2068]
+SimpleType [3097,3118]
+===
+match
+---
+SimpleName: FeatureWithLines [890,906]
+SimpleName: FeatureWithLines [1522,1538]
+===
+match
+---
+FieldAccess [4761,4777]
+FieldAccess [5725,5741]
+===
+match
+---
+SimpleName: parsedStrict [1036,1048]
+SimpleName: parsedStrict [1186,1198]
+===
+match
+---
+NullLiteral [1480,1484]
+NullLiteral [7496,7500]
+===
+match
+---
+MethodInvocation [7397,7423]
+MethodInvocation [9819,9845]
+===
+match
+---
+Modifier: public [2215,2221]
+Modifier: public [3264,3270]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [5421,5442]
+SimpleName: RuntimeOptionsBuilder [6469,6490]
+===
+match
+---
+SimpleName: parsedPluginData [6252,6268]
+SimpleName: parsedPluginData [7294,7310]
+===
+match
+---
+FieldDeclaration [1020,1056]
+FieldDeclaration [1170,1206]
+===
+match
+---
+FieldDeclaration [518,582]
+FieldDeclaration [1569,1633]
+===
+match
+---
+SimpleType [3823,3832]
+SimpleType [635,644]
+===
+match
+---
+FieldDeclaration [6540,6595]
+FieldDeclaration [8964,9019]
+===
+match
+---
+Modifier: public [5171,5177]
+Modifier: public [6221,6227]
+===
+match
+---
+INFIX_EXPRESSION_OPERATOR: == [1477,1479]
+INFIX_EXPRESSION_OPERATOR: == [7493,7495]
+===
+match
+---
+Modifier: private [1156,1163]
+Modifier: private [1306,1313]
+===
+match
+---
+ParameterizedType [7864,7884]
+ParameterizedType [10285,10305]
+===
+match
+---
+ThisExpression [5958,5962]
+ThisExpression [7002,7006]
+===
+match
+---
+Block [6965,7043]
+Block [9389,9467]
+===
+match
+---
+Block [6421,6488]
+Block [8279,8346]
+===
+match
+---
+SimpleType [2083,2089]
+SimpleType [3133,3139]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [1847,1857]
+METHOD_INVOCATION_RECEIVER [2268,2278]
+===
+match
+---
+SimpleName: featureWithLines [1580,1596]
+SimpleName: featureWithLines [7596,7612]
+===
+match
+---
+SimpleName: addPluginName [6679,6692]
+SimpleName: addPluginName [9103,9116]
+===
+match
+---
+FieldDeclaration [739,794]
+FieldDeclaration [1790,1845]
+===
+match
+---
+Block [7205,7330]
+Block [9628,9753]
+===
+match
+---
+SingleVariableDeclaration [1399,1444]
+SingleVariableDeclaration [7415,7460]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [6788,6792]
+METHOD_INVOCATION_ARGUMENTS [9212,9216]
+===
+match
+---
+SimpleName: parsedRerunPaths [1556,1572]
+SimpleName: parsedRerunPaths [7572,7588]
+===
+match
+---
+SimpleType [2370,2384]
+SimpleType [3418,3432]
+===
+match
+---
+SimpleName: addPluginName [2149,2162]
+SimpleName: addPluginName [3199,3212]
+===
+match
+---
+SimpleName: pluginOption [6937,6949]
+SimpleName: pluginOption [9361,9373]
+===
+match
+---
+SimpleName: name [8053,8057]
+SimpleName: name [10474,10478]
+===
+match
+---
+SingleVariableDeclaration [6370,6419]
+SingleVariableDeclaration [8228,8277]
+===
+match
+---
+SimpleName: FeatureWithLines [1410,1426]
+SimpleName: FeatureWithLines [7426,7442]
+===
+match
+---
+Assignment [6431,6481]
+Assignment [8289,8339]
+===
+match
+---
+SimpleType [7869,7883]
+SimpleType [10290,10304]
+===
+match
+---
+Modifier: private [7924,7931]
+Modifier: private [10345,10352]
+===
+match
+---
+VariableDeclarationFragment [3808,3859]
+VariableDeclarationFragment [612,648]
+===
+match
+---
+SimpleName: List [7532,7536]
+SimpleName: List [9953,9957]
+===
+match
+---
+SimpleName: Class [6370,6375]
+SimpleName: Class [8228,8233]
+===
+match
+---
+MethodInvocation [5621,5636]
+MethodInvocation [6668,6683]
+===
+match
+---
+VariableDeclarationFragment [763,793]
+VariableDeclarationFragment [1814,1844]
+===
+match
+---
+PrimitiveType: boolean [5688,5695]
+PrimitiveType: boolean [6734,6741]
+===
+match
+---
+QualifiedName: io.cucumber.core.exception.CucumberException [89,133]
+QualifiedName: io.cucumber.core.exception.CucumberException [88,132]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [7760,7785]
+METHOD_INVOCATION_ARGUMENTS [10180,10205]
+===
+match
+---
+ThisExpression [6319,6323]
+ThisExpression [7361,7365]
+===
+match
+---
+SimpleName: parsedSnippetType [1126,1143]
+SimpleName: parsedSnippetType [1276,1293]
+===
+match
+---
+SimpleName: setThreads [5803,5813]
+SimpleName: setThreads [6848,6858]
+===
+match
+---
+ParameterizedType [8197,8217]
+ParameterizedType [10617,10637]
+===
+match
+---
+Block [8228,8444]
+Block [10648,10864]
+===
+match
+---
+SimpleType [6386,6399]
+SimpleType [8244,8257]
+===
+match
+---
+MethodInvocation [7223,7254]
+MethodInvocation [9646,9677]
+===
+match
+---
+QualifiedName: Options.Plugin [7983,7997]
+QualifiedName: Options.Plugin [10404,10418]
+===
+match
+---
+SimpleName: CucumberException [7077,7094]
+SimpleName: CucumberException [9501,9518]
+===
+match
+---
+MethodDeclaration [5899,6006]
+MethodDeclaration [6943,7050]
+===
+match
+---
+SimpleName: clobber [7940,7947]
+SimpleName: clobber [10361,10368]
+===
+match
+---
+SimpleType [780,789]
+SimpleType [1831,1840]
+===
+match
+---
+SimpleType [1638,1659]
+SimpleType [2012,2033]
+===
+match
+---
+VariableDeclarationFragment [615,652]
+VariableDeclarationFragment [1666,1703]
+===
+match
+---
+SimpleName: wip [5943,5946]
+SimpleName: wip [6987,6990]
+===
+match
+---
+Block [8268,8430]
+Block [10688,10850]
+===
+match
+---
+ExpressionStatement [5714,5741]
+ExpressionStatement [6760,6787]
+===
+match
+---
+SimpleName: isAddPlugin [6900,6911]
+SimpleName: isAddPlugin [9324,9335]
+===
+match
+---
+SimpleType [568,577]
+SimpleType [1619,1628]
+===
+match
+---
+ImportDeclaration [416,437]
+ImportDeclaration [414,435]
+===
+match
+---
+SimpleName: addDefaultSummaryPrinterIfNotPresent [6041,6077]
+SimpleName: addDefaultSummaryPrinterIfNotPresent [7084,7120]
+===
+match
+---
+PrimitiveType: int [4740,4743]
+PrimitiveType: int [5704,5707]
+===
+match
+---
+ReturnStatement [5226,5253]
+ReturnStatement [6276,6303]
+===
+match
+---
+FieldDeclaration [1106,1151]
+FieldDeclaration [1256,1301]
+===
+match
+---
+SimpleName: Integer [945,952]
+SimpleName: Integer [1095,1102]
+===
+match
+---
+SimpleName: String [2257,2263]
+SimpleName: String [3306,3312]
+===
+match
+---
+MethodDeclaration [8177,8444]
+MethodDeclaration [10597,10864]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [7002,7027]
+METHOD_INVOCATION_ARGUMENTS [9426,9451]
+===
+match
+---
+PrimitiveType: boolean [5073,5080]
+PrimitiveType: boolean [6124,6131]
+===
+match
+---
+ParameterizedType [7897,7908]
+ParameterizedType [10318,10329]
+===
+match
+---
+MethodInvocation [8251,8266]
+MethodInvocation [10671,10686]
+===
+match
+---
+SimpleType [813,829]
+SimpleType [1864,1880]
+===
+match
+---
+SimpleName: isAddPlugin [2104,2115]
+SimpleName: isAddPlugin [3154,3165]
+===
+match
+---
+QualifiedName: java.util.ArrayList [343,362]
+QualifiedName: java.util.ArrayList [341,360]
+===
+match
+---
+SimpleName: parsedThreads [5842,5855]
+SimpleName: parsedThreads [6887,6900]
+===
+match
+---
+SimpleName: List [601,605]
+SimpleName: List [1652,1656]
+===
+match
+---
+ThisExpression [5493,5497]
+ThisExpression [6541,6545]
+===
+match
+---
+ParameterizedType [672,694]
+ParameterizedType [1723,1745]
+===
+match
+---
+PrimitiveType: boolean [4858,4865]
+PrimitiveType: boolean [5821,5828]
+===
+match
+---
+NullLiteral [1096,1100]
+NullLiteral [1246,1250]
+===
+match
+---
+Block [5483,5557]
+Block [6531,6605]
+===
+match
+---
+ImportDeclaration [364,392]
+ImportDeclaration [362,390]
+===
+match
+---
+NullLiteral [969,973]
+NullLiteral [1119,1123]
+===
+match
+---
+SingleVariableDeclaration [7532,7562]
+SingleVariableDeclaration [9953,9983]
+===
+match
+---
+SingleVariableDeclaration [7667,7713]
+SingleVariableDeclaration [10087,10133]
+===
+match
+---
+SimpleName: features [3808,3816]
+SimpleName: parsedTagFilters [612,628]
+===
+match
+---
+MethodDeclaration [6179,6330]
+MethodDeclaration [7221,7372]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [2127,2148]
+METHOD_INVOCATION_RECEIVER [3177,3198]
+===
+match
+---
+ExpressionStatement [1847,1868]
+ExpressionStatement [2268,2289]
+===
+match
+---
+MethodInvocation [5233,5252]
+MethodInvocation [6283,6302]
+===
+match
+---
+MethodDeclaration [5774,5893]
+MethodDeclaration [6819,6938]
+===
+match
+---
+ExpressionStatement [5493,5530]
+ExpressionStatement [6541,6578]
+===
+match
+---
+PrimitiveType: boolean [8004,8011]
+PrimitiveType: boolean [10425,10432]
+===
+match
+---
+SimpleName: names [8251,8256]
+SimpleName: names [10671,10676]
+===
+match
+---
+PrimitiveType: void [7510,7514]
+PrimitiveType: void [9931,9935]
+===
+match
+---
+SimpleName: parsedRerunPaths [908,924]
+SimpleName: parsedRerunPaths [1540,1556]
+===
+match
+---
+CompilationUnit [0,8463]
+CompilationUnit [0,10883]
+===
+match
+---
+SimpleName: ArrayList [7897,7906]
+SimpleName: ArrayList [10318,10327]
+===
+match
+---
+Modifier: static [6494,6500]
+Modifier: static [8917,8923]
+===
+match
+---
+QualifiedName: io.cucumber.core.feature.FeatureWithLines [142,183]
+QualifiedName: io.cucumber.core.feature.FeatureWithLines [141,182]
+===
+match
+---
+FieldDeclaration [7924,7956]
+FieldDeclaration [10345,10377]
+===
+match
+---
+ThisExpression [4884,4888]
+ThisExpression [5847,5851]
+===
+match
+---
+SimpleType [5178,5199]
+SimpleType [6228,6249]
+===
+match
+---
+SimpleName: setObjectFactoryClass [6348,6369]
+SimpleName: setObjectFactoryClass [8206,8227]
+===
+match
+---
+FieldDeclaration [937,974]
+FieldDeclaration [1087,1124]
+===
+match
+---
+SimpleName: addFeature [1660,1670]
+SimpleName: addFeature [2034,2044]
+===
+match
+---
+SimpleName: ParsedPlugins [6548,6561]
+SimpleName: ParsedPlugins [8972,8985]
+===
+match
+---
+ThisExpression [2198,2202]
+ThisExpression [3248,3252]
+===
+match
+---
+SimpleType [672,676]
+SimpleType [1723,1727]
+===
+match
+---
+VariableDeclarationFragment [695,733]
+VariableDeclarationFragment [1746,1784]
+===
+match
+---
+InfixExpression [7095,7125]
+InfixExpression [9519,9549]
+===
+match
+---
+MethodInvocation [1847,1867]
+MethodInvocation [2268,2288]
+===
+match
+---
+VariableDeclarationFragment [953,973]
+VariableDeclarationFragment [1103,1123]
+===
+match
+---
+ThisExpression [2127,2131]
+ThisExpression [3177,3181]
+===
+match
+---
+VariableDeclarationFragment [6562,6594]
+VariableDeclarationFragment [8986,9018]
+===
+match
+---
+SimpleName: defaultOptions [2431,2445]
+SimpleName: defaultOptions [3479,3493]
+===
+match
+---
+Modifier: private [6604,6611]
+Modifier: private [9028,9035]
+===
+match
+---
+ParameterizedType [6370,6400]
+ParameterizedType [8228,8258]
+===
+match
+---
+MethodDeclaration [6012,6173]
+MethodDeclaration [7055,7216]
+===
+match
+---
+Assignment [4884,4910]
+Assignment [5847,5873]
+===
+match
+---
+SimpleName: dryRun [4904,4910]
+SimpleName: dryRun [5867,5873]
+===
+match
+---
+NullLiteral [1051,1055]
+NullLiteral [1201,1205]
+===
+match
+---
+SimpleName: setMonochrome [5059,5072]
+SimpleName: setMonochrome [6110,6123]
+===
+match
+---
+SimpleType [7667,7671]
+SimpleType [10087,10091]
+===
+match
+---
+Modifier: private [7856,7863]
+Modifier: private [10277,10284]
+===
+match
+---
+SimpleName: ParsedPlugins [6648,6661]
+SimpleName: ParsedPlugins [9072,9085]
+===
+match
+---
+SimpleType [532,536]
+SimpleType [1583,1587]
+===
+match
+---
+ReturnStatement [5750,5762]
+ReturnStatement [6796,6808]
+===
+match
+---
+SingleVariableDeclaration [5309,5332]
+SingleVariableDeclaration [6358,6381]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [7223,7244]
+METHOD_INVOCATION_RECEIVER [9646,9667]
+===
+match
+---
+Modifier: final [478,483]
+Modifier: final [550,555]
+===
+match
+---
+SimpleName: SnippetType [5458,5469]
+SimpleName: SnippetType [6506,6517]
+===
+match
+---
+ThisExpression [5344,5348]
+ThisExpression [6393,6397]
+===
+match
+---
+BooleanLiteral: false [7469,7474]
+BooleanLiteral: false [9891,9896]
+===
+match
+---
+IfStatement [8076,8149]
+IfStatement [10497,10570]
+===
+match
+---
+SimpleName: setStrict [5678,5687]
+SimpleName: setStrict [6724,6733]
+===
+match
+---
+SimpleName: List [672,676]
+SimpleName: List [1723,1727]
+===
+match
+---
+Assignment [1500,1536]
+Assignment [7516,7552]
+===
+match
+---
+SimpleName: setSnippetType [5443,5457]
+SimpleName: setSnippetType [6491,6505]
+===
+match
+---
+Assignment [8116,8130]
+Assignment [10537,10551]
+===
+match
+---
+SimpleName: add [1994,1997]
+SimpleName: add [3045,3048]
+===
+match
+---
+ExpressionStatement [1716,1757]
+ExpressionStatement [2146,2179]
+===
+match
+---
+SimpleName: ParsedPluginData [853,869]
+SimpleName: ParsedPluginData [1904,1920]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [1797,1818]
+SimpleName: RuntimeOptionsBuilder [2218,2239]
+===
+match
+---
+ExpressionStatement [8116,8131]
+ExpressionStatement [10537,10552]
+===
+match
+---
+Block [1446,1625]
+Block [7462,7641]
+===
+match
+---
+ThisExpression [5546,5550]
+ThisExpression [6594,6598]
+===
+match
+---
+FieldDeclaration [1061,1101]
+FieldDeclaration [1211,1251]
+===
+match
+---
+Modifier: private [6540,6547]
+Modifier: private [8964,8971]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [6019,6040]
+SimpleName: RuntimeOptionsBuilder [7062,7083]
+===
+match
+---
+Modifier: public [4702,4708]
+Modifier: public [5666,5672]
+===
+match
+---
+FieldDeclaration [877,932]
+FieldDeclaration [1509,1564]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [5037,5058]
+SimpleName: RuntimeOptionsBuilder [6088,6109]
+===
+match
+---
+Modifier: final [666,671]
+Modifier: final [1717,1722]
+===
+match
+---
+SimpleName: clobber [8294,8301]
+SimpleName: clobber [10714,10721]
+===
+match
+---
+ParameterizedType [753,762]
+ParameterizedType [1804,1813]
+===
+match
+---
+SimpleType [1252,1259]
+SimpleType [1402,1409]
+===
+match
+---
+ReturnStatement [5390,5402]
+ReturnStatement [6439,6451]
+===
+match
+---
+IfStatement [8290,8368]
+IfStatement [10710,10788]
+===
+match
+---
+SimpleType [2222,2243]
+SimpleType [3271,3292]
+===
+match
+---
+SimpleName: setPickleOrder [5294,5308]
+SimpleName: setPickleOrder [6343,6357]
+===
+match
+---
+StringLiteral: "progress" [7457,7467]
+StringLiteral: "progress" [9879,9889]
+===
+match
+---
+SingleVariableDeclaration [4740,4749]
+SingleVariableDeclaration [5704,5713]
+===
+match
+---
+FieldDeclaration [6604,6664]
+FieldDeclaration [9028,9088]
+===
+match
+---
+Block [5216,5259]
+Block [6266,6309]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [1998,2005]
+METHOD_INVOCATION_ARGUMENTS [3049,3056]
+===
+match
+---
+Modifier: private [937,944]
+Modifier: private [1087,1094]
+===
+match
+---
+Modifier: public [2040,2046]
+Modifier: public [3090,3096]
+===
+match
+---
+TYPE_DECLARATION_KIND: class [484,489]
+TYPE_DECLARATION_KIND: class [556,561]
+===
+match
+---
+SimpleType [7864,7868]
+SimpleType [10285,10289]
+===
+match
+---
+Modifier: final [807,812]
+Modifier: final [1858,1863]
+===
+match
+---
+SimpleName: addGlue [1819,1826]
+SimpleName: addGlue [2240,2247]
+===
+match
+---
+IfStatement [7219,7320]
+IfStatement [9642,9743]
+===
+match
+---
+SimpleName: ParsedPlugins [7828,7841]
+SimpleName: ParsedPlugins [10248,10261]
+===
+match
+---
+FieldAccess [5837,5855]
+FieldAccess [6882,6900]
+===
+match
+---
+SimpleType [5570,5591]
+SimpleType [6617,6638]
+===
+match
+---
+BooleanLiteral: true [5631,5635]
+BooleanLiteral: true [6678,6682]
+===
+match
+---
+Modifier: public [5899,5905]
+Modifier: public [6943,6949]
+===
+match
+---
+SingleVariableDeclaration [1827,1835]
+SingleVariableDeclaration [2248,2256]
+===
+match
+---
+SimpleName: monochrome [5127,5137]
+SimpleName: monochrome [6178,6188]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [1908,1929]
+SimpleName: RuntimeOptionsBuilder [2959,2980]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [4826,4847]
+SimpleName: RuntimeOptionsBuilder [5789,5810]
+===
+match
+---
+SimpleName: clear [8338,8343]
+SimpleName: clear [10758,10763]
+===
+match
+---
+ParameterizedType [639,650]
+ParameterizedType [1690,1701]
+===
+match
+---
+MethodInvocation [2289,2329]
+MethodInvocation [3338,3378]
+===
+match
+---
+Modifier: private [1244,1251]
+Modifier: private [1394,1401]
+===
+match
+---
+SimpleName: pluginOption [6811,6823]
+SimpleName: pluginOption [9235,9247]
+===
+match
+---
+Block [1961,2034]
+Block [3012,3085]
+===
+match
+---
+SimpleName: ParsedPlugins [6612,6625]
+SimpleName: ParsedPlugins [9036,9049]
+===
+match
+---
+FieldDeclaration [1284,1355]
+FieldDeclaration [1928,1999]
+===
+match
+---
+ThrowStatement [7067,7127]
+ThrowStatement [9491,9551]
+===
+match
+---
+FieldDeclaration [1156,1189]
+FieldDeclaration [1306,1339]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [4902,4903]
+ASSIGNMENT_OPERATOR: = [5865,5866]
+===
+match
+---
+ParameterizedType [1523,1534]
+ParameterizedType [7539,7550]
+===
+match
+---
+SimpleName: names [8405,8410]
+SimpleName: names [10825,10830]
+===
+match
+---
+ReturnStatement [5988,6000]
+ReturnStatement [7032,7044]
+===
+match
+---
+SimpleName: ObjectFactory [6386,6399]
+SimpleName: ObjectFactory [8244,8257]
+===
+match
+---
+SimpleName: RuntimeOptions [2468,2482]
+SimpleName: RuntimeOptions [3515,3529]
+===
+match
+---
+SimpleType [1202,1213]
+SimpleType [1352,1363]
+===
+match
+---
+ExpressionStatement [2289,2330]
+ExpressionStatement [3338,3379]
+===
+match
+---
+SimpleType [2489,2503]
+SimpleType [3536,3550]
+===
+match
+---
+SimpleName: addDefaultSummaryPrinterIfNotPresent [6107,6143]
+SimpleName: addDefaultSummaryPrinterIfNotPresent [7150,7186]
+===
+match
+---
+SimpleName: summaryPrinters [7729,7744]
+SimpleName: summaryPrinters [10149,10164]
+===
+match
+---
+SimpleName: name [6788,6792]
+SimpleName: name [9212,9216]
+===
+match
+---
+SimpleName: featureWithLines [1428,1444]
+SimpleName: featureWithLines [7444,7460]
+===
+match
+---
+ExpressionStatement [4761,4786]
+ExpressionStatement [5725,5750]
+===
+match
+---
+SimpleType [6186,6207]
+SimpleType [7228,7249]
+===
+match
+---
+Modifier: public [5649,5655]
+Modifier: public [6695,6701]
+===
+match
+---
+SimpleName: parsedDryRun [995,1007]
+SimpleName: parsedDryRun [1145,1157]
+===
+match
+---
+SimpleName: ObjectFactory [1308,1321]
+SimpleName: ObjectFactory [1952,1965]
+===
+match
+---
+ClassInstanceCreation [6644,6663]
+ClassInstanceCreation [9068,9087]
+===
+match
+---
+ThisExpression [5714,5718]
+ThisExpression [6760,6764]
+===
+match
+---
+SingleVariableDeclaration [7983,8002]
+SingleVariableDeclaration [10404,10423]
+===
+match
+---
+ParameterizedType [601,614]
+ParameterizedType [1652,1665]
+===
+match
+---
+Assignment [5714,5740]
+Assignment [6760,6786]
+===
+match
+---
+ExpressionStatement [5958,5979]
+ExpressionStatement [7002,7023]
+===
+match
+---
+TYPE_DECLARATION_KIND: class [7822,7827]
+TYPE_DECLARATION_KIND: class [10242,10247]
+===
+match
+---
+SimpleType [8202,8216]
+SimpleType [10622,10636]
+===
+match
+---
+SimpleName: glue [1831,1835]
+SimpleName: glue [2252,2256]
+===
+match
+---
+SimpleName: List [7667,7671]
+SimpleName: List [10087,10091]
+===
+match
+---
+ReturnStatement [1607,1619]
+ReturnStatement [7623,7635]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [5973,5974]
+ASSIGNMENT_OPERATOR: = [7017,7018]
+===
+match
+---
+SimpleName: parsedPluginData [6090,6106]
+SimpleName: parsedPluginData [7133,7149]
+===
+match
+---
+SimpleName: pattern [1998,2005]
+SimpleName: pattern [3049,3056]
+===
+match
+---
+SimpleType [4709,4730]
+SimpleType [5673,5694]
+===
+match
+---
+SimpleName: List [753,757]
+SimpleName: List [1804,1808]
+===
+match
+---
+SimpleName: addPluginName [7443,7456]
+SimpleName: addPluginName [9865,9878]
+===
+match
+---
+SimpleName: snippetType [5518,5529]
+SimpleName: snippetType [6566,6577]
+===
+match
+---
+FieldAccess [5714,5731]
+FieldAccess [6760,6777]
+===
+match
+---
+QualifiedName: java.util.List [400,414]
+QualifiedName: java.util.List [398,412]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [7578,7593]
+METHOD_INVOCATION_RECEIVER [9999,10014]
+===
+match
+---
+SingleVariableDeclaration [2489,2518]
+SingleVariableDeclaration [3536,3565]
+===
+match
+---
+MethodInvocation [7578,7619]
+MethodInvocation [9999,10040]
+===
+match
+---
+Block [2279,2357]
+Block [3328,3406]
+===
+match
+---
+ReturnStatement [4920,4932]
+ReturnStatement [5883,5895]
+===
+match
+---
+VariableDeclarationFragment [1077,1100]
+VariableDeclarationFragment [1227,1250]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [8405,8410]
+METHOD_INVOCATION_ARGUMENTS [10825,10830]
+===
+match
+---
+BooleanLiteral: true [5247,5251]
+BooleanLiteral: true [6297,6301]
+===
+match
+---
+FieldDeclaration [799,872]
+FieldDeclaration [1850,1923]
+===
+match
+---
+VariableDeclarationFragment [1214,1238]
+VariableDeclarationFragment [1364,1388]
+===
+match
+---
+SingleVariableDeclaration [8197,8226]
+SingleVariableDeclaration [10617,10646]
+===
+match
+---
+SimpleName: parsedPickleOrder [5349,5366]
+SimpleName: parsedPickleOrder [6398,6415]
+===
+match
+---
+ExpressionStatement [8329,8346]
+ExpressionStatement [10749,10766]
+===
+match
+---
+VariableDeclarationFragment [1126,1150]
+VariableDeclarationFragment [1276,1300]
+===
+match
+---
+Modifier: public [5414,5420]
+Modifier: public [6462,6468]
+===
+match
+---
+SimpleName: build [2410,2415]
+SimpleName: build [3458,3463]
+===
+match
+---
+SimpleName: name [2090,2094]
+SimpleName: name [3140,3144]
+===
+match
+---
+Block [5948,6006]
+Block [6992,7050]
+===
+match
+---
+StringLiteral: "summary" [7288,7297]
+StringLiteral: "summary" [9711,9720]
+===
+match
+---
+SingleVariableDeclaration [2096,2115]
+SingleVariableDeclaration [3146,3165]
+===
+match
+---
+MethodInvocation [6983,7028]
+MethodInvocation [9407,9452]
+===
+match
+---
+SimpleType [6579,6592]
+SimpleType [9003,9016]
+===
+match
+---
+SimpleName: parsedMonochrome [5108,5124]
+SimpleName: parsedMonochrome [6159,6175]
+===
+match
+---
+QualifiedName: io.cucumber.core.order.PickleOrder [192,226]
+QualifiedName: io.cucumber.core.order.PickleOrder [191,225]
+===
+match
+---
+ReturnStatement [2016,2028]
+ReturnStatement [3067,3079]
+===
+match
+---
+ClassInstanceCreation [564,581]
+ClassInstanceCreation [1615,1632]
+===
+match
+---
+SimpleName: pluginSummaryPrinterNames [7688,7713]
+SimpleName: pluginSummaryPrinterNames [10108,10133]
+===
+match
+---
+SimpleName: summaryPrinters [6862,6877]
+SimpleName: summaryPrinters [9286,9301]
+===
+match
+---
+SimpleName: parsedWip [5963,5972]
+SimpleName: parsedWip [7007,7016]
+===
+match
+---
+MethodInvocation [7274,7305]
+MethodInvocation [9697,9728]
+===
+match
+---
+SimpleName: addTagFilter [2244,2256]
+SimpleName: addTagFilter [3293,3305]
+===
+match
+---
+Modifier: public [5265,5271]
+Modifier: public [6314,6320]
+===
+match
+---
+Block [6844,6927]
+Block [9268,9351]
+===
+match
+---
+MethodInvocation [6090,6145]
+MethodInvocation [7133,7188]
+===
+match
+---
+ImportDeclaration [268,313]
+ImportDeclaration [267,312]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [6862,6877]
+METHOD_INVOCATION_RECEIVER [9286,9301]
+===
+match
+---
+SimpleName: formatter [7553,7562]
+SimpleName: formatter [9974,9983]
+===
+match
+---
+ExpressionStatement [8389,8412]
+ExpressionStatement [10809,10832]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [490,511]
+SimpleName: RuntimeOptionsBuilder [562,583]
+===
+match
+---
+ThisExpression [1884,1888]
+ThisExpression [2305,2309]
+===
+match
+---
+SimpleType [7537,7551]
+SimpleType [9958,9972]
+===
+match
+---
+SimpleType [758,761]
+SimpleType [1809,1812]
+===
+match
+---
+SimpleName: objectFactoryClass [6463,6481]
+SimpleName: objectFactoryClass [8321,8339]
+===
+match
+---
+ThisExpression [2289,2293]
+ThisExpression [3338,3342]
+===
+match
+---
+ReturnStatement [1877,1889]
+ReturnStatement [2298,2310]
+===
+match
+---
+SimpleName: ArrayList [568,577]
+SimpleName: ArrayList [1619,1628]
+===
+match
+---
+Block [6242,6330]
+Block [7284,7372]
+===
+match
+---
+SimpleType [720,729]
+SimpleType [1771,1780]
+===
+match
+---
+MethodDeclaration [7340,7500]
+MethodDeclaration [9762,9922]
+===
+match
+---
+SimpleName: parsedCount [4766,4777]
+SimpleName: parsedCount [5730,5741]
+===
+match
+---
+MethodDeclaration [1790,1895]
+MethodDeclaration [2211,2316]
+===
+match
+---
+FieldAccess [5493,5515]
+FieldAccess [6541,6563]
+===
+match
+---
+SimpleName: nameList [8329,8337]
+SimpleName: nameList [10749,10757]
+===
+match
+---
+PrimitiveType: boolean [7932,7939]
+PrimitiveType: boolean [10353,10360]
+===
+match
+---
+SimpleName: updateNameList [7594,7608]
+SimpleName: updateNameList [10015,10029]
+===
+match
+---
+PrimitiveType: boolean [6706,6713]
+PrimitiveType: boolean [9130,9137]
+===
+match
+---
+ThisExpression [7578,7582]
+ThisExpression [9999,10003]
+===
+match
+---
+QualifiedName: Options.Plugin [8202,8216]
+QualifiedName: Options.Plugin [10622,10636]
+===
+match
+---
+VariableDeclarationFragment [1172,1188]
+VariableDeclarationFragment [1322,1338]
+===
+match
+---
+ExpressionStatement [5837,5866]
+ExpressionStatement [6882,6911]
+===
+match
+---
+SimpleType [1908,1929]
+SimpleType [2959,2980]
+===
+match
+---
+SimpleName: setDryRun [5002,5011]
+SimpleName: setDryRun [5964,5973]
+===
+match
+---
+SimpleName: isAddOption [8012,8023]
+SimpleName: isAddOption [10433,10444]
+===
+match
+---
+ParameterizedType [885,907]
+ParameterizedType [1517,1539]
+===
+match
+---
+NullLiteral [1350,1354]
+NullLiteral [1994,1998]
+===
+match
+---
+SimpleType [6648,6661]
+SimpleType [9072,9085]
+===
+match
+---
+SimpleName: addName [6994,7001]
+SimpleName: addName [9418,9425]
+===
+match
+---
+SimpleType [1308,1321]
+SimpleType [1952,1965]
+===
+match
+---
+InfixExpression [1460,1484]
+InfixExpression [7476,7500]
+===
+match
+---
+PrimitiveType: void [6674,6678]
+PrimitiveType: void [9098,9102]
+===
+match
+---
+SimpleType [1944,1951]
+SimpleType [2995,3002]
+===
+match
+---
+SimpleName: parsedNameFilters [615,632]
+SimpleName: parsedNameFilters [1666,1683]
+===
+match
+---
+SimpleName: add [1858,1861]
+SimpleName: add [2279,2282]
+===
+match
+---
+SimpleName: count [4744,4749]
+SimpleName: count [5708,5713]
+===
+match
+---
+NullLiteral [1146,1150]
+NullLiteral [1296,1300]
+===
+match
+---
+SimpleType [5906,5927]
+SimpleType [6950,6971]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [6090,6106]
+METHOD_INVOCATION_RECEIVER [7133,7149]
+===
+match
+---
+SimpleName: addDefaultFormatterIfNotPresent [7345,7376]
+SimpleName: addDefaultFormatterIfNotPresent [9767,9798]
+===
+match
+---
+SimpleName: setStrict [5621,5630]
+SimpleName: setStrict [6668,6677]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [6461,6462]
+ASSIGNMENT_OPERATOR: = [8319,8320]
+===
+match
+---
+NullLiteral [927,931]
+NullLiteral [1559,1563]
+===
+match
+---
+SimpleName: List [8197,8201]
+SimpleName: List [10617,10621]
+===
+match
+---
+SimpleType [5037,5058]
+SimpleType [6088,6109]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [5906,5927]
+SimpleName: RuntimeOptionsBuilder [6950,6971]
+===
+match
+---
+SimpleType [753,757]
+SimpleType [1804,1808]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [2289,2310]
+METHOD_INVOCATION_RECEIVER [3338,3359]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [1716,1734]
+METHOD_INVOCATION_RECEIVER [2090,2108]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [1739,1755]
+METHOD_INVOCATION_ARGUMENTS [2161,2177]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [1638,1659]
+SimpleName: RuntimeOptionsBuilder [2012,2033]
+===
+match
+---
+SimpleName: parsedGlue [763,773]
+SimpleName: parsedGlue [1814,1824]
+===
+match
+---
+ExpressionStatement [4884,4911]
+ExpressionStatement [5847,5874]
+===
+match
+---
+ReturnStatement [6155,6167]
+ReturnStatement [7198,7210]
+===
+match
+---
+SingleVariableDeclaration [5688,5702]
+SingleVariableDeclaration [6734,6748]
+===
+match
+---
+SimpleName: parsedWip [1172,1181]
+SimpleName: parsedWip [1322,1331]
+===
+match
+---
+SimpleName: setDryRun [4973,4982]
+SimpleName: setDryRun [5935,5944]
+===
+match
+---
+SimpleName: Boolean [1069,1076]
+SimpleName: Boolean [1219,1226]
+===
+match
+---
+ImportDeclaration [315,335]
+ImportDeclaration [313,333]
+===
+match
+---
+ThisExpression [5154,5158]
+ThisExpression [6205,6209]
+===
+match
+---
+VariableDeclarationFragment [908,931]
+VariableDeclarationFragment [1540,1563]
+===
+match
+---
+SimpleName: setStrict [5592,5601]
+SimpleName: setStrict [6639,6648]
+===
+match
+---
+SimpleName: parsedTagFilters [545,561]
+SimpleName: parsedTagFilters [1596,1612]
+===
+match
+---
+PackageDeclaration [0,33]
+PackageDeclaration [0,33]
+===
+match
+---
+SimpleType [4951,4972]
+SimpleType [5913,5934]
+===
+match
+---
+BooleanLiteral: true [5012,5016]
+BooleanLiteral: true [5974,5978]
+===
+match
+---
+MethodInvocation [1971,2006]
+MethodInvocation [3022,3057]
+===
+match
+---
+SimpleName: Boolean [987,994]
+SimpleName: Boolean [1137,1144]
+===
+match
+---
+SimpleType [4826,4847]
+SimpleType [5789,5810]
+===
+match
+---
+SimpleName: FeatureWithLines [1671,1687]
+SimpleName: FeatureWithLines [2045,2061]
+===
+match
+---
+MethodDeclaration [5414,5557]
+MethodDeclaration [6462,6605]
+===
+match
+---
+VariableDeclarationFragment [1323,1354]
+VariableDeclarationFragment [1967,1998]
+===
+match
+---
+SimpleType [853,869]
+SimpleType [1904,1920]
+===
+match
+---
+ExpressionStatement [6090,6146]
+ExpressionStatement [7133,7189]
+===
+match
+---
+FieldAccess [7578,7593]
+FieldAccess [9999,10014]
+===
+match
+---
+SimpleName: name [7121,7125]
+SimpleName: name [9545,9549]
+===
+match
+---
+SimpleName: updateFormatters [7515,7531]
+SimpleName: updateFormatters [9936,9952]
+===
+match
+---
+MethodDeclaration [5649,5768]
+MethodDeclaration [6695,6814]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [5367,5368]
+ASSIGNMENT_OPERATOR: = [6416,6417]
+===
+match
+---
+IfStatement [6807,7141]
+IfStatement [9231,9565]
+===
+match
+---
+SimpleName: snippetType [5470,5481]
+SimpleName: snippetType [6518,6529]
+===
+match
+---
+Modifier: public [471,477]
+Modifier: public [543,549]
+===
+match
+---
+FieldAccess [6431,6460]
+FieldAccess [8289,8318]
+===
+match
+---
+ExpressionStatement [8043,8059]
+ExpressionStatement [10464,10480]
+===
+match
+---
+SimpleType [6612,6625]
+SimpleType [9036,9049]
+===
+match
+---
+SimpleType [639,648]
+SimpleType [1690,1699]
+===
+match
+---
+SimpleName: wip [5975,5978]
+SimpleName: wip [7019,7022]
+===
+match
+---
+SimpleName: threads [5818,5825]
+SimpleName: threads [6863,6870]
+===
+match
+---
+Block [7425,7490]
+Block [9847,9912]
+===
+match
+---
+SingleVariableDeclaration [2083,2094]
+SingleVariableDeclaration [3133,3144]
+===
+match
+---
+Modifier: final [6501,6506]
+Modifier: final [8924,8929]
+===
+match
+---
+IfStatement [7393,7490]
+IfStatement [9815,9912]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [6811,6823]
+METHOD_INVOCATION_RECEIVER [9235,9247]
+===
+match
+---
+Modifier: public [6179,6185]
+Modifier: public [7221,7227]
+===
+match
+---
+ParameterizedType [780,791]
+ParameterizedType [1831,1842]
+===
+match
+---
+PrimitiveType: void [7161,7165]
+PrimitiveType: void [9584,9588]
+===
+match
+---
+Block [4985,5024]
+Block [5947,5986]
+===
+match
+---
+QualifiedName: java.util.regex.Pattern [445,468]
+QualifiedName: java.util.regex.Pattern [443,466]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [4951,4972]
+SimpleName: RuntimeOptionsBuilder [5913,5934]
+===
+match
+---
+FieldAccess [5958,5972]
+FieldAccess [7002,7016]
+===
+match
+---
+SimpleName: ParsedPluginData [6513,6529]
+SimpleName: ParsedPluginData [8936,8952]
+===
+match
+---
+ReturnStatement [5147,5159]
+ReturnStatement [6198,6210]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [8053,8057]
+METHOD_INVOCATION_ARGUMENTS [10474,10478]
+===
+match
+---
+SimpleType [890,906]
+SimpleType [1522,1538]
+===
+match
+---
+SimpleName: isSummaryPrinter [6824,6840]
+SimpleName: isSummaryPrinter [9248,9264]
+===
+match
+---
+MethodInvocation [2127,2181]
+MethodInvocation [3177,3231]
+===
+match
+---
+ThisExpression [5995,5999]
+ThisExpression [7039,7043]
+===
+match
+---
+Assignment [5958,5978]
+Assignment [7002,7022]
+===
+match
+---
+FieldAccess [5103,5124]
+FieldAccess [6154,6175]
+===
+match
+---
+Block [7715,7797]
+Block [10135,10217]
+===
+match
+---
+SimpleName: Integer [1252,1259]
+SimpleName: Integer [1402,1409]
+===
+match
+---
+SimpleName: addRerun [1390,1398]
+SimpleName: addRerun [7406,7414]
+===
+match
+---
+Block [2117,2209]
+Block [3167,3259]
+===
+match
+---
+SimpleName: clobber [8116,8123]
+SimpleName: clobber [10537,10544]
+===
+match
+---
+Modifier: private [1284,1291]
+Modifier: private [1928,1935]
+===
+match
+---
+ExpressionStatement [7729,7787]
+ExpressionStatement [10149,10207]
+===
+match
+---
+SimpleName: isAddPlugin [6714,6725]
+SimpleName: isAddPlugin [9138,9149]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [2163,2180]
+METHOD_INVOCATION_ARGUMENTS [3213,3230]
+===
+match
+---
+SimpleName: addName [7975,7982]
+SimpleName: addName [10396,10403]
+===
+match
+---
+SimpleType [6693,6699]
+SimpleType [9117,9123]
+===
+match
+---
+Assignment [5837,5865]
+Assignment [6882,6910]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [8329,8337]
+METHOD_INVOCATION_RECEIVER [10749,10757]
+===
+match
+---
+Assignment [5493,5529]
+Assignment [6541,6577]
+===
+match
+---
+ImportDeclaration [438,469]
+ImportDeclaration [436,467]
+===
+match
+---
+Block [5093,5165]
+Block [6144,6216]
+===
+match
+---
+SingleVariableDeclaration [2257,2277]
+SingleVariableDeclaration [3306,3326]
+===
+match
+---
+ReturnStatement [4795,4807]
+ReturnStatement [5759,5771]
+===
+match
+---
+MethodDeclaration [7640,7797]
+MethodDeclaration [10060,10217]
+===
+match
+---
+SimpleName: addNameFilter [1930,1943]
+SimpleName: addNameFilter [2981,2994]
+===
+match
+---
+QualifiedName: io.cucumber.core.plugin.Options [235,266]
+QualifiedName: io.cucumber.core.plugin.Options [234,265]
+===
+match
+---
+ParameterizedType [1292,1322]
+ParameterizedType [1936,1966]
+===
+match
+---
+ParameterizedType [3823,3834]
+ParameterizedType [635,646]
+===
+match
+---
+SimpleName: add [2311,2314]
+SimpleName: add [3360,3363]
+===
+match
+---
+FieldDeclaration [587,653]
+FieldDeclaration [1638,1704]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [2315,2328]
+METHOD_INVOCATION_ARGUMENTS [3364,3377]
+===
+match
+---
+QualifiedName: formatters.names [7397,7413]
+QualifiedName: formatters.names [9819,9835]
+===
+match
+---
+MethodDeclaration [6336,6488]
+MethodDeclaration [8194,8346]
+===
+match
+---
+SimpleType [5272,5293]
+SimpleType [6321,6342]
+===
+match
+---
+SimpleType [6019,6040]
+SimpleType [7062,7083]
+===
+match
+---
+ThisExpression [2023,2027]
+ThisExpression [3074,3078]
+===
+match
+---
+SimpleName: glue [1862,1866]
+SimpleName: glue [2283,2287]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [6983,6993]
+METHOD_INVOCATION_RECEIVER [9407,9417]
+===
+match
+---
+ParameterizedType [532,544]
+ParameterizedType [1583,1595]
+===
+match
+---
+SimpleName: parsedCount [1260,1271]
+SimpleName: parsedCount [1410,1421]
+===
+match
+---
+PrimitiveType: boolean [2096,2103]
+PrimitiveType: boolean [3146,3153]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [7729,7744]
+METHOD_INVOCATION_RECEIVER [10149,10164]
+===
+match
+---
+MethodDeclaration [7970,8163]
+MethodDeclaration [10391,10584]
+===
+match
+---
+SimpleName: names [8043,8048]
+SimpleName: names [10464,10469]
+===
+match
+---
+SimpleType [5309,5320]
+SimpleType [6358,6369]
+===
+match
+---
+SimpleName: parsedTagFilters [2294,2310]
+SimpleName: parsedTagFilters [3343,3359]
+===
+match
+---
+SimpleName: parsedRerunPaths [1500,1516]
+SimpleName: parsedRerunPaths [7516,7532]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [2416,2430]
+METHOD_INVOCATION_RECEIVER [3464,3478]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [8124,8125]
+ASSIGNMENT_OPERATOR: = [10545,10546]
+===
+match
+---
+Block [6727,7151]
+Block [9151,9575]
+===
+match
+---
+SimpleName: List [885,889]
+SimpleName: List [1517,1521]
+===
+match
+---
+ThisExpression [1971,1975]
+ThisExpression [3022,3026]
+===
+match
+---
+SimpleName: summaryPrinters [6626,6641]
+SimpleName: summaryPrinters [9050,9065]
+===
+match
+---
+MethodDeclaration [2215,2357]
+MethodDeclaration [3264,3406]
+===
+match
+---
+SimpleName: threads [5858,5865]
+SimpleName: threads [6903,6910]
+===
+match
+---
+Block [1706,1784]
+Block [2080,2206]
+===
+match
+---
+SimpleType [1292,1297]
+SimpleType [1936,1941]
+===
+match
+---
+NullLiteral [1234,1238]
+NullLiteral [1384,1388]
+===
+match
+---
+MethodInvocation [1556,1597]
+MethodInvocation [7572,7613]
+===
+match
+---
+SimpleName: addName [6878,6885]
+SimpleName: addName [9302,9309]
+===
+match
+---
+SimpleName: count [4780,4785]
+SimpleName: count [5744,5749]
+===
+match
+---
+SimpleName: tagExpression [2264,2277]
+SimpleName: tagExpression [3313,3326]
+===
+match
+---
+SimpleName: Pattern [606,613]
+SimpleName: Pattern [1657,1664]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [5732,5733]
+ASSIGNMENT_OPERATOR: = [6778,6779]
+===
+match
+---
+Modifier: static [7815,7821]
+Modifier: static [10235,10241]
+===
+match
+---
+ReturnStatement [6312,6324]
+ReturnStatement [7354,7366]
+===
+match
+---
+SimpleType [945,952]
+SimpleType [1095,1102]
+===
+match
+---
+SimpleType [5421,5442]
+SimpleType [6469,6490]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [5570,5591]
+SimpleName: RuntimeOptionsBuilder [6617,6638]
+===
+match
+---
+SimpleName: pickleOrder [5369,5380]
+SimpleName: pickleOrder [6418,6429]
+===
+match
+---
+SimpleName: addPluginName [2069,2082]
+SimpleName: addPluginName [3119,3132]
+===
+match
+---
+Block [7564,7630]
+Block [9985,10051]
+===
+match
+---
+SimpleType [5781,5802]
+SimpleType [6826,6847]
+===
+match
+---
+SimpleName: parsedFeaturePaths [695,713]
+SimpleName: parsedFeaturePaths [1746,1764]
+===
+match
+---
+ReturnStatement [5614,5637]
+ReturnStatement [6661,6684]
+===
+match
+---
+SimpleName: isEmpty [7245,7252]
+SimpleName: isEmpty [9668,9675]
+===
+match
+---
+ThisExpression [5837,5841]
+ThisExpression [6882,6886]
+===
+match
+---
+ReturnStatement [2339,2351]
+ReturnStatement [3388,3400]
+===
+match
+---
+ThisExpression [6162,6166]
+ThisExpression [7205,7209]
+===
+match
+---
+MethodDeclaration [7510,7630]
+MethodDeclaration [9931,10051]
+===
+match
+---
+NullLiteral [1184,1188]
+NullLiteral [1334,1338]
+===
+match
+---
+PrimitiveType: void [7340,7344]
+PrimitiveType: void [9762,9766]
+===
+match
+---
+SimpleName: updateNameList [7745,7759]
+SimpleName: updateNameList [10165,10179]
+===
+match
+---
+SimpleName: parsedObjectFactoryClass [1323,1347]
+SimpleName: parsedObjectFactoryClass [1967,1991]
+===
+match
+---
+ImportDeclaration [135,184]
+ImportDeclaration [134,183]
+===
+match
+---
+MethodInvocation [6937,6963]
+MethodInvocation [9361,9387]
+===
+match
+---
+ThisExpression [4802,4806]
+ThisExpression [5766,5770]
+===
+match
+---
+Block [5604,5643]
+Block [6651,6690]
+===
+match
+---
+Block [7049,7141]
+Block [9473,9565]
+===
+match
+---
+Modifier: public [1361,1367]
+Modifier: public [7377,7383]
+===
+match
+---
+Block [8025,8163]
+Block [10446,10584]
+===
+match
+---
+MethodDeclaration [2363,2455]
+MethodDeclaration [3411,3503]
+===
+match
+---
+SimpleName: parsedNameFilters [1976,1993]
+SimpleName: parsedNameFilters [3027,3044]
+===
+match
+---
+SimpleName: strict [5696,5702]
+SimpleName: strict [6742,6748]
+===
+match
+---
+Assignment [4761,4785]
+Assignment [5725,5749]
+===
+match
+---
+VariableDeclarationFragment [830,871]
+VariableDeclarationFragment [1881,1922]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [4709,4730]
+SimpleName: RuntimeOptionsBuilder [5673,5694]
+===
+match
+---
+SimpleName: parsedThreads [953,966]
+SimpleName: parsedThreads [1103,1116]
+===
+match
+---
+BooleanLiteral: true [8126,8130]
+BooleanLiteral: true [10547,10551]
+===
+match
+---
+SimpleName: PluginOption [6769,6781]
+SimpleName: PluginOption [9193,9205]
+===
+match
+---
+MethodInvocation [8043,8058]
+MethodInvocation [10464,10479]
+===
+match
+---
+FieldDeclaration [7856,7911]
+FieldDeclaration [10277,10332]
+===
+match
+---
+MethodDeclaration [1631,1784]
+MethodDeclaration [2005,2206]
+===
+match
+---
+Modifier: private [1020,1027]
+Modifier: private [1170,1177]
+===
+match
+---
+SimpleName: nameList [8389,8397]
+SimpleName: nameList [10809,10817]
+===
+match
+---
+SimpleType [1164,1171]
+SimpleType [1314,1321]
+===
+match
+---
+ParameterizedType [7667,7687]
+ParameterizedType [10087,10107]
+===
+match
+---
+ExpressionStatement [1971,2007]
+ExpressionStatement [3022,3058]
+===
+match
+---
+Modifier: private [1106,1113]
+Modifier: private [1256,1263]
+===
+match
+---
+Modifier: private [587,594]
+Modifier: private [1638,1645]
+===
+match
+---
+MethodDeclaration [1361,1625]
+MethodDeclaration [7377,7641]
+===
+match
+---
+Block [5334,5408]
+Block [6383,6457]
+===
+match
+---
+SimpleName: isEmpty [7414,7421]
+SimpleName: isEmpty [9836,9843]
+===
+match
+---
+SimpleName: dryRun [4866,4872]
+SimpleName: dryRun [5829,5835]
+===
+match
+---
+ThisExpression [1614,1618]
+ThisExpression [7630,7634]
+===
+match
+---
+QualifiedName: java.net.URI [322,334]
+QualifiedName: java.net.URI [320,332]
+===
+match
+---
+ThisExpression [4761,4765]
+ThisExpression [5725,5729]
+===
+match
+---
+SimpleType [987,994]
+SimpleType [1137,1144]
+===
+match
+---
+SimpleName: parsedRerunPaths [1460,1476]
+SimpleName: parsedRerunPaths [7476,7492]
+===
+match
+---
+Block [5827,5893]
+Block [6872,6938]
+===
+match
+---
+SimpleName: FeatureWithLines [3790,3806]
+SimpleName: FeatureWithLines [1447,1463]
+===
+match
+---
+PREFIX_EXPRESSION_OPERATOR: ! [8080,8081]
+PREFIX_EXPRESSION_OPERATOR: ! [10501,10502]
+===
+match
+---
+QualifiedName: io.cucumber.core.options [8,32]
+QualifiedName: io.cucumber.core.options [8,32]
+===
+match
+---
+Block [2393,2455]
+Block [3441,3503]
+===
+match
+---
+SingleVariableDeclaration [5458,5481]
+SingleVariableDeclaration [6506,6529]
+===
+match
+---
+ParameterizedType [7532,7552]
+ParameterizedType [9953,9973]
+===
+match
+---
+SimpleName: URI [758,761]
+SimpleName: URI [1809,1812]
+===
+match
+---
+Modifier: public [6336,6342]
+Modifier: public [8194,8200]
+===
+match
+---
+SingleVariableDeclaration [6693,6704]
+SingleVariableDeclaration [9117,9128]
+===
+match
+---
+QualifiedName: Options.Plugin [7537,7551]
+QualifiedName: Options.Plugin [9958,9972]
+===
+match
+---
+SimpleName: add [8049,8052]
+SimpleName: add [10470,10473]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [6769,6781]
+METHOD_INVOCATION_RECEIVER [9193,9205]
+===
+match
+---
+SimpleType [1114,1125]
+SimpleType [1264,1275]
+===
+match
+---
+Modifier: public [1901,1907]
+Modifier: public [2952,2958]
+===
+match
+---
+NullLiteral [1010,1014]
+NullLiteral [1160,1164]
+===
+match
+---
+NullLiteral [1274,1278]
+NullLiteral [1424,1428]
+===
+match
+---
+SimpleName: tagExpression [2315,2328]
+SimpleName: tagExpression [3364,3377]
+===
+match
+---
+VariableDeclarationFragment [995,1014]
+VariableDeclarationFragment [1145,1164]
+===
+match
+---
+SimpleType [6370,6375]
+SimpleType [8228,8233]
+===
+match
+---
+Modifier: public [1790,1796]
+Modifier: public [2211,2217]
+===
+match
+---
+MethodInvocation [6769,6793]
+MethodInvocation [9193,9217]
+===
+match
+---
+MethodInvocation [8389,8411]
+MethodInvocation [10809,10831]
+===
+match
+---
+SimpleType [601,605]
+SimpleType [1652,1656]
+===
+match
+---
+VariableDeclarationFragment [1036,1055]
+VariableDeclarationFragment [1186,1205]
+===
+match
+---
+Modifier: private [799,806]
+Modifier: private [1850,1857]
+===
+match
+---
+SimpleType [1069,1076]
+SimpleType [1219,1226]
+===
+match
+---
+SimpleName: formatters [7583,7593]
+SimpleName: formatters [10004,10014]
+===
+match
+---
+SimpleName: build [2385,2390]
+SimpleName: build [3433,3438]
+===
+match
+---
+SimpleType [1671,1687]
+SimpleType [2045,2061]
+===
+match
+---
+FieldAccess [1971,1993]
+FieldAccess [3022,3044]
+===
+match
+---
+SingleVariableDeclaration [5073,5091]
+SingleVariableDeclaration [6124,6142]
+===
+match
+---
+MethodInvocation [6252,6302]
+MethodInvocation [7294,7344]
+===
+match
+---
+SimpleType [5458,5469]
+SimpleType [6506,6517]
+===
+match
+---
+ClassInstanceCreation [7893,7910]
+ClassInstanceCreation [10314,10331]
+===
+match
+---
+SimpleName: name [6700,6704]
+SimpleName: name [9124,9128]
+===
+match
+---
+SimpleName: addPluginName [7274,7287]
+SimpleName: addPluginName [9697,9710]
+===
+match
+---
+SimpleName: PickleOrder [1202,1213]
+SimpleName: PickleOrder [1352,1363]
+===
+match
+---
+SimpleName: List [532,536]
+SimpleName: List [1583,1587]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [5247,5251]
+METHOD_INVOCATION_ARGUMENTS [6297,6301]
+===
+match
+---
+MethodInvocation [8329,8345]
+MethodInvocation [10749,10765]
+===
+match
+---
+Modifier: private [658,665]
+Modifier: private [1709,1716]
+===
+match
+---
+SimpleName: pickleOrder [5321,5332]
+SimpleName: pickleOrder [6370,6381]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [7288,7304]
+METHOD_INVOCATION_ARGUMENTS [9711,9727]
+===
+match
+---
+ExpressionStatement [1500,1537]
+ExpressionStatement [7516,7553]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [5656,5677]
+SimpleName: RuntimeOptionsBuilder [6702,6723]
+===
+match
+---
+SimpleName: ArrayList [3823,3832]
+SimpleName: ArrayList [635,644]
+===
+match
+---
+Modifier: final [747,752]
+Modifier: final [1798,1803]
+===
+match
+---
+BooleanLiteral: false [7950,7955]
+BooleanLiteral: false [10371,10376]
+===
+match
+---
+VariableDeclarationFragment [6754,6793]
+VariableDeclarationFragment [9178,9217]
+===
+match
+---
+QualifiedName: Options.Plugin [7869,7883]
+QualifiedName: Options.Plugin [10290,10304]
+===
+match
+---
+MethodDeclaration [2040,2209]
+MethodDeclaration [3090,3259]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [6186,6207]
+SimpleName: RuntimeOptionsBuilder [7228,7249]
+===
+match
+---
+ImportDeclaration [336,363]
+ImportDeclaration [334,361]
+===
+match
+---
+SimpleName: pluginOption [7002,7014]
+SimpleName: pluginOption [9426,9438]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [5781,5802]
+SimpleName: RuntimeOptionsBuilder [6826,6847]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [2047,2068]
+SimpleName: RuntimeOptionsBuilder [3097,3118]
+===
+match
+---
+ClassInstanceCreation [7073,7126]
+ClassInstanceCreation [9497,9550]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [1862,1866]
+METHOD_INVOCATION_ARGUMENTS [2283,2287]
+===
+match
+---
+MethodInvocation [7443,7475]
+MethodInvocation [9865,9897]
+===
+match
+---
+Modifier: private [1061,1068]
+Modifier: private [1211,1218]
+===
+match
+---
+ThisExpression [5397,5401]
+ThisExpression [6446,6450]
+===
+match
+---
+ExpressionStatement [7578,7620]
+ExpressionStatement [9999,10041]
+===
+match
+---
+IfStatement [6933,7141]
+IfStatement [9357,9565]
+===
+match
+---
+ImportDeclaration [228,267]
+ImportDeclaration [227,266]
+===
+match
+---
+Block [8303,8368]
+Block [10723,10788]
+===
+match
+---
+Modifier: public [4819,4825]
+Modifier: public [5782,5788]
+===
+match
+---
+SingleVariableDeclaration [5935,5946]
+SingleVariableDeclaration [6979,6990]
+===
+match
+---
+SimpleName: Boolean [1028,1035]
+SimpleName: Boolean [1178,1185]
+===
+match
+---
+SimpleName: String [537,543]
+SimpleName: String [1588,1594]
+===
+match
+---
+MethodInvocation [2416,2447]
+MethodInvocation [3464,3495]
+===
+match
+---
+ReturnStatement [4995,5018]
+ReturnStatement [5957,5980]
+===
+match
+---
+SimpleName: setMonochrome [5200,5213]
+SimpleName: setMonochrome [6250,6263]
+===
+match
+---
+SimpleType [1410,1426]
+SimpleType [7426,7442]
+===
+match
+---
+SimpleType [1523,1532]
+SimpleType [7539,7548]
+===
+match
+---
+ExpressionStatement [5344,5381]
+ExpressionStatement [6393,6430]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [8389,8397]
+METHOD_INVOCATION_RECEIVER [10809,10817]
+===
+match
+---
+SimpleType [885,889]
+SimpleType [1517,1521]
+===
+match
+---
+ClassInstanceCreation [776,793]
+ClassInstanceCreation [1827,1844]
+===
+match
+---
+SimpleType [6548,6561]
+SimpleType [8972,8985]
+===
+match
+---
+VariableDeclarationStatement [6741,6794]
+VariableDeclarationStatement [9165,9218]
+===
+match
+---
+Modifier: final [526,531]
+Modifier: final [1577,1582]
+===
+match
+---
+MethodDeclaration [5563,5643]
+MethodDeclaration [6610,6690]
+===
+match
+---
+MethodDeclaration [4819,4938]
+MethodDeclaration [5782,5901]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [5178,5199]
+SimpleName: RuntimeOptionsBuilder [6228,6249]
+===
+match
+---
+ThisExpression [6431,6435]
+ThisExpression [8289,8293]
+===
+match
+---
+MethodDeclaration [7161,7330]
+MethodDeclaration [9584,9753]
+===
+match
+---
+SimpleType [7897,7906]
+SimpleType [10318,10327]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [4778,4779]
+ASSIGNMENT_OPERATOR: = [5742,5743]
+===
+match
+---
+ExpressionStatement [7274,7306]
+ExpressionStatement [9697,9729]
+===
+match
+---
+SimpleName: parsedPluginData [830,846]
+SimpleName: parsedPluginData [1881,1897]
+===
+match
+---
+SimpleName: setMonochrome [5233,5246]
+SimpleName: setMonochrome [6283,6296]
+===
+match
+---
+Assignment [5344,5380]
+Assignment [6393,6429]
+===
+match
+---
+SimpleName: parsedObjectFactoryClass [6436,6460]
+SimpleName: parsedObjectFactoryClass [8294,8318]
+===
+match
+---
+SimpleName: isAddPlugin [7016,7027]
+SimpleName: isAddPlugin [9440,9451]
+===
+match
+---
+Block [8094,8149]
+Block [10515,10570]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [6252,6268]
+METHOD_INVOCATION_RECEIVER [7294,7310]
+===
+match
+---
+SimpleType [7983,7997]
+SimpleType [10404,10418]
+===
+match
+---
+SimpleName: monochrome [5081,5091]
+SimpleName: monochrome [6132,6142]
+===
+match
+---
+ExpressionStatement [6431,6482]
+ExpressionStatement [8289,8340]
+===
+match
+---
+SimpleType [1368,1389]
+SimpleType [7384,7405]
+===
+match
+---
+Modifier: private [1194,1201]
+Modifier: private [1344,1351]
+===
+match
+---
+WildcardType [6376,6399]
+WildcardType [8234,8257]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [5125,5126]
+ASSIGNMENT_OPERATOR: = [6176,6177]
+===
+match
+---
+BooleanLiteral: false [7299,7304]
+BooleanLiteral: false [9722,9727]
+===
+match
+---
+PrimitiveType: void [8177,8181]
+PrimitiveType: void [10597,10601]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [6886,6911]
+METHOD_INVOCATION_ARGUMENTS [9310,9335]
+===
+match
+---
+SimpleName: String [6693,6699]
+SimpleName: String [9117,9123]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [5856,5857]
+ASSIGNMENT_OPERATOR: = [6901,6902]
+===
+match
+---
+Block [7379,7500]
+Block [9801,9922]
+===
+match
+---
+INFIX_EXPRESSION_OPERATOR: + [7119,7120]
+INFIX_EXPRESSION_OPERATOR: + [9543,9544]
+===
+match
+---
+SimpleType [606,613]
+SimpleType [1657,1664]
+===
+match
+---
+QualifiedName: java.util.Collection [371,391]
+QualifiedName: java.util.Collection [369,389]
+===
+match
+---
+SimpleName: strict [5734,5740]
+SimpleName: strict [6780,6786]
+===
+match
+---
+SimpleName: Collection [1399,1409]
+SimpleName: Collection [7415,7425]
+===
+match
+---
+ImportDeclaration [393,415]
+ImportDeclaration [391,413]
+===
+match
+---
+SimpleType [677,693]
+SimpleType [1728,1744]
+===
+match
+---
+PREFIX_EXPRESSION_OPERATOR: ! [8250,8251]
+PREFIX_EXPRESSION_OPERATOR: ! [10670,10671]
+===
+match
+---
+MethodInvocation [6811,6842]
+MethodInvocation [9235,9266]
+===
+match
+---
+SimpleName: featureWithLines [1688,1704]
+SimpleName: featureWithLines [2062,2078]
+===
+match
+---
+SimpleName: parsedPickleOrder [1214,1231]
+SimpleName: parsedPickleOrder [1364,1381]
+===
+match
+---
+Modifier: public [1631,1637]
+Modifier: public [2005,2011]
+===
+match
+---
+SimpleName: parse [6782,6787]
+SimpleName: parse [9206,9211]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [1368,1389]
+SimpleName: RuntimeOptionsBuilder [7384,7405]
+===
+match
+---
+StringLiteral: "Unrecognized plugin: " [7095,7118]
+StringLiteral: "Unrecognized plugin: " [9519,9542]
+===
+match
+---
+QualifiedName: java.util.Set [423,436]
+QualifiedName: java.util.Set [421,434]
+===
+match
+---
+SimpleType [1399,1409]
+SimpleType [7415,7425]
+===
+match
+---
+SimpleType [1827,1830]
+SimpleType [2248,2251]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [5516,5517]
+ASSIGNMENT_OPERATOR: = [6564,6565]
+===
+match
+---
+SimpleName: formatters [6983,6993]
+SimpleName: formatters [9407,9417]
+===
+match
+---
+SimpleType [2468,2482]
+SimpleType [3515,3529]
+===
+match
+---
+ThisExpression [4927,4931]
+ThisExpression [5890,5894]
+===
+match
+---
+SimpleName: featureWithLines [1739,1755]
+SimpleName: featureWithLines [2161,2177]
+===
+match
+---
+SimpleName: addDefaultFormatterIfNotPresent [6269,6300]
+SimpleName: addDefaultFormatterIfNotPresent [7311,7342]
+===
+match
+---
+SimpleType [3790,3806]
+SimpleType [1447,1463]
+===
+match
+---
+SimpleType [7077,7094]
+SimpleType [9501,9518]
+===
+match
+---
+MethodDeclaration [4702,4813]
+MethodDeclaration [5666,5777]
+===
+match
+---
+Modifier: public [5563,5569]
+Modifier: public [6610,6616]
+===
+match
+---
+SimpleName: SnippetType [1114,1125]
+SimpleName: SnippetType [1264,1275]
+===
+match
+---
+ReturnStatement [5875,5887]
+ReturnStatement [6920,6932]
+===
+match
+---
+MethodDeclaration [6674,7151]
+MethodDeclaration [9098,9575]
+===
+match
+---
+TYPE_DECLARATION_KIND: class [6507,6512]
+TYPE_DECLARATION_KIND: class [8930,8935]
+===
+match
+---
+SimpleName: List [7864,7868]
+SimpleName: List [10285,10289]
+===
+match
+---
+Modifier: private [518,525]
+Modifier: private [1569,1576]
+===
+match
+---
+Modifier: public [5030,5036]
+Modifier: public [6081,6087]
+===
+match
+---
+ExpressionStatement [1556,1598]
+ExpressionStatement [7572,7614]
+===
+match
+---
+Modifier: public [2363,2369]
+Modifier: public [3411,3417]
+===
+match
+---
+FieldAccess [2289,2310]
+FieldAccess [3338,3359]
+===
+match
+---
+MethodInvocation [5002,5017]
+MethodInvocation [5964,5979]
+===
+match
+---
+SingleVariableDeclaration [1944,1959]
+SingleVariableDeclaration [2995,3010]
+===
+match
+---
+VariableDeclarationFragment [7885,7910]
+VariableDeclarationFragment [10306,10331]
+===
+match
+---
+SimpleName: PluginOption [6741,6753]
+SimpleName: PluginOption [9165,9177]
+===
+match
+---
+PrefixExpression [8080,8092]
+PrefixExpression [10501,10513]
+===
+match
+---
+SimpleName: PickleOrder [5309,5320]
+SimpleName: PickleOrder [6358,6369]
+===
+match
+---
+TypeDeclaration [471,8462]
+TypeDeclaration [543,10882]
+===
+match
+---
+MethodDeclaration [5265,5408]
+MethodDeclaration [6314,6457]
+===
+match
+---
+SimpleName: updateSummaryPrinters [7645,7666]
+SimpleName: updateSummaryPrinters [10065,10086]
+===
+match
+---
+SimpleName: updateNameList [8182,8196]
+SimpleName: updateNameList [10602,10616]
+===
+match
+---
+Block [1486,1547]
+Block [7502,7563]
+===
+match
+---
+ClassInstanceCreation [3819,3859]
+ClassInstanceCreation [631,648]
+===
+match
+---
+SimpleName: ArrayList [780,789]
+SimpleName: ArrayList [1831,1840]
+===
+match
+---
+TypeDeclaration [6494,8460]
+TypeDeclaration [8917,10880]
+===
+match
+---
+SimpleType [8197,8201]
+SimpleType [10617,10621]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [8251,8256]
+METHOD_INVOCATION_RECEIVER [10671,10676]
+===
+match
+---
+WildcardType [1298,1321]
+WildcardType [1942,1965]
+===
+match
+---
+VariableDeclarationFragment [6626,6663]
+VariableDeclarationFragment [9050,9087]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [7457,7474]
+METHOD_INVOCATION_ARGUMENTS [9879,9896]
+===
+match
+---
+SimpleName: names [7885,7890]
+SimpleName: names [10306,10311]
+===
+match
+---
+SimpleType [537,543]
+SimpleType [1588,1594]
+===
+match
+---
+VariableDeclarationFragment [7940,7955]
+VariableDeclarationFragment [10361,10376]
+===
+match
+---
+SimpleName: Class [1292,1297]
+SimpleName: Class [1936,1941]
+===
+match
+---
+SimpleName: parsedFeaturePaths [1716,1734]
+SimpleName: parsedFeaturePaths [2090,2108]
+===
+match
+---
+SimpleName: formatters [6562,6572]
+SimpleName: formatters [8986,8996]
+===
+match
+---
+PrimitiveType: void [7970,7974]
+PrimitiveType: void [10391,10395]
+===
+match
+---
+IfStatement [1456,1547]
+IfStatement [7472,7563]
+===
+match
+---
+ParameterizedType [720,731]
+ParameterizedType [1771,1782]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [7397,7413]
+METHOD_INVOCATION_RECEIVER [9819,9835]
+===
+match
+---
+SimpleName: setWip [5928,5934]
+SimpleName: setWip [6972,6978]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [2416,2447]
+METHOD_INVOCATION_ARGUMENTS [3464,3495]
+===
+match
+---
+SimpleName: String [2083,2089]
+SimpleName: String [3133,3139]
+===
+match
+---
+SimpleName: nameList [8218,8226]
+SimpleName: nameList [10638,10646]
+===
+match
+---
+FieldDeclaration [1194,1239]
+FieldDeclaration [1344,1389]
+===
+match
+---
+FieldAccess [5344,5366]
+FieldAccess [6393,6415]
+===
+match
+---
+Modifier: private [877,884]
+Modifier: private [1509,1516]
+===
+match
+---
+SimpleName: ArrayList [1523,1532]
+SimpleName: ArrayList [7539,7548]
+===
+match
+---
+VariableDeclarationFragment [1260,1278]
+VariableDeclarationFragment [1410,1428]
+===
+match
+---
+SimpleName: ParsedPlugins [6579,6592]
+SimpleName: ParsedPlugins [9003,9016]
+===
+match
+---
+MethodInvocation [2410,2448]
+MethodInvocation [3458,3496]
+===
+match
+---
+MethodDeclaration [1901,2034]
+MethodDeclaration [2952,3085]
+===
+match
+---
+ExpressionStatement [7443,7476]
+ExpressionStatement [9865,9898]
+===
+match
+---
+SimpleName: pluginOption [6754,6766]
+SimpleName: pluginOption [9178,9190]
+===
+match
+---
+SimpleType [1028,1035]
+SimpleType [1178,1185]
+===
+match
+---
+Block [6080,6173]
+Block [7123,7216]
+===
+match
+---
+SimpleName: addAll [8398,8404]
+SimpleName: addAll [10818,10824]
+===
+match
+---
+SimpleName: ArrayList [639,648]
+SimpleName: ArrayList [1690,1699]
+===
+match
+---
+Modifier: public [5774,5780]
+Modifier: public [6819,6825]
+===
+match
+---
+SimpleName: isFormatter [6950,6961]
+SimpleName: isFormatter [9374,9385]
+===
+match
+---
+ImportDeclaration [35,81]
+ImportDeclaration [34,80]
+===
+match
+---
+SimpleName: addDefaultSummaryPrinterIfNotPresent [7166,7202]
+SimpleName: addDefaultSummaryPrinterIfNotPresent [9589,9625]
+===
+match
+---
+METHOD_INVOCATION_RECEIVER [8043,8048]
+METHOD_INVOCATION_RECEIVER [10464,10469]
+===
+match
+---
+SimpleName: addAll [1573,1579]
+SimpleName: addAll [7589,7595]
+===
+match
+---
+MethodInvocation [6862,6912]
+MethodInvocation [9286,9336]
+===
+match
+---
+SimpleName: ParsedPluginData [813,829]
+SimpleName: ParsedPluginData [1864,1880]
+===
+match
+---
+PrimitiveType: boolean [5935,5942]
+PrimitiveType: boolean [6979,6986]
+===
+match
+---
+SimpleName: runtimeOptions [2504,2518]
+SimpleName: runtimeOptions [3551,3565]
+===
+match
+---
+ImportDeclaration [82,134]
+ImportDeclaration [81,133]
+===
+match
+---
+SimpleType [3785,3789]
+SimpleType [1442,1446]
+===
+match
+---
+SimpleName: pluginOption [6886,6898]
+SimpleName: pluginOption [9310,9322]
+===
+match
+---
+SingleVariableDeclaration [8004,8023]
+SingleVariableDeclaration [10425,10444]
+===
+match
+---
+Modifier: private [7807,7814]
+Modifier: private [10227,10234]
+===
+match
+---
+Modifier: public [6012,6018]
+Modifier: public [7055,7061]
+===
+match
+---
+SimpleName: setCount [4731,4739]
+SimpleName: setCount [5695,5703]
+===
+match
+---
+SimpleName: RuntimeOptionsBuilder [5272,5293]
+SimpleName: RuntimeOptionsBuilder [6321,6342]
+===
+match
+---
+ParameterizedType [1399,1427]
+ParameterizedType [7415,7443]
+===
+match
+---
+FieldDeclaration [658,734]
+FieldDeclaration [1709,1785]
+===
+match
+---
+MethodDeclaration [4944,5024]
+MethodDeclaration [5906,5986]
+===
+match
+---
+MethodDeclaration [5171,5259]
+MethodDeclaration [6221,6309]
+===
+match
+---
+SingleVariableDeclaration [5814,5825]
+SingleVariableDeclaration [6859,6870]
+===
+match
+---
+Block [5704,5768]
+Block [6750,6814]
+===
+match
+---
+FieldAccess [4884,4901]
+FieldAccess [5847,5864]
+===
+match
+---
+QualifiedName: io.cucumber.core.snippets.SnippetType [275,312]
+QualifiedName: io.cucumber.core.snippets.SnippetType [274,311]
+===
+match
+---
+SingleVariableDeclaration [1671,1704]
+SingleVariableDeclaration [2045,2078]
+===
+match
+---
+PrimitiveType: int [5814,5817]
+PrimitiveType: int [6859,6862]
+===
+match
+---
+ClassInstanceCreation [849,871]
+ClassInstanceCreation [1900,1922]
+===
+match
+---
+SimpleName: addDefaultFormatterIfNotPresent [6208,6239]
+SimpleName: addDefaultFormatterIfNotPresent [7250,7281]
+===
+match
+---
+MethodDeclaration [5030,5165]
+MethodDeclaration [6081,6216]
+===
+match
+---
+SimpleName: parsedPluginData [2132,2148]
+SimpleName: parsedPluginData [3182,3198]
+===
+match
+---
+QualifiedName: Options.Plugin [7672,7686]
+QualifiedName: Options.Plugin [10092,10106]
+===
+match
+---
+ThisExpression [5103,5107]
+ThisExpression [6154,6158]
+===
+match
+---
+ExpressionStatement [6862,6913]
+ExpressionStatement [9286,9337]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [7609,7618]
+METHOD_INVOCATION_ARGUMENTS [10030,10039]
+===
+match
+---
+SimpleName: FeatureWithLines [677,693]
+SimpleName: FeatureWithLines [1728,1744]
+===
+match
+---
+ExpressionStatement [2127,2182]
+ExpressionStatement [3177,3232]
+===
+match
+---
+ReturnStatement [2403,2449]
+ReturnStatement [3451,3497]
+===
+match
+---
+SimpleName: add [1735,1738]
+SimpleName: addLineFilters [2146,2160]
+===
+match
+---
+ClassInstanceCreation [1519,1536]
+ClassInstanceCreation [7535,7552]
+===
+match
+---
+ThisExpression [5757,5761]
+ThisExpression [6803,6807]
+===
+match
+---
+QualifiedName: io.cucumber.core.backend.ObjectFactory [42,80]
+QualifiedName: io.cucumber.core.backend.ObjectFactory [41,79]
+===
+match
+---
+METHOD_INVOCATION_ARGUMENTS [1580,1596]
+METHOD_INVOCATION_ARGUMENTS [7596,7612]
+===
+match
+---
+SimpleType [7672,7686]
+SimpleType [10092,10106]
+===
+match
+---
+SimpleType [6741,6753]
+SimpleType [9165,9177]
+===
+match
+---
+PrefixExpression [8250,8266]
+PrefixExpression [10670,10686]
+===
+match
+---
+PrimitiveType: void [7640,7644]
+PrimitiveType: void [10060,10064]
+===
+match
+---
+SimpleName: parsedStrict [5719,5731]
+SimpleName: parsedStrict [6765,6777]
+===
+match
+---
+SimpleName: name [2163,2167]
+SimpleName: name [3213,3217]
+===
+match
+---
+SimpleName: List [3785,3789]
+SimpleName: List [1442,1446]
+===
+match
+---
+FieldDeclaration [979,1015]
+FieldDeclaration [1129,1165]
+===
+match
+---
+SimpleName: isAddPlugin [2169,2180]
+SimpleName: isAddPlugin [3219,3230]
+===
+match
+---
+ExpressionStatement [6983,7029]
+ExpressionStatement [9407,9453]
+===
+match
+---
+ClassInstanceCreation [635,652]
+ClassInstanceCreation [1686,1703]
+===
+match
+---
+SimpleName: parsedMonochrome [1077,1093]
+SimpleName: parsedMonochrome [1227,1243]
+===
+match
+---
+TypeDeclaration [7807,8454]
+TypeDeclaration [10227,10874]
+===
+match
+---
+SimpleName: URI [1827,1830]
+SimpleName: URI [2248,2251]
+===
+match
+---
+MethodInvocation [7729,7786]
+MethodInvocation [10149,10206]
+===
+match
+---
+SimpleType [2257,2263]
+SimpleType [3306,3312]
+===
+match
+---
+Modifier: public [4944,4950]
+Modifier: public [5906,5912]
+===
+match
+---
+SimpleName: setDryRun [4848,4857]
+SimpleName: setDryRun [5811,5820]
+===
+match
+---
+SimpleName: parsedDryRun [4889,4901]
+SimpleName: parsedDryRun [5852,5864]
+===
+match
+---
+SimpleType [1797,1818]
+SimpleType [2218,2239]
+===
+match
+---
+ThisExpression [1773,1777]
+ThisExpression [2195,2199]
+===
+match
+---
+SimpleType [7532,7536]
+SimpleType [9953,9957]
+===
+match
+---
+SimpleName: pluginSummaryPrinterNames [7760,7785]
+SimpleName: pluginSummaryPrinterNames [10180,10205]
+===
+match
+---
+ParameterizedType [3785,3807]
+ParameterizedType [1442,1464]
+===
+match
+---
+SimpleName: formatter [7609,7618]
+SimpleName: formatter [10030,10039]
+===
+match
+---
+ASSIGNMENT_OPERATOR: = [1517,1518]
+ASSIGNMENT_OPERATOR: = [7533,7534]
+===
+match
+---
+MethodInvocation [1716,1756]
+MethodInvocation [2146,2178]
+===
+match
+---
+FieldAccess [2127,2148]
+FieldAccess [3177,3198]
+===
+insert-tree
+---
+ImportDeclaration [468,493]
+    QualifiedName: java.util.HashMap [475,492]
+to
+CompilationUnit [0,8463]
+at 13
+===
+insert-tree
+---
+ImportDeclaration [494,515]
+    QualifiedName: java.util.Map [501,514]
+to
+CompilationUnit [0,8463]
+at 14
+===
+insert-tree
+---
+ImportDeclaration [516,541]
+    QualifiedName: java.util.TreeSet [523,540]
+to
+CompilationUnit [0,8463]
+at 15
+===
+move-tree
+---
+FieldDeclaration [877,932]
+    Modifier: private [877,884]
+    ParameterizedType [885,907]
+        SimpleType [885,889]
+            SimpleName: List [885,889]
+        SimpleType [890,906]
+            SimpleName: FeatureWithLines [890,906]
+    VariableDeclarationFragment [908,931]
+        SimpleName: parsedRerunPaths [908,924]
+        NullLiteral [927,931]
+to
+TypeDeclaration [471,8462]
+at 17
+===
+move-tree
+---
+FieldDeclaration [518,582]
+    Modifier: private [518,525]
+    Modifier: final [526,531]
+    ParameterizedType [532,544]
+        SimpleType [532,536]
+            SimpleName: List [532,536]
+        SimpleType [537,543]
+            SimpleName: String [537,543]
+    VariableDeclarationFragment [545,581]
+        SimpleName: parsedTagFilters [545,561]
+        ClassInstanceCreation [564,581]
+            ParameterizedType [568,579]
+                SimpleType [568,577]
+                    SimpleName: ArrayList [568,577]
+to
+TypeDeclaration [471,8462]
+at 17
+===
+move-tree
+---
+FieldDeclaration [587,653]
+    Modifier: private [587,594]
+    Modifier: final [595,600]
+    ParameterizedType [601,614]
+        SimpleType [601,605]
+            SimpleName: List [601,605]
+        SimpleType [606,613]
+            SimpleName: Pattern [606,613]
+    VariableDeclarationFragment [615,652]
+        SimpleName: parsedNameFilters [615,632]
+        ClassInstanceCreation [635,652]
+            ParameterizedType [639,650]
+                SimpleType [639,648]
+                    SimpleName: ArrayList [639,648]
+to
+TypeDeclaration [471,8462]
+at 17
+===
+move-tree
+---
+FieldDeclaration [658,734]
+    Modifier: private [658,665]
+    Modifier: final [666,671]
+    ParameterizedType [672,694]
+        SimpleType [672,676]
+            SimpleName: List [672,676]
+        SimpleType [677,693]
+            SimpleName: FeatureWithLines [677,693]
+    VariableDeclarationFragment [695,733]
+        SimpleName: parsedFeaturePaths [695,713]
+        ClassInstanceCreation [716,733]
+            ParameterizedType [720,731]
+                SimpleType [720,729]
+                    SimpleName: ArrayList [720,729]
+to
+TypeDeclaration [471,8462]
+at 17
+===
+move-tree
+---
+FieldDeclaration [739,794]
+    Modifier: private [739,746]
+    Modifier: final [747,752]
+    ParameterizedType [753,762]
+        SimpleType [753,757]
+            SimpleName: List [753,757]
+        SimpleType [758,761]
+            SimpleName: URI [758,761]
+    VariableDeclarationFragment [763,793]
+        SimpleName: parsedGlue [763,773]
+        ClassInstanceCreation [776,793]
+            ParameterizedType [780,791]
+                SimpleType [780,789]
+                    SimpleName: ArrayList [780,789]
+to
+TypeDeclaration [471,8462]
+at 17
+===
+move-tree
+---
+FieldDeclaration [799,872]
+    Modifier: private [799,806]
+    Modifier: final [807,812]
+    SimpleType [813,829]
+        SimpleName: ParsedPluginData [813,829]
+    VariableDeclarationFragment [830,871]
+        SimpleName: parsedPluginData [830,846]
+        ClassInstanceCreation [849,871]
+            SimpleType [853,869]
+                SimpleName: ParsedPluginData [853,869]
+to
+TypeDeclaration [471,8462]
+at 17
+===
+move-tree
+---
+MethodDeclaration [1361,1625]
+    Modifier: public [1361,1367]
+    SimpleType [1368,1389]
+        SimpleName: RuntimeOptionsBuilder [1368,1389]
+    SimpleName: addRerun [1390,1398]
+    SingleVariableDeclaration [1399,1444]
+        ParameterizedType [1399,1427]
+            SimpleType [1399,1409]
+                SimpleName: Collection [1399,1409]
+            SimpleType [1410,1426]
+                SimpleName: FeatureWithLines [1410,1426]
+        SimpleName: featureWithLines [1428,1444]
+    Block [1446,1625]
+        IfStatement [1456,1547]
+            InfixExpression [1460,1484]
+                SimpleName: parsedRerunPaths [1460,1476]
+                INFIX_EXPRESSION_OPERATOR: == [1477,1479]
+                NullLiteral [1480,1484]
+            Block [1486,1547]
+                ExpressionStatement [1500,1537]
+                    Assignment [1500,1536]
+                        SimpleName: parsedRerunPaths [1500,1516]
+                        ASSIGNMENT_OPERATOR: = [1517,1518]
+                        ClassInstanceCreation [1519,1536]
+                            ParameterizedType [1523,1534]
+                                SimpleType [1523,1532]
+                                    SimpleName: ArrayList [1523,1532]
+        ExpressionStatement [1556,1598]
+            MethodInvocation [1556,1597]
+                METHOD_INVOCATION_RECEIVER [1556,1572]
+                    SimpleName: parsedRerunPaths [1556,1572]
+                SimpleName: addAll [1573,1579]
+                METHOD_INVOCATION_ARGUMENTS [1580,1596]
+                    SimpleName: featureWithLines [1580,1596]
+        ReturnStatement [1607,1619]
+            ThisExpression [1614,1618]
+to
+TypeDeclaration [471,8462]
+at 40
+===
+insert-node
+---
+FieldDeclaration [591,649]
+to
+TypeDeclaration [471,8462]
+at 4
+===
+insert-tree
+---
+FieldDeclaration [654,714]
+    Modifier: private [654,661]
+    ParameterizedType [662,675]
+        SimpleType [662,666]
+            SimpleName: List [662,666]
+        SimpleType [667,674]
+            SimpleName: Pattern [667,674]
+    VariableDeclarationFragment [676,713]
+        SimpleName: parsedNameFilters [676,693]
+        ClassInstanceCreation [696,713]
+            ParameterizedType [700,711]
+                SimpleType [700,709]
+                    SimpleName: ArrayList [700,709]
+to
+TypeDeclaration [471,8462]
+at 5
+===
+insert-tree
+---
+FieldDeclaration [719,786]
+    Modifier: private [719,726]
+    ParameterizedType [727,749]
+        SimpleType [727,730]
+            SimpleName: Map [727,730]
+        SimpleType [731,734]
+            SimpleName: URI [731,734]
+        ParameterizedType [736,748]
+            SimpleType [736,739]
+                SimpleName: Set [736,739]
+            SimpleType [740,747]
+                SimpleName: Integer [740,747]
+    VariableDeclarationFragment [750,785]
+        SimpleName: parsedLineFilters [750,767]
+        ClassInstanceCreation [770,785]
+            ParameterizedType [774,783]
+                SimpleType [774,781]
+                    SimpleName: HashMap [774,781]
+to
+TypeDeclaration [471,8462]
+at 6
+===
+insert-tree
+---
+FieldDeclaration [791,848]
+    Modifier: private [791,798]
+    ParameterizedType [799,808]
+        SimpleType [799,803]
+            SimpleName: List [799,803]
+        SimpleType [804,807]
+            SimpleName: URI [804,807]
+    VariableDeclarationFragment [809,847]
+        SimpleName: parsedFeaturePaths [809,827]
+        ClassInstanceCreation [830,847]
+            ParameterizedType [834,845]
+                SimpleType [834,843]
+                    SimpleName: ArrayList [834,843]
+to
+TypeDeclaration [471,8462]
+at 7
+===
+insert-tree
+---
+FieldDeclaration [853,902]
+    Modifier: private [853,860]
+    ParameterizedType [861,870]
+        SimpleType [861,865]
+            SimpleName: List [861,865]
+        SimpleType [866,869]
+            SimpleName: URI [866,869]
+    VariableDeclarationFragment [871,901]
+        SimpleName: parsedGlue [871,881]
+        ClassInstanceCreation [884,901]
+            ParameterizedType [888,899]
+                SimpleType [888,897]
+                    SimpleName: ArrayList [888,897]
+to
+TypeDeclaration [471,8462]
+at 8
+===
+insert-tree
+---
+FieldDeclaration [907,974]
+    Modifier: private [907,914]
+    SimpleType [915,931]
+        SimpleName: ParsedPluginData [915,931]
+    VariableDeclarationFragment [932,973]
+        SimpleName: parsedPluginData [932,948]
+        ClassInstanceCreation [951,973]
+            SimpleType [955,971]
+                SimpleName: ParsedPluginData [955,971]
+to
+TypeDeclaration [471,8462]
+at 9
+===
+insert-tree
+---
+FieldDeclaration [979,1039]
+    Modifier: private [979,986]
+    ParameterizedType [987,999]
+        SimpleType [987,991]
+            SimpleName: List [987,991]
+        SimpleType [992,998]
+            SimpleName: String [992,998]
+    VariableDeclarationFragment [1000,1038]
+        SimpleName: parsedJunitOptions [1000,1018]
+        ClassInstanceCreation [1021,1038]
+            ParameterizedType [1025,1036]
+                SimpleType [1025,1034]
+                    SimpleName: ArrayList [1025,1034]
+to
+TypeDeclaration [471,8462]
+at 10
+===
+insert-tree
+---
+FieldDeclaration [1044,1082]
+    Modifier: private [1044,1051]
+    PrimitiveType: boolean [1052,1059]
+    VariableDeclarationFragment [1060,1081]
+        SimpleName: parsedIsRerun [1060,1073]
+        BooleanLiteral: false [1076,1081]
+to
+TypeDeclaration [471,8462]
+at 11
+===
+insert-node
+---
+FieldDeclaration [1434,1504]
+to
+TypeDeclaration [471,8462]
+at 20
+===
+insert-tree
+---
+MethodDeclaration [2321,2463]
+    Modifier: public [2321,2327]
+    SimpleType [2328,2349]
+        SimpleName: RuntimeOptionsBuilder [2328,2349]
+    SimpleName: addJunitOption [2350,2364]
+    SingleVariableDeclaration [2365,2383]
+        SimpleType [2365,2371]
+            SimpleName: String [2365,2371]
+        SimpleName: junitOption [2372,2383]
+    Block [2385,2463]
+        ExpressionStatement [2395,2436]
+            MethodInvocation [2395,2435]
+                METHOD_INVOCATION_RECEIVER [2395,2418]
+                    FieldAccess [2395,2418]
+                        ThisExpression [2395,2399]
+                        SimpleName: parsedJunitOptions [2400,2418]
+                SimpleName: add [2419,2422]
+                METHOD_INVOCATION_ARGUMENTS [2423,2434]
+                    SimpleName: junitOption [2423,2434]
+        ReturnStatement [2445,2457]
+            ThisExpression [2452,2456]
+to
+TypeDeclaration [471,8462]
+at 30
+===
+insert-tree
+---
+MethodDeclaration [2468,2947]
+    Modifier: private [2468,2475]
+    SimpleType [2476,2497]
+        SimpleName: RuntimeOptionsBuilder [2476,2497]
+    SimpleName: addLineFilters [2498,2512]
+    SingleVariableDeclaration [2513,2546]
+        SimpleType [2513,2529]
+            SimpleName: FeatureWithLines [2513,2529]
+        SimpleName: featureWithLines [2530,2546]
+    Block [2548,2947]
+        VariableDeclarationStatement [2558,2591]
+            SimpleType [2558,2561]
+                SimpleName: URI [2558,2561]
+            VariableDeclarationFragment [2562,2590]
+                SimpleName: key [2562,2565]
+                MethodInvocation [2568,2590]
+                    METHOD_INVOCATION_RECEIVER [2568,2584]
+                        SimpleName: featureWithLines [2568,2584]
+                    SimpleName: uri [2585,2588]
+        VariableDeclarationStatement [2600,2646]
+            ParameterizedType [2600,2612]
+                SimpleType [2600,2603]
+                    SimpleName: Set [2600,2603]
+                SimpleType [2604,2611]
+                    SimpleName: Integer [2604,2611]
+            VariableDeclarationFragment [2613,2645]
+                SimpleName: lines [2613,2618]
+                MethodInvocation [2621,2645]
+                    METHOD_INVOCATION_RECEIVER [2621,2637]
+                        SimpleName: featureWithLines [2621,2637]
+                    SimpleName: lines [2638,2643]
+        IfStatement [2655,2712]
+            MethodInvocation [2659,2674]
+                METHOD_INVOCATION_RECEIVER [2659,2664]
+                    SimpleName: lines [2659,2664]
+                SimpleName: isEmpty [2665,2672]
+            Block [2676,2712]
+                ReturnStatement [2690,2702]
+                    NullLiteral [2697,2701]
+        IfStatement [2721,2920]
+            MethodInvocation [2725,2764]
+                METHOD_INVOCATION_RECEIVER [2725,2747]
+                    FieldAccess [2725,2747]
+                        ThisExpression [2725,2729]
+                        SimpleName: parsedLineFilters [2730,2747]
+                SimpleName: containsKey [2748,2759]
+                METHOD_INVOCATION_ARGUMENTS [2760,2763]
+                    SimpleName: key [2760,2763]
+            Block [2766,2836]
+                ExpressionStatement [2780,2826]
+                    MethodInvocation [2780,2825]
+                        METHOD_INVOCATION_RECEIVER [2780,2811]
+                            MethodInvocation [2780,2811]
+                                METHOD_INVOCATION_RECEIVER [2780,2802]
+                                    FieldAccess [2780,2802]
+                                        ThisExpression [2780,2784]
+                                        SimpleName: parsedLineFilters [2785,2802]
+                                SimpleName: get [2803,2806]
+                                METHOD_INVOCATION_ARGUMENTS [2807,2810]
+                                    SimpleName: key [2807,2810]
+                        SimpleName: addAll [2812,2818]
+                        METHOD_INVOCATION_ARGUMENTS [2819,2824]
+                            SimpleName: lines [2819,2824]
+            Block [2842,2920]
+                ExpressionStatement [2856,2910]
+                    MethodInvocation [2856,2909]
+                        METHOD_INVOCATION_RECEIVER [2856,2878]
+                            FieldAccess [2856,2878]
+                                ThisExpression [2856,2860]
+                                SimpleName: parsedLineFilters [2861,2878]
+                        SimpleName: put [2879,2882]
+                        METHOD_INVOCATION_ARGUMENTS [2883,2908]
+                            SimpleName: key [2883,2886]
+                            ClassInstanceCreation [2888,2908]
+                                ParameterizedType [2892,2901]
+                                    SimpleType [2892,2899]
+                                        SimpleName: TreeSet [2892,2899]
+                                SimpleName: lines [2902,2907]
+        ReturnStatement [2929,2941]
+            ThisExpression [2936,2940]
+to
+TypeDeclaration [471,8462]
+at 31
+===
+insert-node
+---
+MethodDeclaration [3508,5660]
+to
+TypeDeclaration [471,8462]
+at 36
+===
+insert-tree
+---
+MethodDeclaration [5991,6076]
+    Modifier: public [5991,5997]
+    PrimitiveType: void [5998,6002]
+    SimpleName: setIsRerun [6003,6013]
+    SingleVariableDeclaration [6014,6029]
+        PrimitiveType: boolean [6014,6021]
+        SimpleName: isRerun [6022,6029]
+    Block [6031,6076]
+        ExpressionStatement [6041,6070]
+            Assignment [6041,6069]
+                FieldAccess [6041,6059]
+                    ThisExpression [6041,6045]
+                    SimpleName: parsedIsRerun [6046,6059]
+                ASSIGNMENT_OPERATOR: = [6060,6061]
+                SimpleName: isRerun [6062,6069]
+to
+TypeDeclaration [471,8462]
+at 42
+===
+insert-tree
+---
+MethodDeclaration [7646,8188]
+    Modifier: private [7646,7653]
+    PrimitiveType: boolean [7654,7661]
+    SimpleName: hasFeaturesWithLineFilters [7662,7688]
+    Block [7691,8188]
+to
+TypeDeclaration [471,8462]
+at 54
+===
+insert-tree
+---
+TypeDeclaration [8352,8911]
+    Modifier: private [8352,8359]
+    Modifier: static [8360,8366]
+    TYPE_DECLARATION_KIND: class [8367,8372]
+    SimpleName: ParsedOptionNames [8373,8390]
+    FieldDeclaration [8402,8449]
+        Modifier: private [8402,8409]
+        ParameterizedType [8410,8422]
+            SimpleType [8410,8414]
+                SimpleName: List [8410,8414]
+            SimpleType [8415,8421]
+                SimpleName: String [8415,8421]
+        VariableDeclarationFragment [8423,8448]
+            SimpleName: names [8423,8428]
+            ClassInstanceCreation [8431,8448]
+                ParameterizedType [8435,8446]
+                    SimpleType [8435,8444]
+                        SimpleName: ArrayList [8435,8444]
+    FieldDeclaration [8458,8490]
+        Modifier: private [8458,8465]
+        PrimitiveType: boolean [8466,8473]
+        VariableDeclarationFragment [8474,8489]
+            SimpleName: clobber [8474,8481]
+            BooleanLiteral: false [8484,8489]
+    MethodDeclaration [8500,8665]
+        PrimitiveType: void [8500,8504]
+        SimpleName: addName [8505,8512]
+        SingleVariableDeclaration [8513,8524]
+            SimpleType [8513,8519]
+                SimpleName: String [8513,8519]
+            SimpleName: name [8520,8524]
+        SingleVariableDeclaration [8526,8545]
+            PrimitiveType: boolean [8526,8533]
+            SimpleName: isAddOption [8534,8545]
+        Block [8547,8665]
+            ExpressionStatement [8561,8577]
+                MethodInvocation [8561,8576]
+                    METHOD_INVOCATION_RECEIVER [8561,8566]
+                        SimpleName: names [8561,8566]
+                    SimpleName: add [8567,8570]
+                    METHOD_INVOCATION_ARGUMENTS [8571,8575]
+                        SimpleName: name [8571,8575]
+            IfStatement [8590,8655]
+                PrefixExpression [8594,8606]
+                    PREFIX_EXPRESSION_OPERATOR: ! [8594,8595]
+                    SimpleName: isAddOption [8595,8606]
+                Block [8608,8655]
+                    ExpressionStatement [8626,8641]
+                        Assignment [8626,8640]
+                            SimpleName: clobber [8626,8633]
+                            ASSIGNMENT_OPERATOR: = [8634,8635]
+                            BooleanLiteral: true [8636,8640]
+    MethodDeclaration [8674,8905]
+        PrimitiveType: void [8674,8678]
+        SimpleName: updateNameList [8679,8693]
+        SingleVariableDeclaration [8694,8715]
+            ParameterizedType [8694,8706]
+                SimpleType [8694,8698]
+                    SimpleName: List [8694,8698]
+                SimpleType [8699,8705]
+                    SimpleName: String [8699,8705]
+            SimpleName: nameList [8707,8715]
+        Block [8717,8905]
+            IfStatement [8731,8895]
+                PrefixExpression [8735,8751]
+                    PREFIX_EXPRESSION_OPERATOR: ! [8735,8736]
+                    MethodInvocation [8736,8751]
+                        METHOD_INVOCATION_RECEIVER [8736,8741]
+                            SimpleName: names [8736,8741]
+                        SimpleName: isEmpty [8742,8749]
+                Block [8753,8895]
+                    IfStatement [8771,8841]
+                        SimpleName: clobber [8775,8782]
+                        Block [8784,8841]
+                            ExpressionStatement [8806,8823]
+                                MethodInvocation [8806,8822]
+                                    METHOD_INVOCATION_RECEIVER [8806,8814]
+                                        SimpleName: nameList [8806,8814]
+                                    SimpleName: clear [8815,8820]
+                    ExpressionStatement [8858,8881]
+                        MethodInvocation [8858,8880]
+                            METHOD_INVOCATION_RECEIVER [8858,8866]
+                                SimpleName: nameList [8858,8866]
+                            SimpleName: addAll [8867,8873]
+                            METHOD_INVOCATION_ARGUMENTS [8874,8879]
+                                SimpleName: names [8874,8879]
+to
+TypeDeclaration [471,8462]
+at 56
+===
+insert-node
+---
+Modifier: private [591,598]
+to
+FieldDeclaration [591,649]
+at 0
+===
+insert-tree
+---
+ParameterizedType [599,611]
+    SimpleType [599,603]
+        SimpleName: List [599,603]
+    SimpleType [604,610]
+        SimpleName: String [604,610]
+to
+FieldDeclaration [591,649]
+at 1
+===
+move-tree
+---
+VariableDeclarationFragment [3808,3859]
+    SimpleName: features [3808,3816]
+    ClassInstanceCreation [3819,3859]
+        ParameterizedType [3823,3834]
+            SimpleType [3823,3832]
+                SimpleName: ArrayList [3823,3832]
+        FieldAccess [3835,3858]
+            ThisExpression [3835,3839]
+            SimpleName: parsedFeaturePaths [3840,3858]
+to
+FieldDeclaration [591,649]
+at 2
+===
+insert-node
+---
+Modifier: private [1434,1441]
+to
+FieldDeclaration [1434,1504]
+at 0
+===
+move-tree
+---
+ParameterizedType [3785,3807]
+    SimpleType [3785,3789]
+        SimpleName: List [3785,3789]
+    SimpleType [3790,3806]
+        SimpleName: FeatureWithLines [3790,3806]
+to
+FieldDeclaration [1434,1504]
+at 1
+===
+insert-tree
+---
+VariableDeclarationFragment [1465,1503]
+    SimpleName: parsedFeaturePaths [1465,1483]
+    ClassInstanceCreation [1486,1503]
+        ParameterizedType [1490,1501]
+            SimpleType [1490,1499]
+                SimpleName: ArrayList [1490,1499]
+to
+FieldDeclaration [1434,1504]
+at 2
+===
+insert-node
+---
+Modifier: public [3508,3514]
+to
+MethodDeclaration [3508,5660]
+at 0
+===
+move-tree
+---
+SimpleType [2468,2482]
+    SimpleName: RuntimeOptions [2468,2482]
+to
+MethodDeclaration [3508,5660]
+at 1
+===
+insert-node
+---
+SimpleName: build [3530,3535]
+to
+MethodDeclaration [3508,5660]
+at 2
+===
+move-tree
+---
+SingleVariableDeclaration [2489,2518]
+    SimpleType [2489,2503]
+        SimpleName: RuntimeOptions [2489,2503]
+    SimpleName: runtimeOptions [2504,2518]
+to
+MethodDeclaration [3508,5660]
+at 3
+===
+insert-node
+---
+Block [3567,5660]
+to
+MethodDeclaration [3508,5660]
+at 4
+===
+update-node
+---
+SimpleName: features [3808,3816]
+replace features by parsedTagFilters
+===
+insert-node
+---
+ExpressionStatement [2090,2137]
+to
+Block [1706,1784]
+at 0
+===
+insert-node
+---
+MethodInvocation [2090,2136]
+to
+ExpressionStatement [2090,2137]
+at 0
+===
+move-tree
+---
+METHOD_INVOCATION_RECEIVER [1716,1734]
+    SimpleName: parsedFeaturePaths [1716,1734]
+to
+MethodInvocation [2090,2136]
+at 0
+===
+insert-node
+---
+SimpleName: add [2109,2112]
+to
+MethodInvocation [2090,2136]
+at 1
+===
+insert-tree
+---
+METHOD_INVOCATION_ARGUMENTS [2113,2135]
+    MethodInvocation [2113,2135]
+        METHOD_INVOCATION_RECEIVER [2113,2129]
+            SimpleName: featureWithLines [2113,2129]
+        SimpleName: uri [2130,2133]
+to
+MethodInvocation [2090,2136]
+at 2
+===
+update-node
+---
+SimpleName: add [1735,1738]
+replace add by addLineFilters
+===
+delete-tree
+---
+FieldAccess [3835,3858]
+    ThisExpression [3835,3839]
+    SimpleName: parsedFeaturePaths [3840,3858]
+===
+delete-node
+---
+Modifier: public [2461,2467]
+===
+===
+delete-node
+---
+SimpleName: build [2483,2488]
+===
+===
+delete-tree
+---
+IfStatement [2530,2632]
+    InfixExpression [2534,2560]
+        FieldAccess [2534,2552]
+            ThisExpression [2534,2538]
+            SimpleName: parsedThreads [2539,2552]
+        INFIX_EXPRESSION_OPERATOR: != [2553,2555]
+        NullLiteral [2556,2560]
+    Block [2562,2632]
+        ExpressionStatement [2576,2622]
+            MethodInvocation [2576,2621]
+                METHOD_INVOCATION_RECEIVER [2576,2590]
+                    SimpleName: runtimeOptions [2576,2590]
+                SimpleName: setThreads [2591,2601]
+                METHOD_INVOCATION_ARGUMENTS [2602,2620]
+                    FieldAccess [2602,2620]
+                        ThisExpression [2602,2606]
+                        SimpleName: parsedThreads [2607,2620]
+===
+delete-tree
+---
+IfStatement [2642,2741]
+    InfixExpression [2646,2671]
+        FieldAccess [2646,2663]
+            ThisExpression [2646,2650]
+            SimpleName: parsedDryRun [2651,2663]
+        INFIX_EXPRESSION_OPERATOR: != [2664,2666]
+        NullLiteral [2667,2671]
+    Block [2673,2741]
+        ExpressionStatement [2687,2731]
+            MethodInvocation [2687,2730]
+                METHOD_INVOCATION_RECEIVER [2687,2701]
+                    SimpleName: runtimeOptions [2687,2701]
+                SimpleName: setDryRun [2702,2711]
+                METHOD_INVOCATION_ARGUMENTS [2712,2729]
+                    FieldAccess [2712,2729]
+                        ThisExpression [2712,2716]
+                        SimpleName: parsedDryRun [2717,2729]
+===
+delete-tree
+---
+IfStatement [2751,2850]
+    InfixExpression [2755,2780]
+        FieldAccess [2755,2772]
+            ThisExpression [2755,2759]
+            SimpleName: parsedStrict [2760,2772]
+        INFIX_EXPRESSION_OPERATOR: != [2773,2775]
+        NullLiteral [2776,2780]
+    Block [2782,2850]
+        ExpressionStatement [2796,2840]
+            MethodInvocation [2796,2839]
+                METHOD_INVOCATION_RECEIVER [2796,2810]
+                    SimpleName: runtimeOptions [2796,2810]
+                SimpleName: setStrict [2811,2820]
+                METHOD_INVOCATION_ARGUMENTS [2821,2838]
+                    FieldAccess [2821,2838]
+                        ThisExpression [2821,2825]
+                        SimpleName: parsedStrict [2826,2838]
+===
+delete-tree
+---
+IfStatement [2860,2971]
+    InfixExpression [2864,2893]
+        FieldAccess [2864,2885]
+            ThisExpression [2864,2868]
+            SimpleName: parsedMonochrome [2869,2885]
+        INFIX_EXPRESSION_OPERATOR: != [2886,2888]
+        NullLiteral [2889,2893]
+    Block [2895,2971]
+        ExpressionStatement [2909,2961]
+            MethodInvocation [2909,2960]
+                METHOD_INVOCATION_RECEIVER [2909,2923]
+                    SimpleName: runtimeOptions [2909,2923]
+                SimpleName: setMonochrome [2924,2937]
+                METHOD_INVOCATION_ARGUMENTS [2938,2959]
+                    FieldAccess [2938,2959]
+                        ThisExpression [2938,2942]
+                        SimpleName: parsedMonochrome [2943,2959]
+===
+delete-tree
+---
+IfStatement [2981,3095]
+    InfixExpression [2985,3015]
+        FieldAccess [2985,3007]
+            ThisExpression [2985,2989]
+            SimpleName: parsedSnippetType [2990,3007]
+        INFIX_EXPRESSION_OPERATOR: != [3008,3010]
+        NullLiteral [3011,3015]
+    Block [3017,3095]
+        ExpressionStatement [3031,3085]
+            MethodInvocation [3031,3084]
+                METHOD_INVOCATION_RECEIVER [3031,3045]
+                    SimpleName: runtimeOptions [3031,3045]
+                SimpleName: setSnippetType [3046,3060]
+                METHOD_INVOCATION_ARGUMENTS [3061,3083]
+                    FieldAccess [3061,3083]
+                        ThisExpression [3061,3065]
+                        SimpleName: parsedSnippetType [3066,3083]
+===
+delete-tree
+---
+IfStatement [3105,3195]
+    InfixExpression [3109,3131]
+        FieldAccess [3109,3123]
+            ThisExpression [3109,3113]
+            SimpleName: parsedWip [3114,3123]
+        INFIX_EXPRESSION_OPERATOR: != [3124,3126]
+        NullLiteral [3127,3131]
+    Block [3133,3195]
+        ExpressionStatement [3147,3185]
+            MethodInvocation [3147,3184]
+                METHOD_INVOCATION_RECEIVER [3147,3161]
+                    SimpleName: runtimeOptions [3147,3161]
+                SimpleName: setWip [3162,3168]
+                METHOD_INVOCATION_ARGUMENTS [3169,3183]
+                    FieldAccess [3169,3183]
+                        ThisExpression [3169,3173]
+                        SimpleName: parsedWip [3174,3183]
+===
+delete-tree
+---
+IfStatement [3205,3319]
+    InfixExpression [3209,3239]
+        FieldAccess [3209,3231]
+            ThisExpression [3209,3213]
+            SimpleName: parsedPickleOrder [3214,3231]
+        INFIX_EXPRESSION_OPERATOR: != [3232,3234]
+        NullLiteral [3235,3239]
+    Block [3241,3319]
+        ExpressionStatement [3255,3309]
+            MethodInvocation [3255,3308]
+                METHOD_INVOCATION_RECEIVER [3255,3269]
+                    SimpleName: runtimeOptions [3255,3269]
+                SimpleName: setPickleOrder [3270,3284]
+                METHOD_INVOCATION_ARGUMENTS [3285,3307]
+                    FieldAccess [3285,3307]
+                        ThisExpression [3285,3289]
+                        SimpleName: parsedPickleOrder [3290,3307]
+===
+delete-tree
+---
+IfStatement [3329,3425]
+    InfixExpression [3333,3357]
+        FieldAccess [3333,3349]
+            ThisExpression [3333,3337]
+            SimpleName: parsedCount [3338,3349]
+        INFIX_EXPRESSION_OPERATOR: != [3350,3352]
+        NullLiteral [3353,3357]
+    Block [3359,3425]
+        ExpressionStatement [3373,3415]
+            MethodInvocation [3373,3414]
+                METHOD_INVOCATION_RECEIVER [3373,3387]
+                    SimpleName: runtimeOptions [3373,3387]
+                SimpleName: setCount [3388,3396]
+                METHOD_INVOCATION_ARGUMENTS [3397,3413]
+                    FieldAccess [3397,3413]
+                        ThisExpression [3397,3401]
+                        SimpleName: parsedCount [3402,3413]
+===
+delete-tree
+---
+IfStatement [3435,3689]
+    InfixExpression [3439,3540]
+        PrefixExpression [3439,3471]
+            PREFIX_EXPRESSION_OPERATOR: ! [3439,3440]
+            MethodInvocation [3440,3471]
+                METHOD_INVOCATION_RECEIVER [3440,3461]
+                    FieldAccess [3440,3461]
+                        ThisExpression [3440,3444]
+                        SimpleName: parsedTagFilters [3445,3461]
+                SimpleName: isEmpty [3462,3469]
+        INFIX_EXPRESSION_OPERATOR: || [3472,3474]
+        PrefixExpression [3475,3508]
+            PREFIX_EXPRESSION_OPERATOR: ! [3475,3476]
+            MethodInvocation [3476,3508]
+                METHOD_INVOCATION_RECEIVER [3476,3498]
+                    FieldAccess [3476,3498]
+                        ThisExpression [3476,3480]
+                        SimpleName: parsedNameFilters [3481,3498]
+                SimpleName: isEmpty [3499,3506]
+        MethodInvocation [3512,3540]
+            SimpleName: hasFeaturesWithLineFilters [3512,3538]
+    Block [3542,3689]
+        ExpressionStatement [3556,3612]
+            MethodInvocation [3556,3611]
+                METHOD_INVOCATION_RECEIVER [3556,3570]
+                    SimpleName: runtimeOptions [3556,3570]
+                SimpleName: setTagExpressions [3571,3588]
+                METHOD_INVOCATION_ARGUMENTS [3589,3610]
+                    FieldAccess [3589,3610]
+                        ThisExpression [3589,3593]
+                        SimpleName: parsedTagFilters [3594,3610]
+        ExpressionStatement [3625,3679]
+            MethodInvocation [3625,3678]
+                METHOD_INVOCATION_RECEIVER [3625,3639]
+                    SimpleName: runtimeOptions [3625,3639]
+                SimpleName: setNameFilters [3640,3654]
+                METHOD_INVOCATION_ARGUMENTS [3655,3677]
+                    FieldAccess [3655,3677]
+                        ThisExpression [3655,3659]
+                        SimpleName: parsedNameFilters [3660,3677]
+===
+delete-tree
+---
+InfixExpression [3702,3769]
+    PrefixExpression [3702,3736]
+        PREFIX_EXPRESSION_OPERATOR: ! [3702,3703]
+        MethodInvocation [3703,3736]
+            METHOD_INVOCATION_RECEIVER [3703,3726]
+                FieldAccess [3703,3726]
+                    ThisExpression [3703,3707]
+                    SimpleName: parsedFeaturePaths [3708,3726]
+            SimpleName: isEmpty [3727,3734]
+    INFIX_EXPRESSION_OPERATOR: || [3737,3739]
+    InfixExpression [3740,3769]
+        FieldAccess [3740,3761]
+            ThisExpression [3740,3744]
+            SimpleName: parsedRerunPaths [3745,3761]
+        INFIX_EXPRESSION_OPERATOR: != [3762,3764]
+        NullLiteral [3765,3769]
+===
+delete-node
+---
+VariableDeclarationStatement [3785,3860]
+===
+===
+delete-tree
+---
+IfStatement [3873,3974]
+    InfixExpression [3877,3901]
+        SimpleName: parsedRerunPaths [3877,3893]
+        INFIX_EXPRESSION_OPERATOR: != [3894,3896]
+        NullLiteral [3897,3901]
+    Block [3903,3974]
+        ExpressionStatement [3921,3960]
+            MethodInvocation [3921,3959]
+                METHOD_INVOCATION_RECEIVER [3921,3929]
+                    SimpleName: features [3921,3929]
+                SimpleName: addAll [3930,3936]
+                METHOD_INVOCATION_ARGUMENTS [3937,3958]
+                    FieldAccess [3937,3958]
+                        ThisExpression [3937,3941]
+                        SimpleName: parsedRerunPaths [3942,3958]
+===
+delete-tree
+---
+ExpressionStatement [3987,4028]
+    MethodInvocation [3987,4027]
+        METHOD_INVOCATION_RECEIVER [3987,4001]
+            SimpleName: runtimeOptions [3987,4001]
+        SimpleName: setFeaturePaths [4002,4017]
+        METHOD_INVOCATION_ARGUMENTS [4018,4026]
+            SimpleName: features [4018,4026]
+===
+delete-node
+---
+Block [3771,4038]
+===
+===
+delete-node
+---
+IfStatement [3698,4038]
+===
+===
+delete-tree
+---
+IfStatement [4048,4144]
+    PrefixExpression [4052,4078]
+        PREFIX_EXPRESSION_OPERATOR: ! [4052,4053]
+        MethodInvocation [4053,4078]
+            METHOD_INVOCATION_RECEIVER [4053,4068]
+                FieldAccess [4053,4068]
+                    ThisExpression [4053,4057]
+                    SimpleName: parsedGlue [4058,4068]
+            SimpleName: isEmpty [4069,4076]
+    Block [4080,4144]
+        ExpressionStatement [4094,4134]
+            MethodInvocation [4094,4133]
+                METHOD_INVOCATION_RECEIVER [4094,4108]
+                    SimpleName: runtimeOptions [4094,4108]
+                SimpleName: setGlue [4109,4116]
+                METHOD_INVOCATION_ARGUMENTS [4117,4132]
+                    FieldAccess [4117,4132]
+                        ThisExpression [4117,4121]
+                        SimpleName: parsedGlue [4122,4132]
+===
+delete-tree
+---
+ExpressionStatement [4154,4225]
+    MethodInvocation [4154,4224]
+        METHOD_INVOCATION_RECEIVER [4154,4175]
+            FieldAccess [4154,4175]
+                ThisExpression [4154,4158]
+                SimpleName: parsedPluginData [4159,4175]
+        SimpleName: updateFormatters [4176,4192]
+        METHOD_INVOCATION_ARGUMENTS [4193,4223]
+            MethodInvocation [4193,4223]
+                METHOD_INVOCATION_RECEIVER [4193,4207]
+                    SimpleName: runtimeOptions [4193,4207]
+                SimpleName: getFormatters [4208,4221]
+===
+delete-tree
+---
+ExpressionStatement [4234,4314]
+    MethodInvocation [4234,4313]
+        METHOD_INVOCATION_RECEIVER [4234,4255]
+            FieldAccess [4234,4255]
+                ThisExpression [4234,4238]
+                SimpleName: parsedPluginData [4239,4255]
+        SimpleName: updateSummaryPrinters [4256,4277]
+        METHOD_INVOCATION_ARGUMENTS [4278,4312]
+            MethodInvocation [4278,4312]
+                METHOD_INVOCATION_RECEIVER [4278,4292]
+                    SimpleName: runtimeOptions [4278,4292]
+                SimpleName: getSummaryPrinter [4293,4310]
+===
+delete-tree
+---
+IfStatement [4324,4449]
+    InfixExpression [4328,4360]
+        SimpleName: parsedObjectFactoryClass [4328,4352]
+        INFIX_EXPRESSION_OPERATOR: != [4353,4355]
+        NullLiteral [4356,4360]
+    Block [4362,4449]
+        ExpressionStatement [4376,4439]
+            MethodInvocation [4376,4438]
+                METHOD_INVOCATION_RECEIVER [4376,4390]
+                    SimpleName: runtimeOptions [4376,4390]
+                SimpleName: setObjectFactoryClass [4391,4412]
+                METHOD_INVOCATION_ARGUMENTS [4413,4437]
+                    SimpleName: parsedObjectFactoryClass [4413,4437]
+===
+delete-tree
+---
+ReturnStatement [4459,4481]
+    SimpleName: runtimeOptions [4466,4480]
+===
+delete-node
+---
+Block [2520,4487]
+===
+===
+delete-node
+---
+MethodDeclaration [2461,4487]
+===
+===
+delete-tree
+---
+MethodDeclaration [4493,4696]
+    Modifier: private [4493,4500]
+    PrimitiveType: boolean [4501,4508]
+    SimpleName: hasFeaturesWithLineFilters [4509,4535]
+    Block [4538,4696]
+        ReturnStatement [4548,4690]
+            InfixExpression [4555,4689]
+                InfixExpression [4555,4579]
+                    SimpleName: parsedRerunPaths [4555,4571]
+                    INFIX_EXPRESSION_OPERATOR: != [4572,4574]
+                    NullLiteral [4575,4579]
+                INFIX_EXPRESSION_OPERATOR: || [4580,4582]
+                PrefixExpression [4583,4689]
+                    PREFIX_EXPRESSION_OPERATOR: ! [4583,4584]
+                    MethodInvocation [4584,4689]
+                        METHOD_INVOCATION_RECEIVER [4584,4653]
+                            MethodInvocation [4584,4653]
+                                METHOD_INVOCATION_RECEIVER [4584,4611]
+                                    MethodInvocation [4584,4611]
+                                        METHOD_INVOCATION_RECEIVER [4584,4602]
+                                            SimpleName: parsedFeaturePaths [4584,4602]
+                                        SimpleName: stream [4603,4609]
+                                SimpleName: map [4625,4628]
+                                METHOD_INVOCATION_ARGUMENTS [4629,4652]
+                                    ExpressionMethodReference [4629,4652]
+                                        SimpleName: FeatureWithLines [4629,4645]
+                                        SimpleName: lines [4647,4652]
+                        SimpleName: allMatch [4667,4675]
+                        METHOD_INVOCATION_ARGUMENTS [4676,4688]
+                            ExpressionMethodReference [4676,4688]
+                                SimpleName: Set [4676,4679]
+                                SimpleName: isEmpty [4681,4688]

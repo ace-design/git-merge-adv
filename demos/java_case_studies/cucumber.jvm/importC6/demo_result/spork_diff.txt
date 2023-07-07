@@ -1,4 +1,5 @@
-deletions: 0
-insertions: 0
+deletions: 4
+insertions: 4
 moves: 2
 diff_path: 0
+Overall: 6.0

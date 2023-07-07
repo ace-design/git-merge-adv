@@ -54,7 +54,6 @@ class MainRoot:
     def get_children(self):
         return self.children
 
-
 class Class:
     def __init__(self,name,full_name,indent,closer,version,nod):
         self.version=set()
