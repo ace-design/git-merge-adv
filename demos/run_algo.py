@@ -2,6 +2,7 @@ import argparse
 import subprocess
 import re
 import os
+import math
 
 def parsing():
     parser = argparse.ArgumentParser(description='Enter path to case study, which merge algorithm and language of case study')
@@ -98,53 +99,110 @@ def search_gumtree(result,new):
                         pass
                 elif (('import' in val) or ("Import" in val)) and ("operator: ," not in val):
                     data[key]+=1
+    total=0
+    for value in data.values():
+        total+=math.pow(value,2)
+    total=math.sqrt(total)
 
     with open(new,'w') as writer:
         for key in data.keys():
             writer.write(key+": "+str(data[key])+"\n")
+        writer.write("Overall: "+str(total))
 
+def search_gumtree_full(result,new):
+    if (len(result)==1 and result[0]==''):
+        print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
+        exit(0)
+
+    dict={
+    'deletions':re.compile(r'\ndelete'),
+    'moves':re.compile(r'\nmove-tree'),
+    'insertions':re.compile(r'\ninsert'),
+    'diff_path':re.compile(r'\nupdate')
+    }
+
+    data={'deletions':0,'insertions':0,'moves':0,'diff_path':0}
+
+    for val in result:
+        for key,rx in dict.items():
+            match=rx.search(val)
+            if (match):
+                data[key]+=1
+    total=0
+    for value in data.values():
+        total+=math.pow(value,2)
+    total=math.sqrt(total)
+
+    with open(new,'w') as writer:
+        for key in data.keys():
+            writer.write(key+": "+str(data[key])+"\n")
+        writer.write("Overall: "+str(total))
 
 # Compares spork version to desired version (Java )
 def run_gumtree_spork(output_path):
     desired=output_path+"/desired.java"
     result=output_path+"/spork_result.java"
+
+    without_git=subprocess.run(['cat',result],capture_output=True, text=True)
+    new_result=output_path+"/demo_result/without_git.java"
+    with open(new_result,'w') as writer:
+        for line in without_git.stdout.split('\n'):
+            if ("<<<<<<<" not in line and "=======" not in line and ">>>>>>>" not in line):
+                writer.write(line+'\n')
     new=output_path+"/demo_result/spork_diff.txt"
-    result=subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
+
+    result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
     
     if (len(result)==1 and result[0]==''):
         print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
         exit(0)
+    subprocess.run(['rm',new_result])
 
-    search_gumtree(result,new)
+    search_gumtree_full(result,new)
     
 # Compares jdime version to desired version
 def run_gumtree_jdime(output_path):
     desired=output_path+"/desired.java"
     result=output_path+"/jdime.java"
     new=output_path+"/demo_result/jdime_diff.txt"
-    result=subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
+
+    without_git=subprocess.run(['cat',result],capture_output=True, text=True)
+    new_result=output_path+"/demo_result/without_git.java"
+    with open(new_result,'w') as writer:
+        for line in without_git.stdout.split('\n'):
+            if ("<<<<<<<" not in line and "=======" not in line and ">>>>>>>" not in line):
+                writer.write(line+'\n')
+    
+    result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
 
     
     if (len(result)==1 and result[0]==''):
         print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
         exit(0)
+    subprocess.run(['rm',new_result])
 
-    search_gumtree(result,new)
+    search_gumtree_full(result,new)
 
 # Compares inputted algorithm version to desired version. 
 def run_gumtree(output_path,lang,algo):
     desired=output_path+"/desired."+lang
     result=output_path+"/demo_result/"+algo+"."+lang
+    without_git=subprocess.run(['cat',result],capture_output=True, text=True)
+    new_result=output_path+"/demo_result/without_git."+lang
+    with open(new_result,'w') as writer:
+        for line in without_git.stdout.split('\n'):
+            if ("<<<<<<<" not in line and "=======" not in line and ">>>>>>>" not in line):
+                writer.write(line+'\n')
     new=output_path+"/demo_result/"+algo+"_diff.txt"
-    # result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
 
     match lang:
         case "py":
-            result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
+            result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
         case "java":
-            result=subprocess.run(['java','-jar','gumtree.jar','textdiff',desired,result],capture_output=True,text=True).stdout.strip("/n").split("===")
-
-    search_gumtree(result,new)
+            result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+    subprocess.run(['rm',new_result])
+    # search_gumtree(result,new)
+    search_gumtree_full(result,new)
 
 
 if __name__=="__main__":

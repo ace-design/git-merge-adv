@@ -1,0 +1,194 @@
+package org.antlr.v4.semantics;
+import org.antlr.v4.analysis.LeftRecursiveRuleTransformer;
+import org.antlr.v4.parse.ANTLRParser;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.Pair;
+import org.antlr.v4.tool.ErrorType;
+import org.antlr.v4.tool.Grammar;
+import org.antlr.v4.tool.Rule;
+import org.antlr.v4.tool.ast.GrammarAST;
+import java.util.List;
+import org.antlr.v4.runtime.misc.NotNull;
+
+public class SemanticPipeline {
+
+    public Grammar g;
+
+    public SemanticPipeline(Grammar g) {
+		this.g = g;
+	}
+    public void process() {
+		if ( g.ast==null ) return;
+
+		// COLLECT RULE OBJECTS
+		RuleCollector ruleCollector = new RuleCollector(g);
+		ruleCollector.process(g.ast);
+
+		// DO BASIC / EASY SEMANTIC CHECKS
+		BasicSemanticChecks basics = new BasicSemanticChecks(g, ruleCollector);
+		basics.process();
+
+		// don't continue if we get errors in this basic check
+		//if ( false ) return;
+
+		// TRANSFORM LEFT-RECURSIVE RULES
+		LeftRecursiveRuleTransformer lrtrans =
+			new LeftRecursiveRuleTransformer(g.ast, ruleCollector.rules.values(), g.tool);
+		lrtrans.translateLeftRecursiveRules();
+
+		// STORE RULES IN GRAMMAR
+		for (Rule r : ruleCollector.rules.values()) {
+			g.defineRule(r);
+		}
+
+		// COLLECT SYMBOLS: RULES, ACTIONS, TERMINALS, ...
+		SymbolCollector collector = new SymbolCollector(g);
+		collector.process(g.ast);
+
+		// CHECK FOR SYMBOL COLLISIONS
+		SymbolChecks symcheck = new SymbolChecks(g, collector);
+		symcheck.process(); // side-effect: strip away redef'd rules.
+
+		for (GrammarAST a : collector.namedActions) {
+			g.defineAction(a);
+		}
+
+		// LINK (outermost) ALT NODES WITH Alternatives
+		for (Rule r : g.rules.values()) {
+			for (int i=1; i<=r.numberOfAlts; i++) {
+				r.alt[i].ast.alt = r.alt[i];
+			}
+		}
+
+		// ASSIGN TOKEN TYPES
+		g.importTokensFromTokensFile();
+		if ( g.isLexer() ) {
+			assignLexerTokenTypes(g, collector.tokensDefs);
+		}
+		else {
+			assignTokenTypes(g, collector.tokensDefs,
+							 collector.tokenIDRefs, collector.terminals);
+		}
+
+		// CHECK RULE REFS NOW (that we've defined rules in grammar)
+		symcheck.checkRuleArgs(g, collector.rulerefs);
+		identifyStartRules(collector);
+		symcheck.checkForQualifiedRuleIssues(g, collector.qualifiedRulerefs);
+
+		// don't continue if we got symbol errors
+		if ( g.tool.getNumErrors()>0 ) return;
+
+		// CHECK ATTRIBUTE EXPRESSIONS FOR SEMANTIC VALIDITY
+		AttributeChecks.checkAllAttributeExpressions(g);
+
+		UseDefAnalyzer.trackTokenRuleRefsInActions(g);
+	}
+    void identifyStartRules(SymbolCollector collector) {
+		for (GrammarAST ref : collector.rulerefs) {
+			String ruleName = ref.getText();
+			Rule r = g.getRule(ruleName);
+			if ( r!=null ) r.isStartRule = false;
+		}
+	}
+    void assignLexerTokenTypes(Grammar g, List<GrammarAST> tokensDefs) {
+		Grammar G = g.getOutermostGrammar(); // put in root, even if imported
+		for (GrammarAST def : tokensDefs) {
+			if ( def.getType()== ANTLRParser.ID ) G.defineTokenName(def.getText());
+		}
+
+		/* Define token types for nonfragment rules which do not include a 'type(...)'
+		 * or 'more' lexer command.
+		 */
+		for (Rule r : g.rules.values()) {
+			if ( !r.isFragment() && !hasTypeOrMoreCommand(r) ) {
+				G.defineTokenName(r.name);
+			}
+		}
+
+		// FOR ALL X : 'xxx'; RULES, DEFINE 'xxx' AS TYPE X
+		List<Pair<GrammarAST,GrammarAST>> litAliases = Grammar.getStringLiteralAliasesFromLexerRules(g.ast);
+		if ( litAliases!=null ) {
+			for (Pair<GrammarAST,GrammarAST> pair : litAliases) {
+				GrammarAST nameAST = pair.a;
+				GrammarAST litAST = pair.b;
+				if ( !G.stringLiteralToTypeMap.containsKey(litAST.getText()) ) {
+					G.defineTokenAlias(nameAST.getText(), litAST.getText());
+				}
+				else {
+					g.tool.errMgr.grammarError(ErrorType.ALIAS_REASSIGNMENT,
+											   g.fileName, nameAST.token,
+											   litAST.getText(), nameAST.getText());
+				}
+			}
+		}
+
+	}
+
+    void assignTokenTypes(Grammar g, List<GrammarAST> tokensDefs,
+						  List<GrammarAST> tokenIDs, List<GrammarAST> terminals)
+	{
+		//Grammar G = g.getOutermostGrammar(); // put in root, even if imported
+
+		// DEFINE tokens { X='x'; } ALIASES
+		for (GrammarAST alias : tokensDefs) {
+			if ( alias.getType()== ANTLRParser.ASSIGN ) {
+				String name = alias.getChild(0).getText();
+				String lit = alias.getChild(1).getText();
+				g.defineTokenAlias(name, lit);
+			}
+			else {
+				g.defineTokenName(alias.getText());
+			}
+		}
+
+		// DEFINE TOKEN TYPES FOR TOKEN REFS LIKE ID, INT
+		for (GrammarAST idAST : tokenIDs) {
+			if (g.getTokenType(idAST.getText()) == Token.INVALID_TYPE) {
+				g.tool.errMgr.grammarError(ErrorType.IMPLICIT_TOKEN_DEFINITION, g.fileName, idAST.token, idAST.getText());
+			}
+
+			g.defineTokenName(idAST.getText());
+		}
+
+		// VERIFY TOKEN TYPES FOR STRING LITERAL REFS LIKE 'while', ';'
+		for (GrammarAST termAST : terminals) {
+			if (termAST.getType() != ANTLRParser.STRING_LITERAL) {
+				continue;
+			}
+
+			if (g.getTokenType(termAST.getText()) == Token.INVALID_TYPE) {
+				g.tool.errMgr.grammarError(ErrorType.IMPLICIT_STRING_DEFINITION, g.fileName, termAST.token, termAST.getText());
+			}
+		}
+
+		g.tool.log("semantics", "tokens="+g.tokenNameToTypeMap);
+        g.tool.log("semantics", "strings="+g.stringLiteralToTypeMap);
+	}
+    boolean hasTypeOrMoreCommand(@NotNull Rule r) {
+		GrammarAST ast = r.ast;
+		if (ast == null) {
+			return false;
+		}
+
+		GrammarAST altActionAst = (GrammarAST)ast.getFirstDescendantWithType(ANTLRParser.LEXER_ALT_ACTION);
+		if (altActionAst == null) {
+			// the rule isn't followed by any commands
+			return false;
+		}
+
+		// first child is the alt itself, subsequent are the actions
+		for (int i = 1; i < altActionAst.getChildCount(); i++) {
+			GrammarAST node = (GrammarAST)altActionAst.getChild(i);
+			if (node.getType() == ANTLRParser.LEXER_ACTION_CALL) {
+				if ("type".equals(node.getChild(0).getText())) {
+					return true;
+				}
+			}
+			else if ("more".equals(node.getText())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+}

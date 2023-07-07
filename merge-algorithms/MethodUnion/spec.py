@@ -30,7 +30,6 @@ Language.build_library(
 Java_Lang = Language(path+'/build/my-languages.so', 'java')
 
 
-
 ## Abstract Class Definition (Best you can do with Python lol)
 class Lang(ABC):
     # Used to generate string path for particular target from tree. 
