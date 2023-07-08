@@ -5,6 +5,7 @@ from Node import Pack, Class, Method
 from abc import ABC,abstractmethod
 import os
 import copy
+import astor
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
@@ -486,6 +487,28 @@ class Python(Lang):
     def getUsages(self,git_content):
         return super().getUsages()
     
-    def getClasses(self,content):
-        return super().getClasses()
+    def getClasses(self,content,version):
+        codeast = self.generateAST(content)
+        for nod in codeast.body:
+            if isinstance(nod, ast.FunctionDef):
+                methodName = nod.name
+                methodindent= nod.col_offset
+                newMethod = Method(methodName,version,None,nod)
+
+                #Method declaration is referenced by its signature.
+                if (methodindent+" "+methodName in all_methods.keys()):
+                    nodepresent = False
+                    for methodObject in all_methods[methodindent+" "+methodName]:
+                        if astor.to_source(methodObject.astnode) == astor.to_source(nod):
+                            methodObject.add_version(version)
+                            nodepresent =  True
+                    if nodepresent == False:
+                            all_methods[methodindent+" "+methodName].append(newMethod)
+                else:
+                    all_methods[methodindent+" "+methodName]=[newMethod]
+                        
+
+           
+
+        
                             
