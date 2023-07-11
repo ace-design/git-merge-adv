@@ -51,6 +51,13 @@ public final class Cucumber extends ParentRunner<FeatureRunner>{
     private final Plugins plugins;
     private boolean multiThreadingAssumed = false;
 
+
+    /**
+     * Constructor called by JUnit.
+     *
+     * @param clazz the class with the @RunWith annotation.
+     * @throws org.junit.runners.model.InitializationError if there is another problem
+     */
     public Cucumber(Class clazz) throws InitializationError {
         super(clazz);
         Assertions.assertNoCucumberAnnotatedMethods(clazz);
@@ -138,7 +145,7 @@ public final class Cucumber extends ParentRunner<FeatureRunner>{
         multiThreadingAssumed = true;
     }
 
-    class RunCucumber extends Statement {
+    class RunCucumber extends Statement{
 
         private final Statement runFeatures;
 

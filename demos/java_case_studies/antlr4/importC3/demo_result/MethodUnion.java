@@ -18,7 +18,7 @@ import org.antlr.v4.runtime.misc.Nullable;
 import org.antlr.v4.tool.Attribute;
 import org.antlr.v4.tool.AttributeDict;
 
-public class SymbolChecks {
+public class SymbolChecks{
 
     Grammar g;
     SymbolCollector collector;
@@ -92,55 +92,13 @@ public class SymbolChecks {
 //            tokenIDs.add(ID);
 //        }
     }
-    void checkForTypeMismatch(LabelElementPair prevLabelPair,
-                                        LabelElementPair labelPair)
-    {
-        // label already defined; if same type, no problem
-        if ( prevLabelPair.type != labelPair.type ) {
-            String typeMismatchExpr = labelPair.type+"!="+prevLabelPair.type;
-            errMgr.grammarError(
-                ErrorType.LABEL_TYPE_CONFLICT,
-                g.fileName,
-                labelPair.label.token,
-                labelPair.label.getText(),
-                typeMismatchExpr);
-        }
-    }
-    public void checkForRuleArgumentAndReturnValueConflicts(Rule r) {
-        if ( r.retvals!=null ) {
-            Set<String> conflictingKeys = r.retvals.intersection(r.args);
-            if (conflictingKeys!=null) {
-				for (String key : conflictingKeys) {
-					errMgr.grammarError(
-						ErrorType.ARG_RETVAL_CONFLICT,
-						g.fileName,
-						((GrammarAST) r.ast.getChild(0)).token,
-						key,
-						r.name);
-				}
-            }
-        }
-    }
-    public void checkForQualifiedRuleIssues(Grammar g, List<GrammarAST> qualifiedRuleRefs) {
-		for (GrammarAST dot : qualifiedRuleRefs) {
-			GrammarAST grammar = (GrammarAST)dot.getChild(0);
-			GrammarAST rule = (GrammarAST)dot.getChild(1);
-            g.tool.log("semantics", grammar.getText()+"."+rule.getText());
-			Grammar delegate = g.getImportedGrammar(grammar.getText());
-			if ( delegate==null ) {
-				errMgr.grammarError(ErrorType.NO_SUCH_GRAMMAR_SCOPE,
-										  g.fileName, grammar.token, grammar.getText(),
-										  rule.getText());
-			}
-			else {
-				if ( g.getRule(grammar.getText(), rule.getText())==null ) {
-					errMgr.grammarError(ErrorType.NO_SUCH_RULE_IN_SCOPE,
-											  g.fileName, rule.token, grammar.getText(),
-											  rule.getText());
-				}
-			}
-		}
-	}
+
+    /** Make sure a label doesn't conflict with another symbol.
+     *  Labels must not conflict with: rules, tokens, scope names,
+     *  return values, parameters, and rule-scope dynamic attributes
+     *  defined in surrounding rule.  Also they must have same type
+     *  for repeated defs.
+     */
     public void checkForLabelConflicts(Collection<Rule> rules) {
         for (Rule r : rules) {
             checkForAttributeConflicts(r);
@@ -162,6 +120,20 @@ public class SymbolChecks {
                     }
                 }
             }
+        }
+    }
+    void checkForTypeMismatch(LabelElementPair prevLabelPair,
+                                        LabelElementPair labelPair)
+    {
+        // label already defined; if same type, no problem
+        if ( prevLabelPair.type != labelPair.type ) {
+            String typeMismatchExpr = labelPair.type+"!="+prevLabelPair.type;
+            errMgr.grammarError(
+                ErrorType.LABEL_TYPE_CONFLICT,
+                g.fileName,
+                labelPair.label.token,
+                labelPair.label.getText(),
+                typeMismatchExpr);
         }
     }
     public void checkForLabelConflict(Rule r, GrammarAST labelID) {
@@ -236,6 +208,21 @@ public class SymbolChecks {
 				r.name);
 		}
 	}
+    public void checkForRuleArgumentAndReturnValueConflicts(Rule r) {
+        if ( r.retvals!=null ) {
+            Set<String> conflictingKeys = r.retvals.intersection(r.args);
+            if (conflictingKeys!=null) {
+				for (String key : conflictingKeys) {
+					errMgr.grammarError(
+						ErrorType.ARG_RETVAL_CONFLICT,
+						g.fileName,
+						((GrammarAST) r.ast.getChild(0)).token,
+						key,
+						r.name);
+				}
+            }
+        }
+    }
     public void checkRuleArgs(Grammar g, List<GrammarAST> rulerefs) {
 		if ( rulerefs==null ) return;
 		for (GrammarAST ref : rulerefs) {
@@ -250,6 +237,26 @@ public class SymbolChecks {
 			else if ( arg==null && (r!=null&&r.args!=null) ) {
 				errMgr.grammarError(ErrorType.MISSING_RULE_ARGS,
 										  g.fileName, ref.token, ruleName);
+			}
+		}
+	}
+    public void checkForQualifiedRuleIssues(Grammar g, List<GrammarAST> qualifiedRuleRefs) {
+		for (GrammarAST dot : qualifiedRuleRefs) {
+			GrammarAST grammar = (GrammarAST)dot.getChild(0);
+			GrammarAST rule = (GrammarAST)dot.getChild(1);
+            g.tool.log("semantics", grammar.getText()+"."+rule.getText());
+			Grammar delegate = g.getImportedGrammar(grammar.getText());
+			if ( delegate==null ) {
+				errMgr.grammarError(ErrorType.NO_SUCH_GRAMMAR_SCOPE,
+										  g.fileName, grammar.token, grammar.getText(),
+										  rule.getText());
+			}
+			else {
+				if ( g.getRule(grammar.getText(), rule.getText())==null ) {
+					errMgr.grammarError(ErrorType.NO_SUCH_RULE_IN_SCOPE,
+											  g.fileName, rule.token, grammar.getText(),
+											  rule.getText());
+				}
 			}
 		}
 	}

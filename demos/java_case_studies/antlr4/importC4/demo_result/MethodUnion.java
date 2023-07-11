@@ -14,6 +14,20 @@ public class BufferedTokenStream implements TokenStream{
     protected int lastMarker;
     protected int p = -1;
 
+
+    /** Record every single token pulled from the source so we can reproduce
+     *  chunks of it later.  The buffer in LookaheadStream overlaps sometimes
+     *  as its moving window moves through the input.  This list captures
+     *  everything so we can access complete input text.
+     */
+
+    /** Track the last mark() call result value for use in rewind(). */
+
+    /** The index into the tokens list of the current token (next token
+     *  to consume).  tokens[p] should be LT(1).  p=-1 indicates need
+     *  to initialize with first token.  The ctor doesn't get a token.
+     *  First call to LT(1) or whatever gets the first token and sets p=0;
+     */
     public BufferedTokenStream() { }
     public BufferedTokenStream(TokenSource tokenSource) {
         this.tokenSource = tokenSource;
@@ -44,17 +58,29 @@ public class BufferedTokenStream implements TokenStream{
     }
     @Override
     public int size() { return tokens.size(); }
+
+    /** Move the input pointer to the next incoming token.  The stream
+     *  must become active with LT(1) available.  consume() simply
+     *  moves the input pointer so that LT(1) points at the next
+     *  input symbol. Consume at least one token.
+     *
+     *  Walk past any token not on the channel the parser is listening to.
+     */
     @Override
     public void consume() {
         if ( p == -1 ) setup();
         p++;
         sync(p);
     }
+
+    /** Make sure index i in tokens has a token. */
     protected void sync(int i) {
         int n = i - tokens.size() + 1; // how many more elements we need?
         //System.out.println("sync("+i+") needs "+n);
         if ( n > 0 ) fetch(n);
     }
+
+    /** add n elements to buffer */
     protected void fetch(int n) {
         for (int i=1; i<=n; i++) {
             Token t = tokenSource.nextToken();
@@ -72,6 +98,8 @@ public class BufferedTokenStream implements TokenStream{
         }
         return tokens.get(i);
     }
+
+ /** Get all tokens from start..stop inclusively */
     public List<Token> get(int start, int stop) {
 		if ( start<0 || stop<0 ) return null;
 		if ( p == -1 ) setup();
@@ -106,6 +134,8 @@ public class BufferedTokenStream implements TokenStream{
         return tokens.get(i);
     }
     protected void setup() { sync(0); p = 0; }
+
+    /** Reset this token stream by setting its token source. */
     public void setTokenSource(TokenSource tokenSource) {
         this.tokenSource = tokenSource;
         tokens.clear();
@@ -115,6 +145,11 @@ public class BufferedTokenStream implements TokenStream{
     public List<Token> getTokens(int start, int stop) {
         return getTokens(start, stop, null);
     }
+
+    /** Given a start and stop index, return a List of all tokens in
+     *  the token type BitSet.  Return null if no tokens were found.  This
+     *  method looks at both on and off channel tokens.
+     */
     public List<Token> getTokens(int start, int stop, Set<Integer> types) {
         if ( p == -1 ) setup();
 		if ( start<0 || stop>=tokens.size() ||
@@ -143,6 +178,11 @@ public class BufferedTokenStream implements TokenStream{
 		s.add(ttype);
 		return getTokens(start,stop, s);
     }
+
+ /** Given a starting index, return the index of the next token on channel.
+	 *  Return i if tokens[i] is on channel.  Return -1 if there are no tokens
+	 *  on channel between i and EOF.
+	 */
     protected int nextTokenOnChannel(int i, int channel) {
 		sync(i);
 		Token token = tokens.get(i);
@@ -155,12 +195,22 @@ public class BufferedTokenStream implements TokenStream{
 		}
 		return i;
 	}
+
+ /** Given a starting index, return the index of the previous token on channel.
+	 *  Return i if tokens[i] is on channel. Return -1 if there are no tokens
+	 *  on channel between i and 0.
+	 */
     protected int previousTokenOnChannel(int i, int channel) {
 		while ( i>=0 && tokens.get(i).getChannel()!=channel ) {
 			i--;
 		}
 		return i;
 	}
+
+ /** Collect all tokens on specified channel to the right of
+	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL or
+	 *  EOF. If channel is -1, find any non default channel token.
+	 */
     public List<Token> getHiddenTokensToRight(int tokenIndex, int channel) {
 		if ( p == -1 ) setup();
 		if ( tokenIndex<0 || tokenIndex>=tokens.size() ) {
@@ -177,9 +227,19 @@ public class BufferedTokenStream implements TokenStream{
 
 		return filterForChannel(from, to, channel);
 	}
+
+ /** Collect all hidden tokens (any off-default channel) to the right of
+	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL
+	 *  of EOF.
+	 */
     public List<Token> getHiddenTokensToRight(int tokenIndex) {
 		return getHiddenTokensToRight(tokenIndex, -1);
 	}
+
+ /** Collect all tokens on specified channel to the left of
+	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
+	 *  If channel is -1, find any non default channel token.
+	 */
     public List<Token> getHiddenTokensToLeft(int tokenIndex, int channel) {
 		if ( p == -1 ) setup();
 		if ( tokenIndex<0 || tokenIndex>=tokens.size() ) {
@@ -195,6 +255,10 @@ public class BufferedTokenStream implements TokenStream{
 
 		return filterForChannel(from, to, channel);
 	}
+
+ /** Collect all hidden tokens (any off-default channel) to the left of
+	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
+	 */
     public List<Token> getHiddenTokensToLeft(int tokenIndex) {
 		return getHiddenTokensToLeft(tokenIndex, -1);
 	}
@@ -214,6 +278,8 @@ public class BufferedTokenStream implements TokenStream{
 	}
     @Override
     public String getSourceName() {	return tokenSource.getSourceName();	}
+
+ /** Get the text of all tokens in this buffer. */
     @NotNull
 	@Override
 	public String getText() {
@@ -252,6 +318,8 @@ public class BufferedTokenStream implements TokenStream{
 
 		return "";
     }
+
+    /** Get all tokens from lexer until EOF */
     public void fill() {
         if ( p == -1 ) setup();
         if ( tokens.get(p).getType()==Token.EOF ) return;

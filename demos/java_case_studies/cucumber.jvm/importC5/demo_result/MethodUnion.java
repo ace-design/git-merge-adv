@@ -35,23 +35,26 @@ import java.util.List;
 import java.util.function.Predicate;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
-import cucumber.runner.TimeService;
-import cucumber.runtime.BackendModuleBackendSupplier;
-import gherkin.events.PickleEvent;
 import cucumber.runner.*;
 import cucumber.runtime.*;
 
 @API(status = API.Status.STABLE)
-public final class TestNGCucumberRunner {
+public final class TestNGCucumberRunner extends Blah{
 
     private final EventBus bus;
-    private final Filters filters;
-    private final FeaturePathFeatureSupplier featureSupplier;
+    private final Predicate<CucumberPickle> filters;
     private final ThreadLocalRunnerSupplier runnerSupplier;
     private final RuntimeOptions runtimeOptions;
     private final Plugins plugins;
-    private final Predicate<CucumberPickle> filters;
+    private final FeaturePathFeatureSupplier featureSupplier;
 
+
+    /**
+     * Bootstrap the cucumber runtime
+     *
+     * @param clazz Which has the {@link CucumberOptions}
+     *              and {@link org.testng.annotations.Test} annotations
+     */
     public TestNGCucumberRunner(Class clazz) {
 
         ClassLoader classLoader = clazz.getClassLoader();
@@ -72,19 +75,10 @@ public final class TestNGCucumberRunner {
             .parse(CucumberProperties.fromEnvironment())
             .build(annotationOptions);
 
-<<<<<<< left_content.java
-        runtimeOptions.addUndefinedStepsPrinterIfSummaryNotDefined();
-
-        ClassFinder classFinder = new ResourceLoaderClassFinder(resourceLoader, classLoader);
-        BackendModuleBackendSupplier backendSupplier = new BackendModuleBackendSupplier(resourceLoader, classFinder, runtimeOptions);
-        bus = new TimeServiceEventBus(TimeService.SYSTEM);
-        plugins = new Plugins(classLoader, new PluginFactory(), runtimeOptions);
-=======
         runtimeOptions = new CucumberPropertiesParser(resourceLoader)
             .parse(CucumberProperties.fromSystemProperties())
             .build(environmentOptions);
 
->>>>>>> right_content.java
         FeatureLoader featureLoader = new FeatureLoader(resourceLoader);
         featureSupplier = new FeaturePathFeatureSupplier(featureLoader, runtimeOptions);
 
@@ -96,18 +90,6 @@ public final class TestNGCucumberRunner {
         this.filters = new Filters(runtimeOptions);
         TypeRegistryConfigurerSupplier typeRegistryConfigurerSupplier = new ScanningTypeRegistryConfigurerSupplier(classFinder, runtimeOptions);
         this.runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier, objectFactorySupplier, typeRegistryConfigurerSupplier);
-    }
-
-    public void runScenario(PickleEvent pickle) throws Throwable {
-        //Possibly invoked in a multi-threaded context
-        Runner runner = runnerSupplier.get();
-        TestCaseResultListener testCaseResultListener = new TestCaseResultListener(runner.getBus(), runtimeOptions.isStrict());
-        runner.runPickle(pickle);
-        testCaseResultListener.finishExecutionUnit();
-
-        if (!testCaseResultListener.isPassed()) {
-            throw testCaseResultListener.getError();
-        }
     }
     public void runScenario(Pickle pickle) throws Throwable {
         //Possibly invoked in a multi-threaded context
@@ -141,6 +123,11 @@ public final class TestNGCucumberRunner {
     public void finish() {
         bus.send(new TestRunFinished(bus.getInstant()));
     }
+
+    /**
+     * @return returns the cucumber scenarios as a two dimensional array of {@link PickleWrapper}
+     * scenarios combined with their {@link FeatureWrapper} feature.
+     */
     public Object[][] provideScenarios() {
         try {
             return getFeatures().stream()
