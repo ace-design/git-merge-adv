@@ -52,7 +52,7 @@ import static java.util.stream.Collectors.toList;
  * </ol>
  */
 @API(status = API.Status.STABLE)
-public final class TestNGCucumberRunner {
+public final class TestNGCucumberRunner extends Blah{
 
     private final EventBus bus;
     private final Predicate<CucumberPickle> filters;

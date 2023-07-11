@@ -64,6 +64,35 @@ public final class TestNGFormatter implements EventListener, StrictAware{
     private final Map<URI, String> featuresNames = new HashMap<>();
     private final FeatureParser parser = new FeatureParser(UUID::randomUUID);
 
+    public TestNGFormatter(OutputStream out) {
+        this.writer = new UTF8OutputStreamWriter(out);
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            results = document.createElement("testng-results");
+            suite = document.createElement("suite");
+            test = document.createElement("test");
+            suite.appendChild(test);
+            results.appendChild(suite);
+            document.appendChild(results);
+        } catch (ParserConfigurationException e) {
+            throw new CucumberException("Error initializing DocumentBuilder.", e);
+        }
+    }
+    @SuppressWarnings("WeakerAccess") // Used by plugin factory
+    public TestNGFormatter(URL url) throws IOException {
+        this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            results = document.createElement("testng-results");
+            suite = document.createElement("suite");
+            test = document.createElement("test");
+            suite.appendChild(test);
+            results.appendChild(suite);
+            document.appendChild(results);
+        } catch (ParserConfigurationException e) {
+            throw new CucumberException("Error initializing DocumentBuilder.", e);
+        }
+    }
     @Override
     public void setEventPublisher(EventPublisher publisher) {
         publisher.registerHandlerFor(TestSourceRead.class, this::handleTestSourceRead);
@@ -160,37 +189,8 @@ public final class TestNGFormatter implements EventListener, StrictAware{
 
         return count;
     }
-    @SuppressWarnings("WeakerAccess") // Used by plugin factory
-    public TestNGFormatter(URL url) throws IOException {
-        this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
-        try {
-            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            results = document.createElement("testng-results");
-            suite = document.createElement("suite");
-            test = document.createElement("test");
-            suite.appendChild(test);
-            results.appendChild(suite);
-            document.appendChild(results);
-        } catch (ParserConfigurationException e) {
-            throw new CucumberException("Error initializing DocumentBuilder.", e);
-        }
-    }
-    public TestNGFormatter(OutputStream out) {
-        this.writer = new UTF8OutputStreamWriter(out);
-        try {
-            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            results = document.createElement("testng-results");
-            suite = document.createElement("suite");
-            test = document.createElement("test");
-            suite.appendChild(test);
-            results.appendChild(suite);
-            document.appendChild(results);
-        } catch (ParserConfigurationException e) {
-            throw new CucumberException("Error initializing DocumentBuilder.", e);
-        }
-    }
 
-    final class TestCase {
+    final class TestCase{
 
         private final List<PickleStepTestStep> steps = new ArrayList<>();
         private final List<Result> results = new ArrayList<>();
@@ -212,6 +212,43 @@ public final class TestNGFormatter implements EventListener, StrictAware{
                 previousTestCaseName = testCaseName;
                 exampleNumber = 1;
                 return testCaseName;
+            }
+        }
+        void finish(Document doc, Element element, Instant instant) {
+            element.setAttribute("duration-ms", calculateTotalDurationString());
+            element.setAttribute("finished-at", ISO_INSTANT.format(instant));
+            StringBuilder stringBuilder = new StringBuilder();
+            addStepAndResultListing(stringBuilder);
+            Result skipped = null;
+            Result failed = null;
+            for (Result result : results) {
+                if (result.getStatus().is(Status.FAILED) || result.getStatus().is(Status.AMBIGUOUS)) {
+                    failed = result;
+                }
+                if (result.getStatus().is(Status.UNDEFINED) || result.getStatus().is(Status.PENDING)) {
+                    skipped = result;
+                }
+            }
+            for (Result result : hooks) {
+                if (failed == null && result.getStatus().is(Status.FAILED)) {
+                    failed = result;
+                }
+            }
+            if (failed != null) {
+                element.setAttribute("status", "FAIL");
+                String stacktrace = printStackTrace(failed.getError());
+                Element exception = createException(doc, failed.getError().getClass().getName(), stringBuilder.toString(), stacktrace);
+                element.appendChild(exception);
+            } else if (skipped != null) {
+                if (strict) {
+                    element.setAttribute("status", "FAIL");
+                    Element exception = createException(doc, "The scenario has pending or undefined step(s)", stringBuilder.toString(), "The scenario has pending or undefined step(s)");
+                    element.appendChild(exception);
+                } else {
+                    element.setAttribute("status", "SKIP");
+                }
+            } else {
+                element.setAttribute("status", "PASS");
             }
         }
         private String printStrackTrace(Result failed) {
@@ -260,43 +297,6 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             exceptionElement.appendChild(stacktraceElement);
 
             return exceptionElement;
-        }
-        void finish(Document doc, Element element, Instant instant) {
-            element.setAttribute("duration-ms", calculateTotalDurationString());
-            element.setAttribute("finished-at", ISO_INSTANT.format(instant));
-            StringBuilder stringBuilder = new StringBuilder();
-            addStepAndResultListing(stringBuilder);
-            Result skipped = null;
-            Result failed = null;
-            for (Result result : results) {
-                if (result.getStatus().is(Status.FAILED) || result.getStatus().is(Status.AMBIGUOUS)) {
-                    failed = result;
-                }
-                if (result.getStatus().is(Status.UNDEFINED) || result.getStatus().is(Status.PENDING)) {
-                    skipped = result;
-                }
-            }
-            for (Result result : hooks) {
-                if (failed == null && result.getStatus().is(Status.FAILED)) {
-                    failed = result;
-                }
-            }
-            if (failed != null) {
-                element.setAttribute("status", "FAIL");
-                String stacktrace = printStackTrace(failed.getError());
-                Element exception = createException(doc, failed.getError().getClass().getName(), stringBuilder.toString(), stacktrace);
-                element.appendChild(exception);
-            } else if (skipped != null) {
-                if (strict) {
-                    element.setAttribute("status", "FAIL");
-                    Element exception = createException(doc, "The scenario has pending or undefined step(s)", stringBuilder.toString(), "The scenario has pending or undefined step(s)");
-                    element.appendChild(exception);
-                } else {
-                    element.setAttribute("status", "SKIP");
-                }
-            } else {
-                element.setAttribute("status", "PASS");
-            }
         }
     }
 }

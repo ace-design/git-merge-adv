@@ -84,7 +84,7 @@ import static org.junit.Assert.assertTrue;
 import org.antlr.v4.runtime.misc.Pair;
 import static org.junit.Assert.*;
 
-public abstract class BaseTest {
+public abstract class BaseTest{
 
     private static final Logger LOGGER = Logger.getLogger(BaseTest.class.getName());
     public static final String newline = System.getProperty("line.separator");
@@ -104,6 +104,14 @@ public abstract class BaseTest {
 
 	};
 
+
+    /**
+     * Build up the full classpath we need, including the surefire path (if present)
+     */
+
+ /** If error during parser execution, store stderr here; can't return
+     *  stdout and stderr.  This doesn't trap errors from running antlr.
+     */
     @Before
 	public void setUp() throws Exception {
         // new output dir for each test
@@ -273,6 +281,10 @@ public abstract class BaseTest {
 //		return equeue.all;
 		return null;
 	}
+
+ /** Wow! much faster than compiling outside of VM. Finicky though.
+	 *  Had rules called r and modulo. Wouldn't compile til I changed to 'a'.
+	 */
     protected boolean compile(String... fileNames) {
 		List<File> files = new ArrayList<File>();
 		for (String fileName : fileNames) {
@@ -348,6 +360,8 @@ public abstract class BaseTest {
 		}
 		*/
 	}
+
+ /** Return true if all is ok, no errors */
     protected ErrorQueue antlr(String fileName, String grammarFileName, String grammarStr, boolean defaultListener, String... extraOptions) {
 		System.out.println("dir "+tmpdir);
 		mkdir(tmpdir);
@@ -417,6 +431,45 @@ public abstract class BaseTest {
 		}
 		return output;
 	}
+    public ParseTree execParser(String startRuleName, String input,
+								String parserName, String lexerName)
+		throws Exception
+	{
+<<<<<<< left_content.java
+		Pair<Parser, Lexer> pl = getParserAndLexer(input, parserName, lexerName);
+		Parser parser = pl.a;
+		return execStartRule(startRuleName, parser);
+=======
+		final Class<? extends Lexer> lexerClass = loadLexerClassFromTempDir(lexerName);
+		final Class<? extends Parser> parserClass = loadParserClassFromTempDir(parserName);
+
+		ANTLRInputStream in = new ANTLRInputStream(new StringReader(input));
+
+		Class<? extends Lexer> c = lexerClass.asSubclass(Lexer.class);
+		Constructor<? extends Lexer> ctor = c.getConstructor(CharStream.class);
+		Lexer lexer = ctor.newInstance(in);
+
+		Class<? extends Parser> pc = parserClass.asSubclass(Parser.class);
+		Constructor<? extends Parser> pctor = pc.getConstructor(TokenStream.class);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		Parser parser = pctor.newInstance(tokens);
+
+		Method startRule = null;
+		Object[] args = null;
+		try {
+			startRule = parserClass.getMethod(startRuleName);
+		}
+		catch (NoSuchMethodException nsme) {
+			// try with int _p arg for recursive func
+			startRule = parserClass.getMethod(startRuleName, int.class);
+			args = new Integer[] {0};
+		}
+		ParseTree result = (ParseTree)startRule.invoke(parser, args);
+		System.out.println("parse tree = "+result.toStringTree(parser));
+		return result;
+>>>>>>> right_content.java
+	}
+
     protected String execParser(String grammarFileName,
 								String grammarStr,
 								String parserName,
@@ -436,6 +489,67 @@ public abstract class BaseTest {
 								 startRuleName,
 								 debug);
 	}
+    public ParseTree execStartRule(String startRuleName, Parser parser)
+		throws IllegalAccessException, InvocationTargetException,
+			   NoSuchMethodException
+	{
+		Method startRule = null;
+		Object[] args = null;
+		try {
+			startRule = parser.getClass().getMethod(startRuleName);
+		}
+		catch (NoSuchMethodException nsme) {
+			// try with int _p arg for recursive func
+			startRule = parser.getClass().getMethod(startRuleName, int.class);
+			args = new Integer[] {0};
+		}
+		ParseTree result = (ParseTree)startRule.invoke(parser, args);
+//		System.out.println("parse tree = "+result.toStringTree(parser));
+		return result;
+	}
+    public Pair<Parser, Lexer> getParserAndLexer(String input,
+												 String parserName, String lexerName)
+		throws Exception
+	{
+		final Class<? extends Lexer> lexerClass = loadLexerClassFromTempDir(lexerName);
+		final Class<? extends Parser> parserClass = loadParserClassFromTempDir(parserName);
+
+		ANTLRInputStream in = new ANTLRInputStream(new StringReader(input));
+
+		Class<? extends Lexer> c = lexerClass.asSubclass(Lexer.class);
+		Constructor<? extends Lexer> ctor = c.getConstructor(CharStream.class);
+		Lexer lexer = ctor.newInstance(in);
+
+		Class<? extends Parser> pc = parserClass.asSubclass(Parser.class);
+		Constructor<? extends Parser> pctor = pc.getConstructor(TokenStream.class);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		Parser parser = pctor.newInstance(tokens);
+		return new Pair<Parser, Lexer>(parser, lexer);
+	}
+    public Class<?> loadClassFromTempDir(String name) throws Exception {
+		ClassLoader loader =
+			new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() },
+							   ClassLoader.getSystemClassLoader());
+		return loader.loadClass(name);
+	}
+    public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
+<<<<<<< left_content.java
+		return loadClassFromTempDir(name).asSubclass(Lexer.class);
+=======
+		return (Class<? extends Lexer>)loadClassFromTempDir(name);
+>>>>>>> right_content.java
+	}
+
+    public Class<? extends Parser> loadParserClassFromTempDir(String name) throws Exception {
+<<<<<<< left_content.java
+		return loadClassFromTempDir(name).asSubclass(Parser.class);
+=======
+		return (Class<? extends Parser>)loadClassFromTempDir(name);
+>>>>>>> right_content.java
+	}
+
+
+ /** Return true if all is well */
     protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
 													String grammarStr,
 													@Nullable String parserName,
@@ -444,6 +558,8 @@ public abstract class BaseTest {
 	{
 		return rawGenerateAndBuildRecognizer(grammarFileName, grammarStr, parserName, lexerName, false, extraOptions);
 	}
+
+ /** Return true if all is well */
     protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
 													String grammarStr,
 													@Nullable String parserName,
@@ -877,6 +993,18 @@ public abstract class BaseTest {
 		String prefix="Exception in thread \"main\" ";
 		return lines[0].substring(prefix.length(),lines[0].length());
 	}
+
+    /**
+     * When looking at a result set that consists of a Map/HashTable
+     * we cannot rely on the output order, as the hashing algorithm or other aspects
+     * of the implementation may be different on differnt JDKs or platforms. Hence
+     * we take the Map, convert the keys to a List, sort them and Stringify the Map, which is a
+     * bit of a hack, but guarantees that we get the same order on all systems. We assume that
+     * the keys are strings.
+     *
+     * @param m The Map that contains keys we wish to return in sorted order
+     * @return A string that represents all the keys in sorted order.
+     */
     public <K, V> String sortMapToString(Map<K, V> m) {
         // Pass in crap, and get nothing back
         //
@@ -904,12 +1032,16 @@ public abstract class BaseTest {
 		assertNotNull(text);
 		assertFalse(text.isEmpty());
 	}
+
+ /** Sort a list */
     public <T extends Comparable<? super T>> List<T> sort(List<T> data) {
 		List<T> dup = new ArrayList<T>();
 		dup.addAll(data);
 		Collections.sort(dup);
 		return dup;
 	}
+
+ /** Return map sorted by key */
     public <K extends Comparable<? super K>,V> LinkedHashMap<K,V> sort(Map<K,V> data) {
 		LinkedHashMap<K,V> dup = new LinkedHashMap<K, V>();
 		List<K> keys = new ArrayList<K>();
@@ -920,104 +1052,6 @@ public abstract class BaseTest {
 		}
 		return dup;
 	}
-    public ParseTree execParser(String startRuleName, String input,
-								String parserName, String lexerName)
-		throws Exception
-	{
-<<<<<<< left_content.java
-		Pair<Parser, Lexer> pl = getParserAndLexer(input, parserName, lexerName);
-		Parser parser = pl.a;
-		return execStartRule(startRuleName, parser);
-=======
-		final Class<? extends Lexer> lexerClass = loadLexerClassFromTempDir(lexerName);
-		final Class<? extends Parser> parserClass = loadParserClassFromTempDir(parserName);
-
-		ANTLRInputStream in = new ANTLRInputStream(new StringReader(input));
-
-		Class<? extends Lexer> c = lexerClass.asSubclass(Lexer.class);
-		Constructor<? extends Lexer> ctor = c.getConstructor(CharStream.class);
-		Lexer lexer = ctor.newInstance(in);
-
-		Class<? extends Parser> pc = parserClass.asSubclass(Parser.class);
-		Constructor<? extends Parser> pctor = pc.getConstructor(TokenStream.class);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		Parser parser = pctor.newInstance(tokens);
-
-		Method startRule = null;
-		Object[] args = null;
-		try {
-			startRule = parserClass.getMethod(startRuleName);
-		}
-		catch (NoSuchMethodException nsme) {
-			// try with int _p arg for recursive func
-			startRule = parserClass.getMethod(startRuleName, int.class);
-			args = new Integer[] {0};
-		}
-		ParseTree result = (ParseTree)startRule.invoke(parser, args);
-		System.out.println("parse tree = "+result.toStringTree(parser));
-		return result;
->>>>>>> right_content.java
-	}
-
-    public ParseTree execStartRule(String startRuleName, Parser parser)
-		throws IllegalAccessException, InvocationTargetException,
-			   NoSuchMethodException
-	{
-		Method startRule = null;
-		Object[] args = null;
-		try {
-			startRule = parser.getClass().getMethod(startRuleName);
-		}
-		catch (NoSuchMethodException nsme) {
-			// try with int _p arg for recursive func
-			startRule = parser.getClass().getMethod(startRuleName, int.class);
-			args = new Integer[] {0};
-		}
-		ParseTree result = (ParseTree)startRule.invoke(parser, args);
-//		System.out.println("parse tree = "+result.toStringTree(parser));
-		return result;
-	}
-    public Pair<Parser, Lexer> getParserAndLexer(String input,
-												 String parserName, String lexerName)
-		throws Exception
-	{
-		final Class<? extends Lexer> lexerClass = loadLexerClassFromTempDir(lexerName);
-		final Class<? extends Parser> parserClass = loadParserClassFromTempDir(parserName);
-
-		ANTLRInputStream in = new ANTLRInputStream(new StringReader(input));
-
-		Class<? extends Lexer> c = lexerClass.asSubclass(Lexer.class);
-		Constructor<? extends Lexer> ctor = c.getConstructor(CharStream.class);
-		Lexer lexer = ctor.newInstance(in);
-
-		Class<? extends Parser> pc = parserClass.asSubclass(Parser.class);
-		Constructor<? extends Parser> pctor = pc.getConstructor(TokenStream.class);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		Parser parser = pctor.newInstance(tokens);
-		return new Pair<Parser, Lexer>(parser, lexer);
-	}
-    public Class<?> loadClassFromTempDir(String name) throws Exception {
-		ClassLoader loader =
-			new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() },
-							   ClassLoader.getSystemClassLoader());
-		return loader.loadClass(name);
-	}
-    public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
-<<<<<<< left_content.java
-		return loadClassFromTempDir(name).asSubclass(Lexer.class);
-=======
-		return (Class<? extends Lexer>)loadClassFromTempDir(name);
->>>>>>> right_content.java
-	}
-
-    public Class<? extends Parser> loadParserClassFromTempDir(String name) throws Exception {
-<<<<<<< left_content.java
-		return loadClassFromTempDir(name).asSubclass(Parser.class);
-=======
-		return (Class<? extends Parser>)loadClassFromTempDir(name);
->>>>>>> right_content.java
-	}
-
 
  public static class StreamVacuum implements Runnable{
 
@@ -1046,6 +1080,8 @@ public abstract class BaseTest {
 				System.err.println("can't read output from process");
 			}
 		}
+
+  /** wait for the thread to finish */
      public void join() throws InterruptedException {
 			sucker.join();
 		}

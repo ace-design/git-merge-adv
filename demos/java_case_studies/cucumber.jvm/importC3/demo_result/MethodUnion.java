@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
-public final class RuntimeOptionsBuilder {
+public final class RuntimeOptionsBuilder{
 
     private List<String> parsedTagFilters = new ArrayList<>();
     private List<Pattern> parsedNameFilters = new ArrayList<>();
@@ -42,6 +42,13 @@ public final class RuntimeOptionsBuilder {
     private final ParsedPluginData parsedPluginData = new ParsedPluginData();
     private Class<? extends ObjectFactory> parsedObjectFactoryClass = null;
 
+    public RuntimeOptionsBuilder addRerun(Collection<FeatureWithLines> featureWithLines) {
+        if (parsedRerunPaths == null) {
+            parsedRerunPaths = new ArrayList<>();
+        }
+        parsedRerunPaths.addAll(featureWithLines);
+        return this;
+    }
     public RuntimeOptionsBuilder addFeature(FeatureWithLines featureWithLines) {
         parsedFeaturePaths.add(featureWithLines.uri());
         addLineFilters(featureWithLines);
@@ -146,6 +153,24 @@ public final class RuntimeOptionsBuilder {
         return runtimeOptions;
     }
 
+    private boolean hasFeaturesWithLineFilters() {
+<<<<<<< left_content.java
+        if (parsedRerunPaths != null) {
+            return true;
+        }
+        for (FeatureWithLines parsedFeaturePath : parsedFeaturePaths) {
+            if (!parsedFeaturePath.lines().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+=======
+        return parsedRerunPaths != null || !parsedFeaturePaths.stream()
+            .map(FeatureWithLines::lines)
+            .allMatch(Set::isEmpty);
+>>>>>>> right_content.java
+    }
+
     public RuntimeOptionsBuilder setCount(int count) {
         this.parsedCount = count;
         return this;
@@ -198,36 +223,11 @@ public final class RuntimeOptionsBuilder {
         parsedPluginData.addDefaultFormatterIfNotPresent();
         return this;
     }
-    public RuntimeOptionsBuilder addRerun(Collection<FeatureWithLines> featureWithLines) {
-        if (parsedRerunPaths == null) {
-            parsedRerunPaths = new ArrayList<>();
-        }
-        parsedRerunPaths.addAll(featureWithLines);
-        return this;
-    }
-    private boolean hasFeaturesWithLineFilters() {
-<<<<<<< left_content.java
-        if (parsedRerunPaths != null) {
-            return true;
-        }
-        for (FeatureWithLines parsedFeaturePath : parsedFeaturePaths) {
-            if (!parsedFeaturePath.lines().isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-=======
-        return parsedRerunPaths != null || !parsedFeaturePaths.stream()
-            .map(FeatureWithLines::lines)
-            .allMatch(Set::isEmpty);
->>>>>>> right_content.java
-    }
-
     public void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
         this.parsedObjectFactoryClass = objectFactoryClass;
     }
 
-    private static class ParsedOptionNames {
+    private static class ParsedOptionNames{
 
         private List<String> names = new ArrayList<>();
         private boolean clobber = false;
@@ -248,7 +248,7 @@ public final class RuntimeOptionsBuilder {
         }
     }
 
-    static final class ParsedPluginData {
+    static final class ParsedPluginData{
 
         private ParsedPlugins formatters = new ParsedPlugins();
         private ParsedPlugins summaryPrinters = new ParsedPlugins();
@@ -280,7 +280,7 @@ public final class RuntimeOptionsBuilder {
             summaryPrinters.updateNameList(pluginSummaryPrinterNames);
         }
 
-        private static class ParsedPlugins {
+        private static class ParsedPlugins{
 
             private List<Options.Plugin> names = new ArrayList<>();
             private boolean clobber = false;

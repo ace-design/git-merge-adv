@@ -57,6 +57,60 @@ public class TestPerformance extends BaseTest{
     private int currentPass;
     int configOutputSize = 0;
 
+
+    /** Parse all java files under this package within the JDK_SOURCE_ROOT. */
+
+    /** True to load java files from sub-packages of {@link #TOP_PACKAGE}. */
+
+    /**
+     *  True to use the Java grammar with expressions in the v4 left-recursive syntax (Java-LR.g). False to use
+     *  the standard grammar (Java.g). In either case, the grammar is renamed in the temporary directory to Java.g
+     *  before compiling.
+     */
+
+    /**
+     *  True to specify the -Xforce-atn option when generating the grammar, forcing all decisions in JavaParser to
+     *  be handled by {@link ParserATNSimulator#adaptivePredict}.
+     */
+
+    /**
+     *  True to specify the -atn option when generating the grammar. This will cause ANTLR
+     *  to export the ATN for each decision as a DOT (GraphViz) file.
+     */
+
+    /**
+     *  True to delete temporary (generated and compiled) files when the test completes.
+     */
+
+    /** Parse each file with JavaParser.compilationUnit */
+
+    /** True to use {@link BailErrorStrategy}, False to use {@link DefaultErrorStrategy} */
+
+    /** This value is passed to {@link Parser#setBuildParseTree}. */
+
+    /**
+     *  Use ParseTreeWalker.DEFAULT.walk with the BlankJavaParserListener to show parse tree walking overhead.
+     *  If {@link #BUILD_PARSE_TREES} is false, the listener will instead be called during the parsing process via
+     *  {@link Parser#addParseListener}.
+     */
+
+    /**
+     *  If true, a single JavaLexer will be used, and {@link Lexer#setInputStream} will be called to initialize it
+     *  for each source file. In this mode, the cached DFA will be persisted throughout the lexing process.
+     */
+
+    /**
+     *  If true, a single JavaParser will be used, and {@link Parser#setInputStream} will be called to initialize it
+     *  for each source file. In this mode, the cached DFA will be persisted throughout the parsing process.
+     */
+
+    /**
+     * If true, the shared lexer and parser are reset after each pass. If false, all passes after the first will
+     * be fully "warmed up", which makes them faster and can compare them to the first warm-up pass, but it will
+     * not distinguish bytecode load/JIT time from warm-up time during the first pass.
+     */
+
+    /** Total number of passes to make over the source */
     @Test
     //@Ignore
     public void compileJdk() throws IOException {
@@ -142,10 +196,20 @@ public class TestPerformance extends BaseTest{
 
         return builder.toString();
     }
+
+    /**
+     *  This method is separate from {@link #parse2} so the first pass can be distinguished when analyzing
+     *  profiler results.
+     */
     protected void parse1(JavaParserFactory factory, Collection<CharStream> sources) {
         System.gc();
         parseSources(factory, sources);
     }
+
+    /**
+     *  This method is separate from {@link #parse1} so the first pass can be distinguished when analyzing
+     *  profiler results.
+     */
     protected void parse2(JavaParserFactory factory, Collection<CharStream> sources) {
         System.gc();
         parseSources(factory, sources);
@@ -222,6 +286,77 @@ public class TestPerformance extends BaseTest{
         }
         finally {
             isr.close();
+        }
+    }
+    protected JavaParserFactory getParserFactory() {
+        try {
+            ClassLoader loader = new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() }, ClassLoader.getSystemClassLoader());
+            @SuppressWarnings({"unchecked"})
+            final Class<? extends Lexer> lexerClass = (Class<? extends Lexer>)loader.loadClass("JavaLexer");
+            @SuppressWarnings({"unchecked"})
+            final Class<? extends Parser> parserClass = (Class<? extends Parser>)loader.loadClass("JavaParser");
+            @SuppressWarnings({"unchecked"})
+            final Class<? extends ParseTreeListener<Token>> listenerClass = (Class<? extends ParseTreeListener<Token>>)loader.loadClass("JavaBaseListener");
+            TestPerformance.sharedListener = listenerClass.newInstance();
+
+            final Constructor<? extends Lexer> lexerCtor = lexerClass.getConstructor(CharStream.class);
+            final Constructor<? extends Parser> parserCtor = parserClass.getConstructor(TokenStream.class);
+
+            // construct initial instances of the lexer and parser to deserialize their ATNs
+            lexerCtor.newInstance(new ANTLRInputStream(""));
+            parserCtor.newInstance(new CommonTokenStream());
+
+            return new JavaParserFactory() {
+                @SuppressWarnings({"PointlessBooleanExpression"})
+                @Override
+                public void parseFile(CharStream input) {
+                    try {
+                        if (REUSE_LEXER && sharedLexer != null) {
+                            sharedLexer.setInputStream(input);
+                        } else {
+                            sharedLexer = lexerCtor.newInstance(input);
+                        }
+
+                        CommonTokenStream tokens = new CommonTokenStream(sharedLexer);
+                        tokens.fill();
+                        tokenCount += tokens.size();
+
+                        if (!RUN_PARSER) {
+                            return;
+                        }
+
+                        if (REUSE_PARSER && sharedParser != null) {
+                            sharedParser.setInputStream(tokens);
+                        } else {
+                            sharedParser = parserCtor.newInstance(tokens);
+                            sharedParser.setBuildParseTree(BUILD_PARSE_TREES);
+                            if (!BUILD_PARSE_TREES && BLANK_LISTENER) {
+								// TJP commented out for now; changed interface
+//                                sharedParser.addParseListener(sharedListener);
+                            }
+                            if (BAIL_ON_ERROR) {
+                                sharedParser.setErrorHandler(new BailErrorStrategy());
+                            }
+                        }
+
+                        Method parseMethod = parserClass.getMethod("compilationUnit");
+                        Object parseResult = parseMethod.invoke(sharedParser);
+                        Assert.assertTrue(parseResult instanceof ParseTree);
+
+                        if (BUILD_PARSE_TREES && BLANK_LISTENER) {
+                            ParseTreeWalker.DEFAULT.walk(sharedListener, (ParseTree)parseResult);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace(System.out);
+                        throw new IllegalStateException(e);
+                    }
+                }
+            };
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            lastTestFailed = true;
+            Assert.fail(e.getMessage());
+            throw new IllegalStateException(e);
         }
     }
     protected void parseSources(JavaParserFactory factory, Collection<CharStream> sources) {
@@ -325,77 +460,6 @@ public class TestPerformance extends BaseTest{
                     }
                 }
             }
-        }
-    }
-    protected JavaParserFactory getParserFactory() {
-        try {
-            ClassLoader loader = new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() }, ClassLoader.getSystemClassLoader());
-            @SuppressWarnings({"unchecked"})
-            final Class<? extends Lexer> lexerClass = (Class<? extends Lexer>)loader.loadClass("JavaLexer");
-            @SuppressWarnings({"unchecked"})
-            final Class<? extends Parser> parserClass = (Class<? extends Parser>)loader.loadClass("JavaParser");
-            @SuppressWarnings({"unchecked"})
-            final Class<? extends ParseTreeListener<Token>> listenerClass = (Class<? extends ParseTreeListener<Token>>)loader.loadClass("JavaBaseListener");
-            TestPerformance.sharedListener = listenerClass.newInstance();
-
-            final Constructor<? extends Lexer> lexerCtor = lexerClass.getConstructor(CharStream.class);
-            final Constructor<? extends Parser> parserCtor = parserClass.getConstructor(TokenStream.class);
-
-            // construct initial instances of the lexer and parser to deserialize their ATNs
-            lexerCtor.newInstance(new ANTLRInputStream(""));
-            parserCtor.newInstance(new CommonTokenStream());
-
-            return new JavaParserFactory() {
-                @SuppressWarnings({"PointlessBooleanExpression"})
-                @Override
-                public void parseFile(CharStream input) {
-                    try {
-                        if (REUSE_LEXER && sharedLexer != null) {
-                            sharedLexer.setInputStream(input);
-                        } else {
-                            sharedLexer = lexerCtor.newInstance(input);
-                        }
-
-                        CommonTokenStream tokens = new CommonTokenStream(sharedLexer);
-                        tokens.fill();
-                        tokenCount += tokens.size();
-
-                        if (!RUN_PARSER) {
-                            return;
-                        }
-
-                        if (REUSE_PARSER && sharedParser != null) {
-                            sharedParser.setInputStream(tokens);
-                        } else {
-                            sharedParser = parserCtor.newInstance(tokens);
-                            sharedParser.setBuildParseTree(BUILD_PARSE_TREES);
-                            if (!BUILD_PARSE_TREES && BLANK_LISTENER) {
-								// TJP commented out for now; changed interface
-//                                sharedParser.addParseListener(sharedListener);
-                            }
-                            if (BAIL_ON_ERROR) {
-                                sharedParser.setErrorHandler(new BailErrorStrategy());
-                            }
-                        }
-
-                        Method parseMethod = parserClass.getMethod("compilationUnit");
-                        Object parseResult = parseMethod.invoke(sharedParser);
-                        Assert.assertTrue(parseResult instanceof ParseTree);
-
-                        if (BUILD_PARSE_TREES && BLANK_LISTENER) {
-                            ParseTreeWalker.DEFAULT.walk(sharedListener, (ParseTree)parseResult);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace(System.out);
-                        throw new IllegalStateException(e);
-                    }
-                }
-            };
-        } catch (Exception e) {
-            e.printStackTrace(System.out);
-            lastTestFailed = true;
-            Assert.fail(e.getMessage());
-            throw new IllegalStateException(e);
         }
     }
 }

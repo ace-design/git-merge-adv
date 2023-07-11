@@ -73,196 +73,6 @@ public class ParserATNFactory implements ATNFactory{
     protected final List<Triple<Rule, ATNState, ATNState>> preventEpsilonOptionalBlocks =
 		new ArrayList<Triple<Rule, ATNState, ATNState>>();
 
-    @Override
-	public void setCurrentRuleName(String name) {
-		this.currentRule = g.getRule(name);
-	}
-    @Override
-	public void setCurrentOuterAlt(int alt) {
-		currentOuterAlt = alt;
-	}
-    @Override
-	public Handle rule(GrammarAST ruleAST, String name, Handle blk) {
-		Rule r = g.getRule(name);
-		RuleStartState start = atn.ruleToStartState[r.index];
-		epsilon(start, blk.left);
-		RuleStopState stop = atn.ruleToStopState[r.index];
-		epsilon(blk.right, stop);
-		Handle h = new Handle(start, stop);
-//		ATNPrinter ser = new ATNPrinter(g, h.left);
-//		System.out.println(ruleAST.toStringTree()+":\n"+ser.asString());
-		ruleAST.atnState = start;
-		return h;
-	}
-    @Override
-	public Handle tokenRef(TerminalAST node) {
-		ATNState left = newState(node);
-		ATNState right = newState(node);
-		int ttype = g.getTokenType(node.getText());
-		left.addTransition(new AtomTransition(right, ttype));
-		node.atnState = left;
-		return new Handle(left, right);
-	}
-    @Override
-	public Handle set(GrammarAST associatedAST, List<GrammarAST> terminals, boolean invert) {
-		ATNState left = newState(associatedAST);
-		ATNState right = newState(associatedAST);
-		IntervalSet set = new IntervalSet();
-		for (GrammarAST t : terminals) {
-			int ttype = g.getTokenType(t.getText());
-			set.add(ttype);
-		}
-		if ( invert ) {
-			left.addTransition(new NotSetTransition(right, set));
-		}
-		else {
-			left.addTransition(new SetTransition(right, set));
-		}
-		associatedAST.atnState = left;
-		return new Handle(left, right);
-	}
-    @Override
-	public Handle range(GrammarAST a, GrammarAST b) {
-		throw new UnsupportedOperationException();
-	}
-    protected int getTokenType(GrammarAST atom) {
-		int ttype;
-		if ( g.isLexer() ) {
-			ttype = CharSupport.getCharValueFromGrammarCharLiteral(atom.getText());
-		}
-		else {
-			ttype = g.getTokenType(atom.getText());
-		}
-		return ttype;
-	}
-    @Override
-	public Handle stringLiteral(TerminalAST stringLiteralAST) {
-		return tokenRef(stringLiteralAST);
-	}
-    @Override
-	public Handle charSetLiteral(GrammarAST charSetAST) {
-		return null;
-	}
-    @Override
-	public Handle ruleRef(GrammarAST node) {
-		Handle h = _ruleRef(node);
-		return h;
-	}
-    public void addFollowLink(int ruleIndex, ATNState right) {
-		// add follow edge from end of invoked rule
-		RuleStopState stop = atn.ruleToStopState[ruleIndex];
-//        System.out.println("add follow link from "+ruleIndex+" to "+right);
-		epsilon(stop, right);
-	}
-    @Override
-	public Handle epsilon(GrammarAST node) {
-		ATNState left = newState(node);
-		ATNState right = newState(node);
-		epsilon(left, right);
-		node.atnState = left;
-		return new Handle(left, right);
-	}
-    @Override
-	public Handle action(ActionAST action) {
-		//System.out.println("action: "+action);
-		ATNState left = newState(action);
-		ATNState right = newState(action);
-		ActionTransition a = new ActionTransition(right, currentRule.index);
-		left.addTransition(a);
-		action.atnState = left;
-		return new Handle(left, right);
-	}
-    @Override
-	public Handle action(String action) {
-		return null;
-	}
-    protected Handle makeBlock(BlockStartState start, GrammarAST blkAST, List<Handle> alts) {
-		BlockEndState end = newState(BlockEndState.class, blkAST);
-		start.endState = end;
-		for (Handle alt : alts) {
-			// hook alts up to decision block
-			epsilon(start, alt.left);
-			epsilon(alt.right, end);
-			// no back link in ATN so must walk entire alt to see if we can
-			// strip out the epsilon to 'end' state
-			TailEpsilonRemover opt = new TailEpsilonRemover(atn);
-			opt.visit(alt.left);
-		}
-		Handle h = new Handle(start, end);
-//		FASerializer ser = new FASerializer(g, h.left);
-//		System.out.println(blkAST.toStringTree()+":\n"+ser);
-		blkAST.atnState = start;
-		return h;
-	}
-    @NotNull
-	@Override
-	public Handle alt(@NotNull List<Handle> els) {
-		return elemList(els);
-	}
-    @NotNull
-	@Override
-	public Handle wildcard(GrammarAST node) {
-		ATNState left = newState(node);
-		ATNState right = newState(node);
-		left.addTransition(new WildcardTransition(right));
-		node.atnState = left;
-		return new Handle(left, right);
-	}
-    public int addEOFTransitionToStartRules() {
-		int n = 0;
-		ATNState eofTarget = newState(null); // one unique EOF target for all rules
-		for (Rule r : g.rules.values()) {
-			ATNState stop = atn.ruleToStopState[r.index];
-			if ( stop.getNumberOfTransitions()>0 ) continue;
-			n++;
-			Transition t = new AtomTransition(eofTarget, Token.EOF);
-			stop.addTransition(t);
-		}
-		return n;
-	}
-    @Override
-	public Handle label(Handle t) {
-		return t;
-	}
-    @Override
-	public Handle listLabel(Handle t) {
-		return t;
-	}
-    @NotNull
-	@Override
-	public ATNState newState() { return newState(null); }
-    public boolean expectNonGreedy(@NotNull BlockAST blkAST) {
-		if ( blockHasWildcardAlt(blkAST) ) {
-			return true;
-		}
-
-		return false;
-	}
-    public static boolean blockHasWildcardAlt(@NotNull GrammarAST block) {
-		for (Object alt : block.getChildren()) {
-			if ( !(alt instanceof AltAST) ) continue;
-			AltAST altAST = (AltAST)alt;
-			if ( altAST.getChildCount()==1 ) {
-				Tree e = altAST.getChild(0);
-				if ( e.getType()==ANTLRParser.WILDCARD ) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-    @Override
-	public Handle lexerAltCommands(Handle alt, Handle cmds) {
-		return null;
-	}
-    @Override
-	public String lexerCallCommand(GrammarAST ID, GrammarAST arg) {
-		return null;
-	}
-    @Override
-	public String lexerCommand(GrammarAST ID) {
-		return null;
-	}
     public ParserATNFactory(@NotNull Grammar g) {
 		if (g == null) {
 			throw new NullPointerException("g");
@@ -334,6 +144,187 @@ public class ParserATNFactory implements ATNFactory{
 		}
 	}
     @Override
+	public void setCurrentRuleName(String name) {
+		this.currentRule = g.getRule(name);
+	}
+    @Override
+	public void setCurrentOuterAlt(int alt) {
+		currentOuterAlt = alt;
+	}
+
+ /* start->ruleblock->end */
+    @Override
+	public Handle rule(GrammarAST ruleAST, String name, Handle blk) {
+		Rule r = g.getRule(name);
+		RuleStartState start = atn.ruleToStartState[r.index];
+		epsilon(start, blk.left);
+		RuleStopState stop = atn.ruleToStopState[r.index];
+		epsilon(blk.right, stop);
+		Handle h = new Handle(start, stop);
+//		ATNPrinter ser = new ATNPrinter(g, h.left);
+//		System.out.println(ruleAST.toStringTree()+":\n"+ser.asString());
+		ruleAST.atnState = start;
+		return h;
+	}
+
+ /** From label {@code A} build graph {@code o-A->o}. */
+    @Override
+	public Handle tokenRef(TerminalAST node) {
+		ATNState left = newState(node);
+		ATNState right = newState(node);
+		int ttype = g.getTokenType(node.getText());
+		left.addTransition(new AtomTransition(right, ttype));
+		node.atnState = left;
+		return new Handle(left, right);
+	}
+
+ /** From set build single edge graph {@code o->o-set->o}.  To conform to
+     *  what an alt block looks like, must have extra state on left.
+	 *  This also handles {@code ~A}, converted to {@code ~{A}} set.
+     */
+    @Override
+	public Handle set(GrammarAST associatedAST, List<GrammarAST> terminals, boolean invert) {
+		ATNState left = newState(associatedAST);
+		ATNState right = newState(associatedAST);
+		IntervalSet set = new IntervalSet();
+		for (GrammarAST t : terminals) {
+			int ttype = g.getTokenType(t.getText());
+			set.add(ttype);
+		}
+		if ( invert ) {
+			left.addTransition(new NotSetTransition(right, set));
+		}
+		else {
+			left.addTransition(new SetTransition(right, set));
+		}
+		associatedAST.atnState = left;
+		return new Handle(left, right);
+	}
+
+ /** Not valid for non-lexers. */
+    @Override
+	public Handle range(GrammarAST a, GrammarAST b) {
+		throw new UnsupportedOperationException();
+	}
+    protected int getTokenType(GrammarAST atom) {
+		int ttype;
+		if ( g.isLexer() ) {
+			ttype = CharSupport.getCharValueFromGrammarCharLiteral(atom.getText());
+		}
+		else {
+			ttype = g.getTokenType(atom.getText());
+		}
+		return ttype;
+	}
+
+ /** For a non-lexer, just build a simple token reference atom. */
+    @Override
+	public Handle stringLiteral(TerminalAST stringLiteralAST) {
+		return tokenRef(stringLiteralAST);
+	}
+
+ /** {@code [Aa]} char sets not allowed in parser */
+    @Override
+	public Handle charSetLiteral(GrammarAST charSetAST) {
+		return null;
+	}
+
+ /**
+	 * For reference to rule {@code r}, build
+	 *
+	 * <pre>
+	 *  o->(r)  o
+	 * </pre>
+	 *
+	 * where {@code (r)} is the start of rule {@code r} and the trailing
+	 * {@code o} is not linked to from rule ref state directly (uses
+	 * {@link RuleTransition#followState}).
+	 */
+    @Override
+	public Handle ruleRef(GrammarAST node) {
+		Handle h = _ruleRef(node);
+		return h;
+	}
+    public Handle _ruleRef(GrammarAST node) {
+		Rule r = g.getRule(node.getText());
+		if ( r==null ) {
+			g.tool.errMgr.toolError(ErrorType.INTERNAL_ERROR, "Rule "+node.getText()+" undefined");
+			return null;
+		}
+		RuleStartState start = atn.ruleToStartState[r.index];
+		ATNState left = newState(node);
+		ATNState right = newState(node);
+		int precedence = 0;
+		if (((GrammarASTWithOptions)node).getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME) != null) {
+			precedence = Integer.parseInt(((GrammarASTWithOptions)node).getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME));
+		}
+		RuleTransition call = new RuleTransition(start, r.index, precedence, right);
+		left.addTransition(call);
+
+		node.atnState = left;
+		return new Handle(left, right);
+	}
+    public void addFollowLink(int ruleIndex, ATNState right) {
+		// add follow edge from end of invoked rule
+		RuleStopState stop = atn.ruleToStopState[ruleIndex];
+//        System.out.println("add follow link from "+ruleIndex+" to "+right);
+		epsilon(stop, right);
+	}
+
+ /** From an empty alternative build {@code o-e->o}. */
+    @Override
+	public Handle epsilon(GrammarAST node) {
+		ATNState left = newState(node);
+		ATNState right = newState(node);
+		epsilon(left, right);
+		node.atnState = left;
+		return new Handle(left, right);
+	}
+
+ /** Build what amounts to an epsilon transition with an action.
+	 *  The action goes into ATN though it is ignored during prediction
+	 *  if {@link ActionTransition#actionIndex actionIndex}{@code <0}.
+	 */
+    @Override
+	public Handle action(ActionAST action) {
+		//System.out.println("action: "+action);
+		ATNState left = newState(action);
+		ATNState right = newState(action);
+		ActionTransition a = new ActionTransition(right, currentRule.index);
+		left.addTransition(a);
+		action.atnState = left;
+		return new Handle(left, right);
+	}
+    @Override
+	public Handle action(String action) {
+		return null;
+	}
+
+ /**
+	 * From {@code A|B|..|Z} alternative block build
+	 *
+	 * <pre>
+	 *  o->o-A->o->o (last ATNState is BlockEndState pointed to by all alts)
+	 *  |          ^
+	 *  |->o-B->o--|
+	 *  |          |
+	 *  ...        |
+	 *  |          |
+	 *  |->o-Z->o--|
+	 * </pre>
+	 *
+	 * So start node points at every alternative with epsilon transition and
+	 * every alt right side points at a block end ATNState.
+	 * <p/>
+	 * Special case: only one alternative: don't make a block with alt
+	 * begin/end.
+	 * <p/>
+	 * Special case: if just a list of tokens/chars/sets, then collapse to a
+	 * single edged o-set->o graph.
+	 * <p/>
+	 * TODO: Set alt number (1..n) in the states?
+	 */
+    @Override
 	public Handle block(BlockAST blkAST, GrammarAST ebnfRoot, List<Handle> alts) {
 		if ( ebnfRoot==null ) {
 			if ( alts.size()==1 ) {
@@ -383,6 +374,29 @@ public class ParserATNFactory implements ATNFactory{
 
 		return h;
 	}
+    protected Handle makeBlock(BlockStartState start, GrammarAST blkAST, List<Handle> alts) {
+		BlockEndState end = newState(BlockEndState.class, blkAST);
+		start.endState = end;
+		for (Handle alt : alts) {
+			// hook alts up to decision block
+			epsilon(start, alt.left);
+			epsilon(alt.right, end);
+			// no back link in ATN so must walk entire alt to see if we can
+			// strip out the epsilon to 'end' state
+			TailEpsilonRemover opt = new TailEpsilonRemover(atn);
+			opt.visit(alt.left);
+		}
+		Handle h = new Handle(start, end);
+//		FASerializer ser = new FASerializer(g, h.left);
+//		System.out.println(blkAST.toStringTree()+":\n"+ser);
+		blkAST.atnState = start;
+		return h;
+	}
+    @NotNull
+	@Override
+	public Handle alt(@NotNull List<Handle> els) {
+		return elemList(els);
+	}
     @NotNull
 	public Handle elemList(@NotNull List<Handle> els) {
 		int n = els.size();
@@ -413,6 +427,19 @@ public class ParserATNFactory implements ATNFactory{
 		}
 		return new Handle(first.left, last.right);
 	}
+
+ /**
+	 * From {@code (A)?} build either:
+	 *
+	 * <pre>
+	 *  o--A->o
+	 *  |     ^
+	 *  o---->|
+	 * </pre>
+	 *
+	 * or, if {@code A} is a block, just add an empty alt to the end of the
+	 * block
+	 */
     @NotNull
 	@Override
 	public Handle optional(@NotNull GrammarAST optAST, @NotNull Handle blk) {
@@ -427,6 +454,19 @@ public class ParserATNFactory implements ATNFactory{
 		optAST.atnState = blk.left;
 		return blk;
 	}
+
+ /**
+	 * From {@code (blk)+} build
+	 *
+	 * <pre>
+	 *   |---------|
+	 *   v         |
+	 *  [o-blk-o]->o->o
+	 * </pre>
+	 *
+	 * We add a decision for loop back node to the existing one at {@code blk}
+	 * start.
+	 */
     @NotNull
 	@Override
 	public Handle plus(@NotNull GrammarAST plusAST, @NotNull Handle blk) {
@@ -461,6 +501,22 @@ public class ParserATNFactory implements ATNFactory{
 
 		return new Handle(blkStart, end);
 	}
+
+ /**
+	 * From {@code (blk)*} build {@code ( blk+ )?} with *two* decisions, one for
+	 * entry and one for choosing alts of {@code blk}.
+	 *
+	 * <pre>
+	 *   |-------------|
+	 *   v             |
+	 *   o--[o-blk-o]->o  o
+	 *   |                ^
+	 *   -----------------|
+	 * </pre>
+	 *
+	 * Note that the optional bypass must jump outside the loop as
+	 * {@code (A|B)*} is not the same thing as {@code (A|B|)+}.
+	 */
     @NotNull
 	@Override
 	public Handle star(@NotNull GrammarAST starAST, @NotNull Handle elem) {
@@ -496,6 +552,17 @@ public class ParserATNFactory implements ATNFactory{
 		starAST.atnState = entry;	// decision is to enter/exit; blk is its own decision
 		return new Handle(entry, end);
 	}
+
+ /** Build an atom with all possible values in its label. */
+    @NotNull
+	@Override
+	public Handle wildcard(GrammarAST node) {
+		ATNState left = newState(node);
+		ATNState right = newState(node);
+		left.addTransition(new WildcardTransition(right));
+		node.atnState = left;
+		return new Handle(left, right);
+	}
     protected void epsilon(ATNState a, @NotNull ATNState b) {
 		epsilon(a, b, false);
 	}
@@ -504,6 +571,49 @@ public class ParserATNFactory implements ATNFactory{
 			int index = prepend ? 0 : a.getNumberOfTransitions();
 			a.addTransition(index, new EpsilonTransition(b));
 		}
+	}
+
+ /** Define all the rule begin/end ATNStates to solve forward reference
+	 *  issues.
+	 */
+    void createRuleStartAndStopATNStates() {
+		atn.ruleToStartState = new RuleStartState[g.rules.size()];
+		atn.ruleToStopState = new RuleStopState[g.rules.size()];
+		for (Rule r : g.rules.values()) {
+			RuleStartState start = newState(RuleStartState.class, r.ast);
+			RuleStopState stop = newState(RuleStopState.class, r.ast);
+			start.stopState = stop;
+			start.isPrecedenceRule = r instanceof LeftRecursiveRule;
+			start.setRuleIndex(r.index);
+			stop.setRuleIndex(r.index);
+			atn.ruleToStartState[r.index] = start;
+			atn.ruleToStopState[r.index] = stop;
+		}
+	}
+
+ /** Build what amounts to an epsilon transition with a semantic
+	 *  predicate action.  The {@code pred} is a pointer into the AST of
+	 *  the {@link ANTLRParser#SEMPRED} token.
+	 */
+    @Override
+	public Handle sempred(PredAST pred) {
+		//System.out.println("sempred: "+ pred);
+		ATNState left = newState(pred);
+		ATNState right = newState(pred);
+
+		AbstractPredicateTransition p;
+		if (pred.getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME) != null) {
+			int precedence = Integer.parseInt(pred.getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME));
+			p = new PrecedencePredicateTransition(right, precedence);
+		}
+		else {
+			boolean isCtxDependent = UseDefAnalyzer.actionIsContextDependent(pred);
+			p = new PredicateTransition(right, currentRule.index, g.sempreds.get(pred), isCtxDependent);
+		}
+
+		left.addTransition(p);
+		pred.atnState = left;
+		return new Handle(left, right);
 	}
     public void addRuleFollowLinks() {
         for (ATNState p : atn.states) {
@@ -516,6 +626,35 @@ public class ParserATNFactory implements ATNFactory{
             }
         }
     }
+
+ /** Add an EOF transition to any rule end ATNState that points to nothing
+     *  (i.e., for all those rules not invoked by another rule).  These
+     *  are start symbols then.
+	 *
+	 *  Return the number of grammar entry points; i.e., how many rules are
+	 *  not invoked by another rule (they can only be invoked from outside).
+	 *  These are the start rules.
+     */
+    public int addEOFTransitionToStartRules() {
+		int n = 0;
+		ATNState eofTarget = newState(null); // one unique EOF target for all rules
+		for (Rule r : g.rules.values()) {
+			ATNState stop = atn.ruleToStopState[r.index];
+			if ( stop.getNumberOfTransitions()>0 ) continue;
+			n++;
+			Transition t = new AtomTransition(eofTarget, Token.EOF);
+			stop.addTransition(t);
+		}
+		return n;
+	}
+    @Override
+	public Handle label(Handle t) {
+		return t;
+	}
+    @Override
+	public Handle listLabel(Handle t) {
+		return t;
+	}
     @NotNull
 	public <T extends ATNState> T newState(@NotNull Class<T> nodeType, GrammarAST node) {
 		Exception cause;
@@ -544,63 +683,49 @@ public class ParserATNFactory implements ATNFactory{
 		throw new UnsupportedOperationException(message, cause);
 	}
     @NotNull
+	@Override
+	public ATNState newState() { return newState(null); }
+    @NotNull
 	public ATNState newState(@Nullable GrammarAST node) {
 		ATNState n = new BasicState();
 		n.setRuleIndex(currentRule.index);
 		atn.addState(n);
 		return n;
 	}
-    public Handle _ruleRef(GrammarAST node) {
-		Rule r = g.getRule(node.getText());
-		if ( r==null ) {
-			g.tool.errMgr.toolError(ErrorType.INTERNAL_ERROR, "Rule "+node.getText()+" undefined");
-			return null;
+    public boolean expectNonGreedy(@NotNull BlockAST blkAST) {
+		if ( blockHasWildcardAlt(blkAST) ) {
+			return true;
 		}
-		RuleStartState start = atn.ruleToStartState[r.index];
-		ATNState left = newState(node);
-		ATNState right = newState(node);
-		int precedence = 0;
-		if (((GrammarASTWithOptions)node).getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME) != null) {
-			precedence = Integer.parseInt(((GrammarASTWithOptions)node).getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME));
-		}
-		RuleTransition call = new RuleTransition(start, r.index, precedence, right);
-		left.addTransition(call);
 
-		node.atnState = left;
-		return new Handle(left, right);
+		return false;
+	}
+
+ /**
+	 * {@code (BLOCK (ALT .))} or {@code (BLOCK (ALT 'a') (ALT .))}.
+	 */
+    public static boolean blockHasWildcardAlt(@NotNull GrammarAST block) {
+		for (Object alt : block.getChildren()) {
+			if ( !(alt instanceof AltAST) ) continue;
+			AltAST altAST = (AltAST)alt;
+			if ( altAST.getChildCount()==1 ) {
+				Tree e = altAST.getChild(0);
+				if ( e.getType()==ANTLRParser.WILDCARD ) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
     @Override
-	public Handle sempred(PredAST pred) {
-		//System.out.println("sempred: "+ pred);
-		ATNState left = newState(pred);
-		ATNState right = newState(pred);
-
-		AbstractPredicateTransition p;
-		if (pred.getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME) != null) {
-			int precedence = Integer.parseInt(pred.getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME));
-			p = new PrecedencePredicateTransition(right, precedence);
-		}
-		else {
-			boolean isCtxDependent = UseDefAnalyzer.actionIsContextDependent(pred);
-			p = new PredicateTransition(right, currentRule.index, g.sempreds.get(pred), isCtxDependent);
-		}
-
-		left.addTransition(p);
-		pred.atnState = left;
-		return new Handle(left, right);
+	public Handle lexerAltCommands(Handle alt, Handle cmds) {
+		return null;
 	}
-    void createRuleStartAndStopATNStates() {
-		atn.ruleToStartState = new RuleStartState[g.rules.size()];
-		atn.ruleToStopState = new RuleStopState[g.rules.size()];
-		for (Rule r : g.rules.values()) {
-			RuleStartState start = newState(RuleStartState.class, r.ast);
-			RuleStopState stop = newState(RuleStopState.class, r.ast);
-			start.stopState = stop;
-			start.isPrecedenceRule = r instanceof LeftRecursiveRule;
-			start.setRuleIndex(r.index);
-			stop.setRuleIndex(r.index);
-			atn.ruleToStartState[r.index] = start;
-			atn.ruleToStopState[r.index] = stop;
-		}
+    @Override
+	public String lexerCallCommand(GrammarAST ID, GrammarAST arg) {
+		return null;
+	}
+    @Override
+	public String lexerCommand(GrammarAST ID) {
+		return null;
 	}
 }

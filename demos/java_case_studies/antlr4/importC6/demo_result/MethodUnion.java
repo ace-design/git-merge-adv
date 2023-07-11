@@ -22,7 +22,7 @@ import java.util.List;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.misc.IntegerList;
 
-public class ATNSerializer {
+public class ATNSerializer{
 
     public Grammar g;
     public ATN atn;
@@ -32,87 +32,28 @@ public class ATNSerializer {
 		this.g = g;
 		this.atn = atn;
 	}
-    public String decode(char[] data) {
-		StringBuilder buf = new StringBuilder();
-		int p = 0;
-		int grammarType = ATNSimulator.toInt(data[p++]);
-		int maxType = ATNSimulator.toInt(data[p++]);
-		buf.append("max type ").append(maxType).append("\n");
-		int nstates = ATNSimulator.toInt(data[p++]);
-		for (int i=1; i<=nstates; i++) {
-			int stype = ATNSimulator.toInt(data[p++]);
-            if ( stype==ATNState.INVALID_TYPE ) continue; // ignore bad type of states
-			int ruleIndex = ATNSimulator.toInt(data[p++]);
-			String arg = "";
-			if ( stype == ATNState.LOOP_END ) {
-				int loopBackStateNumber = ATNSimulator.toInt(data[p++]);
-				arg = " "+loopBackStateNumber;
-			}
-			buf.append(i - 1).append(":")
-				.append(ATNState.serializationNames.get(stype)).append(" ")
-				.append(ruleIndex).append(arg).append("\n");
-		}
-		int nrules = ATNSimulator.toInt(data[p++]);
-		for (int i=0; i<nrules; i++) {
-			int s = ATNSimulator.toInt(data[p++]);
-            if ( g.isLexer() ) {
-                int arg1 = ATNSimulator.toInt(data[p++]);
-                int arg2 = ATNSimulator.toInt(data[p++]);
-                buf.append("rule ").append(i).append(":").append(s).append(" ").append(arg1).append(",").append(arg2).append('\n');
-            }
-            else {
-                buf.append("rule ").append(i).append(":").append(s).append('\n');
-            }
-		}
-		int nmodes = ATNSimulator.toInt(data[p++]);
-		for (int i=0; i<nmodes; i++) {
-			int s = ATNSimulator.toInt(data[p++]);
-			buf.append("mode ").append(i).append(":").append(s).append('\n');
-		}
-		int nsets = ATNSimulator.toInt(data[p++]);
-		for (int i=1; i<=nsets; i++) {
-			int nintervals = ATNSimulator.toInt(data[p++]);
-			buf.append(i-1).append(":");
-			for (int j=1; j<=nintervals; j++) {
-				if ( j>1 ) buf.append(", ");
-				buf.append(getTokenName(ATNSimulator.toInt(data[p]))).append("..").append(getTokenName(ATNSimulator.toInt(data[p + 1])));
-				p += 2;
-			}
-			buf.append("\n");
-		}
-		int nedges = ATNSimulator.toInt(data[p++]);
-		for (int i=1; i<=nedges; i++) {
-			int src = ATNSimulator.toInt(data[p]);
-			int trg = ATNSimulator.toInt(data[p + 1]);
-			int ttype = ATNSimulator.toInt(data[p + 2]);
-			int arg1 = ATNSimulator.toInt(data[p + 3]);
-			int arg2 = ATNSimulator.toInt(data[p + 4]);
-			int arg3 = ATNSimulator.toInt(data[p + 5]);
-			buf.append(src).append("->").append(trg)
-				.append(" ").append(Transition.serializationNames.get(ttype))
-				.append(" ").append(arg1).append(",").append(arg2).append(",").append(arg3)
-				.append("\n");
-			p += 6;
-		}
-		int ndecisions = ATNSimulator.toInt(data[p++]);
-		for (int i=1; i<=ndecisions; i++) {
-			int s = ATNSimulator.toInt(data[p++]);
-			int isGreedy = ATNSimulator.toInt(data[p++]);
-			buf.append(i-1).append(":").append(s).append(" ").append(isGreedy).append("\n");
-		}
-		return buf.toString();
-	}
-    public String getTokenName(int t) {
-		if ( t==-1 ) return "EOF";
-		if ( g!=null ) return g.getTokenDisplayName(t);
-		return String.valueOf(t);
-	}
-    public static String getSerializedAsString(Grammar g, ATN atn) {
-		return new String(Utils.toCharArray(getSerialized(g, atn)));
-	}
-    public static char[] getSerializedAsChars(Grammar g, ATN atn) {
-		return Utils.toCharArray(new ATNSerializer(g, atn).serialize());
-	}
+
+ /** Serialize state descriptors, edge descriptors, and decision->state map
+	 *  into list of ints:
+	 *
+	 * 		grammar-type, (ANTLRParser.LEXER, ...)
+	 *  	max token type,
+	 *  	num states,
+	 *  	state-0-type ruleIndex, state-1-type ruleIndex, ... state-i-type ruleIndex optional-arg ...
+	 *  	num rules,
+	 *  	rule-1-start-state rule-1-args, rule-2-start-state  rule-2-args, ...
+	 *  	(args are token type,actionIndex in lexer else 0,0)
+	 *      num modes,
+	 *      mode-0-start-state, mode-1-start-state, ... (parser has 0 modes)
+	 *      num sets
+	 *      set-0-interval-count intervals, set-1-interval-count intervals, ...
+	 *  	num total edges,
+	 *      src, trg, edge-type, edge arg1, optional edge arg2 (present always), ...
+	 *      num decisions,
+	 *      decision-0-start-state, decision-1-start-state, ...
+	 *
+	 *  Convenient to pack into unsigned shorts to make as Java string.
+	 */
     public IntegerList serialize() {
 		IntegerList data = new IntegerList();
 		// convert grammar type to ATN const to avoid dependence on ANTLRParser
@@ -236,8 +177,91 @@ public class ATNSerializer {
 		}
 		return data;
 	}
+    public String decode(char[] data) {
+		StringBuilder buf = new StringBuilder();
+		int p = 0;
+		int grammarType = ATNSimulator.toInt(data[p++]);
+		int maxType = ATNSimulator.toInt(data[p++]);
+		buf.append("max type ").append(maxType).append("\n");
+		int nstates = ATNSimulator.toInt(data[p++]);
+		for (int i=1; i<=nstates; i++) {
+			int stype = ATNSimulator.toInt(data[p++]);
+            if ( stype==ATNState.INVALID_TYPE ) continue; // ignore bad type of states
+			int ruleIndex = ATNSimulator.toInt(data[p++]);
+			String arg = "";
+			if ( stype == ATNState.LOOP_END ) {
+				int loopBackStateNumber = ATNSimulator.toInt(data[p++]);
+				arg = " "+loopBackStateNumber;
+			}
+			buf.append(i - 1).append(":")
+				.append(ATNState.serializationNames.get(stype)).append(" ")
+				.append(ruleIndex).append(arg).append("\n");
+		}
+		int nrules = ATNSimulator.toInt(data[p++]);
+		for (int i=0; i<nrules; i++) {
+			int s = ATNSimulator.toInt(data[p++]);
+            if ( g.isLexer() ) {
+                int arg1 = ATNSimulator.toInt(data[p++]);
+                int arg2 = ATNSimulator.toInt(data[p++]);
+                buf.append("rule ").append(i).append(":").append(s).append(" ").append(arg1).append(",").append(arg2).append('\n');
+            }
+            else {
+                buf.append("rule ").append(i).append(":").append(s).append('\n');
+            }
+		}
+		int nmodes = ATNSimulator.toInt(data[p++]);
+		for (int i=0; i<nmodes; i++) {
+			int s = ATNSimulator.toInt(data[p++]);
+			buf.append("mode ").append(i).append(":").append(s).append('\n');
+		}
+		int nsets = ATNSimulator.toInt(data[p++]);
+		for (int i=1; i<=nsets; i++) {
+			int nintervals = ATNSimulator.toInt(data[p++]);
+			buf.append(i-1).append(":");
+			for (int j=1; j<=nintervals; j++) {
+				if ( j>1 ) buf.append(", ");
+				buf.append(getTokenName(ATNSimulator.toInt(data[p]))).append("..").append(getTokenName(ATNSimulator.toInt(data[p + 1])));
+				p += 2;
+			}
+			buf.append("\n");
+		}
+		int nedges = ATNSimulator.toInt(data[p++]);
+		for (int i=1; i<=nedges; i++) {
+			int src = ATNSimulator.toInt(data[p]);
+			int trg = ATNSimulator.toInt(data[p + 1]);
+			int ttype = ATNSimulator.toInt(data[p + 2]);
+			int arg1 = ATNSimulator.toInt(data[p + 3]);
+			int arg2 = ATNSimulator.toInt(data[p + 4]);
+			int arg3 = ATNSimulator.toInt(data[p + 5]);
+			buf.append(src).append("->").append(trg)
+				.append(" ").append(Transition.serializationNames.get(ttype))
+				.append(" ").append(arg1).append(",").append(arg2).append(",").append(arg3)
+				.append("\n");
+			p += 6;
+		}
+		int ndecisions = ATNSimulator.toInt(data[p++]);
+		for (int i=1; i<=ndecisions; i++) {
+			int s = ATNSimulator.toInt(data[p++]);
+			int isGreedy = ATNSimulator.toInt(data[p++]);
+			buf.append(i-1).append(":").append(s).append(" ").append(isGreedy).append("\n");
+		}
+		return buf.toString();
+	}
+    public String getTokenName(int t) {
+		if ( t==-1 ) return "EOF";
+		if ( g!=null ) return g.getTokenDisplayName(t);
+		return String.valueOf(t);
+	}
+
+ /** Used by Java target to encode short/int array as chars in string. */
+    public static String getSerializedAsString(Grammar g, ATN atn) {
+		return new String(Utils.toCharArray(getSerialized(g, atn)));
+	}
     public static IntegerList getSerialized(Grammar g, ATN atn) {
 		return new ATNSerializer(g, atn).serialize();
+	}
+    public static char[] getSerializedAsChars(Grammar g, ATN atn) {
+		return Utils.toCharArray(new ATNSerializer(g, atn).serialize());
 	}
     public static String getDecoded(Grammar g, ATN atn) {
 		IntegerList serialized = getSerialized(g, atn);
