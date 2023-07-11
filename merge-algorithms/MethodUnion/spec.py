@@ -1,7 +1,7 @@
 import copy
 import ast
 from tree_sitter import Language, Parser
-from Node import Pack, Class, Method
+from Node import Pack, Class, Method, Comment
 from abc import ABC,abstractmethod
 import os
 import copy
@@ -116,7 +116,9 @@ class Java(Lang):
 
 
     def output_body(self,body,class_name):
-        if (class_name.is_selected()):
+        if (type(class_name)==Class and class_name.is_selected()):
+            comment_ref=class_name.get_comments()
+            # print(comment_ref)
             spacing=' '*int(class_name.get_ranking()*4)
             body+='\n'+spacing+class_name.get_full_name()+'{\n\n'
             method_spacing=spacing+' '*4
@@ -127,12 +129,20 @@ class Java(Lang):
             body+='\n'
             for method in class_name.get_methods():
                 if (method.is_selected()):
+                    # print(method.get_signature())
+                    if (method.get_signature() in comment_ref.keys()):
+                        for new_comment in comment_ref[method.get_signature().strip(" ")+" "]:
+                            comment_spacing=new_comment.get_indent()*" "
+                            body+="\n"+comment_spacing+new_comment.get_comment()+"\n"
                     body+=method_spacing+method.get_method()+'\n'
             
             for sub_class in class_name.get_sub_classes():
                 body = self.output_body(body,sub_class)
         
             body+=spacing+class_name.get_closer()+'\n'
+        elif (type(class_name)==Comment):
+            body+='\n'+class_name.get_comment()+'\n'
+
         return body
 
 
@@ -272,22 +282,56 @@ class Java(Lang):
 
         method_captures+=method_query.captures(tree.root_node)
 
+
+        constructor_comments = Java_Lang.query("""
+            ((block_comment) @name
+            (constructor_declaration
+                name: (identifier) @name
+                parameters: (formal_parameters) @name ))
+        """)
+
+        method_comments = Java_Lang.query("""
+            ((block_comment) @type
+            (method_declaration
+                name: (identifier) @name
+                parameters: (formal_parameters) @parameter ))
+        """)
+
+
+        class_comments = Java_Lang.query("""
+            ((block_comment) @name
+            (class_declaration
+                name: (identifier) @name))
+        """)
+
+        method_comments=method_comments.captures(tree.root_node)+constructor_comments.captures(tree.root_node)
+
         for new_class in class_captures:
             # Tuple of class details including modifiers and name.
             class_details=new_class[0].parent.children
 
             indentation=int(class_details[0].start_point[1])
+
             new_class_name=class_details[2].text.decode()
 
+            new_full_name=""
+
+            for child in class_details:
+                if child.type!="class_body":
+                    new_full_name+=child.text.decode()+" "
+            new_full_name=new_full_name.strip(" ")
+
+
+
             #Checks whether class extends/implements another one.
-            if (class_details[3].text.decode()[0]!="{"):
-                super_class=" "+class_details[3].text.decode()
-            else:
-                super_class=" "
-            super_class=super_class.split('{')[0]
+            # if (class_details[3].text.decode()[0]!="{"):
+            #     super_class=" "+class_details[3].text.decode()
+            # else:
+            #     super_class=""
+            # super_class=super_class.split('{')[0]
 
             #Stores full class declaration
-            new_full_name=class_details[0].text.decode()+" "+class_details[1].text.decode()+" "+class_details[2].text.decode()+super_class
+            # new_full_name=class_details[0].text.decode()+" "+class_details[1].text.decode()+" "+class_details[2].text.decode()+super_class
             
             class_obj=Class(new_class_name,new_full_name,indentation,"}",version)
 
@@ -305,6 +349,7 @@ class Java(Lang):
             else:
                 all_classes[new_class_name]=[class_obj]
                 class_ref[new_full_name]=class_obj
+            
 
             # Checks if class is nested in another class. 
             # Adds it as subclass to main class if it is.
@@ -316,66 +361,115 @@ class Java(Lang):
                 if (nested_class_details.children[3].text.decode()[0]!="{"):
                     nested_class=" "+nested_class_details.children[3].text.decode()
                 else:
-                    nested_class=" "
+                    nested_class=""
                 nested_class=nested_class.split('{')[0]
                 full_nested_name=nested_class_details.children[0].text.decode()+" "+nested_class_details.children[1].text.decode()+" "+nested_class_details.children[2].text.decode()+nested_class
                 class_ref[full_nested_name].add_sub_classes(class_obj)
-        
-        #Adds all variable declarations to associated classes.
+
+        #Adds all variable declarations to associ@API(status = API.Status.STABLE)\npublic final class TestNGCucumberRunner ated classes.
         for field in field_captures:
             declaration=field[0].parent.text.decode()
-            if (field[0].parent.parent.parent.children[3].text.decode()[0]!="{"):
-                nested_class=" "+field[0].parent.parent.parent.children[3].text.decode()
-            else:
-                nested_class=" "
-            parent_class=field[0].parent.parent.parent.children[0].text.decode()+" "+field[0].parent.parent.parent.children[1].text.decode()+" "+field[0].parent.parent.parent.children[2].text.decode()+nested_class
-            class_ref[parent_class].add_declaration(declaration)
+            print(field[0].parent.parent.parent.children)
+            nested_class=""
+            for child in field[0].parent.parent.parent.children:
+                if ("body" not in child.type):
+                    nested_class+=child.text.decode()+" "
+                else:
+                    break
+            nested_class=nested_class.strip(" ")
+            print(class_ref)
+            # if (field[0].parent.parent.parent.children[3].text.decode()[0]!="{"):
+            #     nested_class=" "+field[0].parent.parent.parent.children[3].text.decode()
+            # else:
+            #     nested_class=""
+            # parent_class=field[0].parent.parent.parent.children[0].text.decode()+" "+field[0].parent.parent.parent.children[1].text.decode()+" "+field[0].parent.parent.parent.children[2].text.decode()+nested_class
+            class_ref[nested_class].add_declaration(declaration)
 
+        before="None"
         #Adds all methods to associated classes
         for method in method_captures:
             
             #Stores method as a whole
             method_description=method[0].parent.text.decode()
 
-            #Method signature used to identify equivalent methods.
-            method_signature=" "
-            index=-2
-            while ("(" not in method_signature or method_signature[0]=="("):
-                method_signature=method[0].parent.children[index].text.decode()+" "+method_signature
-                index-=1
 
-            #Extract which class the method belongs to.
+            method_signature=""
+
+            # print(method[0].parent.children)
+
+            for child in method[0].parent.children:
+                if child.type=="block" or "body" in child.type:
+                    break
+                else:
+                    if (child.type!="modifiers" and "type" not in child.type):
+                        method_signature+=child.text.decode()+" "
+                    if (child.type=="identifier"):
+                        method_name=child.text.decode()
+
+            # print(method_signature)
             super_class_details=method[0].parent.parent.parent.children
-            super_class=""
-            index=0
-            while(index<len(super_class_details) and "{" not in super_class_details[index].text.decode()):
-                super_class+=super_class_details[index].text.decode()+" "
-                index+=1
 
-            method_obj=Method(method_description,version,super_class)
+            super_class=""
+            for child in super_class_details:
+                if (child.type!="class_body"):
+                    super_class+=child.text.decode()+" "
+            
+            # super_class=""
+            # index=0
+            # while(index<len(super_class_details) and "{" not in super_class_details[index].text.decode()):
+            #     super_class+=super_class_details[index].text.decode()+" "
+            #     index+=1
+
+            method_obj=Method(method_name,method_description,method_signature,version,super_class)
 
             #Method declaration is referenced by its signature and super class.
             #Method signatures can be the same if declared in two different classes.
             if (super_class+" "+method_signature in all_methods.keys()):
                 if (method_obj not in all_methods[super_class+" "+method_signature]):
                     all_methods[super_class+" "+method_signature].append(method_obj)
-                    self.add_method(classes,method_obj,super_class,version)
+                    self.add_method(classes,method_obj,super_class,version,before)
                 else:
                     index=all_methods[super_class+" "+method_signature].index(method_obj)
                     all_methods[super_class+" "+method_signature][index].add_version(version)
             else:
                 all_methods[super_class+" "+method_signature]=[method_obj]
-                self.add_method(classes,method_obj,super_class,version)
+                self.add_method(classes,method_obj,super_class,version,before)
+            before=method_obj
+
+
+        for comment in method_comments:
+            if (comment[0].type=="block_comment"):
+                main_class=""
+                starting_line=comment[0].start_point[0]
+
+                for element in comment[0].parent.children:
+                    if (element.type=="constructor_declaration" or element.type=="method_declaration") and element.start_point[0]>starting_line:
+                        method=""
+                        # print(element.children)
+                        for child in element.children:
+                            if ("body" not in child.type and "block" not in child.type and child.type!="modifiers" and "type" not in child.type):
+                                method+=child.text.decode()+" "
+                        break
+                for child in comment[0].parent.parent.children:
+                    if child.type!="class_body":
+                        main_class+=child.text.decode()+" "
+                
+                index=comment[0].start_point[1]
+
+                comment_obj=Comment(comment[0].text.decode(),main_class,index)
+
+                class_ref[main_class.strip(" ")].add_comment(method,comment_obj)
 
         return classes
     
     #Recursively finds object for super class, and adds method object to it.
-    def add_method(self,classes,new_method,super_class,version):
+    def add_method(self,classes,new_method,super_class,version,before):
         for new_c in classes:
-            if (new_c.get_full_name().strip(" ")==super_class.strip(" ")):
-                new_c.add_method(new_method,version)
-            else:
-                self.add_method(new_c.get_sub_classes(),new_method,super_class,version)
+            if (type(new_c)==Class):
+                if (new_c.get_full_name().strip(" ")==super_class.strip(" ")):
+                    new_c.add_method(new_method,version,before)
+                else:
+                    self.add_method(new_c.get_sub_classes(),new_method,super_class,version,before)
 
     def get_method_ref(self):
         return dict(all_methods)
@@ -533,7 +627,7 @@ class Python(Lang):
                 else:
                     pointer = (codeseq.index("function "+methodName)) + 1
                 methodindent= str(nod.col_offset)
-                newMethod = Method(astor.to_source(nod),version,None,nod)
+                newMethod = Method(methodName,astor.to_source(nod),methodName,version,None,nod)
 
                 #Method declaration is referenced by its signature.
                 if (methodindent+" "+methodName in all_methods.keys()):

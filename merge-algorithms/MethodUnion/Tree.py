@@ -1,4 +1,4 @@
-from Node import Pack, End, Class, Method
+from Node import Pack, End, Class, Method, Comment
 import merger
 from spec import Python
 
@@ -42,7 +42,7 @@ class Tree:
         if isinstance(lang,Python):
             return lang.output_body()
         for branch in self.root.get_children():
-            if (type(branch) is Class):
+            if (type(branch) is Class or type(branch) is Comment):
                 body=lang.output_body(body,branch)
         return body
     
