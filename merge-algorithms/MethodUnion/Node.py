@@ -65,11 +65,20 @@ class Class:
         self.methods=[]
         self.sub_classes=[]
         self.declarations=[]
+        self.comments={}
         self.selected=False
     
-    def add_method(self,method,version):
+    def add_method(self,method,version,before):
         if (method not in self.methods):
-            self.methods.append(method)
+            if (type(before)!=str):
+                for old_method in self.methods:
+                    if (old_method.get_name()==before.get_name()):
+                        index=self.methods.index(old_method)
+                        self.methods.insert(index,method)
+                        return
+                self.methods.insert(0,method)
+            else:
+                self.methods.append(method)
         else:
             existing_method_idx=self.methods.index(method)
             self.methods[existing_method_idx].add_version(version)
@@ -85,18 +94,28 @@ class Class:
     
     def add_version(self,version):
         self.version.add(version)
+
+    def add_comment(self,method_signature,comment):
+        if method_signature in self.comments.keys():
+            if (comment not in self.comments[method_signature]):
+                self.comments[method_signature].append(comment)
+        else:
+            self.comments[method_signature]=[comment]
     
     def set_selected(self):
         self.selected=True
 
     def get_methods(self):
-        return self.methods
+        return reversed(self.methods)
     
     def get_sub_classes(self):
         return self.sub_classes
     
     def get_ranking(self):
         return self.ranking
+    
+    def get_comments(self):
+        return self.comments
     
     def get_class_name(self):
         return self.class_name
@@ -117,15 +136,17 @@ class Class:
         return self.selected
     
     def __eq__(self,obj):
-        return (self.full_name==obj.get_full_name())
+        return (type(obj)==Class and self.full_name==obj.get_full_name())
     
     def __hash__(self):
         return hash(self.get_full_name())
 
 
 class Method:
-    def __init__(self,des,version,super_class):
-        self.method_name=des
+    def __init__(self,name,des,signature,version,super_class):
+        self.name=name
+        self.full_method=des
+        self.signature=signature
         self.super=super_class
         self.version=set()
         self.version.add(version)
@@ -138,13 +159,19 @@ class Method:
         self.selected=True
 
     def overwrite_method(self,content):
-        self.method_name=content
+        self.full_method=content
 
     def get_method(self):
-        return self.method_name  
+        return self.full_method
     
     def get_version(self):
         return self.version
+    
+    def get_name(self):
+        return self.name
+    
+    def get_signature(self):
+        return self.signature
     
     def get_super(self):
         return self.super
@@ -153,8 +180,26 @@ class Method:
         return self.selected
 
     def __eq__(self,obj):
-        return (self.method_name==obj.get_method() and self.super==obj.get_super())
+        return (self.full_method==obj.get_method() and self.super==obj.get_super())
     
     def __hash__(self):
         return hash(self.get_method()) 
+
+class Comment:
+    def __init__(self,comment_body,super,indent):
+        self.comment=comment_body
+        self.super_class=super
+        self.indent=indent
+
+    def get_comment(self):
+        return self.comment
     
+    def get_indent(self):
+        return self.indent
+
+    
+    def __eq__(self,obj):
+        return (type(obj)==Comment) and self.comment==obj.get_comment()
+    
+    def __hash__(self):
+        return hash(self.comment) 
