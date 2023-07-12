@@ -2,6 +2,7 @@ import subprocess
 from Node import Pack,Class,MainRoot
 from Tree import Tree
 from init import writefile
+from spec import Python
 
 
 # merger.py is used as a starting point to run different merge algorithm. 
@@ -9,6 +10,20 @@ from init import writefile
 
 global tree
 tree=Tree(MainRoot())
+
+
+
+def git_merge(base,right,left,language):
+
+    #Temporary files to perform git 3-way merge algorithm.
+
+    writefile("base_content."+language,base)
+    writefile("right_content."+language,right)
+    writefile("left_content."+language,left)
+
+    git_rest=subprocess.run(['git', 'merge-file', '-p','left_content.'+language, 'base_content.'+language,'right_content.'+language],capture_output=True, text=True)
+    # print(git_rest.stdout.strip("\n"))
+    return git_rest.stdout
 
 def import_merge(lang,base,right,left):
     gen_tree(base, right, left)
@@ -19,7 +34,11 @@ def body_merge(lang, base, right, left):
     append_tree(lang,base,right,left)
     tree.set_classes(lang)
     tree.set_methods(lang)
-    result=tree.find_methods(lang)
+    if isinstance(lang, Python):
+        conflicted_result = git_merge(base,right,left,"py")
+        result=tree.confilct_resolver(lang,conflicted_result)
+    else:
+        result=tree.find_methods(lang)
     return result
 
 def append_tree(lang, base, right, left):
@@ -48,15 +67,5 @@ def gen_tree(base_import, right_import, left_import):
         tree.add_import(imports,"base")
 
 
-def git_merge(base,right,left,lang):
 
-    #Temporary files to perform git 3-way merge algorithm.
-
-    writefile("base_content."+lang,base)
-    writefile("right_content."+lang,right)
-    writefile("left_content."+lang,left)
-
-    git_rest=subprocess.run(['git', 'merge-file', '-p','left_content.'+lang, 'base_content.'+lang,'right_content.'+lang],capture_output=True, text=True)
-    # print(git_rest.stdout.strip("\n"))
-    return git_rest.stdout
     
