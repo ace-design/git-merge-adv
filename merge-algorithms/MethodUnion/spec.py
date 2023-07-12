@@ -39,9 +39,9 @@ class Lang(ABC):
     def output_traverse(node,string,all_imports,suspicious):
         pass
 
-    @abstractmethod
-    def output_methods(writer,class_name):
-        pass
+    # @abstractmethod
+    # def output_methods(writer,class_name):
+    #     pass
 
     # Used to parse the imports to generate a more read-friendly string for tree to split. 
     @abstractmethod
@@ -56,9 +56,9 @@ class Lang(ABC):
     def getClasses(content):
         pass
 
-    @abstractmethod
-    def get_lang():
-        pass
+    # @abstractmethod
+    # def get_lang():
+    #     pass
 
 ## Java Implementation to Abstract Class
 class Java(Lang):
@@ -385,6 +385,10 @@ class Java(Lang):
 
 
 class Python(Lang):
+
+
+    global methods
+    methods=[]
     done=[]
     def generateAST(self,content):
         return ast.parse(content)
@@ -488,12 +492,19 @@ class Python(Lang):
         return super().getUsages()
     
     def getClasses(self,content,version):
+        str_content = ""
+        for line in content:
+                if line== "!!!no import anymore!!!":
+                    continue
+                str_content=str_content+line+'\n'
+        content = str_content
+
         codeast = self.generateAST(content)
         for nod in codeast.body:
             if isinstance(nod, ast.FunctionDef):
                 methodName = nod.name
-                methodindent= nod.col_offset
-                newMethod = Method(methodName,version,None,nod)
+                methodindent= str(nod.col_offset)
+                newMethod = Method(astor.to_source(nod),version,None,nod)
 
                 #Method declaration is referenced by its signature.
                 if (methodindent+" "+methodName in all_methods.keys()):
@@ -504,11 +515,22 @@ class Python(Lang):
                             nodepresent =  True
                     if nodepresent == False:
                             all_methods[methodindent+" "+methodName].append(newMethod)
+                            methods.append(newMethod)
                 else:
                     all_methods[methodindent+" "+methodName]=[newMethod]
+                    methods.append(newMethod)
+
+        return methods
+    
+    def get_class_ref(self):
+        return {"None":[]}
+    
+    def get_method_ref(self):
+        return dict(all_methods)
+    
+
+
+    def get_lang(self):
+        return "py"
                         
 
-           
-
-        
-                            
