@@ -1,3 +1,4 @@
+import bisect
 
 class End:
     def __init__(self,dir,leftstartline=None, leftendline=None):
@@ -27,8 +28,9 @@ class End:
         return self.versions
 
 class Pack:
-    def __init__(self,dir):
+    def __init__(self,dir,start):
         self.path=dir
+        self.start_line=start
         self.children=[]
 
     def get_children(self):
@@ -40,6 +42,8 @@ class Pack:
                 return child
         self.children.append(end)
         return end
+    def get_start(self):
+        return self.start_line
     
     def get_full_dir(self):
         return self.path
@@ -47,25 +51,28 @@ class Pack:
 class MainRoot:
     def __init__(self):
         self.children=set()
+        self.order=[]
     
     def add_child(self,child):
-        self.children.add(child)
+        if (child not in self.order):
+            bisect.insort(self.order,child,key=lambda x: x.get_start())
     
     def get_children(self):
-        return self.children
+        return self.order
 
 class Class:
-    def __init__(self,name,full_name,indent,closer,version,nod):
+    def __init__(self,name,full_name,indent,version,start_line,nod=None):
         self.version=set()
         self.version.add(version)
-        self.closing=closer
         self.ranking=indent/4
+        self.start_line=start_line
         self.class_name=name
         self.full_name=full_name
+        self.order=[]
         self.methods=[]
         self.sub_classes=[]
         self.declarations=[]
-        self.comments={}
+        self.comments=[]
         self.selected=False
         self.node = nod
     
@@ -96,15 +103,32 @@ class Class:
     def add_version(self,version):
         self.version.add(version)
 
-    def add_comment(self,method_signature,comment):
-        if method_signature in self.comments.keys():
-            if (comment not in self.comments[method_signature]):
-                self.comments[method_signature].append(comment)
-        else:
-            self.comments[method_signature]=[comment]
+    def add_comment(self,comment):
+        if (comment not in self.comments):
+            self.comments.append(comment)
+        # if method_signature in self.comments.keys():
+        #     if (comment not in self.comments[method_signature]):
+        #         self.comments[method_signature].append(comment)
+        # else:
+        #     self.comments[method_signature]=[comment]
     
     def set_selected(self):
         self.selected=True
+
+    def get_everything(self):
+        for method in self.methods:
+            bisect.insort(self.order,method,key=lambda x: x.get_start())
+        for subclass in self.sub_classes:
+            bisect.insort(self.order,subclass,key=lambda x: x.get_start())
+        for comment in self.comments:
+            bisect.insort(self.order,comment,key=lambda x: x.get_start())
+
+        return self.order
+
+        
+
+    def get_start(self):
+        return self.start_line
 
     def get_methods(self):
         return reversed(self.methods)
@@ -127,9 +151,6 @@ class Class:
     def get_declarations(self):
         return self.declarations
     
-    def get_closer(self):
-        return self.closing
-    
     def get_version(self):
         return self.version
     
@@ -144,11 +165,12 @@ class Class:
 
 
 class Method:
-    def __init__(self,name,des,signature,version,super_class,astnode=None):
+    def __init__(self,name,des,signature,version,super_class,start,astnode=None):
         self.name=name
         self.full_method=des
         self.signature=signature
         self.super=super_class
+        self.start_line=start
         self.version=set()
         self.version.add(version)
         self.selected=False
@@ -160,6 +182,9 @@ class Method:
 
     def set_selected(self):
         self.selected=True
+
+    def get_start(self):
+        return self.start_line
 
     def overwrite_method(self,content):
         self.full_method=content
@@ -189,17 +214,25 @@ class Method:
         return hash(self.get_method()) 
 
 class Comment:
-    def __init__(self,comment_body,super,indent):
+    def __init__(self,comment_body,super,indent,start):
         self.comment=comment_body
         self.super_class=super
+        self.start_line=start
         self.indent=indent
+        self.selected=True
+
 
     def get_comment(self):
         return self.comment
     
     def get_indent(self):
         return self.indent
-
+    
+    def get_start(self):
+        return self.start_line
+    
+    def is_selected(self):
+        return self.selected
     
     def __eq__(self,obj):
         return (type(obj)==Comment) and self.comment==obj.get_comment()

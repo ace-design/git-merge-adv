@@ -84,6 +84,36 @@ import static org.junit.Assert.assertTrue;
 import org.antlr.v4.runtime.misc.Pair;
 import static org.junit.Assert.*;
 
+/*
+ * [The "BSD license"]
+ *  Copyright (c) 2012 Terence Parr
+ *  Copyright (c) 2012 Sam Harwell
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *  3. The name of the author may not be used to endorse or promote products
+ *     derived from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 public abstract class BaseTest{
 
     private static final Logger LOGGER = Logger.getLogger(BaseTest.class.getName());
@@ -104,12 +134,11 @@ public abstract class BaseTest{
 
 	};
 
-
     /**
      * Build up the full classpath we need, including the surefire path (if present)
      */
 
- /** If error during parser execution, store stderr here; can't return
+    /** If error during parser execution, store stderr here; can't return
      *  stdout and stderr.  This doesn't trap errors from running antlr.
      */
     @Before
@@ -282,7 +311,7 @@ public abstract class BaseTest{
 		return null;
 	}
 
- /** Wow! much faster than compiling outside of VM. Finicky though.
+    /** Wow! much faster than compiling outside of VM. Finicky though.
 	 *  Had rules called r and modulo. Wouldn't compile til I changed to 'a'.
 	 */
     protected boolean compile(String... fileNames) {
@@ -361,7 +390,7 @@ public abstract class BaseTest{
 		*/
 	}
 
- /** Return true if all is ok, no errors */
+    /** Return true if all is ok, no errors */
     protected ErrorQueue antlr(String fileName, String grammarFileName, String grammarStr, boolean defaultListener, String... extraOptions) {
 		System.out.println("dir "+tmpdir);
 		mkdir(tmpdir);
@@ -431,6 +460,25 @@ public abstract class BaseTest{
 		}
 		return output;
 	}
+    protected String execParser(String grammarFileName,
+								String grammarStr,
+								String parserName,
+								String lexerName,
+								String startRuleName,
+								String input, boolean debug)
+	{
+		boolean success = rawGenerateAndBuildRecognizer(grammarFileName,
+														grammarStr,
+														parserName,
+														lexerName,
+														"-visitor");
+		assertTrue(success);
+		writeFile(tmpdir, "input", input);
+		return rawExecRecognizer(parserName,
+								 lexerName,
+								 startRuleName,
+								 debug);
+	}
     public ParseTree execParser(String startRuleName, String input,
 								String parserName, String lexerName)
 		throws Exception
@@ -470,25 +518,6 @@ public abstract class BaseTest{
 >>>>>>> right_content.java
 	}
 
-    protected String execParser(String grammarFileName,
-								String grammarStr,
-								String parserName,
-								String lexerName,
-								String startRuleName,
-								String input, boolean debug)
-	{
-		boolean success = rawGenerateAndBuildRecognizer(grammarFileName,
-														grammarStr,
-														parserName,
-														lexerName,
-														"-visitor");
-		assertTrue(success);
-		writeFile(tmpdir, "input", input);
-		return rawExecRecognizer(parserName,
-								 lexerName,
-								 startRuleName,
-								 debug);
-	}
     public ParseTree execStartRule(String startRuleName, Parser parser)
 		throws IllegalAccessException, InvocationTargetException,
 			   NoSuchMethodException
@@ -506,6 +535,16 @@ public abstract class BaseTest{
 		ParseTree result = (ParseTree)startRule.invoke(parser, args);
 //		System.out.println("parse tree = "+result.toStringTree(parser));
 		return result;
+	}
+
+    /** Return true if all is well */
+    protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
+													String grammarStr,
+													@Nullable String parserName,
+													String lexerName,
+													String... extraOptions)
+	{
+		return rawGenerateAndBuildRecognizer(grammarFileName, grammarStr, parserName, lexerName, false, extraOptions);
 	}
     public Pair<Parser, Lexer> getParserAndLexer(String input,
 												 String parserName, String lexerName)
@@ -526,40 +565,6 @@ public abstract class BaseTest{
 		Parser parser = pctor.newInstance(tokens);
 		return new Pair<Parser, Lexer>(parser, lexer);
 	}
-    public Class<?> loadClassFromTempDir(String name) throws Exception {
-		ClassLoader loader =
-			new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() },
-							   ClassLoader.getSystemClassLoader());
-		return loader.loadClass(name);
-	}
-    public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
-<<<<<<< left_content.java
-		return loadClassFromTempDir(name).asSubclass(Lexer.class);
-=======
-		return (Class<? extends Lexer>)loadClassFromTempDir(name);
->>>>>>> right_content.java
-	}
-
-    public Class<? extends Parser> loadParserClassFromTempDir(String name) throws Exception {
-<<<<<<< left_content.java
-		return loadClassFromTempDir(name).asSubclass(Parser.class);
-=======
-		return (Class<? extends Parser>)loadClassFromTempDir(name);
->>>>>>> right_content.java
-	}
-
-
- /** Return true if all is well */
-    protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
-													String grammarStr,
-													@Nullable String parserName,
-													String lexerName,
-													String... extraOptions)
-	{
-		return rawGenerateAndBuildRecognizer(grammarFileName, grammarStr, parserName, lexerName, false, extraOptions);
-	}
-
- /** Return true if all is well */
     protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
 													String grammarStr,
 													@Nullable String parserName,
@@ -590,6 +595,28 @@ public abstract class BaseTest{
 		boolean allIsWell = compile(files.toArray(new String[files.size()]));
 		return allIsWell;
 	}
+    public Class<?> loadClassFromTempDir(String name) throws Exception {
+		ClassLoader loader =
+			new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() },
+							   ClassLoader.getSystemClassLoader());
+		return loader.loadClass(name);
+	}
+    public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
+<<<<<<< left_content.java
+		return loadClassFromTempDir(name).asSubclass(Lexer.class);
+=======
+		return (Class<? extends Lexer>)loadClassFromTempDir(name);
+>>>>>>> right_content.java
+	}
+
+    public Class<? extends Parser> loadParserClassFromTempDir(String name) throws Exception {
+<<<<<<< left_content.java
+		return loadClassFromTempDir(name).asSubclass(Parser.class);
+=======
+		return (Class<? extends Parser>)loadClassFromTempDir(name);
+>>>>>>> right_content.java
+	}
+
     protected String rawExecRecognizer(String parserName,
 									   String lexerName,
 									   String parserStartRuleName,
@@ -797,7 +824,44 @@ public abstract class BaseTest{
 			System.err.println(equeue.toString());
 		}
 	}
-    protected void checkGrammarSemanticsError(ErrorQueue equeue,
+
+ public static class StreamVacuum implements Runnable{
+
+     StringBuilder buf = new StringBuilder();
+     BufferedReader in;
+     Thread sucker;
+     public StreamVacuum(InputStream in) {
+			this.in = new BufferedReader( new InputStreamReader(in) );
+		}
+     public void start() {
+			sucker = new Thread(this);
+			sucker.start();
+		}
+     @Override
+		public void run() {
+			try {
+				String line = in.readLine();
+				while (line!=null) {
+					buf.append(line);
+					buf.append('\n');
+					line = in.readLine();
+				}
+			}
+			catch (IOException ioe) {
+				System.err.println("can't read output from process");
+			}
+		}
+
+     /** wait for the thread to finish */
+     public void join() throws InterruptedException {
+			sucker.join();
+		}
+     @Override
+		public String toString() {
+			return buf.toString();
+		}
+
+ }    protected void checkGrammarSemanticsError(ErrorQueue equeue,
 											  GrammarSemanticsMessage expectedMessage)
 		throws Exception
 	{
@@ -856,7 +920,29 @@ public abstract class BaseTest{
 		 */
 		assertArrayEquals(expectedMessage.getArgs(), foundMsg.getArgs());
 	}
-    public static void writeFile(String dir, String fileName, String content) {
+
+    public static class FilteringTokenStream extends CommonTokenStream{
+
+        Set<Integer> hide = new HashSet<Integer>();
+        public FilteringTokenStream(TokenSource src) { super(src); }
+        @Override
+        protected boolean sync(int i) {
+            if (!super.sync(i)) {
+				return false;
+			}
+
+			Token t = get(i);
+			if ( hide.contains(t.getType()) ) {
+				((WritableToken)t).setChannel(Token.HIDDEN_CHANNEL);
+			}
+
+			return true;
+        }
+        public void setTokenTypeChannel(int ttype, int channel) {
+            hide.add(ttype);
+        }
+
+    }    public static void writeFile(String dir, String fileName, String content) {
 		try {
 			File f = new File(dir, fileName);
 			FileWriter w = new FileWriter(f);
@@ -1033,92 +1119,10 @@ public abstract class BaseTest{
 		assertFalse(text.isEmpty());
 	}
 
- /** Sort a list */
-    public <T extends Comparable<? super T>> List<T> sort(List<T> data) {
-		List<T> dup = new ArrayList<T>();
-		dup.addAll(data);
-		Collections.sort(dup);
-		return dup;
-	}
-
- /** Return map sorted by key */
-    public <K extends Comparable<? super K>,V> LinkedHashMap<K,V> sort(Map<K,V> data) {
-		LinkedHashMap<K,V> dup = new LinkedHashMap<K, V>();
-		List<K> keys = new ArrayList<K>();
-		keys.addAll(data.keySet());
-		Collections.sort(keys);
-		for (K k : keys) {
-			dup.put(k, data.get(k));
-		}
-		return dup;
-	}
-
- public static class StreamVacuum implements Runnable{
-
-     StringBuilder buf = new StringBuilder();
-     BufferedReader in;
-     Thread sucker;
-
-     public StreamVacuum(InputStream in) {
-			this.in = new BufferedReader( new InputStreamReader(in) );
-		}
-     public void start() {
-			sucker = new Thread(this);
-			sucker.start();
-		}
-     @Override
-		public void run() {
-			try {
-				String line = in.readLine();
-				while (line!=null) {
-					buf.append(line);
-					buf.append('\n');
-					line = in.readLine();
-				}
-			}
-			catch (IOException ioe) {
-				System.err.println("can't read output from process");
-			}
-		}
-
-  /** wait for the thread to finish */
-     public void join() throws InterruptedException {
-			sucker.join();
-		}
-     @Override
-		public String toString() {
-			return buf.toString();
-		}
- }
-
-    public static class FilteringTokenStream extends CommonTokenStream{
-
-        Set<Integer> hide = new HashSet<Integer>();
-
-        public FilteringTokenStream(TokenSource src) { super(src); }
-        @Override
-        protected boolean sync(int i) {
-            if (!super.sync(i)) {
-				return false;
-			}
-
-			Token t = get(i);
-			if ( hide.contains(t.getType()) ) {
-				((WritableToken)t).setChannel(Token.HIDDEN_CHANNEL);
-			}
-
-			return true;
-        }
-        public void setTokenTypeChannel(int ttype, int channel) {
-            hide.add(ttype);
-        }
-    }
-
  public static class IntTokenStream implements TokenStream{
 
      IntegerList types;
      int p=0;
-
      public IntTokenStream(IntegerList types) { this.types = types; }
      @Override
 		public void consume() { p++; }
@@ -1183,5 +1187,26 @@ public abstract class BaseTest{
 		public String getText(Token start, Token stop) {
 			throw new UnsupportedOperationException("can't give strings");
 		}
+
  }
+    /** Sort a list */
+    public <T extends Comparable<? super T>> List<T> sort(List<T> data) {
+		List<T> dup = new ArrayList<T>();
+		dup.addAll(data);
+		Collections.sort(dup);
+		return dup;
+	}
+
+    /** Return map sorted by key */
+    public <K extends Comparable<? super K>,V> LinkedHashMap<K,V> sort(Map<K,V> data) {
+		LinkedHashMap<K,V> dup = new LinkedHashMap<K, V>();
+		List<K> keys = new ArrayList<K>();
+		keys.addAll(data.keySet());
+		Collections.sort(keys);
+		for (K k : keys) {
+			dup.put(k, data.get(k));
+		}
+		return dup;
+	}
+
 }

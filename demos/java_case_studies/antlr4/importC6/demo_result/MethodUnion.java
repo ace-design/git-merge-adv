@@ -22,18 +22,46 @@ import java.util.List;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.misc.IntegerList;
 
+/*
+ [The "BSD license"]
+  Copyright (c) 2011 Terence Parr
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+  3. The name of the author may not be used to endorse or promote products
+     derived from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 public class ATNSerializer{
 
     public Grammar g;
     public ATN atn;
     public List<IntervalSet> sets = new ArrayList<IntervalSet>();
-
     public ATNSerializer(Grammar g, ATN atn) {
 		this.g = g;
 		this.atn = atn;
 	}
 
- /** Serialize state descriptors, edge descriptors, and decision->state map
+    /** Serialize state descriptors, edge descriptors, and decision->state map
 	 *  into list of ints:
 	 *
 	 * 		grammar-type, (ANTLRParser.LEXER, ...)
@@ -253,7 +281,7 @@ public class ATNSerializer{
 		return String.valueOf(t);
 	}
 
- /** Used by Java target to encode short/int array as chars in string. */
+    /** Used by Java target to encode short/int array as chars in string. */
     public static String getSerializedAsString(Grammar g, ATN atn) {
 		return new String(Utils.toCharArray(getSerialized(g, atn)));
 	}
@@ -268,4 +296,5 @@ public class ATNSerializer{
 		char[] data = Utils.toCharArray(serialized);
 		return new ATNSerializer(g, atn).decode(data);
 	}
+
 }

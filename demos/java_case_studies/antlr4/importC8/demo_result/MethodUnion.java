@@ -30,6 +30,34 @@ import org.antlr.v4.runtime.atn.ParserATNSimulator;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.dfa.DFAState;
 
+/*
+ * [The "BSD license"]
+ *  Copyright (c) 2012 Sam Harwell
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *  1. Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright
+ *      notice, this list of conditions and the following disclaimer in the
+ *      documentation and/or other materials provided with the distribution.
+ *  3. The name of the author may not be used to endorse or promote products
+ *      derived from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 public class TestPerformance extends BaseTest{
 
     private static final String TOP_PACKAGE = "java.lang";
@@ -56,7 +84,6 @@ public class TestPerformance extends BaseTest{
     private int tokenCount;
     private int currentPass;
     int configOutputSize = 0;
-
 
     /** Parse all java files under this package within the JDK_SOURCE_ROOT. */
 
@@ -246,6 +273,109 @@ public class TestPerformance extends BaseTest{
             }
         }
     }
+    protected void parseSources(JavaParserFactory factory, Collection<CharStream> sources) {
+        long startTime = System.currentTimeMillis();
+        tokenCount = 0;
+        int inputSize = 0;
+
+        for (CharStream input : sources) {
+            input.seek(0);
+            inputSize += input.size();
+            // this incurred a great deal of overhead and was causing significant variations in performance results.
+            //System.out.format("Parsing file %s\n", input.getSourceName());
+            try {
+                factory.parseFile(input);
+            } catch (IllegalStateException ex) {
+                ex.printStackTrace(System.out);
+            }
+        }
+
+        System.out.format("Total parse time for %d files (%d KB, %d tokens): %dms\n",
+                          sources.size(),
+                          inputSize / 1024,
+                          tokenCount,
+                          System.currentTimeMillis() - startTime);
+
+        if (RUN_PARSER) {
+            // make sure the individual DFAState objects actually have unique ATNConfig arrays
+            final ParserATNSimulator<?> interpreter = sharedParser.getInterpreter();
+            final DFA[] decisionToDFA = interpreter.decisionToDFA;
+
+            if (SHOW_DFA_STATE_STATS) {
+                int states = 0;
+				int configs = 0;
+				Set<ATNConfig> uniqueConfigs = new HashSet<ATNConfig>();
+
+                for (int i = 0; i < decisionToDFA.length; i++) {
+                    DFA dfa = decisionToDFA[i];
+                    if (dfa == null || dfa.states == null) {
+                        continue;
+                    }
+
+                    states += dfa.states.size();
+					for (DFAState state : dfa.states.values()) {
+						configs += state.configset.size();
+						uniqueConfigs.addAll(state.configset);
+					}
+                }
+
+                System.out.format("There are %d DFAState instances, %d configs (%d unique).\n", states, configs, uniqueConfigs.size());
+            }
+
+            int localDfaCount = 0;
+            int globalDfaCount = 0;
+            int localConfigCount = 0;
+            int globalConfigCount = 0;
+            int[] contextsInDFAState = new int[0];
+
+            for (int i = 0; i < decisionToDFA.length; i++) {
+                DFA dfa = decisionToDFA[i];
+                if (dfa == null || dfa.states == null) {
+                    continue;
+                }
+
+                if (SHOW_CONFIG_STATS) {
+                    for (DFAState state : dfa.states.keySet()) {
+                        if (state.configset.size() >= contextsInDFAState.length) {
+                            contextsInDFAState = Arrays.copyOf(contextsInDFAState, state.configset.size() + 1);
+                        }
+
+                        if (state.isAcceptState) {
+                            boolean hasGlobal = false;
+                            for (ATNConfig config : state.configset) {
+                                if (config.reachesIntoOuterContext > 0) {
+                                    globalConfigCount++;
+                                    hasGlobal = true;
+                                } else {
+                                    localConfigCount++;
+                                }
+                            }
+
+                            if (hasGlobal) {
+                                globalDfaCount++;
+                            } else {
+                                localDfaCount++;
+                            }
+                        }
+
+                        contextsInDFAState[state.configset.size()]++;
+                    }
+                }
+            }
+
+            if (SHOW_CONFIG_STATS && currentPass == 0) {
+                System.out.format("  DFA accept states: %d total, %d with only local context, %d with a global context\n", localDfaCount + globalDfaCount, localDfaCount, globalDfaCount);
+                System.out.format("  Config stats: %d total, %d local, %d global\n", localConfigCount + globalConfigCount, localConfigCount, globalConfigCount);
+                if (SHOW_DFA_STATE_STATS) {
+                    for (int i = 0; i < contextsInDFAState.length; i++) {
+                        if (contextsInDFAState[i] != 0) {
+                            System.out.format("  %d configs = %d\n", i, contextsInDFAState[i]);
+                        }
+                    }
+                }
+            }
+        }
+    }
     protected void compileParser(boolean leftRecursive) throws IOException {
         String grammarFileName = "Java.g";
         String sourceName = leftRecursive ? "Java-LR.g" : "Java.g";
@@ -359,107 +489,5 @@ public class TestPerformance extends BaseTest{
             throw new IllegalStateException(e);
         }
     }
-    protected void parseSources(JavaParserFactory factory, Collection<CharStream> sources) {
-        long startTime = System.currentTimeMillis();
-        tokenCount = 0;
-        int inputSize = 0;
 
-        for (CharStream input : sources) {
-            input.seek(0);
-            inputSize += input.size();
-            // this incurred a great deal of overhead and was causing significant variations in performance results.
-            //System.out.format("Parsing file %s\n", input.getSourceName());
-            try {
-                factory.parseFile(input);
-            } catch (IllegalStateException ex) {
-                ex.printStackTrace(System.out);
-            }
-        }
-
-        System.out.format("Total parse time for %d files (%d KB, %d tokens): %dms\n",
-                          sources.size(),
-                          inputSize / 1024,
-                          tokenCount,
-                          System.currentTimeMillis() - startTime);
-
-        if (RUN_PARSER) {
-            // make sure the individual DFAState objects actually have unique ATNConfig arrays
-            final ParserATNSimulator<?> interpreter = sharedParser.getInterpreter();
-            final DFA[] decisionToDFA = interpreter.decisionToDFA;
-
-            if (SHOW_DFA_STATE_STATS) {
-                int states = 0;
-				int configs = 0;
-				Set<ATNConfig> uniqueConfigs = new HashSet<ATNConfig>();
-
-                for (int i = 0; i < decisionToDFA.length; i++) {
-                    DFA dfa = decisionToDFA[i];
-                    if (dfa == null || dfa.states == null) {
-                        continue;
-                    }
-
-                    states += dfa.states.size();
-					for (DFAState state : dfa.states.values()) {
-						configs += state.configset.size();
-						uniqueConfigs.addAll(state.configset);
-					}
-                }
-
-                System.out.format("There are %d DFAState instances, %d configs (%d unique).\n", states, configs, uniqueConfigs.size());
-            }
-
-            int localDfaCount = 0;
-            int globalDfaCount = 0;
-            int localConfigCount = 0;
-            int globalConfigCount = 0;
-            int[] contextsInDFAState = new int[0];
-
-            for (int i = 0; i < decisionToDFA.length; i++) {
-                DFA dfa = decisionToDFA[i];
-                if (dfa == null || dfa.states == null) {
-                    continue;
-                }
-
-                if (SHOW_CONFIG_STATS) {
-                    for (DFAState state : dfa.states.keySet()) {
-                        if (state.configset.size() >= contextsInDFAState.length) {
-                            contextsInDFAState = Arrays.copyOf(contextsInDFAState, state.configset.size() + 1);
-                        }
-
-                        if (state.isAcceptState) {
-                            boolean hasGlobal = false;
-                            for (ATNConfig config : state.configset) {
-                                if (config.reachesIntoOuterContext > 0) {
-                                    globalConfigCount++;
-                                    hasGlobal = true;
-                                } else {
-                                    localConfigCount++;
-                                }
-                            }
-
-                            if (hasGlobal) {
-                                globalDfaCount++;
-                            } else {
-                                localDfaCount++;
-                            }
-                        }
-
-                        contextsInDFAState[state.configset.size()]++;
-                    }
-                }
-            }
-
-            if (SHOW_CONFIG_STATS && currentPass == 0) {
-                System.out.format("  DFA accept states: %d total, %d with only local context, %d with a global context\n", localDfaCount + globalDfaCount, localDfaCount, globalDfaCount);
-                System.out.format("  Config stats: %d total, %d local, %d global\n", localConfigCount + globalConfigCount, localConfigCount, globalConfigCount);
-                if (SHOW_DFA_STATE_STATS) {
-                    for (int i = 0; i < contextsInDFAState.length; i++) {
-                        if (contextsInDFAState[i] != 0) {
-                            System.out.format("  %d configs = %d\n", i, contextsInDFAState[i]);
-                        }
-                    }
-                }
-            }
-        }
-    }
 }

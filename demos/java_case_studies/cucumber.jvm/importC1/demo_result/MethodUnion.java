@@ -63,7 +63,6 @@ public final class TestNGFormatter implements EventListener, StrictAware{
     private Instant started;
     private final Map<URI, String> featuresNames = new HashMap<>();
     private final FeatureParser parser = new FeatureParser(UUID::randomUUID);
-
     public TestNGFormatter(OutputStream out) {
         this.writer = new UTF8OutputStreamWriter(out);
         try {
@@ -196,7 +195,6 @@ public final class TestNGFormatter implements EventListener, StrictAware{
         private final List<Result> results = new ArrayList<>();
         private final List<Result> hooks = new ArrayList<>();
         private final io.cucumber.plugin.event.TestCase testCase;
-
         TestCase(io.cucumber.plugin.event.TestCase testCase) {
             this.testCase = testCase;
         }
@@ -298,5 +296,6 @@ public final class TestNGFormatter implements EventListener, StrictAware{
 
             return exceptionElement;
         }
+
     }
 }

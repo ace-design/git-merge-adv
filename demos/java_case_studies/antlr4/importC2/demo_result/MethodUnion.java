@@ -60,6 +60,46 @@ import org.antlr.v4.runtime.misc.Triple;
 import org.antlr.v4.tool.LexerGrammar;
 import java.util.ArrayList;
 
+/*
+ * [The "BSD license"]
+ *  Copyright (c) 2012 Terence Parr
+ *  Copyright (c) 2012 Sam Harwell
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *  3. The name of the author may not be used to endorse or promote products
+ *     derived from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/** ATN construction routines triggered by ATNBuilder.g.
+ *
+ *  No side-effects. It builds an ATN object and returns it.
+ */
+
+/** ATN construction routines triggered by ATNBuilder.g.
+ *
+ *  No side-effects. It builds an {@link ATN} object and returns it.
+ */
+
 public class ParserATNFactory implements ATNFactory{
 
     @NotNull
@@ -72,7 +112,6 @@ public class ParserATNFactory implements ATNFactory{
 		new ArrayList<Triple<Rule, ATNState, ATNState>>();
     protected final List<Triple<Rule, ATNState, ATNState>> preventEpsilonOptionalBlocks =
 		new ArrayList<Triple<Rule, ATNState, ATNState>>();
-
     public ParserATNFactory(@NotNull Grammar g) {
 		if (g == null) {
 			throw new NullPointerException("g");
@@ -124,6 +163,29 @@ public class ParserATNFactory implements ATNFactory{
 
 		return atn;
 	}
+    @Override
+	public void setCurrentRuleName(String name) {
+		this.currentRule = g.getRule(name);
+	}
+    @Override
+	public void setCurrentOuterAlt(int alt) {
+		currentOuterAlt = alt;
+	}
+
+    /* start->ruleblock->end */
+    @Override
+	public Handle rule(GrammarAST ruleAST, String name, Handle blk) {
+		Rule r = g.getRule(name);
+		RuleStartState start = atn.ruleToStartState[r.index];
+		epsilon(start, blk.left);
+		RuleStopState stop = atn.ruleToStopState[r.index];
+		epsilon(blk.right, stop);
+		Handle h = new Handle(start, stop);
+//		ATNPrinter ser = new ATNPrinter(g, h.left);
+//		System.out.println(ruleAST.toStringTree()+":\n"+ser.asString());
+		ruleAST.atnState = start;
+		return h;
+	}
     protected void _createATN(Collection<Rule> rules) {
 		createRuleStartAndStopATNStates();
 
@@ -143,31 +205,8 @@ public class ParserATNFactory implements ATNFactory{
 			}
 		}
 	}
-    @Override
-	public void setCurrentRuleName(String name) {
-		this.currentRule = g.getRule(name);
-	}
-    @Override
-	public void setCurrentOuterAlt(int alt) {
-		currentOuterAlt = alt;
-	}
 
- /* start->ruleblock->end */
-    @Override
-	public Handle rule(GrammarAST ruleAST, String name, Handle blk) {
-		Rule r = g.getRule(name);
-		RuleStartState start = atn.ruleToStartState[r.index];
-		epsilon(start, blk.left);
-		RuleStopState stop = atn.ruleToStopState[r.index];
-		epsilon(blk.right, stop);
-		Handle h = new Handle(start, stop);
-//		ATNPrinter ser = new ATNPrinter(g, h.left);
-//		System.out.println(ruleAST.toStringTree()+":\n"+ser.asString());
-		ruleAST.atnState = start;
-		return h;
-	}
-
- /** From label {@code A} build graph {@code o-A->o}. */
+    /** From label {@code A} build graph {@code o-A->o}. */
     @Override
 	public Handle tokenRef(TerminalAST node) {
 		ATNState left = newState(node);
@@ -178,7 +217,7 @@ public class ParserATNFactory implements ATNFactory{
 		return new Handle(left, right);
 	}
 
- /** From set build single edge graph {@code o->o-set->o}.  To conform to
+    /** From set build single edge graph {@code o->o-set->o}.  To conform to
      *  what an alt block looks like, must have extra state on left.
 	 *  This also handles {@code ~A}, converted to {@code ~{A}} set.
      */
@@ -201,7 +240,7 @@ public class ParserATNFactory implements ATNFactory{
 		return new Handle(left, right);
 	}
 
- /** Not valid for non-lexers. */
+    /** Not valid for non-lexers. */
     @Override
 	public Handle range(GrammarAST a, GrammarAST b) {
 		throw new UnsupportedOperationException();
@@ -217,19 +256,19 @@ public class ParserATNFactory implements ATNFactory{
 		return ttype;
 	}
 
- /** For a non-lexer, just build a simple token reference atom. */
+    /** For a non-lexer, just build a simple token reference atom. */
     @Override
 	public Handle stringLiteral(TerminalAST stringLiteralAST) {
 		return tokenRef(stringLiteralAST);
 	}
 
- /** {@code [Aa]} char sets not allowed in parser */
+    /** {@code [Aa]} char sets not allowed in parser */
     @Override
 	public Handle charSetLiteral(GrammarAST charSetAST) {
 		return null;
 	}
 
- /**
+    /**
 	 * For reference to rule {@code r}, build
 	 *
 	 * <pre>
@@ -271,7 +310,7 @@ public class ParserATNFactory implements ATNFactory{
 		epsilon(stop, right);
 	}
 
- /** From an empty alternative build {@code o-e->o}. */
+    /** From an empty alternative build {@code o-e->o}. */
     @Override
 	public Handle epsilon(GrammarAST node) {
 		ATNState left = newState(node);
@@ -281,7 +320,32 @@ public class ParserATNFactory implements ATNFactory{
 		return new Handle(left, right);
 	}
 
- /** Build what amounts to an epsilon transition with an action.
+    /** Build what amounts to an epsilon transition with a semantic
+	 *  predicate action.  The {@code pred} is a pointer into the AST of
+	 *  the {@link ANTLRParser#SEMPRED} token.
+	 */
+    @Override
+	public Handle sempred(PredAST pred) {
+		//System.out.println("sempred: "+ pred);
+		ATNState left = newState(pred);
+		ATNState right = newState(pred);
+
+		AbstractPredicateTransition p;
+		if (pred.getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME) != null) {
+			int precedence = Integer.parseInt(pred.getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME));
+			p = new PrecedencePredicateTransition(right, precedence);
+		}
+		else {
+			boolean isCtxDependent = UseDefAnalyzer.actionIsContextDependent(pred);
+			p = new PredicateTransition(right, currentRule.index, g.sempreds.get(pred), isCtxDependent);
+		}
+
+		left.addTransition(p);
+		pred.atnState = left;
+		return new Handle(left, right);
+	}
+
+    /** Build what amounts to an epsilon transition with an action.
 	 *  The action goes into ATN though it is ignored during prediction
 	 *  if {@link ActionTransition#actionIndex actionIndex}{@code <0}.
 	 */
@@ -300,7 +364,7 @@ public class ParserATNFactory implements ATNFactory{
 		return null;
 	}
 
- /**
+    /**
 	 * From {@code A|B|..|Z} alternative block build
 	 *
 	 * <pre>
@@ -324,6 +388,24 @@ public class ParserATNFactory implements ATNFactory{
 	 * <p/>
 	 * TODO: Set alt number (1..n) in the states?
 	 */
+    protected Handle makeBlock(BlockStartState start, GrammarAST blkAST, List<Handle> alts) {
+		BlockEndState end = newState(BlockEndState.class, blkAST);
+		start.endState = end;
+		for (Handle alt : alts) {
+			// hook alts up to decision block
+			epsilon(start, alt.left);
+			epsilon(alt.right, end);
+			// no back link in ATN so must walk entire alt to see if we can
+			// strip out the epsilon to 'end' state
+			TailEpsilonRemover opt = new TailEpsilonRemover(atn);
+			opt.visit(alt.left);
+		}
+		Handle h = new Handle(start, end);
+//		FASerializer ser = new FASerializer(g, h.left);
+//		System.out.println(blkAST.toStringTree()+":\n"+ser);
+		blkAST.atnState = start;
+		return h;
+	}
     @Override
 	public Handle block(BlockAST blkAST, GrammarAST ebnfRoot, List<Handle> alts) {
 		if ( ebnfRoot==null ) {
@@ -355,6 +437,11 @@ public class ParserATNFactory implements ATNFactory{
 		}
 		return null;
 	}
+    @NotNull
+	@Override
+	public Handle alt(@NotNull List<Handle> els) {
+		return elemList(els);
+	}
     protected Handle makeBlock(BlockStartState start, BlockAST blkAST, List<Handle> alts) {
 		BlockEndState end = newState(BlockEndState.class, blkAST);
 		start.endState = end;
@@ -374,29 +461,19 @@ public class ParserATNFactory implements ATNFactory{
 
 		return h;
 	}
-    protected Handle makeBlock(BlockStartState start, GrammarAST blkAST, List<Handle> alts) {
-		BlockEndState end = newState(BlockEndState.class, blkAST);
-		start.endState = end;
-		for (Handle alt : alts) {
-			// hook alts up to decision block
-			epsilon(start, alt.left);
-			epsilon(alt.right, end);
-			// no back link in ATN so must walk entire alt to see if we can
-			// strip out the epsilon to 'end' state
-			TailEpsilonRemover opt = new TailEpsilonRemover(atn);
-			opt.visit(alt.left);
-		}
-		Handle h = new Handle(start, end);
-//		FASerializer ser = new FASerializer(g, h.left);
-//		System.out.println(blkAST.toStringTree()+":\n"+ser);
-		blkAST.atnState = start;
-		return h;
-	}
-    @NotNull
-	@Override
-	public Handle alt(@NotNull List<Handle> els) {
-		return elemList(els);
-	}
+
+    /**
+	 * From {@code (A)?} build either:
+	 *
+	 * <pre>
+	 *  o--A->o
+	 *  |     ^
+	 *  o---->|
+	 * </pre>
+	 *
+	 * or, if {@code A} is a block, just add an empty alt to the end of the
+	 * block
+	 */
     @NotNull
 	public Handle elemList(@NotNull List<Handle> els) {
 		int n = els.size();
@@ -428,17 +505,17 @@ public class ParserATNFactory implements ATNFactory{
 		return new Handle(first.left, last.right);
 	}
 
- /**
-	 * From {@code (A)?} build either:
+    /**
+	 * From {@code (blk)+} build
 	 *
 	 * <pre>
-	 *  o--A->o
-	 *  |     ^
-	 *  o---->|
+	 *   |---------|
+	 *   v         |
+	 *  [o-blk-o]->o->o
 	 * </pre>
 	 *
-	 * or, if {@code A} is a block, just add an empty alt to the end of the
-	 * block
+	 * We add a decision for loop back node to the existing one at {@code blk}
+	 * start.
 	 */
     @NotNull
 	@Override
@@ -455,17 +532,20 @@ public class ParserATNFactory implements ATNFactory{
 		return blk;
 	}
 
- /**
-	 * From {@code (blk)+} build
+    /**
+	 * From {@code (blk)*} build {@code ( blk+ )?} with *two* decisions, one for
+	 * entry and one for choosing alts of {@code blk}.
 	 *
 	 * <pre>
-	 *   |---------|
-	 *   v         |
-	 *  [o-blk-o]->o->o
+	 *   |-------------|
+	 *   v             |
+	 *   o--[o-blk-o]->o  o
+	 *   |                ^
+	 *   -----------------|
 	 * </pre>
 	 *
-	 * We add a decision for loop back node to the existing one at {@code blk}
-	 * start.
+	 * Note that the optional bypass must jump outside the loop as
+	 * {@code (A|B)*} is not the same thing as {@code (A|B|)+}.
 	 */
     @NotNull
 	@Override
@@ -502,21 +582,16 @@ public class ParserATNFactory implements ATNFactory{
 		return new Handle(blkStart, end);
 	}
 
- /**
-	 * From {@code (blk)*} build {@code ( blk+ )?} with *two* decisions, one for
-	 * entry and one for choosing alts of {@code blk}.
-	 *
-	 * <pre>
-	 *   |-------------|
-	 *   v             |
-	 *   o--[o-blk-o]->o  o
-	 *   |                ^
-	 *   -----------------|
-	 * </pre>
-	 *
-	 * Note that the optional bypass must jump outside the loop as
-	 * {@code (A|B)*} is not the same thing as {@code (A|B|)+}.
-	 */
+    /** Build an atom with all possible values in its label. */
+    @NotNull
+	@Override
+	public Handle wildcard(GrammarAST node) {
+		ATNState left = newState(node);
+		ATNState right = newState(node);
+		left.addTransition(new WildcardTransition(right));
+		node.atnState = left;
+		return new Handle(left, right);
+	}
     @NotNull
 	@Override
 	public Handle star(@NotNull GrammarAST starAST, @NotNull Handle elem) {
@@ -553,27 +628,7 @@ public class ParserATNFactory implements ATNFactory{
 		return new Handle(entry, end);
 	}
 
- /** Build an atom with all possible values in its label. */
-    @NotNull
-	@Override
-	public Handle wildcard(GrammarAST node) {
-		ATNState left = newState(node);
-		ATNState right = newState(node);
-		left.addTransition(new WildcardTransition(right));
-		node.atnState = left;
-		return new Handle(left, right);
-	}
-    protected void epsilon(ATNState a, @NotNull ATNState b) {
-		epsilon(a, b, false);
-	}
-    protected void epsilon(ATNState a, @NotNull ATNState b, boolean prepend) {
-		if ( a!=null ) {
-			int index = prepend ? 0 : a.getNumberOfTransitions();
-			a.addTransition(index, new EpsilonTransition(b));
-		}
-	}
-
- /** Define all the rule begin/end ATNStates to solve forward reference
+    /** Define all the rule begin/end ATNStates to solve forward reference
 	 *  issues.
 	 */
     void createRuleStartAndStopATNStates() {
@@ -591,43 +646,7 @@ public class ParserATNFactory implements ATNFactory{
 		}
 	}
 
- /** Build what amounts to an epsilon transition with a semantic
-	 *  predicate action.  The {@code pred} is a pointer into the AST of
-	 *  the {@link ANTLRParser#SEMPRED} token.
-	 */
-    @Override
-	public Handle sempred(PredAST pred) {
-		//System.out.println("sempred: "+ pred);
-		ATNState left = newState(pred);
-		ATNState right = newState(pred);
-
-		AbstractPredicateTransition p;
-		if (pred.getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME) != null) {
-			int precedence = Integer.parseInt(pred.getOptionString(LeftRecursiveRuleTransformer.PRECEDENCE_OPTION_NAME));
-			p = new PrecedencePredicateTransition(right, precedence);
-		}
-		else {
-			boolean isCtxDependent = UseDefAnalyzer.actionIsContextDependent(pred);
-			p = new PredicateTransition(right, currentRule.index, g.sempreds.get(pred), isCtxDependent);
-		}
-
-		left.addTransition(p);
-		pred.atnState = left;
-		return new Handle(left, right);
-	}
-    public void addRuleFollowLinks() {
-        for (ATNState p : atn.states) {
-            if ( p!=null &&
-                 p.getStateType() == ATNState.BASIC && p.getNumberOfTransitions()==1 &&
-                 p.transition(0) instanceof RuleTransition )
-            {
-                RuleTransition rt = (RuleTransition) p.transition(0);
-                addFollowLink(rt.ruleIndex, rt.followState);
-            }
-        }
-    }
-
- /** Add an EOF transition to any rule end ATNState that points to nothing
+    /** Add an EOF transition to any rule end ATNState that points to nothing
      *  (i.e., for all those rules not invoked by another rule).  These
      *  are start symbols then.
 	 *
@@ -635,6 +654,9 @@ public class ParserATNFactory implements ATNFactory{
 	 *  not invoked by another rule (they can only be invoked from outside).
 	 *  These are the start rules.
      */
+    protected void epsilon(ATNState a, @NotNull ATNState b) {
+		epsilon(a, b, false);
+	}
     public int addEOFTransitionToStartRules() {
 		int n = 0;
 		ATNState eofTarget = newState(null); // one unique EOF target for all rules
@@ -647,6 +669,12 @@ public class ParserATNFactory implements ATNFactory{
 		}
 		return n;
 	}
+    protected void epsilon(ATNState a, @NotNull ATNState b, boolean prepend) {
+		if ( a!=null ) {
+			int index = prepend ? 0 : a.getNumberOfTransitions();
+			a.addTransition(index, new EpsilonTransition(b));
+		}
+	}
     @Override
 	public Handle label(Handle t) {
 		return t;
@@ -654,6 +682,27 @@ public class ParserATNFactory implements ATNFactory{
     @Override
 	public Handle listLabel(Handle t) {
 		return t;
+	}
+    public void addRuleFollowLinks() {
+        for (ATNState p : atn.states) {
+            if ( p!=null &&
+                 p.getStateType() == ATNState.BASIC && p.getNumberOfTransitions()==1 &&
+                 p.transition(0) instanceof RuleTransition )
+            {
+                RuleTransition rt = (RuleTransition) p.transition(0);
+                addFollowLink(rt.ruleIndex, rt.followState);
+            }
+        }
+    }
+    @NotNull
+	@Override
+	public ATNState newState() { return newState(null); }
+    public boolean expectNonGreedy(@NotNull BlockAST blkAST) {
+		if ( blockHasWildcardAlt(blkAST) ) {
+			return true;
+		}
+
+		return false;
 	}
     @NotNull
 	public <T extends ATNState> T newState(@NotNull Class<T> nodeType, GrammarAST node) {
@@ -682,25 +731,8 @@ public class ParserATNFactory implements ATNFactory{
 		String message = String.format("Could not create %s of type %s.", ATNState.class.getName(), nodeType.getName());
 		throw new UnsupportedOperationException(message, cause);
 	}
-    @NotNull
-	@Override
-	public ATNState newState() { return newState(null); }
-    @NotNull
-	public ATNState newState(@Nullable GrammarAST node) {
-		ATNState n = new BasicState();
-		n.setRuleIndex(currentRule.index);
-		atn.addState(n);
-		return n;
-	}
-    public boolean expectNonGreedy(@NotNull BlockAST blkAST) {
-		if ( blockHasWildcardAlt(blkAST) ) {
-			return true;
-		}
 
-		return false;
-	}
-
- /**
+    /**
 	 * {@code (BLOCK (ALT .))} or {@code (BLOCK (ALT 'a') (ALT .))}.
 	 */
     public static boolean blockHasWildcardAlt(@NotNull GrammarAST block) {
@@ -724,8 +756,16 @@ public class ParserATNFactory implements ATNFactory{
 	public String lexerCallCommand(GrammarAST ID, GrammarAST arg) {
 		return null;
 	}
+    @NotNull
+	public ATNState newState(@Nullable GrammarAST node) {
+		ATNState n = new BasicState();
+		n.setRuleIndex(currentRule.index);
+		atn.addState(n);
+		return n;
+	}
     @Override
 	public String lexerCommand(GrammarAST ID) {
 		return null;
 	}
+
 }

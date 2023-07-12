@@ -6,7 +6,7 @@ class Tree:
 
     def __init__(self,root):
         self.root=root
-        self.import_root=Pack("")
+        self.import_root=Pack("",0)
         self.root.add_child(self.import_root)
         self.import_ref={}
         self.class_ref={}
@@ -17,7 +17,7 @@ class Tree:
 
 
     def import_traverse(self,node,path,version):
-        parent=node.add_child(Pack(path[0]))
+        parent=node.add_child(Pack(path[0],0))
 
         if len(path)>2:
             child=parent.add_child(End(path[1],path[2],path[3]))
