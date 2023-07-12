@@ -31,7 +31,9 @@ def import_merge(lang,base,right,left):
     return result
 
 def body_merge(lang, base, right, left):
-    append_tree(lang,base,right,left)
+    res = append_tree(lang,base,right,left)
+    if res == "**to_be_handled_by_git**":
+        return "**to_be_handled_by_git**"
     tree.set_classes(lang)
     tree.set_methods(lang)
     if isinstance(lang, Python):
@@ -42,12 +44,23 @@ def body_merge(lang, base, right, left):
     return result
 
 def append_tree(lang, base, right, left):
-    tree.add_body(lang.getClasses(base,"base"))
-    print("Right")
-    tree.add_body(lang.getClasses(right,"right"))
-    print("Left")
-    tree.add_body(lang.getClasses(left,"left"))
-    print("Done")
+    leftclass = lang.getClasses(base,"left")
+    if leftclass == "Not in scope" :
+        return "**to_be_handled_by_git**"
+    tree.add_body(leftclass)
+
+    rightclass = lang.getClasses(right,"right")
+    if rightclass == "Not in scope" :
+        return "**to_be_handled_by_git**"
+    tree.add_body(rightclass)
+
+
+    baseclass = lang.getClasses(base,"base")
+    if baseclass == "Not in scope" :
+        return "**to_be_handled_by_git**"
+    tree.add_body(baseclass)
+
+
 
 
 

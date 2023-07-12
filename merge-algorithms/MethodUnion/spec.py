@@ -5,6 +5,7 @@ from Node import Pack, Class, Method
 from abc import ABC,abstractmethod
 import os
 import copy
+import re
 import astor
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
@@ -491,6 +492,19 @@ class Python(Lang):
     def getUsages(self,git_content):
         return super().getUsages()
     
+    def ifinscope(self,codeast):
+        structure = ''
+        pattrn = r'^(Assign)*(ClassDef|FunctionDef)*(If)?$'
+        for nod in codeast.body:
+            structure= structure+ (nod).__name__
+        if re.match(pattrn, structure):
+            return True
+        else:
+            return False
+
+
+
+    
     def getClasses(self,content,version):
         str_content = ""
         for line in content:
@@ -499,7 +513,11 @@ class Python(Lang):
                 str_content=str_content+line+'\n'
         content = str_content
 
+
         codeast = self.generateAST(content)
+        if self.ifinscope(codeast)== False:
+            return "Not in scope"
+        
         for nod in codeast.body:
             if isinstance(nod, ast.FunctionDef):
                 methodName = nod.name
