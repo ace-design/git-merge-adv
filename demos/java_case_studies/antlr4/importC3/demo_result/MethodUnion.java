@@ -18,6 +18,43 @@ import org.antlr.v4.runtime.misc.Nullable;
 import org.antlr.v4.tool.Attribute;
 import org.antlr.v4.tool.AttributeDict;
 
+/*
+ * [The "BSD license"]
+ *  Copyright (c) 2012 Terence Parr
+ *  Copyright (c) 2012 Sam Harwell
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *  3. The name of the author may not be used to endorse or promote products
+ *     derived from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/** Check for symbol problems; no side-effects.  Inefficient to walk rules
+ *  and such multiple times, but I like isolating all error checking outside
+ *  of code that actually defines symbols etc...
+ *
+ *  Side-effect: strip away redef'd rules.
+ */
+
 public class SymbolChecks{
 
     Grammar g;
@@ -26,7 +63,6 @@ public class SymbolChecks{
     Set<String> tokenIDs = new HashSet<String>();
     Map<String, Set<String>> actionScopeToActionNames = new HashMap<String, Set<String>>();
     public ErrorManager errMgr;
-
     public SymbolChecks(Grammar g, SymbolCollector collector) {
         this.g = g;
         this.collector = collector;
@@ -163,51 +199,6 @@ public class SymbolChecks{
 			errMgr.grammarError(etype, g.fileName, labelID.token, name, r.name);
 		}
 	}
-    public void checkForAttributeConflicts(Rule r) {
-		checkDeclarationRuleConflicts(r, r.args, nameToRuleMap.keySet(), ErrorType.ARG_CONFLICTS_WITH_RULE);
-		checkDeclarationRuleConflicts(r, r.args, tokenIDs, ErrorType.ARG_CONFLICTS_WITH_TOKEN);
-
-		checkDeclarationRuleConflicts(r, r.retvals, nameToRuleMap.keySet(), ErrorType.RETVAL_CONFLICTS_WITH_RULE);
-		checkDeclarationRuleConflicts(r, r.retvals, tokenIDs, ErrorType.RETVAL_CONFLICTS_WITH_TOKEN);
-
-		checkDeclarationRuleConflicts(r, r.locals, nameToRuleMap.keySet(), ErrorType.LOCAL_CONFLICTS_WITH_RULE);
-		checkDeclarationRuleConflicts(r, r.locals, tokenIDs, ErrorType.LOCAL_CONFLICTS_WITH_TOKEN);
-
-		checkLocalConflictingDeclarations(r, r.retvals, r.args, ErrorType.RETVAL_CONFLICTS_WITH_ARG);
-		checkLocalConflictingDeclarations(r, r.locals, r.args, ErrorType.LOCAL_CONFLICTS_WITH_ARG);
-		checkLocalConflictingDeclarations(r, r.locals, r.retvals, ErrorType.LOCAL_CONFLICTS_WITH_RETVAL);
-	}
-    protected void checkDeclarationRuleConflicts(@NotNull Rule r, @Nullable AttributeDict attributes, @NotNull Set<String> ruleNames, @NotNull ErrorType errorType) {
-		if (attributes == null) {
-			return;
-		}
-
-		for (Attribute attribute : attributes.attributes.values()) {
-			if (ruleNames.contains(attribute.name)) {
-				errMgr.grammarError(
-					errorType,
-					g.fileName,
-					attribute.token != null ? attribute.token : ((GrammarAST)r.ast.getChild(0)).token,
-					attribute.name,
-					r.name);
-			}
-		}
-	}
-    protected void checkLocalConflictingDeclarations(@NotNull Rule r, @Nullable AttributeDict attributes, @Nullable AttributeDict referenceAttributes, @NotNull ErrorType errorType) {
-		if (attributes == null || referenceAttributes == null) {
-			return;
-		}
-
-		Set<String> conflictingKeys = attributes.intersection(referenceAttributes);
-		for (String key : conflictingKeys) {
-			errMgr.grammarError(
-				errorType,
-				g.fileName,
-				attributes.get(key).token != null ? attributes.get(key).token : ((GrammarAST) r.ast.getChild(0)).token,
-				key,
-				r.name);
-		}
-	}
     public void checkForRuleArgumentAndReturnValueConflicts(Rule r) {
         if ( r.retvals!=null ) {
             Set<String> conflictingKeys = r.retvals.intersection(r.args);
@@ -223,6 +214,20 @@ public class SymbolChecks{
             }
         }
     }
+    public void checkForAttributeConflicts(Rule r) {
+		checkDeclarationRuleConflicts(r, r.args, nameToRuleMap.keySet(), ErrorType.ARG_CONFLICTS_WITH_RULE);
+		checkDeclarationRuleConflicts(r, r.args, tokenIDs, ErrorType.ARG_CONFLICTS_WITH_TOKEN);
+
+		checkDeclarationRuleConflicts(r, r.retvals, nameToRuleMap.keySet(), ErrorType.RETVAL_CONFLICTS_WITH_RULE);
+		checkDeclarationRuleConflicts(r, r.retvals, tokenIDs, ErrorType.RETVAL_CONFLICTS_WITH_TOKEN);
+
+		checkDeclarationRuleConflicts(r, r.locals, nameToRuleMap.keySet(), ErrorType.LOCAL_CONFLICTS_WITH_RULE);
+		checkDeclarationRuleConflicts(r, r.locals, tokenIDs, ErrorType.LOCAL_CONFLICTS_WITH_TOKEN);
+
+		checkLocalConflictingDeclarations(r, r.retvals, r.args, ErrorType.RETVAL_CONFLICTS_WITH_ARG);
+		checkLocalConflictingDeclarations(r, r.locals, r.args, ErrorType.LOCAL_CONFLICTS_WITH_ARG);
+		checkLocalConflictingDeclarations(r, r.locals, r.retvals, ErrorType.LOCAL_CONFLICTS_WITH_RETVAL);
+	}
     public void checkRuleArgs(Grammar g, List<GrammarAST> rulerefs) {
 		if ( rulerefs==null ) return;
 		for (GrammarAST ref : rulerefs) {
@@ -237,6 +242,22 @@ public class SymbolChecks{
 			else if ( arg==null && (r!=null&&r.args!=null) ) {
 				errMgr.grammarError(ErrorType.MISSING_RULE_ARGS,
 										  g.fileName, ref.token, ruleName);
+			}
+		}
+	}
+    protected void checkDeclarationRuleConflicts(@NotNull Rule r, @Nullable AttributeDict attributes, @NotNull Set<String> ruleNames, @NotNull ErrorType errorType) {
+		if (attributes == null) {
+			return;
+		}
+
+		for (Attribute attribute : attributes.attributes.values()) {
+			if (ruleNames.contains(attribute.name)) {
+				errMgr.grammarError(
+					errorType,
+					g.fileName,
+					attribute.token != null ? attribute.token : ((GrammarAST)r.ast.getChild(0)).token,
+					attribute.name,
+					r.name);
 			}
 		}
 	}
@@ -260,4 +281,20 @@ public class SymbolChecks{
 			}
 		}
 	}
+    protected void checkLocalConflictingDeclarations(@NotNull Rule r, @Nullable AttributeDict attributes, @Nullable AttributeDict referenceAttributes, @NotNull ErrorType errorType) {
+		if (attributes == null || referenceAttributes == null) {
+			return;
+		}
+
+		Set<String> conflictingKeys = attributes.intersection(referenceAttributes);
+		for (String key : conflictingKeys) {
+			errMgr.grammarError(
+				errorType,
+				g.fileName,
+				attributes.get(key).token != null ? attributes.get(key).token : ((GrammarAST) r.ast.getChild(0)).token,
+				key,
+				r.name);
+		}
+	}
+
 }

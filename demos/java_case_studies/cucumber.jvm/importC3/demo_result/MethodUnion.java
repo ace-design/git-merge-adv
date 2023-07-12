@@ -41,7 +41,6 @@ public final class RuntimeOptionsBuilder{
     private final List<URI> parsedGlue = new ArrayList<>();
     private final ParsedPluginData parsedPluginData = new ParsedPluginData();
     private Class<? extends ObjectFactory> parsedObjectFactoryClass = null;
-
     public RuntimeOptionsBuilder addRerun(Collection<FeatureWithLines> featureWithLines) {
         if (parsedRerunPaths == null) {
             parsedRerunPaths = new ArrayList<>();
@@ -215,44 +214,18 @@ public final class RuntimeOptionsBuilder{
         this.parsedWip = wip;
         return this;
     }
-    public RuntimeOptionsBuilder addDefaultSummaryPrinterIfNotPresent() {
-        parsedPluginData.addDefaultSummaryPrinterIfNotPresent();
-        return this;
-    }
-    public RuntimeOptionsBuilder addDefaultFormatterIfNotPresent() {
-        parsedPluginData.addDefaultFormatterIfNotPresent();
-        return this;
-    }
     public void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
         this.parsedObjectFactoryClass = objectFactoryClass;
     }
-
-    private static class ParsedOptionNames{
-
-        private List<String> names = new ArrayList<>();
-        private boolean clobber = false;
-
-        void addName(String name, boolean isAddOption) {
-            names.add(name);
-            if (!isAddOption) {
-                clobber = true;
-            }
-        }
-        void updateNameList(List<String> nameList) {
-            if (!names.isEmpty()) {
-                if (clobber) {
-                    nameList.clear();
-                }
-                nameList.addAll(names);
-            }
-        }
+    public RuntimeOptionsBuilder addDefaultSummaryPrinterIfNotPresent() {
+        parsedPluginData.addDefaultSummaryPrinterIfNotPresent();
+        return this;
     }
 
     static final class ParsedPluginData{
 
         private ParsedPlugins formatters = new ParsedPlugins();
         private ParsedPlugins summaryPrinters = new ParsedPlugins();
-
         void addPluginName(String name, boolean isAddPlugin) {
             PluginOption pluginOption = PluginOption.parse(name);
             if (pluginOption.isSummaryPrinter()) {
@@ -284,7 +257,6 @@ public final class RuntimeOptionsBuilder{
 
             private List<Options.Plugin> names = new ArrayList<>();
             private boolean clobber = false;
-
             void addName(Options.Plugin name, boolean isAddOption) {
                 names.add(name);
                 if (!isAddOption) {
@@ -299,6 +271,31 @@ public final class RuntimeOptionsBuilder{
                     nameList.addAll(names);
                 }
             }
+
         }
+    }    public RuntimeOptionsBuilder addDefaultFormatterIfNotPresent() {
+        parsedPluginData.addDefaultFormatterIfNotPresent();
+        return this;
+    }
+
+    private static class ParsedOptionNames{
+
+        private List<String> names = new ArrayList<>();
+        private boolean clobber = false;
+        void addName(String name, boolean isAddOption) {
+            names.add(name);
+            if (!isAddOption) {
+                clobber = true;
+            }
+        }
+        void updateNameList(List<String> nameList) {
+            if (!names.isEmpty()) {
+                if (clobber) {
+                    nameList.clear();
+                }
+                nameList.addAll(names);
+            }
+        }
+
     }
 }

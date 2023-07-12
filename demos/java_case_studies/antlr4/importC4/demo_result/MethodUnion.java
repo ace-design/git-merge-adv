@@ -7,13 +7,56 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/*
+ [The "BSD license"]
+ Copyright (c) 2011 Terence Parr
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+    derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/** Buffer all input tokens but do on-demand fetching of new tokens from
+ *  lexer. Useful when the parser or lexer has to set context/mode info before
+ *  proper lexing of future tokens. The ST template parser needs this,
+ *  for example, because it has to constantly flip back and forth between
+ *  inside/output templates. E.g., <names:{hi, <it>}> has to parse names
+ *  as part of an expression but "hi, <it>" as a nested template.
+ *
+ *  You can't use this stream if you pass whitespace or other off-channel
+ *  tokens to the parser. The stream can't ignore off-channel tokens.
+ *  (UnbufferedTokenStream is the same way.)  Use CommonTokenStream.
+ *
+ *  This is not a subclass of UnbufferedTokenStream because I don't want
+ *  to confuse small moving window of tokens it uses for the full buffer.
+ */
+
 public class BufferedTokenStream implements TokenStream{
 
     protected TokenSource tokenSource;
     protected List<Token> tokens = new ArrayList<Token>(100);
     protected int lastMarker;
     protected int p = -1;
-
 
     /** Record every single token pulled from the source so we can reproduce
      *  chunks of it later.  The buffer in LookaheadStream overlaps sometimes
@@ -99,7 +142,7 @@ public class BufferedTokenStream implements TokenStream{
         return tokens.get(i);
     }
 
- /** Get all tokens from start..stop inclusively */
+    /** Get all tokens from start..stop inclusively */
     public List<Token> get(int start, int stop) {
 		if ( start<0 || stop<0 ) return null;
 		if ( p == -1 ) setup();
@@ -179,7 +222,7 @@ public class BufferedTokenStream implements TokenStream{
 		return getTokens(start,stop, s);
     }
 
- /** Given a starting index, return the index of the next token on channel.
+    /** Given a starting index, return the index of the next token on channel.
 	 *  Return i if tokens[i] is on channel.  Return -1 if there are no tokens
 	 *  on channel between i and EOF.
 	 */
@@ -196,7 +239,7 @@ public class BufferedTokenStream implements TokenStream{
 		return i;
 	}
 
- /** Given a starting index, return the index of the previous token on channel.
+    /** Given a starting index, return the index of the previous token on channel.
 	 *  Return i if tokens[i] is on channel. Return -1 if there are no tokens
 	 *  on channel between i and 0.
 	 */
@@ -207,7 +250,7 @@ public class BufferedTokenStream implements TokenStream{
 		return i;
 	}
 
- /** Collect all tokens on specified channel to the right of
+    /** Collect all tokens on specified channel to the right of
 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL or
 	 *  EOF. If channel is -1, find any non default channel token.
 	 */
@@ -228,7 +271,7 @@ public class BufferedTokenStream implements TokenStream{
 		return filterForChannel(from, to, channel);
 	}
 
- /** Collect all hidden tokens (any off-default channel) to the right of
+    /** Collect all hidden tokens (any off-default channel) to the right of
 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL
 	 *  of EOF.
 	 */
@@ -236,7 +279,7 @@ public class BufferedTokenStream implements TokenStream{
 		return getHiddenTokensToRight(tokenIndex, -1);
 	}
 
- /** Collect all tokens on specified channel to the left of
+    /** Collect all tokens on specified channel to the left of
 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
 	 *  If channel is -1, find any non default channel token.
 	 */
@@ -256,7 +299,7 @@ public class BufferedTokenStream implements TokenStream{
 		return filterForChannel(from, to, channel);
 	}
 
- /** Collect all hidden tokens (any off-default channel) to the left of
+    /** Collect all hidden tokens (any off-default channel) to the left of
 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
 	 */
     public List<Token> getHiddenTokensToLeft(int tokenIndex) {
@@ -279,7 +322,7 @@ public class BufferedTokenStream implements TokenStream{
     @Override
     public String getSourceName() {	return tokenSource.getSourceName();	}
 
- /** Get the text of all tokens in this buffer. */
+    /** Get the text of all tokens in this buffer. */
     @NotNull
 	@Override
 	public String getText() {
@@ -331,4 +374,5 @@ public class BufferedTokenStream implements TokenStream{
             sync(i);
         }
     }
+
 }

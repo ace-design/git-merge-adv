@@ -38,6 +38,22 @@ import static java.util.stream.Collectors.toList;
 import cucumber.runner.*;
 import cucumber.runtime.*;
 
+/**
+ * Glue code for running Cucumber via TestNG.
+ */
+
+/**
+ * Glue code for running Cucumber via TestNG.
+ * <p>
+ * Options can be provided in order of precedence by:
+ * <ol>
+ * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@link System#getProperties()} ()}</li>
+ * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@link System#getenv()}</li>
+ * <li>Annotating the runner class with {@link CucumberOptions}</li>
+ * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@value Constants#CUCUMBER_PROPERTIES_FILE_NAME}</li>
+ * </ol>
+ */
+
 @API(status = API.Status.STABLE)
 public final class TestNGCucumberRunner extends Blah{
 
@@ -47,7 +63,6 @@ public final class TestNGCucumberRunner extends Blah{
     private final RuntimeOptions runtimeOptions;
     private final Plugins plugins;
     private final FeaturePathFeatureSupplier featureSupplier;
-
 
     /**
      * Bootstrap the cucumber runtime
@@ -152,4 +167,5 @@ public final class TestNGCucumberRunner extends Blah{
         }
         return features;
     }
+
 }

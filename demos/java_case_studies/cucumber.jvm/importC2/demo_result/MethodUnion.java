@@ -39,7 +39,6 @@ public final class RuntimeOptions implements
     private final List<Plugin> formatters = new ArrayList<>();
     private final List<Plugin> summaryPrinters = new ArrayList<>();
     private Class<? extends ObjectFactory> objectFactoryClass;
-
     private RuntimeOptions() {
 
     }
@@ -175,4 +174,5 @@ public final class RuntimeOptions implements
     void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
         this.objectFactoryClass = objectFactoryClass;
     }
+
 }

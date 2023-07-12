@@ -10,10 +10,62 @@ import org.antlr.v4.tool.ast.GrammarAST;
 import java.util.List;
 import org.antlr.v4.runtime.misc.NotNull;
 
+/*
+ [The "BSD license"]
+ Copyright (c) 2011 Terence Parr
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+    derived from this software without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/** Do as much semantic checking as we can and fill in grammar
+ *  with rules, actions, and token definitions.
+ *  The only side effects are in the grammar passed to process().
+ *  We consume a bunch of memory here while we build up data structures
+ *  to perform checking, but all of it goes away after this pipeline object
+ *  gets garbage collected.
+ *
+ *  After this pipeline finishes, we can be sure that the grammar
+ *  is syntactically correct and that it's semantically correct enough for us
+ *  to attempt grammar analysis. We have assigned all token types.
+ *  Note that imported grammars bring in token and rule definitions
+ *  but only the root grammar and any implicitly created lexer grammar
+ *  get their token definitions filled up. We are treating the
+ *  imported grammars like includes.
+ *
+ *  The semantic pipeline works on root grammars (those that do the importing,
+ *  if any). Upon entry to the semantic pipeline, all imported grammars
+ *  should have been loaded into delegate grammar objects with their
+ *  ASTs created.  The pipeline does the BasicSemanticChecks on the
+ *  imported grammar before collecting symbols. We cannot perform the
+ *  simple checks such as undefined rule until we have collected all
+ *  tokens and rules from the imported grammars into a single collection.
+ */
+
 public class SemanticPipeline{
 
     public Grammar g;
-
     public SemanticPipeline(Grammar g) {
 		this.g = g;
 	}
@@ -124,33 +176,6 @@ public class SemanticPipeline{
 
 	}
 
-    boolean hasTypeOrMoreCommand(@NotNull Rule r) {
-		GrammarAST ast = r.ast;
-		if (ast == null) {
-			return false;
-		}
-
-		GrammarAST altActionAst = (GrammarAST)ast.getFirstDescendantWithType(ANTLRParser.LEXER_ALT_ACTION);
-		if (altActionAst == null) {
-			// the rule isn't followed by any commands
-			return false;
-		}
-
-		// first child is the alt itself, subsequent are the actions
-		for (int i = 1; i < altActionAst.getChildCount(); i++) {
-			GrammarAST node = (GrammarAST)altActionAst.getChild(i);
-			if (node.getType() == ANTLRParser.LEXER_ACTION_CALL) {
-				if ("type".equals(node.getChild(0).getText())) {
-					return true;
-				}
-			}
-			else if ("more".equals(node.getText())) {
-				return true;
-			}
-		}
-
-		return false;
-	}
     void assignTokenTypes(Grammar g, List<GrammarAST> tokensDefs,
 						  List<GrammarAST> tokenIDs, List<GrammarAST> terminals)
 	{
@@ -191,4 +216,32 @@ public class SemanticPipeline{
 		g.tool.log("semantics", "tokens="+g.tokenNameToTypeMap);
         g.tool.log("semantics", "strings="+g.stringLiteralToTypeMap);
 	}
+    boolean hasTypeOrMoreCommand(@NotNull Rule r) {
+		GrammarAST ast = r.ast;
+		if (ast == null) {
+			return false;
+		}
+
+		GrammarAST altActionAst = (GrammarAST)ast.getFirstDescendantWithType(ANTLRParser.LEXER_ALT_ACTION);
+		if (altActionAst == null) {
+			// the rule isn't followed by any commands
+			return false;
+		}
+
+		// first child is the alt itself, subsequent are the actions
+		for (int i = 1; i < altActionAst.getChildCount(); i++) {
+			GrammarAST node = (GrammarAST)altActionAst.getChild(i);
+			if (node.getType() == ANTLRParser.LEXER_ACTION_CALL) {
+				if ("type".equals(node.getChild(0).getText())) {
+					return true;
+				}
+			}
+			else if ("more".equals(node.getText())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }
