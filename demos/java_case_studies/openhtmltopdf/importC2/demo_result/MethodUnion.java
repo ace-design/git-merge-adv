@@ -1,4 +1,5 @@
 package com.openhtmltopdf.objects.pdf;
+import java.awt.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
@@ -13,7 +14,6 @@ import org.w3c.dom.Element;
 import com.openhtmltopdf.extend.OutputDevice;
 import com.openhtmltopdf.pdfboxout.PdfBoxOutputDevice;
 import com.openhtmltopdf.render.RenderingContext;
-import java.awt.*;
 
 public class MergeBackgroundPdfDrawer extends PdfDrawerBase{
 

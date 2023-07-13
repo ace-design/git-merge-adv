@@ -9,6 +9,7 @@ def parsing():
     parser.add_argument('--cs', type=str, help="Path to case study folder")
     parser.add_argument('--algo', type=str, help="Name of merge algorithm")
     parser.add_argument('--lang',type=str,help="Name of language")
+    parser.add_argument('--purpose',type=str,help="Enter all for general, or spec for specific")
     args = parser.parse_args()
     return args
 
@@ -16,16 +17,34 @@ def main():
     case_study=parsing().cs
     algo=parsing().algo
     lang=get_suffix(parsing().lang)
+    purpose=parsing().purpose
 
     output_path=case_study.strip("../")
 
-    get_case_study(case_study,output_path)
-    exec_algo(algo,output_path,lang)
-    run_gumtree(output_path,lang,algo)
+    if (purpose=="spec"):
+        get_case_study(case_study,output_path)
+        exec_algo(algo,output_path,lang)
 
-    if (lang=="java"):
-        run_gumtree_spork(output_path)
-        run_gumtree_jdime(output_path)
+        run_gumtree(output_path,lang,algo)
+
+        if (lang=="java"):
+            run_gumtree_spork(output_path)
+            run_gumtree_jdime(output_path)
+    else:
+        for subdir, dirs, files in os.walk(output_path):
+            for d in dirs:
+                if ("importC" in d or "conflict" in d):
+                    print("\nExecute "+os.path.join(subdir, d)+":")
+                    print(os.path.join(subdir, d),lang)
+                    exec_algo(algo,os.path.join(subdir, d),lang)
+
+                    run_gumtree(os.path.join(subdir,d),lang,algo)
+
+                    if (lang=="java"):
+                        run_gumtree_spork(os.path.join(subdir,d))
+                        run_gumtree_jdime(os.path.join(subdir,d))
+
+    # for dir in os.walk(output_path)
 
 
 def get_suffix(lang):

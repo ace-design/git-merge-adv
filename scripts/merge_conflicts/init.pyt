@@ -68,9 +68,10 @@ def main():
     filename=parsing().output
 
     conflict_merges=generate(url)
-    genCSV(filename, conflict_merges)
-
-
+    if (len(conflict_merges)!=0):
+        genCSV(filename, conflict_merges)
+    else:
+        print("No Merge Conflicts")
 
 
 

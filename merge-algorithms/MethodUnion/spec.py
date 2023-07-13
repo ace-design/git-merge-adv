@@ -11,7 +11,6 @@ import astor
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
 
-
 # Obtains path to already cloned tree-sitter-java repo (from CompressedTree)
 for dirpath, dirnames, filenames in os.walk('../'):
     for name in dirnames:
@@ -195,36 +194,27 @@ class Java(Lang):
         tree = parser.parse(byte_rep)
 
         query = Java_Lang.query("""
-            ((package_declaration
-                (scoped_identifier
-                    scope: (scoped_identifier) @type))
-                    (#match? @type ""))
+            ((package_declaration) @name)
 
         """)
         captures= query.captures(tree.root_node)
         query = Java_Lang.query("""
-            ((import_declaration
-                (scoped_identifier
-                    scope: (scoped_identifier) @type))
-                    (#match? @type ""))
+            ((import_declaration) @name)
 
         """)
         captures+= query.captures(tree.root_node)
         query = Java_Lang.query("""
-            ((import_declaration
-                (scoped_identifier
-                    scope: (identifier) @type))
-                    (#match? @type ""))
+            ((import_declaration) @name)
         """)
         captures+= query.captures(tree.root_node)
 
 
 
         for val in captures:
-            res=val[0].parent.parent.text
-
+            res=val[0].text
             line=res.decode()
-            other.remove(line)
+            if (line in other):
+                other.remove(line)
 
             #Split import statement to seperate path and desired package.
             index=line.rfind(".")
@@ -329,12 +319,19 @@ class Java(Lang):
                 if (class_obj not in classes):
                     classes.append(class_obj)
             else:
-                if (nested_class_details.children[3].text.decode()[0]!="{"):
-                    nested_class=" "+nested_class_details.children[3].text.decode()
-                else:
-                    nested_class=""
-                nested_class=nested_class.split('{')[0]
-                full_nested_name=nested_class_details.children[0].text.decode()+" "+nested_class_details.children[1].text.decode()+" "+nested_class_details.children[2].text.decode()+nested_class
+                full_nested_name=""
+                for child in nested_class_details.children:
+                    if ("body" not in child.type and "block" not in child.type):
+                        full_nested_name+=child.text.decode()+" "
+                    else:
+                        full_nested_name=full_nested_name.strip(" ")
+                        break
+                # if (nested_class_details.children[3].text.decode()[0]!="{"):
+                #     nested_class=" "+nested_class_details.children[3].text.decode()
+                # else:
+                #     nested_class=""
+                # nested_class=nested_class.split('{')[0]
+                # full_nested_name=nested_class_details.children[0].text.decode()+" "+nested_class_details.children[1].text.decode()+" "+nested_class_details.children[2].text.decode()+nested_class
                 class_ref[full_nested_name].add_sub_classes(class_obj)
 
         #Adds all variable declarations to associ@API(status = API.Status.STABLE)\npublic final class TestNGCucumberRunner ated classes.
