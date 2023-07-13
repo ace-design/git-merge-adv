@@ -3,7 +3,6 @@ import subprocess
 #Parts of code given by Richard Li
 
 def getHashes():
-    all_merges=[]
     merges=subprocess.check_output(['git log --merges --pretty=format:"%h"'],shell=True).decode('utf-8').split('\n')
     return merges
 

@@ -1,8 +1,0 @@
-Commit Hash:240b77d0
-Left Parent Hash:003b2428
-Right Parent Hash:31c4f475
-Base Hash: dde1e84e
-File Name: openhtmltopdf-core/src/main/java/com/openhtmltopdf/render/BlockBox.java
-
-Analysis:
-- There were some  import statements that were present in the base and right versions but not in left veresion, git , jdime and spork easily handled them

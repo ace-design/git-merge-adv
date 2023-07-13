@@ -1,5 +1,19 @@
 # Python Demos
 
+## Rationale
+
+Analysis of case studies from credible, and well-developed projects help us obtain quality results that we can use to further support our project development.
+
+Our secondary focus on Python will provide us with specific syntax that we can use to develop a slightly higher level algorithm than our previous Java one. 
+
+## Pre-requisites:
+
+*  `base.java`: Common ancestor between left and right parents.
+*  `left.java`: Left parent of merge
+* `right.java`: Right parent of merge
+* `desired.java`: Version of file after user manually handled.
+*  `git.java`: Version of file after git algorithm tried to handle.
+
 ## Results
 
 * Note: Formatting still needs to be fixed. Gumtree is inaccurate because of formattting, so results need to be updated after it is fixed. 
@@ -14,9 +28,7 @@
 ![My Image](images/CompressedTree.png)
 
 
-## Acknowledgements:
+### References and Acknowledgements:
 
-Case Studies obtained from the following repositories:
-* Cryptography: [https://github.com/pyca/cryptography]
-* mypy: [https://github.com/python/mypy]
+* All projects chosen from Python Awesome List: [https://github.com/vinta/awesome-python]
 

@@ -1,9 +1,0 @@
-Commit Hash: 96fc1fdb
-Left Parent Hash: 96a1ad60
-Right Parent Hash: d82d2457
-Base Hash: 4ae99b77
-File Name: blaze/compute/tests/test_postgresql_compute.py
-
-- There were again some import statements that were added in left and right , also there were statements that were removed from left , git caused conflict in same.
-- The developer kept the import statements that were removed in left , also kept the (left version)import statement that was present in base but modified in left.
-- The import statement that was removed in left and present in base and right , which developer also kept had no use in the code so it might have been removed too.

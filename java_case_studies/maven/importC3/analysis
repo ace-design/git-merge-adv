@@ -1,9 +1,0 @@
-Commit Hash: 137cbd8a9
-Left Parent Hash: 3868007b
-Right Parent Hash: 8181e7c7
-Base Hash: 39d063a4
-File Name: maven-embedder/src/main/java/org/apache/maven/cli/transfer/Slf4jMavenTransferListener.java
-
-
-Analysis
-- This example again strenthens the theory that common in base and left or base and right should be removed , anything uncommon in either left or right should be added
