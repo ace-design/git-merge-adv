@@ -1,5 +1,21 @@
 # Java Demos
 
+## Rationale
+
+Analysis of case studies from credible, and well-developed projects help us obtain quality results that we can use to further support our project development.
+
+Our focus on Java will provide us with specific syntax that we can use to develop a lower level algorithm. 
+
+## Pre-requisites:
+
+*  `base.java`: Common ancestor between left and right parents.
+*  `left.java`: Left parent of merge
+* `right.java`: Right parent of merge
+* `desired.java`: Version of file after user manually handled.
+*  `git.java`: Version of file after git algorithm tried to handle.
+* `spork_result.java`: Version of file after spork tried to handle.
+* `jdime.java`: Version of file after jdime tried to handle.
+
 ## Results
 
 ### CompressedTree Algorithm:
@@ -38,10 +54,7 @@
 * Different Paths: Number of import statements in result that are from the wrong path.
 
 
+### References and Acknowledgements:
 
-## Acknowledgements:
-
-Case Studies obtained from the following repositories:
-* Cucumber-jvm: [https://github.com/cucumber/cucumber-jvm]
-* TwelveMonkeys: [https://github.com/haraldk/TwelveMonkeys]
+* All projects chosen from Java Awesome List: [https://github.com/akullpp/awesome-java]
 

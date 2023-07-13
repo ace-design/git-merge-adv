@@ -1,7 +1,0 @@
-hash,left,right,base,file
-e9214bc,1f3237aa,72afae4f,bd86d560,pom.xml
-e9214bc,1f3237aa,72afae4f,bd86d560,src/main/java/com/amazonaws/services/dynamodb/sessionmanager/DynamoDBSessionManager.java
-e9214bc,1f3237aa,72afae4f,bd86d560,src/main/java/com/amazonaws/services/dynamodb/sessionmanager/DynamoDBSessionStore.java
-e9214bc,1f3237aa,72afae4f,bd86d560,src/main/java/com/amazonaws/services/dynamodb/sessionmanager/util/DynamoUtils.java
-5cc688f,2cb17671,f079854e,bd86d560,pom.xml
-5cc688f,2cb17671,f079854e,bd86d560,src/main/java/com/amazonaws/services/dynamodb/sessionmanager/DynamoDBSessionStore.java

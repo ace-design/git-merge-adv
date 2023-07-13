@@ -1,9 +1,0 @@
-Commit Hash:da70dc5e
-Left Parent Hash:b215c372
-Right Parent Hash:941c3047
-Base Hash: bf8534c1
-File Name: blaze/tests/test_interactive.py
-
-
-Analysis:
-- There are lot of changes introduced in the right version and git was able to handle them well but the git failed to handle them in another case that is C1b
