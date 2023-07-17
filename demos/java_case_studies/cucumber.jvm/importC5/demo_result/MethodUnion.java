@@ -2,6 +2,8 @@ package io.cucumber.testng;
 import io.cucumber.core.backend.ObjectFactoryServiceLoader;
 import io.cucumber.core.event.TestRunFinished;
 import io.cucumber.core.event.TestRunStarted;
+import cucumber.runner.*;
+import cucumber.runtime.*;
 import io.cucumber.core.eventbus.EventBus;
 import io.cucumber.core.exception.CucumberException;
 import io.cucumber.core.event.TestSourceRead;
@@ -35,24 +37,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
-import cucumber.runner.*;
-import cucumber.runtime.*;
-
-/**
- * Glue code for running Cucumber via TestNG.
- */
-
-/**
- * Glue code for running Cucumber via TestNG.
- * <p>
- * Options can be provided in order of precedence by:
- * <ol>
- * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@link System#getProperties()} ()}</li>
- * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@link System#getenv()}</li>
- * <li>Annotating the runner class with {@link CucumberOptions}</li>
- * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@value Constants#CUCUMBER_PROPERTIES_FILE_NAME}</li>
- * </ol>
- */
 
 @API(status = API.Status.STABLE)
 public final class TestNGCucumberRunner extends Blah{

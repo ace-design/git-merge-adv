@@ -15,6 +15,9 @@ class End:
     def get_dir(self):
         return self.rename
     
+    def get_start(self):
+        return self.leftstartline
+    
     def get_full_dir(self):
         if self.rename=="":
             return self.real_name

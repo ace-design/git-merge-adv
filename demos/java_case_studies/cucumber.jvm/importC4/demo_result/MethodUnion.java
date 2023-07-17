@@ -42,65 +42,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import static java.util.stream.Collectors.toList;
 
-/**
- * <p>
- * Classes annotated with {@code @RunWith(Cucumber.class)} will run a Cucumber Feature.
- * In general, the runner class should be empty without any fields or methods.
- * For example:
- * <blockquote><pre>
- * &#64;RunWith(Cucumber.class)
- * &#64;CucumberOptions(plugin = "pretty")
- * public class RunCucumberTest {
- * }
- * </pre></blockquote>
- * <p>
- * By default Cucumber will look for {@code .feature} and glue files on the classpath, using the same resource
- * path as the annotated class. For example, if the annotated class is {@code com.example.RunCucumber} then
- * features and glue are assumed to be located in {@code com.example}.
- * <p>
- * Additional hints can be provided to Cucumber by annotating the class with {@link CucumberOptions}.
- * <p>
- * Cucumber also supports JUnits {@link ClassRule}, {@link BeforeClass} and {@link AfterClass} annotations.
- * These will be executed before and after all scenarios. Using these is not recommended as it limits the portability
- * between different runners; they may not execute correctly when using the commandline, IntelliJ IDEA or
- * Cucumber-Eclipse. Instead it is recommended to use Cucumbers `Before` and `After` hooks.
- *
- * @see CucumberOptions
- */
-
-/**
- * Cucumber JUnit Runner.
- * <p>
- * A class annotated with {@code @RunWith(Cucumber.class)} will run feature files as junit tests.
- * In general, the runner class should be empty without any fields or methods.
- * For example:
- * <blockquote><pre>
- * &#64;RunWith(Cucumber.class)
- * &#64;CucumberOptions(plugin = "pretty")
- * public class RunCucumberTest {
- * }
- * </pre></blockquote>
- * <p>
- * By default Cucumber will look for {@code .feature} and glue files on the classpath, using the same resource
- * path as the annotated class. For example, if the annotated class is {@code com.example.RunCucumber} then
- * features and glue are assumed to be located in {@code com.example}.
- * <p>
- * Options can be provided in by (order of precedence):
- * <ol>
- * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@link System#getProperties()} ()}</li>
- * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@link System#getenv()}</li>
- * <li>Annotating the runner class with {@link CucumberOptions}</li>
- * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@code cucumber.properties}</li>
- * </ol>
- * <p>
- * Cucumber also supports JUnits {@link ClassRule}, {@link BeforeClass} and {@link AfterClass} annotations.
- * These will be executed before and after all scenarios. Using these is not recommended as it limits the portability
- * between different runners; they may not execute correctly when using the commandline, IntelliJ IDEA or
- * Cucumber-Eclipse. Instead it is recommended to use Cucumbers `Before` and `After` hooks.
- *
- * @see CucumberOptions
- */
-
 @API(status = API.Status.STABLE)
 public final class Cucumber extends ParentRunner<FeatureRunner>{
 

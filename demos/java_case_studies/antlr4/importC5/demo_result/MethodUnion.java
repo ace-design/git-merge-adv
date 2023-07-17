@@ -1,15 +1,3 @@
-package org.antlr.v4.semantics;
-import org.antlr.v4.analysis.LeftRecursiveRuleTransformer;
-import org.antlr.v4.parse.ANTLRParser;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.misc.Pair;
-import org.antlr.v4.tool.ErrorType;
-import org.antlr.v4.tool.Grammar;
-import org.antlr.v4.tool.Rule;
-import org.antlr.v4.tool.ast.GrammarAST;
-import java.util.List;
-import org.antlr.v4.runtime.misc.NotNull;
-
 /*
  [The "BSD license"]
  Copyright (c) 2011 Terence Parr
@@ -38,30 +26,17 @@ import org.antlr.v4.runtime.misc.NotNull;
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/** Do as much semantic checking as we can and fill in grammar
- *  with rules, actions, and token definitions.
- *  The only side effects are in the grammar passed to process().
- *  We consume a bunch of memory here while we build up data structures
- *  to perform checking, but all of it goes away after this pipeline object
- *  gets garbage collected.
- *
- *  After this pipeline finishes, we can be sure that the grammar
- *  is syntactically correct and that it's semantically correct enough for us
- *  to attempt grammar analysis. We have assigned all token types.
- *  Note that imported grammars bring in token and rule definitions
- *  but only the root grammar and any implicitly created lexer grammar
- *  get their token definitions filled up. We are treating the
- *  imported grammars like includes.
- *
- *  The semantic pipeline works on root grammars (those that do the importing,
- *  if any). Upon entry to the semantic pipeline, all imported grammars
- *  should have been loaded into delegate grammar objects with their
- *  ASTs created.  The pipeline does the BasicSemanticChecks on the
- *  imported grammar before collecting symbols. We cannot perform the
- *  simple checks such as undefined rule until we have collected all
- *  tokens and rules from the imported grammars into a single collection.
- */
+package org.antlr.v4.semantics;
+import org.antlr.v4.analysis.LeftRecursiveRuleTransformer;
+import org.antlr.v4.parse.ANTLRParser;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.Pair;
+import org.antlr.v4.tool.ErrorType;
+import org.antlr.v4.tool.Grammar;
+import org.antlr.v4.tool.Rule;
+import org.antlr.v4.tool.ast.GrammarAST;
+import java.util.List;
+import org.antlr.v4.runtime.misc.NotNull;
 
 public class SemanticPipeline{
 

@@ -4,6 +4,7 @@ import cucumber.api.TypeRegistry;
 import io.cucumber.datatable.DataTableType;
 import io.cucumber.cucumberexpressions.ParameterType;
 import java.text.SimpleDateFormat;
+import io.cucumber.examples.testng.ShoppingSteps.Grocery;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -11,7 +12,6 @@ import static io.cucumber.examples.testng.RpnCalculatorStepdefs.Entry;
 import static java.text.DateFormat.MEDIUM;
 import static java.text.DateFormat.getDateInstance;
 import static java.util.Locale.ENGLISH;
-import io.cucumber.examples.testng.ShoppingSteps.Grocery;
 
 public class ParameterTypes implements TypeRegistryConfigurer{
 

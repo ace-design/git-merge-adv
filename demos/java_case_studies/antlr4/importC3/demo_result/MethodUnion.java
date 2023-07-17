@@ -1,23 +1,3 @@
-package org.antlr.v4.semantics;
-import org.antlr.v4.parse.ANTLRParser;
-import org.antlr.v4.tool.Alternative;
-import org.antlr.v4.tool.ErrorManager;
-import org.antlr.v4.tool.ErrorType;
-import org.antlr.v4.tool.Grammar;
-import org.antlr.v4.tool.LabelElementPair;
-import org.antlr.v4.tool.Rule;
-import org.antlr.v4.tool.ast.GrammarAST;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.misc.Nullable;
-import org.antlr.v4.tool.Attribute;
-import org.antlr.v4.tool.AttributeDict;
-
 /*
  * [The "BSD license"]
  *  Copyright (c) 2012 Terence Parr
@@ -47,13 +27,25 @@ import org.antlr.v4.tool.AttributeDict;
  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/** Check for symbol problems; no side-effects.  Inefficient to walk rules
- *  and such multiple times, but I like isolating all error checking outside
- *  of code that actually defines symbols etc...
- *
- *  Side-effect: strip away redef'd rules.
- */
+package org.antlr.v4.semantics;
+import org.antlr.v4.parse.ANTLRParser;
+import org.antlr.v4.tool.Alternative;
+import org.antlr.v4.tool.ErrorManager;
+import org.antlr.v4.tool.ErrorType;
+import org.antlr.v4.tool.Grammar;
+import org.antlr.v4.tool.LabelElementPair;
+import org.antlr.v4.tool.Rule;
+import org.antlr.v4.tool.ast.GrammarAST;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.misc.Nullable;
+import org.antlr.v4.tool.Attribute;
+import org.antlr.v4.tool.AttributeDict;
 
 public class SymbolChecks{
 

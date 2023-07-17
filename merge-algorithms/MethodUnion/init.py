@@ -2,6 +2,7 @@ import argparse
 from spec import Java,Python
 import merger
 import subprocess
+from Node import Comment
 
 def parsing():
     parser = argparse.ArgumentParser(description='Enter left and right parent files.')
@@ -53,7 +54,10 @@ def writefile(name, content):
         for line in content:
             if line == "!!!no import anymore!!!":
                 continue
-            output.write(line+'\n')
+            elif type(line)==Comment:
+                output.write(line.get_comment()+'\n')
+            else:
+                output.write(line+'\n')
 
 def appendfile(name, content):
     with open(name,"a") as res2:

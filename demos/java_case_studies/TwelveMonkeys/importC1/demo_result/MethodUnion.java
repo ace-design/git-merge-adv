@@ -1,24 +1,3 @@
-package com.twelvemonkeys.imageio.metadata.tiff;
-import com.twelvemonkeys.imageio.metadata.CompoundDirectory;
-import com.twelvemonkeys.imageio.metadata.Directory;
-import com.twelvemonkeys.imageio.metadata.Entry;
-import com.twelvemonkeys.imageio.metadata.MetadataWriter;
-import com.twelvemonkeys.lang.Validate;
-import javax.imageio.IIOException;
-import javax.imageio.stream.ImageOutputStream;
-import java.io.IOException;
-import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import static com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry.getType;
-import static com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry.getValueLength;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.nio.charset.Charset;
-
 /*
  * Copyright (c) 2013, Harald Kuhr
  * All rights reserved.
@@ -48,14 +27,26 @@ import java.nio.charset.Charset;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/**
- * TIFFWriter
- *
- * @author <a href="mailto:harald.kuhr@gmail.com">Harald Kuhr</a>
- * @author last modified by $Author: haraldk$
- * @version $Id: TIFFWriter.java,v 1.0 17.07.13 10:20 haraldk Exp$
- */
+package com.twelvemonkeys.imageio.metadata.tiff;
+import com.twelvemonkeys.imageio.metadata.CompoundDirectory;
+import com.twelvemonkeys.imageio.metadata.Directory;
+import com.twelvemonkeys.imageio.metadata.Entry;
+import com.twelvemonkeys.imageio.metadata.MetadataWriter;
+import com.twelvemonkeys.lang.Validate;
+import javax.imageio.IIOException;
+import javax.imageio.stream.ImageOutputStream;
+import java.io.IOException;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import static com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry.getType;
+import static com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry.getValueLength;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.nio.charset.Charset;
 
 public final class TIFFWriter extends MetadataWriter{
 

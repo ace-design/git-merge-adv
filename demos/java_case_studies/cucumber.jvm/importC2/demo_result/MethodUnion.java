@@ -1,7 +1,7 @@
 package io.cucumber.core.options;
-import io.cucumber.core.feature.FeatureWithLines;
 import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.order.PickleOrder;
+import io.cucumber.core.feature.FeatureWithLines;
 import io.cucumber.core.order.StandardPickleOrders;
 import io.cucumber.core.snippets.SnippetType;
 import java.net.URI;

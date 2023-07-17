@@ -1,46 +1,30 @@
 package com.twelvemonkeys.servlet.image;
 import com.twelvemonkeys.image.ImageUtil;
+import com.twelvemonkeys.image.BufferedImageIcon;
 import com.twelvemonkeys.io.FileUtil;
+import com.twelvemonkeys.io.FastByteArrayOutputStream;
 import com.twelvemonkeys.servlet.OutputStreamAdapter;
 import org.junit.Before;
 import org.junit.Test;
 import javax.imageio.ImageIO;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import javax.swing.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.lang.reflect.InvocationTargetException;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import com.twelvemonkeys.image.BufferedImageIcon;
-import com.twelvemonkeys.io.FastByteArrayOutputStream;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import javax.swing.*;
-import java.awt.image.IndexColorModel;
-import java.lang.reflect.InvocationTargetException;
-
-/**
- * ImageServletResponseImplTestCase
- *
- * @author <a href="mailto:harald.kuhr@gmail.com">Harald Kuhr</a>
- * @author last modified by $Author: haku $
- * @version $Id: //depot/branches/personal/haraldk/twelvemonkeys/release-2/twelvemonkeys-servlet/src/test/java/com/twelvemonkeys/servlet/image/ImageServletResponseImplTestCase.java#6 $
- */
-
-/**
- * ImageServletResponseImplTestCase
- *
- * @author <a href="mailto:harald.kuhr@gmail.com">Harald Kuhr</a>
- * @author last modified by $Author: haku $
- * @version $Id: twelvemonkeys-servlet/src/test/java/com/twelvemonkeys/servlet/image/ImageServletResponseImplTestCase.java#6 $
- */
 
 public class ImageServletResponseImplTestCase{
 

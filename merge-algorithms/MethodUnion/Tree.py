@@ -10,18 +10,17 @@ class Tree:
         self.import_ref={}
         self.class_ref={}
         self.method_ref={}
+        self.all_imports=[]
 
     def add_import(self,path,version):
         self.import_traverse(self.import_root,path,version)
 
 
     def import_traverse(self,node,path,version):
-        parent=node.add_child(Pack(path[0],0))
+        parent=node.add_child(Pack(path[0],path[2]))
 
-        if len(path)>2:
-            child=parent.add_child(End(path[1],path[2],path[3]))
-        else:     
-            child=parent.add_child(End(path[1]))
+        child=parent.add_child(End(path[1],path[2],path[3]))
+
         child.add_version(version)
 
         if (path[1] in self.import_ref.keys()):
@@ -31,7 +30,6 @@ class Tree:
                 self.import_ref[path[1]].add(child)
 
     def find_imports(self,lang):
-        all_import=[]
         version_ref={'right':0,'base':0,'left':0}
         current_sum=0
         extra={}
@@ -41,7 +39,7 @@ class Tree:
             if (type(result) is str):
                 extra[current_sum]=self.import_ref[dir]
             else:
-                lang.output_imports(self.import_root,"",all_import,result,sus)
+                lang.output_imports(self.import_root,"",result,sus)
                 for v in versions:
                     version_ref[v]+=1
             current_sum+=1
@@ -55,23 +53,21 @@ class Tree:
             if (len(paths)==2):
                 versions=list(paths[0].get_version())
                 if (versions[0]==highest):
-                    lang.output_imports(self.import_root,"",all_import,paths[0],True)
+                    lang.output_imports(self.import_root,"",paths[0],True)
                 else:
-                    lang.output_imports(self.import_root,"",all_import,paths[1],True)
+                    lang.output_imports(self.import_root,"",paths[1],True)
             else:
                 versions=list(paths[0].get_version())
                 versions_2=list(paths[1].get_version())
                 if (highest in versions):
-                    lang.output_imports(self.import_root,"",all_import,paths[0],True)
+                    lang.output_imports(self.import_root,"",paths[0],True)
                 elif (highest in versions_2):
-                    lang.output_imports(self.import_root,"",all_import,paths[1],True)
+                    lang.output_imports(self.import_root,"",paths[1],True)
                 else:
-                    lang.output_imports(self.import_root,"",all_import,paths[2],True)
+                    lang.output_imports(self.import_root,"",paths[2],True)
 
-            curr_path=all_import.pop(-1)
-            all_import.insert(conflict_dir-1,curr_path)
 
-        return all_import
+        return lang.get_top_body()
     
     
     def most_frequent(self,ref):
@@ -91,7 +87,7 @@ class Tree:
     def find_body(self,lang):
         body=""
         for branch in self.root.get_children():
-            if (type(branch) is Class or type(branch) is Comment):
+            if (type(branch) is Class or type(branch) is Comment or type(branch) is Pack):
                 body=lang.output_body(body,branch)
         return body
     

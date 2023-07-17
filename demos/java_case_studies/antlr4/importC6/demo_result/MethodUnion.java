@@ -1,27 +1,3 @@
-package org.antlr.v4.automata;
-import org.antlr.v4.misc.Utils;
-import org.antlr.v4.parse.ANTLRParser;
-import org.antlr.v4.runtime.atn.ATN;
-import org.antlr.v4.runtime.atn.ATNSimulator;
-import org.antlr.v4.runtime.atn.ATNState;
-import org.antlr.v4.runtime.atn.ActionTransition;
-import org.antlr.v4.runtime.atn.AtomTransition;
-import org.antlr.v4.runtime.atn.DecisionState;
-import org.antlr.v4.runtime.atn.LoopEndState;
-import org.antlr.v4.runtime.atn.PredicateTransition;
-import org.antlr.v4.runtime.atn.RangeTransition;
-import org.antlr.v4.runtime.atn.RuleTransition;
-import org.antlr.v4.runtime.atn.SetTransition;
-import org.antlr.v4.runtime.atn.Transition;
-import org.antlr.v4.runtime.misc.Interval;
-import org.antlr.v4.runtime.misc.IntervalSet;
-import org.antlr.v4.tool.Grammar;
-import org.antlr.v4.tool.Rule;
-import java.util.ArrayList;
-import java.util.List;
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.misc.IntegerList;
-
 /*
  [The "BSD license"]
   Copyright (c) 2011 Terence Parr
@@ -50,6 +26,29 @@ import org.antlr.v4.runtime.misc.IntegerList;
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package org.antlr.v4.automata;
+import org.antlr.v4.misc.Utils;
+import org.antlr.v4.parse.ANTLRParser;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNSimulator;
+import org.antlr.v4.runtime.atn.ATNState;
+import org.antlr.v4.runtime.atn.ActionTransition;
+import org.antlr.v4.runtime.atn.AtomTransition;
+import org.antlr.v4.runtime.atn.DecisionState;
+import org.antlr.v4.runtime.atn.LoopEndState;
+import org.antlr.v4.runtime.atn.PredicateTransition;
+import org.antlr.v4.runtime.atn.RangeTransition;
+import org.antlr.v4.runtime.atn.RuleTransition;
+import org.antlr.v4.runtime.atn.SetTransition;
+import org.antlr.v4.runtime.atn.Transition;
+import org.antlr.v4.runtime.misc.Interval;
+import org.antlr.v4.runtime.misc.IntervalSet;
+import org.antlr.v4.tool.Grammar;
+import org.antlr.v4.tool.Rule;
+import java.util.ArrayList;
+import java.util.List;
+import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.misc.IntegerList;
 
 public class ATNSerializer{
 
