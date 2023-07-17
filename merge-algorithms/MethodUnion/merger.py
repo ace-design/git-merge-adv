@@ -44,7 +44,7 @@ def body_merge(lang, base, right, left):
         return "**to_be_handled_by_git**"
     tree.set_classes(lang)
     tree.set_methods(lang)
-
+    tree.set_fields(lang)
     result=tree.find_body(lang)
     return result
 

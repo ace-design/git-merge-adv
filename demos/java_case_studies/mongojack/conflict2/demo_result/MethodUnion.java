@@ -33,17 +33,19 @@ public abstract class MongoDBTestBase{
     private static final Random rand = new Random();
     private boolean useStreamParser = true;
     private boolean useStreamSerialiser = false;
+    private static final String dbHostKey = "MONGOJACK_TESTDB_HOST";
+    private static final Map<String, String> environment = System.getenv();
     protected Mongo mongo;
     protected DB db;
     private Set<String> collections;
-    private static final String dbHostKey = "MONGOJACK_TESTDB_HOST";
-    private static final Map<String, String> environment = System.getenv();
+
     @Before
     public void connectToDb() throws Exception {
         mongo = new Mongo();
         db = mongo.getDB("unittest");
         collections = new HashSet<String>();
     }
+
     @After
     public void disconnectFromDb() throws Exception {
         for (String collection : collections) {
@@ -58,6 +60,7 @@ public abstract class MongoDBTestBase{
      * @param name The name of the collection
      * @return The collection
      */
+
     protected DBCollection getCollection(String name) {
         collections.add(name);
         return db.getCollection(name);
@@ -68,6 +71,7 @@ public abstract class MongoDBTestBase{
      *
      * @return The collection
      */
+
     protected DBCollection getCollection() {
         StringBuilder name = new StringBuilder();
         while (name.length() < 8) {
@@ -87,6 +91,7 @@ public abstract class MongoDBTestBase{
      *
      * @return The collection
      */
+
     protected <T, K> JacksonDBCollection<T, K> configure(JacksonDBCollection<T, K> collection) {
         if (useStreamParser) {
             collection.enable(JacksonDBCollection.Feature.USE_STREAM_DESERIALIZATION);
@@ -100,21 +105,27 @@ public abstract class MongoDBTestBase{
         }
         return collection;
     }
+
     protected <T, K> JacksonDBCollection<T, K> getCollection(Class<T> type, Class<K> keyType) {
         return configure(JacksonDBCollection.wrap(getCollection(), type, keyType));
     }
+
     protected <T, K> JacksonDBCollection<T, K> getCollection(Class<T> type, Class<K> keyType, Class<?> view) {
         return configure(JacksonDBCollection.wrap(getCollection(), type, keyType, view));
     }
+
     protected <T, K> JacksonDBCollection<T, K> getCollection(Class<T> type, Class<K> keyType, String collectionName) {
         return configure(JacksonDBCollection.wrap(getCollection(collectionName), type, keyType));
     }
+
     public void setUseStreamParser(boolean useStreamParser) {
         this.useStreamParser = useStreamParser;
     }
+
     public void setUseStreamSerialiser(boolean useStreamSerialiser) {
         this.useStreamSerialiser = useStreamSerialiser;
     }
+
     protected <T, K> JacksonDBCollection<T, K> getCollection(Class<T> type, Class<K> keyType, ObjectMapper mapper) {
         return configure(JacksonDBCollection.wrap(getCollection(), type, keyType, mapper));
     }

@@ -119,8 +119,16 @@ public abstract class BaseTest{
     public static final String newline = System.getProperty("line.separator");
     public static final String pathSep = System.getProperty("path.separator");
     public static final boolean TEST_IN_SAME_PROCESS = Boolean.parseBoolean(System.getProperty("antlr.testinprocess"));
+
+    /**
+     * Build up the full classpath we need, including the surefire path (if present)
+     */
     public static final String CLASSPATH = System.getProperty("java.class.path");
     public String tmpdir = null;
+
+    /** If error during parser execution, store stderr here; can't return
+     *  stdout and stderr.  This doesn't trap errors from running antlr.
+     */
     protected String stderrDuringParse;
     @org.junit.Rule
 	public final TestRule testWatcher = new TestWatcher() {
@@ -133,13 +141,6 @@ public abstract class BaseTest{
 
 	};
 
-    /**
-     * Build up the full classpath we need, including the surefire path (if present)
-     */
-
-    /** If error during parser execution, store stderr here; can't return
-     *  stdout and stderr.  This doesn't trap errors from running antlr.
-     */
     @Before
 	public void setUp() throws Exception {
         // new output dir for each test
@@ -147,14 +148,17 @@ public abstract class BaseTest{
 						  getClass().getSimpleName()+"-"+System.currentTimeMillis()).getAbsolutePath();
 //		tmpdir = "/tmp";
     }
+
     protected org.antlr.v4.Tool newTool(String[] args) {
 		Tool tool = new Tool(args);
 		return tool;
 	}
+
     protected Tool newTool() {
 		org.antlr.v4.Tool tool = new Tool(new String[] {"-o", tmpdir});
 		return tool;
 	}
+
     protected ATN createATN(Grammar g, boolean useSerializer) {
 		if ( g.atn==null ) {
 			semanticProcess(g);
@@ -180,6 +184,7 @@ public abstract class BaseTest{
 
 		return atn;
 	}
+
     protected void semanticProcess(Grammar g) {
 		if ( g.ast!=null && !g.ast.hasErrors ) {
 			System.out.println(g.ast.toStringTree());
@@ -193,6 +198,7 @@ public abstract class BaseTest{
 			}
 		}
 	}
+
     public DFA createDFA(Grammar g, DecisionState s) {
 //		PredictionDFAFactory conv = new PredictionDFAFactory(g, s);
 //		DFA dfa = conv.createDFA();
@@ -201,6 +207,7 @@ public abstract class BaseTest{
 //		return dfa;
 		return null;
 	}
+
     IntegerList getTypesFromString(Grammar g, String expecting) {
 		IntegerList expectingTokenTypes = new IntegerList();
 		if ( expecting!=null && !expecting.trim().isEmpty() ) {
@@ -211,6 +218,7 @@ public abstract class BaseTest{
 		}
 		return expectingTokenTypes;
 	}
+
     public IntegerList getTokenTypesViaATN(String input, LexerATNSimulator lexerATN) {
 		ANTLRInputStream in = new ANTLRInputStream(input);
 		IntegerList tokenTypes = new IntegerList();
@@ -221,6 +229,7 @@ public abstract class BaseTest{
 		} while ( ttype!= Token.EOF );
 		return tokenTypes;
 	}
+
     public List<String> getTokenTypes(LexerGrammar lg,
 									  ATN atn,
 									  CharStream input)
@@ -249,6 +258,7 @@ public abstract class BaseTest{
 		} while ( ttype!=Token.EOF );
 		return tokenTypes;
 	}
+
     List<ANTLRMessage> checkRuleDFA(String gtext, String ruleName, String expecting)
 		throws Exception
 	{
@@ -269,6 +279,7 @@ public abstract class BaseTest{
 		checkRuleDFA(g, blk, expecting);
 		return equeue.all;
 	}
+
     List<ANTLRMessage> checkRuleDFA(String gtext, int decision, String expecting)
 		throws Exception
 	{
@@ -279,6 +290,7 @@ public abstract class BaseTest{
 		checkRuleDFA(g, blk, expecting);
 		return equeue.all;
 	}
+
     void checkRuleDFA(Grammar g, DecisionState blk, String expecting)
 		throws Exception
 	{
@@ -287,11 +299,13 @@ public abstract class BaseTest{
 		if ( dfa!=null ) result = dfa.toString();
 		assertEquals(expecting, result);
 	}
+
     List<ANTLRMessage> checkLexerDFA(String gtext, String expecting)
 		throws Exception
 	{
 		return checkLexerDFA(gtext, LexerGrammar.DEFAULT_MODE_NAME, expecting);
 	}
+
     List<ANTLRMessage> checkLexerDFA(String gtext, String modeName, String expecting)
 		throws Exception
 	{
@@ -313,6 +327,7 @@ public abstract class BaseTest{
     /** Wow! much faster than compiling outside of VM. Finicky though.
 	 *  Had rules called r and modulo. Wouldn't compile til I changed to 'a'.
 	 */
+
     protected boolean compile(String... fileNames) {
 		List<File> files = new ArrayList<File>();
 		for (String fileName : fileNames) {
@@ -390,6 +405,7 @@ public abstract class BaseTest{
 	}
 
     /** Return true if all is ok, no errors */
+
     protected ErrorQueue antlr(String fileName, String grammarFileName, String grammarStr, boolean defaultListener, String... extraOptions) {
 		System.out.println("dir "+tmpdir);
 		mkdir(tmpdir);
@@ -432,6 +448,7 @@ public abstract class BaseTest{
 
 		return equeue;
 	}
+
     protected String execLexer(String grammarFileName,
 							   String grammarStr,
 							   String lexerName,
@@ -439,6 +456,7 @@ public abstract class BaseTest{
 	{
 		return execLexer(grammarFileName, grammarStr, lexerName, input, false);
 	}
+
     protected String execLexer(String grammarFileName,
 							   String grammarStr,
 							   String lexerName,
@@ -459,6 +477,7 @@ public abstract class BaseTest{
 		}
 		return output;
 	}
+
     protected String execParser(String grammarFileName,
 								String grammarStr,
 								String parserName,
@@ -478,6 +497,7 @@ public abstract class BaseTest{
 								 startRuleName,
 								 debug);
 	}
+
     public ParseTree execParser(String startRuleName, String input,
 								String parserName, String lexerName)
 		throws Exception
@@ -517,6 +537,7 @@ public abstract class BaseTest{
 >>>>>>> right_content.java
 	}
 
+
     public ParseTree execStartRule(String startRuleName, Parser parser)
 		throws IllegalAccessException, InvocationTargetException,
 			   NoSuchMethodException
@@ -537,6 +558,7 @@ public abstract class BaseTest{
 	}
 
     /** Return true if all is well */
+
     protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
 													String grammarStr,
 													@Nullable String parserName,
@@ -545,6 +567,7 @@ public abstract class BaseTest{
 	{
 		return rawGenerateAndBuildRecognizer(grammarFileName, grammarStr, parserName, lexerName, false, extraOptions);
 	}
+
     public Pair<Parser, Lexer> getParserAndLexer(String input,
 												 String parserName, String lexerName)
 		throws Exception
@@ -564,6 +587,7 @@ public abstract class BaseTest{
 		Parser parser = pctor.newInstance(tokens);
 		return new Pair<Parser, Lexer>(parser, lexer);
 	}
+
     protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
 													String grammarStr,
 													@Nullable String parserName,
@@ -594,12 +618,14 @@ public abstract class BaseTest{
 		boolean allIsWell = compile(files.toArray(new String[files.size()]));
 		return allIsWell;
 	}
+
     public Class<?> loadClassFromTempDir(String name) throws Exception {
 		ClassLoader loader =
 			new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() },
 							   ClassLoader.getSystemClassLoader());
 		return loader.loadClass(name);
 	}
+
     public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
 <<<<<<< left_content.java
 		return loadClassFromTempDir(name).asSubclass(Lexer.class);
@@ -608,6 +634,7 @@ public abstract class BaseTest{
 >>>>>>> right_content.java
 	}
 
+
     public Class<? extends Parser> loadParserClassFromTempDir(String name) throws Exception {
 <<<<<<< left_content.java
 		return loadClassFromTempDir(name).asSubclass(Parser.class);
@@ -615,6 +642,7 @@ public abstract class BaseTest{
 		return (Class<? extends Parser>)loadClassFromTempDir(name);
 >>>>>>> right_content.java
 	}
+
 
     protected String rawExecRecognizer(String parserName,
 									   String lexerName,
@@ -635,9 +663,11 @@ public abstract class BaseTest{
 		compile("Test.java");
 		return execClass("Test");
 	}
+
     public String execRecognizer() {
 		return execClass("Test");
 	}
+
     public String execClass(String className) {
 		if (TEST_IN_SAME_PROCESS) {
 			try {
@@ -738,6 +768,7 @@ public abstract class BaseTest{
 		}
 		return null;
 	}
+
     public void testErrors(String[] pairs, boolean printTree) {
         for (int i = 0; i < pairs.length; i+=2) {
             String input = pairs[i];
@@ -758,6 +789,7 @@ public abstract class BaseTest{
             assertEquals("error in: "+msg,expect,actual);
         }
     }
+
     public String getFilenameFromFirstLineOfGrammar(String line) {
 		String fileName = "A" + Tool.GRAMMAR_EXTENSION;
 		int grIndex = line.lastIndexOf("grammar");
@@ -769,6 +801,7 @@ public abstract class BaseTest{
 		if ( fileName.length()==Tool.GRAMMAR_EXTENSION.length() ) fileName = "A" + Tool.GRAMMAR_EXTENSION;
 		return fileName;
 	}
+
     List<ANTLRMessage> getMessagesOfType(List<ANTLRMessage> msgs, Class<? extends ANTLRMessage> c) {
 		List<ANTLRMessage> filtered = new ArrayList<ANTLRMessage>();
 		for (ANTLRMessage m : msgs) {
@@ -776,6 +809,7 @@ public abstract class BaseTest{
 		}
 		return filtered;
 	}
+
     void checkRuleATN(Grammar g, String ruleName, String expecting) {
 		ParserATNFactory f = new ParserATNFactory(g);
 		ATN atn = f.createATN();
@@ -791,6 +825,7 @@ public abstract class BaseTest{
 		//System.out.print(result);
 		assertEquals(expecting, result);
 	}
+
     public void testActions(String templates, String actionName, String action, String expected) throws org.antlr.runtime.RecognitionException {
 		int lp = templates.indexOf('(');
 		String name = templates.substring(0, lp);
@@ -829,13 +864,16 @@ public abstract class BaseTest{
      StringBuilder buf = new StringBuilder();
      BufferedReader in;
      Thread sucker;
+
      public StreamVacuum(InputStream in) {
 			this.in = new BufferedReader( new InputStreamReader(in) );
 		}
+
      public void start() {
 			sucker = new Thread(this);
 			sucker.start();
 		}
+
      @Override
 		public void run() {
 			try {
@@ -852,15 +890,18 @@ public abstract class BaseTest{
 		}
 
      /** wait for the thread to finish */
+
      public void join() throws InterruptedException {
 			sucker.join();
 		}
+
      @Override
 		public String toString() {
 			return buf.toString();
 		}
 
- }    protected void checkGrammarSemanticsError(ErrorQueue equeue,
+ }
+    protected void checkGrammarSemanticsError(ErrorQueue equeue,
 											  GrammarSemanticsMessage expectedMessage)
 		throws Exception
 	{
@@ -879,6 +920,7 @@ public abstract class BaseTest{
 			System.err.println(equeue);
 		}
 	}
+
     protected void checkGrammarSemanticsWarning(ErrorQueue equeue,
 											    GrammarSemanticsMessage expectedMessage)
 		throws Exception
@@ -898,6 +940,7 @@ public abstract class BaseTest{
 			System.err.println(equeue);
 		}
 	}
+
     protected void checkError(ErrorQueue equeue,
 							  ANTLRMessage expectedMessage)
 		throws Exception
@@ -922,8 +965,10 @@ public abstract class BaseTest{
 
     public static class FilteringTokenStream extends CommonTokenStream{
 
-        Set<Integer> hide = new HashSet<Integer>();
+
         public FilteringTokenStream(TokenSource src) { super(src); }
+        Set<Integer> hide = new HashSet<Integer>();
+
         @Override
         protected boolean sync(int i) {
             if (!super.sync(i)) {
@@ -937,11 +982,13 @@ public abstract class BaseTest{
 
 			return true;
         }
+
         public void setTokenTypeChannel(int ttype, int channel) {
             hide.add(ttype);
         }
 
-    }    public static void writeFile(String dir, String fileName, String content) {
+    }
+    public static void writeFile(String dir, String fileName, String content) {
 		try {
 			File f = new File(dir, fileName);
 			FileWriter w = new FileWriter(f);
@@ -955,10 +1002,12 @@ public abstract class BaseTest{
 			ioe.printStackTrace(System.err);
 		}
 	}
+
     protected void mkdir(String dir) {
 		File f = new File(dir);
 		f.mkdirs();
 	}
+
     protected void writeTestFile(String parserName,
 								 String lexerName,
 								 String parserStartRuleName,
@@ -1009,6 +1058,7 @@ public abstract class BaseTest{
 		outputFileST.add("parserStartRuleName", parserStartRuleName);
 		writeFile(tmpdir, "Test.java", outputFileST.render());
 	}
+
     protected void writeLexerTestFile(String lexerName, boolean showDFA) {
 		ST outputFileST = new ST(
 			"import org.antlr.v4.runtime.*;\n" +
@@ -1028,6 +1078,7 @@ public abstract class BaseTest{
 		outputFileST.add("lexerName", lexerName);
 		writeFile(tmpdir, "Test.java", outputFileST.render());
 	}
+
     public void writeRecognizerAndCompile(String parserName, String lexerName,
 										  String parserStartRuleName,
 										  boolean debug) {
@@ -1043,6 +1094,7 @@ public abstract class BaseTest{
 
 		compile("Test.java");
 	}
+
     protected void eraseFiles(final String filesEndingWith) {
         File tmpdirF = new File(tmpdir);
         String[] files = tmpdirF.list();
@@ -1052,6 +1104,7 @@ public abstract class BaseTest{
             }
         }
     }
+
     protected void eraseFiles() {
 		if (tmpdir == null) {
 			return;
@@ -1063,6 +1116,7 @@ public abstract class BaseTest{
             new File(tmpdir+"/"+files[i]).delete();
         }
     }
+
     protected void eraseTempDir() {
         File tmpdirF = new File(tmpdir);
         if ( tmpdirF.exists() ) {
@@ -1070,6 +1124,7 @@ public abstract class BaseTest{
             tmpdirF.delete();
         }
     }
+
     public String getFirstLineOfException() {
 		if ( this.stderrDuringParse ==null ) {
 			return null;
@@ -1090,6 +1145,7 @@ public abstract class BaseTest{
      * @param m The Map that contains keys we wish to return in sorted order
      * @return A string that represents all the keys in sorted order.
      */
+
     public <K, V> String sortMapToString(Map<K, V> m) {
         // Pass in crap, and get nothing back
         //
@@ -1106,13 +1162,16 @@ public abstract class BaseTest{
         System.out.println("Tree map looks like: " + nset.toString());
         return nset.toString();
     }
+
     public List<String> realElements(List<String> elements) {
 		return elements.subList(Token.MIN_USER_TOKEN_TYPE, elements.size());
 	}
+
     public void assertNotNullOrEmpty(String message, String text) {
 		assertNotNull(message, text);
 		assertFalse(message, text.isEmpty());
 	}
+
     public void assertNotNullOrEmpty(String text) {
 		assertNotNull(text);
 		assertFalse(text.isEmpty());
@@ -1122,33 +1181,43 @@ public abstract class BaseTest{
 
      IntegerList types;
      int p=0;
+
      public IntTokenStream(IntegerList types) { this.types = types; }
+
      @Override
 		public void consume() { p++; }
+
      @Override
 		public int LA(int i) { return LT(i).getType(); }
+
      @Override
 		public int mark() {
 			return index();
 		}
+
      @Override
 		public int index() { return p; }
+
      @Override
 		public void release(int marker) {
 			seek(marker);
 		}
+
      @Override
 		public void seek(int index) {
 			p = index;
 		}
+
      @Override
 		public int size() {
 			return types.size();
 		}
+
      @Override
 		public String getSourceName() {
 			return null;
 		}
+
      @Override
 		public Token LT(int i) {
 			CommonToken t;
@@ -1158,29 +1227,35 @@ public abstract class BaseTest{
 			t.setTokenIndex(rawIndex);
 			return t;
 		}
+
      @Override
 		public Token get(int i) {
 			return new org.antlr.v4.runtime.CommonToken(types.get(i));
 		}
+
      @Override
 		public TokenSource getTokenSource() {
 			return null;
 		}
+
      @NotNull
 		@Override
 		public String getText() {
 			throw new UnsupportedOperationException("can't give strings");
 		}
+
      @NotNull
 		@Override
 		public String getText(Interval interval) {
 			throw new UnsupportedOperationException("can't give strings");
 		}
+
      @NotNull
 		@Override
 		public String getText(RuleContext ctx) {
 			throw new UnsupportedOperationException("can't give strings");
 		}
+
      @NotNull
 		@Override
 		public String getText(Token start, Token stop) {
@@ -1189,6 +1264,7 @@ public abstract class BaseTest{
 
  }
     /** Sort a list */
+
     public <T extends Comparable<? super T>> List<T> sort(List<T> data) {
 		List<T> dup = new ArrayList<T>();
 		dup.addAll(data);
@@ -1197,6 +1273,7 @@ public abstract class BaseTest{
 	}
 
     /** Return map sorted by key */
+
     public <K extends Comparable<? super K>,V> LinkedHashMap<K,V> sort(Map<K,V> data) {
 		LinkedHashMap<K,V> dup = new LinkedHashMap<K, V>();
 		List<K> keys = new ArrayList<K>();

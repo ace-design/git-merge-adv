@@ -131,7 +131,7 @@ def search_gumtree(result,new):
             writer.write(key+": "+str(data[key])+"\n")
         writer.write("Overall: "+str(total))
 
-def search_gumtree_full(result,new):
+def search_gumtree_full(result,new,num_conflicts):
     if (len(result)==1 and result[0]==''):
         print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
         exit(0)
@@ -143,7 +143,7 @@ def search_gumtree_full(result,new):
     'diff_path':re.compile(r'\nupdate')
     }
 
-    data={'deletions':0,'insertions':0,'moves':0,'diff_path':0}
+    data={'deletions':0,'insertions':0,'moves':0,'diff_path':0,'num_conflicts':num_conflicts}
 
     for val in result:
         for key,rx in dict.items():
@@ -167,10 +167,14 @@ def run_gumtree_spork(output_path):
 
     without_git=subprocess.run(['cat',result],capture_output=True, text=True)
     new_result=output_path+"/demo_result/without_git.java"
+
+    num_conflicts=0
     with open(new_result,'w') as writer:
         for line in without_git.stdout.split('\n'):
             if ("<<<<<<<" not in line and "=======" not in line and ">>>>>>>" not in line):
                 writer.write(line+'\n')
+            elif ("<<<<<<<" in line):
+                num_conflicts+=1
     new=output_path+"/demo_result/spork_diff.txt"
 
     result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
@@ -180,7 +184,7 @@ def run_gumtree_spork(output_path):
         exit(0)
     subprocess.run(['rm',new_result])
 
-    search_gumtree_full(result,new)
+    search_gumtree_full(result,new,num_conflicts)
     
 # Compares jdime version to desired version
 def run_gumtree_jdime(output_path):
@@ -190,10 +194,14 @@ def run_gumtree_jdime(output_path):
 
     without_git=subprocess.run(['cat',result],capture_output=True, text=True)
     new_result=output_path+"/demo_result/without_git.java"
+
+    num_conflicts=0
     with open(new_result,'w') as writer:
         for line in without_git.stdout.split('\n'):
             if ("<<<<<<<" not in line and "=======" not in line and ">>>>>>>" not in line):
                 writer.write(line+'\n')
+            elif ("<<<<<<<" in line):
+                num_conflicts+=1
     
     result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
 
@@ -203,7 +211,7 @@ def run_gumtree_jdime(output_path):
         exit(0)
     subprocess.run(['rm',new_result])
 
-    search_gumtree_full(result,new)
+    search_gumtree_full(result,new,num_conflicts)
 
 # Compares inputted algorithm version to desired version. 
 def run_gumtree(output_path,lang,algo):
@@ -211,10 +219,14 @@ def run_gumtree(output_path,lang,algo):
     result=output_path+"/demo_result/"+algo+"."+lang
     without_git=subprocess.run(['cat',result],capture_output=True, text=True)
     new_result=output_path+"/demo_result/without_git."+lang
+
+    num_conflicts=0
     with open(new_result,'w') as writer:
         for line in without_git.stdout.split('\n'):
             if ("<<<<<<<" not in line and "=======" not in line and ">>>>>>>" not in line):
                 writer.write(line+'\n')
+            elif ("<<<<<<<" in line):
+                num_conflicts+=1
     new=output_path+"/demo_result/"+algo+"_diff.txt"
 
     match lang:
@@ -224,7 +236,7 @@ def run_gumtree(output_path,lang,algo):
             result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
     subprocess.run(['rm',new_result])
     # search_gumtree(result,new)
-    search_gumtree_full(result,new)
+    search_gumtree_full(result,new,num_conflicts)
 
 
 if __name__=="__main__":

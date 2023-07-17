@@ -57,6 +57,7 @@ public final class Cucumber extends ParentRunner<FeatureRunner>{
      * @param clazz the class with the @RunWith annotation.
      * @throws org.junit.runners.model.InitializationError if there is another problem
      */
+
     public Cucumber(Class clazz) throws InitializationError {
         super(clazz);
         Assertions.assertNoCucumberAnnotatedMethods(clazz);
@@ -125,9 +126,11 @@ public final class Cucumber extends ParentRunner<FeatureRunner>{
     class RunCucumber extends Statement{
 
         private final Statement runFeatures;
+
         RunCucumber(Statement runFeatures) {
             this.runFeatures = runFeatures;
         }
+
         @Override
         public void evaluate() throws Throwable {
             if (multiThreadingAssumed) {
@@ -144,23 +147,28 @@ public final class Cucumber extends ParentRunner<FeatureRunner>{
             bus.send(new TestRunFinished(bus.getInstant()));
         }
 
-    }    @Override
+    }
+    @Override
     protected List<FeatureRunner> getChildren() {
         return children;
     }
+
     @Override
     protected Description describeChild(FeatureRunner child) {
         return child.getDescription();
     }
+
     @Override
     protected void runChild(FeatureRunner child, RunNotifier notifier) {
         child.run(notifier);
     }
+
     @Override
     protected Statement childrenInvoker(RunNotifier notifier) {
         Statement runFeatures = super.childrenInvoker(notifier);
         return new RunCucumber(runFeatures);
     }
+
     @Override
     public void setScheduler(RunnerScheduler scheduler) {
         super.setScheduler(scheduler);

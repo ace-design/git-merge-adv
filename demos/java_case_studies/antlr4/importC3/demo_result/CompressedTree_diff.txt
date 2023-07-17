@@ -2,3 +2,5 @@ deletions: 0
 insertions: 0
 moves: 4
 diff_path: 0
+num_conflicts: 0
+Overall: 4.0

@@ -10,6 +10,7 @@ class Tree:
         self.root.add_child(self.import_root)
         self.import_ref={}
         self.class_ref={}
+        self.field_ref={}
         self.method_ref={}
         self.all_imports=[]
 
@@ -54,7 +55,6 @@ class Tree:
                 result,sus,versions=self.base_algorithm(self.class_ref,class_val)
                 if (type(result) is str):
                     result=self.class_ref[class_val][0]
-                    extra.append(class_val)
                 result.set_selected()
 
 
@@ -171,7 +171,7 @@ class Tree:
         else:
             highest=ordered[0]
         return highest
-    
+
 
     def confilct_resolver(self,lang,conflicted_content):
         print(conflicted_content)
@@ -188,3 +188,49 @@ class Tree:
                         f.write(x.method_name)
         return "Yup"
                     
+    
+    def set_fields(self,lang):
+        self.field_ref=lang.get_field_ref()
+        for field_val in self.field_ref.keys():
+            if (len(self.field_ref[field_val])>0):
+                result,sus,versions=self.base_algorithm(self.field_ref,field_val)
+                if (type(result) is str):
+                    result=self.field_ref[field_val][0]
+                result.set_selected()
+
+
+
+
+    def base_algorithm(self,references,node):
+        paths=list(references[node])
+
+        if (len(paths)==1):
+            versions=list(paths[0].get_version())
+            if (len(versions)==1 or len(versions)==2):
+                return paths[0],True,versions #updater=versions
+            else:
+                return paths[0],False,versions #False because 3 versions include same
+        elif (len(paths)==2):
+            versions=list(paths[0].get_version())
+            versions_2=list(paths[1].get_version())
+            if (len(versions)==2 or len(versions_2)==2):
+                if (len(versions)==2):
+                    if (versions_2[0]=="base"):
+                        return paths[0],False,versions
+                    else:
+                        return paths[1],False,versions_2
+                else:
+                    return paths[0],False,versions
+            else:
+                if (versions[0]=="base"):
+                    return paths[1],True,versions_2
+                elif (versions_2[0]=="base"):
+                    return paths[0],True,versions
+                else:
+                    return "Conflicting",None,None
+                    # extra[current_sum]=self.map[dir]
+        else:
+            return "Conflicting",None,None
+            # extra[current_sum]=self.map[dir]
+
+    

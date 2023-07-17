@@ -55,6 +55,7 @@ public class ATNSerializer{
     public Grammar g;
     public ATN atn;
     public List<IntervalSet> sets = new ArrayList<IntervalSet>();
+
     public ATNSerializer(Grammar g, ATN atn) {
 		this.g = g;
 		this.atn = atn;
@@ -81,6 +82,7 @@ public class ATNSerializer{
 	 *
 	 *  Convenient to pack into unsigned shorts to make as Java string.
 	 */
+
     public IntegerList serialize() {
 		IntegerList data = new IntegerList();
 		// convert grammar type to ATN const to avoid dependence on ANTLRParser
@@ -204,6 +206,7 @@ public class ATNSerializer{
 		}
 		return data;
 	}
+
     public String decode(char[] data) {
 		StringBuilder buf = new StringBuilder();
 		int p = 0;
@@ -274,6 +277,7 @@ public class ATNSerializer{
 		}
 		return buf.toString();
 	}
+
     public String getTokenName(int t) {
 		if ( t==-1 ) return "EOF";
 		if ( g!=null ) return g.getTokenDisplayName(t);
@@ -281,15 +285,19 @@ public class ATNSerializer{
 	}
 
     /** Used by Java target to encode short/int array as chars in string. */
+
     public static String getSerializedAsString(Grammar g, ATN atn) {
 		return new String(Utils.toCharArray(getSerialized(g, atn)));
 	}
+
     public static IntegerList getSerialized(Grammar g, ATN atn) {
 		return new ATNSerializer(g, atn).serialize();
 	}
+
     public static char[] getSerializedAsChars(Grammar g, ATN atn) {
 		return Utils.toCharArray(new ATNSerializer(g, atn).serialize());
 	}
+
     public static String getDecoded(Grammar g, ATN atn) {
 		IntegerList serialized = getSerialized(g, atn);
 		char[] data = Utils.toCharArray(serialized);

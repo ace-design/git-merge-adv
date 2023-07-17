@@ -2,4 +2,5 @@ deletions: 2
 insertions: 1
 moves: 2
 diff_path: 0
-Overall: 3.0
+num_conflicts: 1
+Overall: 3.1622776601683795

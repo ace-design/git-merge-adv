@@ -22,8 +22,10 @@ class AlternatorDBHandler{
     private final Logger logger = LoggerFactory.getLogger(AlternatorDBHandler.class);
     private Map<String, Table> tables = new HashMap<String, Table>();
     private List<Table> tableList = new ArrayList<Table>();
+
     public AlternatorDBHandler() {
     }
+
     public void save(String persistence){
         try {
             createObjectMapper().writeValue(new File(persistence), tableList);
@@ -31,6 +33,7 @@ class AlternatorDBHandler{
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
+
     public void restore(String persistence){
         try {
             File dbFile = new File(persistence);
@@ -48,6 +51,7 @@ class AlternatorDBHandler{
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
+
     public ObjectMapper createObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY)
@@ -60,6 +64,7 @@ class AlternatorDBHandler{
 
         return mapper;
     }
+
     public String handle(HttpServletRequest request) throws LimitExceededException, InternalServerErrorException, ResourceInUseException, ResourceNotFoundException, ConditionalCheckFailedException {
         AmazonWebServiceRequestParser parser = new AmazonWebServiceRequestParser(request);
 
@@ -104,6 +109,7 @@ class AlternatorDBHandler{
         }
         return null;
     }
+
     protected CreateTableResult createTable(CreateTableRequest request) throws LimitExceededException, InternalServerErrorException, ResourceInUseException {
         // table limit of 256
         if (this.tables.size() >= Limits.TABLE_MAX) {
@@ -133,6 +139,7 @@ class AlternatorDBHandler{
 
         return new CreateTableResult().withTableDescription(table.getTableDescription());
     }
+
     protected DescribeTableResult describeTable(DescribeTableRequest request) throws InternalServerErrorException, ResourceNotFoundException {
         // Validate data coming in
         DescribeTableRequestValidator validator = new DescribeTableRequestValidator();
@@ -154,6 +161,7 @@ class AlternatorDBHandler{
         }
         return result;
     }
+
     protected ListTablesResult listTables(ListTablesRequest request) throws InternalServerErrorException, ResourceNotFoundException {
         // Validate data coming in
         ListTablesRequestValidator validator = new ListTablesRequestValidator();
@@ -206,6 +214,7 @@ class AlternatorDBHandler{
 
         return result;
     }
+
     protected DeleteTableResult deleteTable(DeleteTableRequest request) throws InternalServerErrorException, ResourceNotFoundException {
         // Validate data coming in
         DeleteTableRequestValidator validator = new DeleteTableRequestValidator();
@@ -225,6 +234,7 @@ class AlternatorDBHandler{
 
         return new DeleteTableResult().withTableDescription(table.getTableDescription().withTableStatus(TableStatus.DELETING));
     }
+
     protected UpdateTableResult updateTable(UpdateTableRequest request) throws InternalServerErrorException, ResourceNotFoundException {
         // Validate data coming in
         UpdateTableRequestValidator validator = new UpdateTableRequestValidator();
@@ -244,6 +254,7 @@ class AlternatorDBHandler{
 
         return new UpdateTableResult().withTableDescription(table.getTableDescription());
     }
+
     protected PutItemResult putItem(PutItemRequest request) throws InternalServerErrorException, ResourceNotFoundException, ConditionalCheckFailedException {
         // Validate data coming in
         PutItemRequestValidator validator = new PutItemRequestValidator();
@@ -307,6 +318,7 @@ class AlternatorDBHandler{
 
         return result;
     }
+
     protected GetItemResult getItem(GetItemRequest request) throws InternalServerErrorException, ResourceNotFoundException {
         // Validate data coming in
         GetItemRequestValidator validator = new GetItemRequestValidator();
@@ -350,6 +362,7 @@ class AlternatorDBHandler{
         }
         return result;
     }
+
     protected DeleteItemResult deleteItem(DeleteItemRequest request) {
         // Validate data coming in
         DeleteItemRequestValidator validator = new DeleteItemRequestValidator();
@@ -404,6 +417,7 @@ class AlternatorDBHandler{
         table.removeItem(hashKey);
         return result;
     }
+
     protected BatchGetItemResult batchGetItem(BatchGetItemRequest request) {
 		BatchGetItemResult batchGetItemResult = new BatchGetItemResult();
 <<<<<<< left_content.java
@@ -431,6 +445,7 @@ class AlternatorDBHandler{
 		}
 		return new BatchGetItemResult();
 	}
+
 
     <<<<<<< left_content.java
 protected BatchWriteItemResult batchWriteItem(BatchWriteItemRequest request) {
@@ -460,6 +475,7 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
         return new BatchWriteItemResult();
 >>>>>>> right_content.java
     }
+
 
     protected ScanResult scan(ScanRequest request) {
         ScanResult result = new ScanResult();
@@ -565,6 +581,7 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
         result.setScannedCount(items.size());
         return result;
     }
+
     public QueryResult query(QueryRequest request) {
         // Validate data coming in
         QueryRequestValidator validator = new QueryRequestValidator();
@@ -596,6 +613,7 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
 
         return queryResult;
     }
+
     protected String getKeyValue(AttributeValue value) {
         if (value != null) {
             if (value.getN() != null) {
@@ -606,6 +624,7 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
         }
         return null;
     }
+
     protected AttributeValueType getAttributeValueType(AttributeValue value) {
         if (value != null) {
             if (value.getN() != null) {
@@ -620,6 +639,7 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
         }
         return AttributeValueType.UNKNOWN;
     }
+
     protected InternalServerErrorException createInternalServerException(List<Error> errors) {
         String message = "The following Errors occured: ";
         for (Error error : errors) {
@@ -627,6 +647,7 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
         }
         return new InternalServerErrorException(message);
     }
+
     protected UpdateItemResult updateItem(UpdateItemRequest request) {
         // Validate data coming in
         // TODO: Look into how we're doing validation, maybe implement better solution
@@ -749,11 +770,13 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
         }
         return result;
     }
+
     private void EQHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         if (item.get(k).equals(attributeValue)) {
              items.add(item);
         }
     }
+
     private void GTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
             if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
@@ -775,6 +798,7 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
             //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
         }
     }
+
     private void LTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
             if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
@@ -796,6 +820,7 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
             //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
         }
     }
+
     protected Map<String, AttributeValue> getItemWithAttributesToGet(Map<String, AttributeValue> item, List<String> attributesToGet) {
 		if (attributesToGet == null) {
 			return item;
@@ -808,6 +833,7 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
 		}
 		return item;
 	}
+
     protected List<Map<String, AttributeValue>> getItemWithAttributesToGet(List<Map<String, AttributeValue>> items, List<String> attributesToGet) {
 		List<Map<String, AttributeValue>> copy = new ArrayList<Map<String, AttributeValue>>();
 		for (Map<String, AttributeValue> item : items) {
@@ -815,14 +841,17 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
 		}
 		return copy;
 	}
+
     private void GEHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         EQHandle(items, item, attributeValue, k);
         GTHandle(items, item, attributeValue, k);
     }
+
     private void LEHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         EQHandle(items, item, attributeValue, k);
         LTHandle(items, item, attributeValue, k);
     }
+
     private void BETWEENHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue1, AttributeValue attributeValue2, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
             if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {

@@ -125,6 +125,9 @@ class Class:
             bisect.insort(self.order,subclass,key=lambda x: x.get_start())
         for comment in self.comments:
             bisect.insort(self.order,comment,key=lambda x: x.get_start())
+        for field in self.declarations:
+            bisect.insort(self.order,field,key=lambda x: x.get_start())
+
 
         return self.order
 
@@ -166,6 +169,47 @@ class Class:
     def __hash__(self):
         return hash(self.get_full_name())
 
+class Field:
+    def __init__(self,variable,declaration,version,class_val,start):
+        self.identifier=variable
+        self.full_declaration=declaration
+        self.version=set()
+        self.version.add(version)
+        self.objclass=class_val
+        self.start_line=start
+        self.selected=False
+
+
+    def add_version(self,version):
+        self.version.add(version)
+
+    def set_selected(self):
+        self.selected=True
+
+    def get_start(self):
+        return self.start_line
+    
+    def get_declaration(self):
+        return self.full_declaration
+    
+    def get_name(self):
+        return self.identifier
+
+    def get_super(self):
+        return self.objclass
+    
+    def get_version(self):
+        return self.version
+    
+    def is_selected(self):
+        return self.selected
+    
+    def __eq__(self,obj):
+        return (self.full_declaration==obj.get_declaration() and self.objclass==obj.get_super())
+    
+    def __hash__(self):
+        return hash(self.get_method()) 
+    
 
 class Method:
     def __init__(self,name,des,signature,version,super_class,start,astnode=None):

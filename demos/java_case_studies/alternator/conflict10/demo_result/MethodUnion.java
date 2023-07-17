@@ -44,14 +44,17 @@ import com.michelboudreau.alternator.enums.AttributeValueType;
 public class AlternatorItemTest extends AlternatorTest{
 
     private String tableName;
+
     @Before
     public void setUp() throws Exception {
         tableName = createTableName();
     }
+
     @After
     public void tearDown() throws Exception {
         deleteAllTables();
     }
+
     @Test
     public void putItemWithHashKey() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -61,6 +64,7 @@ public class AlternatorItemTest extends AlternatorTest{
         Assert.assertNotNull(res);
         Assert.assertNotNull(res.getConsumedCapacityUnits());
     }
+
     @Test
     public void putItemWithHashKeyOverwriteItem() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -71,6 +75,7 @@ public class AlternatorItemTest extends AlternatorTest{
         Assert.assertNotNull(res);
         Assert.assertNotNull(res.getConsumedCapacityUnits());
     }
+
     @Test
     public void putItemWithHashKeyWithoutItem() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -82,6 +87,7 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
     @Test
     public void putItemWithHashKeyWithoutTableName() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -93,6 +99,7 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
     @Test
     public void putItemWithHashKeyAndRangeKey() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -103,6 +110,7 @@ public class AlternatorItemTest extends AlternatorTest{
         Assert.assertNotNull(res);
         Assert.assertNotNull(res.getConsumedCapacityUnits());
     }
+
     @Test
     public void putItemWithHashKeyAndRangeKeyOverwriteItem() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -114,6 +122,7 @@ public class AlternatorItemTest extends AlternatorTest{
         Assert.assertNotNull(res);
         Assert.assertNotNull(res.getConsumedCapacityUnits());
     }
+
     @Test
     public void putItemWithHashKeyAndRangeKeyWithoutItem() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -126,6 +135,7 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
     @Test
     public void putItemWithHashKeyAndRangeKeyWithoutTableName() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -138,6 +148,7 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
     @Test
     public void getItemTest() {
         AttributeValue hash = createItem(tableName);
@@ -147,6 +158,7 @@ public class AlternatorItemTest extends AlternatorTest{
         Assert.assertNotNull(res.getItem());
         Assert.assertEquals(res.getItem().get("id"), hash);
     }
+
     @Test
     public void getItemWithoutTableNameTest() {
         GetItemRequest request = new GetItemRequest();
@@ -157,6 +169,7 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
     @Test
     public void updateItemInTableTest() {
         AttributeValue hash = putItemInDb();
@@ -171,6 +184,7 @@ public class AlternatorItemTest extends AlternatorTest{
         Assert.assertNotNull(res);
         Assert.assertNotNull(res.getAttributes());
     }
+
     @Test
     public void getItemWithoutKeyTest() {
         GetItemRequest request = new GetItemRequest();
@@ -181,6 +195,7 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
     @Test
     public void updateItemWithoutTableNameTest() {
         AttributeValue hash = putItemInDb();
@@ -199,6 +214,7 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
     @Test
     public void deleteItem() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -209,6 +225,7 @@ public class AlternatorItemTest extends AlternatorTest{
         DeleteItemResult result = getClient().deleteItem(request);
         Assert.assertNotNull(result.getConsumedCapacityUnits());
     }
+
     @Test
     public void updateItemWithoutKeyTest() {
         AttributeValue hash = putItemInDb();
@@ -227,6 +244,7 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
     @Test
     public void deleteItemWithHashKeyAndRangeKey() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -246,6 +264,7 @@ public class AlternatorItemTest extends AlternatorTest{
         result = getClient().deleteItem(request2);
         Assert.assertNotNull(result.getAttributes());
     }
+
     @Test
 	public void putItemWithExpected() {
 		KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -266,6 +285,7 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (ConditionalCheckFailedException ccfe) {
 		}
 	}
+
     @Test
     public void deleteItemWithoutTableName() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -279,6 +299,7 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
     @Test
     public void deleteNonExistantItem() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -366,6 +387,7 @@ public class AlternatorItemTest extends AlternatorTest{
          request.setRequestItems(requestItems);
          return request;
      }*/
+
     private static String readFileAsString(String filePath)
             throws java.io.IOException{
         StringBuffer fileData = new StringBuffer(1000);
@@ -381,6 +403,7 @@ public class AlternatorItemTest extends AlternatorTest{
         reader.close();
         return fileData.toString();
     }
+
     public <T extends AmazonWebServiceRequest> T getData(Class<T> clazz, Unmarshaller<T, JsonUnmarshallerContext> unmarshaller, String json) {
         ObjectMapper mapper = new ObjectMapper();
         JsonFactory jsonFactory = new JsonFactory();
@@ -402,6 +425,7 @@ public class AlternatorItemTest extends AlternatorTest{
         }
         return null;
     }
+
     protected AttributeValueType getAttributeValueType(AttributeValue value) {
         if (value != null) {
             if (value.getN() != null) {
@@ -416,18 +440,23 @@ public class AlternatorItemTest extends AlternatorTest{
         }
         return AttributeValueType.UNKNOWN;
     }
+
     protected AttributeValue createStringAttribute() {
         return new AttributeValue(UUID.randomUUID().toString());
     }
+
     protected AttributeValue createNumberAttribute() {
         return new AttributeValue().withN(Math.round(Math.random() * 1000) + "");
     }
+
     protected Map<String, AttributeValue> createGenericItem() {
         return createGenericItem(createStringAttribute(), createStringAttribute());
     }
+
     protected Map<String, AttributeValue> createGenericItem(AttributeValue hash) {
         return createGenericItem(hash, createStringAttribute());
     }
+
     protected Map<String, AttributeValue> createGenericItem(AttributeValue hash, AttributeValue range) {
         Map<String, AttributeValue> map = new HashMap<String, AttributeValue>();
         map.put("id", hash);
@@ -436,6 +465,7 @@ public class AlternatorItemTest extends AlternatorTest{
         }
         return map;
     }
+
     protected AttributeValue putItemInDb() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
         createTable(tableName, schema);

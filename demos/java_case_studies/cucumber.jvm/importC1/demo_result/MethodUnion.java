@@ -63,6 +63,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
     private Instant started;
     private final Map<URI, String> featuresNames = new HashMap<>();
     private final FeatureParser parser = new FeatureParser(UUID::randomUUID);
+
     public TestNGFormatter(OutputStream out) {
         this.writer = new UTF8OutputStreamWriter(out);
         try {
@@ -77,6 +78,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             throw new CucumberException("Error initializing DocumentBuilder.", e);
         }
     }
+
     @SuppressWarnings("WeakerAccess") // Used by plugin factory
     public TestNGFormatter(URL url) throws IOException {
         this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
@@ -92,6 +94,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             throw new CucumberException("Error initializing DocumentBuilder.", e);
         }
     }
+
     @Override
     public void setEventPublisher(EventPublisher publisher) {
         publisher.registerHandlerFor(TestSourceRead.class, this::handleTestSourceRead);
@@ -101,19 +104,23 @@ public final class TestNGFormatter implements EventListener, StrictAware{
         publisher.registerHandlerFor(TestStepFinished.class, this::handleTestStepFinished);
         publisher.registerHandlerFor(TestRunFinished.class, this::handleTestRunFinished);
     }
+
     private void handleTestRunStarted(TestRunStarted event) {
         this.started = event.getInstant();
     }
+
     @Override
     public void setStrict(boolean strict) {
         this.strict = strict;
     }
+
     private void handleTestSourceRead(TestSourceRead event) {
         TestSourceReadResource source = new TestSourceReadResource(event);
         parser.parseResource(source).ifPresent(feature ->
             featuresNames.put(feature.getUri(), feature.getName())
         );
     }
+
     private void handleTestCaseStarted(TestCaseStarted event) {
         if (currentFeatureFile == null || !currentFeatureFile.equals(event.getTestCase().getUri())) {
             currentFeatureFile = event.getTestCase().getUri();
@@ -128,6 +135,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
         testCase = new TestCase(event.getTestCase());
         testCase.start(root, event.getInstant());
     }
+
     private void handleTestStepFinished(TestStepFinished event) {
         if (event.getTestStep() instanceof PickleStepTestStep) {
             testCase.steps.add((PickleStepTestStep) event.getTestStep());
@@ -136,9 +144,11 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             testCase.hooks.add(event.getResult());
         }
     }
+
     private void handleTestCaseFinished(TestCaseFinished event) {
         testCase.finish(document, root, event.getInstant());
     }
+
     private void handleTestRunFinished(TestRunFinished event) {
         try {
             Instant finished = event.getInstant();
@@ -164,6 +174,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             throw new CucumberException("Error transforming report.", e);
         }
     }
+
     private void closeQuietly(Closeable out) {
         try {
             out.close();
@@ -171,6 +182,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             // go gentle into that good night
         }
     }
+
     private int getElementsCountByAttribute(Node node, String attributeName, String attributeValue) {
         int count = 0;
 
@@ -195,13 +207,16 @@ public final class TestNGFormatter implements EventListener, StrictAware{
         private final List<Result> results = new ArrayList<>();
         private final List<Result> hooks = new ArrayList<>();
         private final io.cucumber.plugin.event.TestCase testCase;
+
         TestCase(io.cucumber.plugin.event.TestCase testCase) {
             this.testCase = testCase;
         }
+
         private void start(Element element, Instant instant) {
             element.setAttribute("name", calculateElementName(testCase));
             element.setAttribute("started-at", ISO_INSTANT.format(instant));
         }
+
         private String calculateElementName(io.cucumber.plugin.event.TestCase testCase) {
             String testCaseName = testCase.getName();
             if (testCaseName.equals(previousTestCaseName)) {
@@ -212,6 +227,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
                 return testCaseName;
             }
         }
+
         void finish(Document doc, Element element, Instant instant) {
             element.setAttribute("duration-ms", calculateTotalDurationString());
             element.setAttribute("finished-at", ISO_INSTANT.format(instant));
@@ -249,11 +265,13 @@ public final class TestNGFormatter implements EventListener, StrictAware{
                 element.setAttribute("status", "PASS");
             }
         }
+
         private String printStrackTrace(Result failed) {
             StringWriter stringWriter = new StringWriter();
             failed.getError().printStackTrace(new PrintWriter(stringWriter));
             return stringWriter.toString();
         }
+
         private String calculateTotalDurationString() {
             Duration totalDuration = ZERO;
             for (Result r : results) {
@@ -264,6 +282,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             }
             return String.valueOf(totalDuration.toMillis());
         }
+
         private void addStepAndResultListing(StringBuilder sb) {
             for (int i = 0; i < steps.size(); i++) {
                 int length = sb.length();
@@ -280,6 +299,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
                 sb.append("\n");
             }
         }
+
         private Element createException(Document doc, String clazz, String message, String stacktrace) {
             Element exceptionElement = doc.createElement("exception");
             exceptionElement.setAttribute("class", clazz);

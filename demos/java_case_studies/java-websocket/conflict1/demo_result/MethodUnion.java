@@ -25,6 +25,10 @@ import org.java_websocket.handshake.ServerHandshake;
 
 public abstract class WebSocketClient extends WebSocketAdapter implements Runnable, WebSocket{
 
+
+    /**
+	 * The URI this channel is supposed to connect to.
+	 */
     protected URI uri = null;
     private WebSocketImpl engine = null;
     private Socket socket = null;
@@ -38,11 +42,8 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
     private CountDownLatch closeLatch = new CountDownLatch( 1 );
     private int connectTimeout = 0;
 
-    /**
-	 * The URI this channel is supposed to connect to.
-	 */
-
     /** This open a websocket connection as specified by rfc6455 */
+
     public WebSocketClient( URI serverURI ) {
 		this( serverURI, new Draft_17() );
 	}
@@ -52,9 +53,11 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 	 * specified URI. The channel does not attampt to connect automatically. The connection
 	 * will be established once you call <var>connect</var>.
 	 */
+
     public WebSocketClient( URI serverUri , Draft draft ) {
 		this( serverUri, draft, null, 0 );
 	}
+
     public WebSocketClient( URI serverUri , Draft protocolDraft , Map<String,String> httpHeaders , int connectTimeout ) {
 		if( serverUri == null ) {
 			throw new IllegalArgumentException();
@@ -71,6 +74,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
     /**
 	 * Returns the URI that this WebSocketClient is connected to.
 	 */
+
     public URI getURI() {
 		return uri;
 	}
@@ -79,6 +83,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 	 * Returns the protocol version this channel uses.<br>
 	 * For more infos see https://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
 	 */
+
     public Draft getDraft() {
 		return draft;
 	}
@@ -86,6 +91,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
     /**
 	 * Initiates the websocket connection. This method does not block.
 	 */
+
     public void connect() {
 		if( writeThread != null )
 			throw new IllegalStateException( "WebSocketClient objects are not reuseable" );
@@ -97,6 +103,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 	 * Same as <code>connect</code> but blocks until the websocket connected or failed to do so.<br>
 	 * Returns whether it succeeded or not.
 	 **/
+
     public boolean connectBlocking() throws InterruptedException {
 		connect();
 		connectLatch.await();
@@ -107,11 +114,13 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 	 * Initiates the websocket close handshake. This method does not block<br>
 	 * In oder to make sure the connection is closed use <code>closeBlocking</code>
 	 */
+
     public void close() {
 		if( writeThread != null ) {
 			engine.close( CloseFrame.NORMAL );
 		}
 	}
+
     public void closeBlocking() throws InterruptedException {
 		close();
 		closeLatch.await();
@@ -123,6 +132,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 	 * @param text
 	 *            The string which will be transmitted.
 	 */
+
     public void send( String text ) throws NotYetConnectedException {
 		engine.send( text );
 	}
@@ -133,9 +143,11 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 	 * @param data
 	 *            The byte-Array of data to send to the WebSocket server.
 	 */
+
     public void send( byte[] data ) throws NotYetConnectedException {
 		engine.send( data );
 	}
+
     public void run() {
 		try {
 			if( socket == null ) {
@@ -175,6 +187,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 		}
 		assert ( socket.isClosed() );
 	}
+
     private int getPort() {
 		int port = uri.getPort();
 		if( port == -1 ) {
@@ -193,6 +206,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 		}
 		return port;
 	}
+
 
     private void sendHandshake() throws InvalidHandshakeException {
 		String path;
@@ -221,6 +235,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
     /**
 	 * This represents the state of the connection.
 	 */
+
     public READYSTATE getReadyState() {
 		return engine.getReadyState();
 	}
@@ -228,14 +243,17 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
     /**
 	 * Calls subclass' implementation of <var>onMessage</var>.
 	 */
+
     @Override
 	public final void onWebsocketMessage( WebSocket conn, String message ) {
 		onMessage( message );
 	}
+
     @Override
 	public final void onWebsocketMessage( WebSocket conn, ByteBuffer blob ) {
 		onMessage( blob );
 	}
+
     @Override
 	public void onWebsocketMessageFragment( WebSocket conn, Framedata frame ) {
 		onFragment( frame );
@@ -244,6 +262,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
     /**
 	 * Calls subclass' implementation of <var>onOpen</var>.
 	 */
+
     @Override
 	public final void onWebsocketOpen( WebSocket conn, Handshakedata handshake ) {
 		connectLatch.countDown();
@@ -253,6 +272,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
     /**
 	 * Calls subclass' implementation of <var>onClose</var>.
 	 */
+
     @Override
 	public final void onWebsocketClose( WebSocket conn, int code, String reason, boolean remote ) {
 		connectLatch.countDown();
@@ -271,51 +291,67 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
     /**
 	 * Calls subclass' implementation of <var>onIOError</var>.
 	 */
+
     @Override
 	public final void onWebsocketError( WebSocket conn, Exception ex ) {
 		onError( ex );
 	}
+
     @Override
 	public final void onWriteDemand( WebSocket conn ) {
 		// nothing to do
 	}
+
     @Override
 	public void onWebsocketCloseInitiated( WebSocket conn, int code, String reason ) {
 		onCloseInitiated( code, reason );
 	}
+
     @Override
 	public void onWebsocketClosing( WebSocket conn, int code, String reason, boolean remote ) {
 		onClosing( code, reason, remote );
 	}
+
     public void onCloseInitiated( int code, String reason ) {
 	}
+
     public void onClosing( int code, String reason, boolean remote ) {
 	}
+
     public WebSocket getConnection() {
 		return engine;
 	}
+
     @Override
 	public InetSocketAddress getLocalSocketAddress( WebSocket conn ) {
 		if( socket != null )
 			return (InetSocketAddress) socket.getLocalSocketAddress();
 		return null;
 	}
+
     @Override
 	public InetSocketAddress getRemoteSocketAddress( WebSocket conn ) {
 		if( socket != null )
 			return (InetSocketAddress) socket.getRemoteSocketAddress();
 		return null;
 	}
+
     public abstract void onOpen( ServerHandshake handshakedata );
+
     public abstract void onMessage( String message );
+
     public abstract void onClose( int code, String reason, boolean remote );
+
     public abstract void onError( Exception ex );
+
     public void onMessage( ByteBuffer bytes ) {
 	}
+
     public void onFragment( Framedata frame ) {
 	}
 
  private class WebsocketWriteThread implements Runnable{
+
 
      @Override
 		public void run() {
@@ -333,7 +369,8 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 			}
 		}
 
- }    public void setProxy( Proxy proxy ) {
+ }
+    public void setProxy( Proxy proxy ) {
 		if( proxy == null )
 			throw new IllegalArgumentException();
 		this.proxy = proxy;
@@ -344,68 +381,84 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 	 * This method must be called before <code>connect</code>.
 	 * If the given socket is not yet bound it will be bound to the uri specified in the constructor.
 	 **/
+
     public void setSocket( Socket socket ) {
 		if( this.socket != null ) {
 			throw new IllegalStateException( "socket has already been set" );
 		}
 		this.socket = socket;
 	}
+
     @Override
 	public void sendFragmentedFrame( Opcode op, ByteBuffer buffer, boolean fin ) {
 		engine.sendFragmentedFrame( op, buffer, fin );
 	}
+
     @Override
 	public boolean isOpen() {
 		return engine.isOpen();
 	}
+
     @Override
 	public boolean isFlushAndClose() {
 		return engine.isFlushAndClose();
 	}
+
     @Override
 	public boolean isClosed() {
 		return engine.isClosed();
 	}
+
     @Override
 	public boolean isClosing() {
 		return engine.isClosing();
 	}
+
     @Override
 	public boolean isConnecting() {
 		return engine.isConnecting();
 	}
+
     @Override
 	public boolean hasBufferedData() {
 		return engine.hasBufferedData();
 	}
+
     @Override
 	public void close( int code ) {
 		engine.close();
 	}
+
     @Override
 	public void close( int code, String message ) {
 		engine.close( code, message );
 	}
+
     @Override
 	public void closeConnection( int code, String message ) {
 		engine.closeConnection( code, message );
 	}
+
     @Override
 	public void send( ByteBuffer bytes ) throws IllegalArgumentException , NotYetConnectedException {
 		engine.send( bytes );
 	}
+
     @Override
 	public void sendFrame( Framedata framedata ) {
 		engine.sendFrame( framedata );
 	}
+
     @Override
 	public InetSocketAddress getLocalSocketAddress() {
 		return engine.getLocalSocketAddress();
 	}
+
     @Override
 	public InetSocketAddress getRemoteSocketAddress() {
 		return engine.getRemoteSocketAddress();
 	}
+
     @Override
 	public String getResourceDescriptor() {
 		return uri.getPath();
