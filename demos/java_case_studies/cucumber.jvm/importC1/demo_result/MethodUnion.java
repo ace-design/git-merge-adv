@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.URL;
 import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
@@ -40,11 +41,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import static io.cucumber.core.exception.ExceptionUtils.printStackTrace;
 import static java.time.Duration.ZERO;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
 import static java.util.Locale.ROOT;
-import java.net.URL;
-import static io.cucumber.core.exception.ExceptionUtils.printStackTrace;
 
 public final class TestNGFormatter implements EventListener, StrictAware{
 

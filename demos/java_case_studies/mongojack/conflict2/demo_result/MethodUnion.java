@@ -1,17 +1,3 @@
-package org.mongojack;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.mongojack.JacksonDBCollection;
-
 /*
  * Copyright 2011 VZ Netzwerke Ltd
  *
@@ -27,16 +13,19 @@ import org.mongojack.JacksonDBCollection;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * Base class for unit tests that run against MongoDB.  Assumes there is a MongoDB instance listening on the default
- * port on localhost, and that we can do whatever we want to a database called "unittest".
- */
-
-/**
- * Base class for unit tests that run against MongoDB. Assumes there is a MongoDB instance listening on the default
- * port on localhost, and that we can do whatever we want to a database called "unittest".
- */
+package org.mongojack;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.Mongo;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.mongojack.JacksonDBCollection;
 
 @RunWith(MongoDBTestCaseRunner.class)
 public abstract class MongoDBTestBase{

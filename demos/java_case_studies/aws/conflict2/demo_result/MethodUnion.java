@@ -1,3 +1,17 @@
+/*
+ * Copyright 2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *  http://aws.amazon.com/apache2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
 package com.amazonaws.services.dynamodb.sessionmanager;
 import static com.amazonaws.util.BinaryUtils.copyAllBytesFrom;
 import java.io.ByteArrayInputStream;
@@ -13,45 +27,21 @@ import org.apache.catalina.Session;
 import org.apache.catalina.session.StandardSession;
 import org.apache.catalina.session.StoreBase;
 import org.apache.catalina.util.CustomObjectInputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import org.apache.juli.logging.Log;
+import java.io.ByteArrayOutputStream;
 import org.apache.juli.logging.LogFactory;
 import com.amazonaws.services.dynamodb.sessionmanager.util.DynamoUtils;
+import java.io.ObjectOutputStream;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
+import java.util.List;
 import com.amazonaws.services.dynamodbv2.model.TableDescription;
 import com.amazonaws.util.IOUtils;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.util.List;
 import org.apache.catalina.Container;
 import org.apache.catalina.Loader;
-
-/*
- * Copyright 2013 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License").
- * You may not use this file except in compliance with the License.
- * A copy of the License is located at
- *
- *  http://aws.amazon.com/apache2.0
- *
- * or in the "license" file accompanying this file. This file is distributed
- * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- */
-
-/**
- * Session store implementation that loads and stores HTTP sessions from Amazon
- * DynamoDB.
- */
-
-/**
- * Session store implementation that loads and stores HTTP sessions from Amazon DynamoDB.
- */
 
 public class DynamoDBSessionStore extends StoreBase{
 

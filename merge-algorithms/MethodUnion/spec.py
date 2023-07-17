@@ -77,8 +77,8 @@ class Java(Lang):
 
     #Used to store each main class (each object has a class tree-structure)
     #Items in list will be directly added to overall tree
-    global classes
-    classes=[]
+    global bottom_body
+    bottom_body=[]
 
     #Used for each class object reference.
     #Key is the full class declaration, value is the associated class object
@@ -95,10 +95,13 @@ class Java(Lang):
     global all_methods
     all_methods={}
 
+    global top_body
+    top_body=[]
+
     def get_lang(self):
         return "java"
 
-    def output_imports(self,node,string,all_imports,target,suspicious):
+    def output_imports(self,node,string,target,suspicious):
         # Finds the specified target node in the tree
 
         if (suspicious and (target.get_full_dir() not in usages) and (target.get_full_dir()[-1]!="*")):
@@ -109,9 +112,13 @@ class Java(Lang):
                 dup+=item.get_full_dir()
                 ## If the type is Pack, then it is not a leaf node. Recurse further.
                 if (type(item)==Pack):
-                    self.output_imports(item,dup,all_imports,target,False)
+                    self.output_imports(item,dup,target,False)
                 elif (item==target):
-                    all_imports.append(dup+";")
+                    if (dup+';' not in top_body):
+                        top_body.insert(target.get_start(),dup+';')
+    
+    def get_top_body(self):
+        return top_body
 
 
     def output_body(self,body,class_name):
@@ -204,14 +211,17 @@ class Java(Lang):
         """)
         captures+= query.captures(tree.root_node)
         query = Java_Lang.query("""
-            ((import_declaration) @name)
+            ((block_comment) @name
+	            (import_declaration) @name)
         """)
-        captures+= query.captures(tree.root_node)
+        comments= query.captures(tree.root_node)
 
 
 
         for val in captures:
             res=val[0].text
+            start_point=int(val[0].start_point[0])
+            end_point=start_point
             line=res.decode()
             if (line in other):
                 other.remove(line)
@@ -227,7 +237,14 @@ class Java(Lang):
                 lstring=line[0:new_index+1]
                 rstring=line[new_index+1:-1]
 
-            imports.append([lstring,rstring])
+            imports.append([lstring,rstring,start_point,end_point])
+        
+        for comment_val in comments:
+            if (comment_val[0].type=="block_comment"):
+                starting_line=int(comment_val[0].start_point[0])
+                comment_obj=Comment(comment_val[0].text.decode(),"",index,starting_line)
+                if (comment_obj not in top_body):
+                    top_body.insert(starting_line,comment_obj)
 
         return imports,other
     
@@ -273,7 +290,11 @@ class Java(Lang):
             ((block_comment) @name)
         """)
 
-        all_comments=comments.captures(tree.root_node)
+        linecomments = Java_Lang.query("""
+            ((line_comment) @name)
+        """)
+
+        all_comments=comments.captures(tree.root_node)+linecomments.captures(tree.root_node)
 
         for new_class in class_captures:
             # Tuple of class details including modifiers and name.
@@ -316,8 +337,8 @@ class Java(Lang):
             # Adds it as subclass to main class if it is.
             nested_class_details=new_class[0].parent.parent.parent
             if (nested_class_details is None):
-                if (class_obj not in classes):
-                    classes.append(class_obj)
+                if (class_obj not in bottom_body):
+                    bottom_body.append(class_obj)
             else:
                 full_nested_name=""
                 for child in nested_class_details.children:
@@ -381,18 +402,18 @@ class Java(Lang):
             if (super_class+" "+method_signature in all_methods.keys()):
                 if (method_obj not in all_methods[super_class+" "+method_signature]):
                     all_methods[super_class+" "+method_signature].append(method_obj)
-                    self.add_method(classes,method_obj,super_class,version,before)
+                    self.add_method(bottom_body,method_obj,super_class,version,before)
                 else:
                     index=all_methods[super_class+" "+method_signature].index(method_obj)
                     all_methods[super_class+" "+method_signature][index].add_version(version)
             else:
                 all_methods[super_class+" "+method_signature]=[method_obj]
-                self.add_method(classes,method_obj,super_class,version,before)
+                self.add_method(bottom_body,method_obj,super_class,version,before)
             before=method_obj
 
 
         for comment in all_comments:
-            if (comment[0].type=="block_comment" and (comment[0].parent.type=="class_body")):
+            if (comment[0].type=="block_comment" and (comment[0].parent.type=="class_body") and comment[0].text.decode() not in top_body):
                 main_class=""
                 starting_line=int(comment[0].start_point[0])
                 for child in comment[0].parent.parent.children:
@@ -403,15 +424,15 @@ class Java(Lang):
                 index=comment[0].start_point[1]
 
                 comment_obj=Comment(comment[0].text.decode(),main_class,index,starting_line)
-
                 class_ref[main_class.strip(" ")].add_comment(comment_obj)
-            elif (comment[0].type=="block_comment" and comment[0].parent.type=="program"):
-                starting_line=int(comment[0].start_point[0])
-                index=comment[0].start_point[1]
-                comment_obj=Comment(comment[0].text.decode(),"",index,starting_line)
-                classes.append(comment_obj)
 
-        return classes
+            # elif (comment[0].type=="block_comment" and comment[0].parent.type=="program"):
+            #     starting_line=int(comment[0].start_point[0])
+            #     index=comment[0].start_point[1]
+            #     comment_obj=Comment(comment[0].text.decode(),"",index,starting_line)
+            #     bottom_body.append(comment_obj)
+
+        return bottom_body
     
     #Recursively finds object for super class, and adds method object to it.
     def add_method(self,classes,new_method,super_class,version,before):
@@ -440,11 +461,17 @@ class Python(Lang):
     codeseq = []
     done=[]
 
+    global top_body
+    top_body=[]
+
     def get_lang(self):
         return "python"
 
     def generateAST(self,content):
         return ast.parse(content)
+    
+    def get_top_body(self):
+        return top_body
     
 
     def getImportNodes(self,codetree):
@@ -486,7 +513,7 @@ class Python(Lang):
         return formatted_imports,restofCode
     
 
-    def output_imports(self,node,string,all_imports,target,formatter = ""):
+    def output_imports(self,node,string,target,formatter = ""):
         # Finds the specified target node in the tree
         for item in node.get_children():
             formatter = copy.deepcopy(formatter)
@@ -506,24 +533,24 @@ class Python(Lang):
             dup+=item.get_full_dir()
             if (type(item)==Pack):
                 dup+=" "
-                self.output_imports(item,dup,all_imports,target,formatter)
+                self.output_imports(item,dup,target,formatter)
                 formatter = ''
             elif (item==target):
                 if formatter == "":
 
-                    all_imports.append(dup)
+                    top_body.append(dup)
                 else:
-                    for i,imp in enumerate(all_imports):
+                    for i,imp in enumerate(top_body):
                         if theprefix in imp:
                             match formatter:
                                 case "oneline":
-                                    all_imports[i] = all_imports[i] + ',' + target.get_full_dir()
+                                    top_body[i] = top_body[i] + ',' + target.get_full_dir()
                                 case "multiline":
                                     
-                                    temparray = all_imports[i].split('\n')
+                                    temparray = top_body[i].split('\n')
                                     if len(temparray)==1:
                                         temimp = imp.replace(theprefix,'')
-                                        all_imports[i] = theprefix+ f'(\n    {temimp},\n    {target.get_full_dir()},\n)'
+                                        top_body[i] = theprefix+ f'(\n    {temimp},\n    {target.get_full_dir()},\n)'
                                     else :
                                         new_imp = temparray[0]+'\n'
                                         temparray.pop(0)
@@ -531,14 +558,14 @@ class Python(Lang):
                                         for el in temparray:
                                             new_imp+=el+'\n'
                                         new_imp += f'    {target.get_full_dir()},\n)'
-                                        all_imports[i] = new_imp
+                                        top_body[i] = new_imp
 
                                             
                                 case "separateline":
-                                    all_imports.append(dup)
+                                    top_body.append(dup)
                             return
                     
-                    all_imports.append(dup)
+                    top_body.append(dup)
 
 
     def getUsages(self,git_content):

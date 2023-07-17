@@ -1,12 +1,3 @@
-package org.antlr.v4.runtime;
-import org.antlr.v4.runtime.misc.NotNull;
-import java.util.*;
-import org.antlr.v4.runtime.misc.Interval;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 /*
  [The "BSD license"]
  Copyright (c) 2011 Terence Parr
@@ -35,21 +26,14 @@ import java.util.Set;
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/** Buffer all input tokens but do on-demand fetching of new tokens from
- *  lexer. Useful when the parser or lexer has to set context/mode info before
- *  proper lexing of future tokens. The ST template parser needs this,
- *  for example, because it has to constantly flip back and forth between
- *  inside/output templates. E.g., <names:{hi, <it>}> has to parse names
- *  as part of an expression but "hi, <it>" as a nested template.
- *
- *  You can't use this stream if you pass whitespace or other off-channel
- *  tokens to the parser. The stream can't ignore off-channel tokens.
- *  (UnbufferedTokenStream is the same way.)  Use CommonTokenStream.
- *
- *  This is not a subclass of UnbufferedTokenStream because I don't want
- *  to confuse small moving window of tokens it uses for the full buffer.
- */
+package org.antlr.v4.runtime;
+import org.antlr.v4.runtime.misc.NotNull;
+import java.util.*;
+import org.antlr.v4.runtime.misc.Interval;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class BufferedTokenStream implements TokenStream{
 

@@ -61,16 +61,19 @@ def get_suffix(lang):
 
 def exec_algo(algo,case_study,lang):
     try:
-        action=input("\nEnter 0 if testing new algorithm\nEnter 1 if executing gumtree again due to previous errors.\n")
-        if (action=="0"):
-            algo_path="../merge-algorithms/"+algo+'/init.py'
-            subprocess.run(['mkdir','-p',case_study+"/demo_result/"])
-            subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang,'--file',case_study+"/base."+lang])
-        elif (action=="1"):
-            pass
-        else:
-            print("Not a valid answer. Ended program.")
-            exit(0)
+        # action=input("\nEnter 0 if testing new algorithm\nEnter 1 if executing gumtree again due to previous errors.\n")
+        algo_path="../merge-algorithms/"+algo+'/init.py'
+        subprocess.run(['mkdir','-p',case_study+"/demo_result/"])
+        subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang,'--file',case_study+"/base."+lang])
+        # if (action=="0"):
+        #     algo_path="../merge-algorithms/"+algo+'/init.py'
+        #     subprocess.run(['mkdir','-p',case_study+"/demo_result/"])
+        #     subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang,'--file',case_study+"/base."+lang])
+        # elif (action=="1"):
+        #     pass
+        # else:
+        #     print("Not a valid answer. Ended program.")
+        #     exit(0)
     except:
         print("path not found")
         exit(0)

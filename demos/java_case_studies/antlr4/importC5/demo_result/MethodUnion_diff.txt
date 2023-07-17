@@ -1,5 +1,5 @@
-deletions: 0
+deletions: 1
 insertions: 0
 moves: 2
 diff_path: 0
-Overall: 2.0
+Overall: 2.23606797749979
