@@ -1,6 +1,6 @@
 package io.cucumber.examples.testng;
 import cucumber.api.TypeRegistryConfigurer;
-import io.cucumber.core.api.TypeRegistry;
+import cucumber.api.TypeRegistry;
 import io.cucumber.datatable.DataTableType;
 import io.cucumber.cucumberexpressions.ParameterType;
 import java.text.SimpleDateFormat;

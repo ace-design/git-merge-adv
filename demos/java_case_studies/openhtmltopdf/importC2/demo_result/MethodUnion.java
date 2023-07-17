@@ -17,6 +17,7 @@ import com.openhtmltopdf.render.RenderingContext;
 
 public class MergeBackgroundPdfDrawer extends PdfDrawerBase{
 
+
     @Override
     public Map<Shape, String> drawObject(Element e, double x, double y, double width, double height,
             OutputDevice outputDevice, RenderingContext ctx, int dotsPerPixel)

@@ -53,6 +53,7 @@ public class DynamoUtils{
 
     public static final String SESSION_ID_KEY = "sessionId";
     public static final String SESSION_DATA_ATTRIBUTE = "sessionData";
+
     public static Map<String, AttributeValue> loadItemBySessionId(AmazonDynamoDB dynamo,
                                                                   String tableName,
                                                                   String sessionId) {
@@ -70,6 +71,7 @@ public class DynamoUtils{
 
         return null;
     }
+
     public static List<String> loadKeys(AmazonDynamoDB dynamo, String tableName) {
 		ScanRequest request = new ScanRequest(tableName);
 		request.setSelect(Select.SPECIFIC_ATTRIBUTES);
@@ -90,6 +92,7 @@ public class DynamoUtils{
 
 		return list;
 	}
+
     public static void deleteSession(AmazonDynamoDB dynamo, String tableName, String sessionId) {
 		Map<String, AttributeValue> key = newAttributeValueMap();
 		key.put(SESSION_ID_KEY, new AttributeValue(sessionId));
@@ -109,6 +112,7 @@ public class DynamoUtils{
 		}
 	}
 
+
     public static ByteBuffer loadItemBySessionId(AmazonDynamoDB dynamo, String tableName, String sessionId) {
 		Map<String, AttributeValue> key = newAttributeValueMap();
 		key.put(SESSION_ID_KEY, new AttributeValue(sessionId));
@@ -126,6 +130,7 @@ public class DynamoUtils{
 		}
 		return null;
 	}
+
     public static void storeSession(AmazonDynamoDB dynamo, String tableName, Session session) throws IOException {
         Map<String, Object> sessionAttributes = new HashMap<String, Object>();
 
@@ -161,6 +166,7 @@ public class DynamoUtils{
             DynamoDBSessionManager.error("Unable to save session " + session.getId(), e);
         }
     }
+
     public static void storeSession(AmazonDynamoDB dynamo, String tableName, String sessionId, ByteBuffer byteBuffer)
 			throws IOException {
 
@@ -176,6 +182,7 @@ public class DynamoUtils{
 			DynamoDBSessionManager.error("Unable to save session " + sessionId, e);
 		}
 	}
+
     public static boolean doesTableExist(AmazonDynamoDBClient dynamo, String tableName) {
 <<<<<<< left_content.java
 		try {
@@ -210,6 +217,7 @@ public class DynamoUtils{
         }
     }
 >>>>>>> right_content.java
+
 
     public static void waitForTableToBecomeActive(AmazonDynamoDBClient dynamo, String tableName) {
 <<<<<<< left_content.java
@@ -276,6 +284,7 @@ public class DynamoUtils{
 		throw new AmazonClientException("Table '" + tableName + "' never became active");
 	}
 
+
     public static void createSessionTable(AmazonDynamoDBClient dynamo, String tableName, long readCapacityUnits, long writeCapacityUnits) {
         CreateTableRequest request = new CreateTableRequest().withTableName(tableName);
         addClientMarker(request);
@@ -294,6 +303,7 @@ public class DynamoUtils{
 
         dynamo.createTable(request);
     }
+
     public static void createSessionTable(AmazonDynamoDBClient dynamo,
                                           String tableName,
                                           long readCapacityUnits,
@@ -315,6 +325,7 @@ public class DynamoUtils{
 
         dynamo.createTable(request);
     }
+
     public static void createSessionTable(AmazonDynamoDBClient dynamo, String tableName, long readCapacityUnits,
 			long writeCapacityUnits) {
 		CreateTableRequest request = new CreateTableRequest().withTableName(tableName);
@@ -330,12 +341,15 @@ public class DynamoUtils{
 
 		dynamo.createTable(request);
 	}
+
     public static void addClientMarker(AmazonWebServiceRequest request) {
 		request.getRequestClientOptions().addClientMarker("DynamoSessionManager/2.0");
 	}
+
     private static Map<String, AttributeValue> newAttributeValueMap() {
 		return new HashMap<String, AttributeValue>();
 	}
+
     public static void appendUserAgent(AmazonWebServiceRequest request) {
         request.getRequestClientOptions().appendUserAgent("DynamoSessionManager/1.0");
     }

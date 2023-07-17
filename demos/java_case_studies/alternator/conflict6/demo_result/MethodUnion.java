@@ -12,6 +12,7 @@ import java.util.List;
 
 public class BatchGetItemResultMarshaller implements Marshaller<String, BatchGetItemResult>{
 
+
     public String marshall(BatchGetItemResult batchGetItemResult) {
 		if (batchGetItemResult == null) {
 			throw new AmazonClientException("Invalid argument passed to marshall(...)");

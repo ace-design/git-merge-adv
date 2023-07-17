@@ -32,9 +32,8 @@ import com.amazonaws.util.StringUtils;
 
 public class DynamoDBSessionManager extends PersistentManagerBase{
 
-    private static final String DEFAULT_TABLE_NAME = "Tomcat_SessionState";
     private static final String name = "AmazonDynamoDBSessionManager";
-    private static final String info = name + "/1.0";
+    private static final String info = name + "/2.0";
     private String regionId = "us-east-1";
     private String endpoint;
     private File credentialsFile;
@@ -44,13 +43,12 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
     private long writeCapacityUnits = 5;
     private boolean createIfNotExist = true;
     private String tableName = DEFAULT_TABLE_NAME;
-    private final DynamoDBSessionStore dynamoSessionStore;
-    private ExpiredSessionReaper expiredSessionReaper;
-    private static Log logger;
-    private static final String info = name + "/2.0";
     private String proxyHost;
+    private final DynamoDBSessionStore dynamoSessionStore;
     private Integer proxyPort;
+    private ExpiredSessionReaper expiredSessionReaper;
     private static final Log logger = LogFactory.getLog(DynamoDBSessionManager.class);
+
     public DynamoDBSessionManager() {
         dynamoSessionStore = new DynamoDBSessionStore();
         setStore(dynamoSessionStore);
@@ -62,46 +60,60 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
         // MaxIdleBackup controls when sessions are persisted to the store
         setMaxIdleBackup(30); // 30 seconds
     }
+
     public String getInfo() {
         return info;
     }
+
     @Override
     public String getName() {
         return name;
     }
+
     public void setRegionId(String regionId) {
         this.regionId = regionId;
     }
+
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
     }
+
     public void setAwsAccessKey(String accessKey) {
         this.accessKey = accessKey;
     }
+
     public void setAwsSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
+
     public void setAwsCredentialsFile(String credentialsFile) {
         this.credentialsFile = new File(credentialsFile);
     }
+
     public void setTable(String table) {
         this.tableName = table;
     }
+
     public void setReadCapacityUnits(int readCapacityUnits) {
         this.readCapacityUnits = readCapacityUnits;
     }
+
     public void setWriteCapacityUnits(int writeCapacityUnits) {
         this.writeCapacityUnits = writeCapacityUnits;
     }
+
     public void setCreateIfNotExist(boolean createIfNotExist) {
         this.createIfNotExist = createIfNotExist;
     }
+
     public void setProxyHost(String proxyHost) {
         this.proxyHost = proxyHost;
     }
+
     public void setProxyPort(Integer proxyPort) {
         this.proxyPort = proxyPort;
     }
+
     @Override
     protected void initInternal() throws LifecycleException {
         this.setDistributable(true);
@@ -128,10 +140,12 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
 >>>>>>> right_content.java
     }
 
+
     @Override
     protected synchronized void stopInternal() throws LifecycleException {
         super.stopInternal();
     }
+
     private void initDynamoTable(AmazonDynamoDBClient dynamo) {
         boolean tableExists = DynamoUtils.doesTableExist(dynamo, this.tableName);
 
@@ -146,6 +160,7 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
 
         DynamoUtils.waitForTableToBecomeActive(dynamo, this.tableName);
     }
+
     private AWSCredentialsProvider initCredentials() {
         // Attempt to use any credentials specified in context.xml first
         if (credentialsExistInContextConfig()) {
@@ -188,12 +203,15 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
      * @return True if the user has set their AWS credentials either partially or completely in
      *         context.xml. False otherwise
      */
+
     public static void debug(String s) {
         logger.debug(s);
     }
+
     private boolean credentialsExistInContextConfig() {
         return accessKey != null || secretKey != null;
     }
+
     public static void warn(String s) {
         logger.warn(s);
     }
@@ -202,15 +220,19 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
      * @return True if both the access key and secret key were set in context.xml config. False
      *         otherwise
      */
+
     public static void warn(String s, Exception e) {
         logger.warn(s, e);
     }
+
     private boolean credentialsInContextConfigAreValid() {
         return StringUtils.isNullOrEmpty(accessKey) || StringUtils.isNullOrEmpty(secretKey);
     }
+
     public static void error(String s) {
         logger.error(s);
     }
+
     private ClientConfiguration initClientConfiguration() {
         ClientConfiguration clientConfiguration = new ClientConfiguration();
 
@@ -227,6 +249,7 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
 
         return clientConfiguration;
     }
+
     public static void error(String s, Exception e) {
         logger.error(s, e);
     }

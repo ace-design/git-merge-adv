@@ -29,16 +29,18 @@ import org.slf4j.LoggerFactory;
 
 public class Slf4jMavenTransferListener extends AbstractTransferListener{
 
-    protected Logger out;
     protected final Logger out;
+
     public Slf4jMavenTransferListener( Logger out )
     {
         this.out = out;
     }
+
     public Slf4jMavenTransferListener()
     {
         this.out = LoggerFactory.getLogger( Slf4jMavenTransferListener.class );
     }
+
     @Override
     public void transferInitiated( TransferEvent event )
     {
@@ -46,6 +48,7 @@ public class Slf4jMavenTransferListener extends AbstractTransferListener{
 
         out.info( message + ": " + event.getResource().getRepositoryUrl() + event.getResource().getResourceName() );
     }
+
     @Override
     public void transferCorrupted( TransferEvent event )
         throws TransferCancelledException
@@ -54,6 +57,7 @@ public class Slf4jMavenTransferListener extends AbstractTransferListener{
 
         out.warn( event.getException().getMessage() + " for " + resource.getRepositoryUrl() + resource.getResourceName() );
     }
+
     @Override
     public void transferSucceeded( TransferEvent event )
     {
@@ -77,6 +81,7 @@ public class Slf4jMavenTransferListener extends AbstractTransferListener{
                 + throughput + ")" );
         }
     }
+
     protected long toKB( long bytes )
     {
         return ( bytes + 1023 ) / 1024;

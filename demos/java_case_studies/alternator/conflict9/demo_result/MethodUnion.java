@@ -42,39 +42,49 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
 
     private static final Log log = LogFactory.getLog(AlternatorDBInProcessClient.class);
     private AlternatorDBHandler handler = new AlternatorDBHandler();
+
     public AlternatorDBInProcessClient() {
 		this(new ClientConfiguration());
 	}
+
     public AlternatorDBInProcessClient(ClientConfiguration clientConfiguration) {
 		super(clientConfiguration);
 		init();
 	}
+
     private void init() {
 	}
+
     public ListTablesResult listTables(ListTablesRequest listTablesRequest)
 			throws AmazonServiceException, AmazonClientException {
 		return handler.listTables(listTablesRequest);
 	}
+
     public QueryResult query(QueryRequest queryRequest)
 			throws AmazonServiceException, AmazonClientException {
 		return handler.query(queryRequest);
 	}
+
     public BatchWriteItemResult batchWriteItem(BatchWriteItemRequest batchWriteItemRequest)
 			throws AmazonServiceException, AmazonClientException {
 		return handler.batchWriteItem(batchWriteItemRequest);
 	}
+
     public PutItemResult putItem(PutItemRequest putItemRequest)
 			throws AmazonServiceException, AmazonClientException, ConditionalCheckFailedException {
 		return handler.putItem(putItemRequest);
 	}
+
     public DescribeTableResult describeTable(DescribeTableRequest describeTableRequest)
 			throws AmazonServiceException, AmazonClientException {
 		return handler.describeTable(describeTableRequest);
 	}
+
     public ScanResult scan(ScanRequest scanRequest)
 			throws AmazonServiceException, AmazonClientException {
 		return handler.scan(scanRequest);
 	}
+
     public UpdateItemResult updateItem(UpdateItemRequest updateItemRequest)
 			throws AmazonServiceException, AmazonClientException {
 <<<<<<< left_content.java
@@ -85,18 +95,22 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
 >>>>>>> right_content.java
 	}
 
+
     public PutItemResult putItem(PutItemRequest putItemRequest)
 			throws AmazonServiceException, AmazonClientException {
 
             return handler.putItem(putItemRequest);
 }
+
     public BatchGetItemResult batchGetItem(BatchGetItemRequest batchGetItemRequest)
 			throws AmazonServiceException, AmazonClientException {
 		return handler.batchGetItem(batchGetItemRequest);
 	}
+
     public ListTablesResult listTables() throws AmazonServiceException, AmazonClientException {
 		return listTables(new ListTablesRequest());
 	}
+
     public CreateTableResult createTable(CreateTableRequest createTableRequest)
 			throws AmazonServiceException, AmazonClientException {
 <<<<<<< left_content.java
@@ -106,6 +120,7 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
             return handler.createTable(createTableRequest);
 >>>>>>> right_content.java
 	}
+
 
     public UpdateTableResult updateTable(UpdateTableRequest updateTableRequest)
 			throws AmazonServiceException, AmazonClientException {
@@ -117,6 +132,7 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
 >>>>>>> right_content.java
 	}
 
+
     public DeleteTableResult deleteTable(DeleteTableRequest deleteTableRequest)
 			throws AmazonServiceException, AmazonClientException {
 <<<<<<< left_content.java
@@ -126,6 +142,7 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
             return handler.deleteTable(deleteTableRequest);
 >>>>>>> right_content.java
 	}
+
 
     public DeleteItemResult deleteItem(DeleteItemRequest deleteItemRequest)
 			throws AmazonServiceException, AmazonClientException {
@@ -138,6 +155,7 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
     }
 >>>>>>> right_content.java
 
+
     public GetItemResult getItem(GetItemRequest getItemRequest)
 			throws AmazonServiceException, AmazonClientException {
 <<<<<<< left_content.java
@@ -148,10 +166,12 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
 >>>>>>> right_content.java
 	}
 
+
     @Override
 	public void setEndpoint(String endpoint) throws IllegalArgumentException {
 		super.setEndpoint(endpoint);
 	}
+
     @Override
 	public ResponseMetadata getCachedResponseMetadata(AmazonWebServiceRequest request) {
 		return client.getResponseMetadataForRequest(request);

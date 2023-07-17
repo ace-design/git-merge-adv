@@ -23,7 +23,7 @@ def main():
 #Find all data associated with the desired algorithm in specified case studies path.
 def run_cs(algo,dir):
 
-    data={'deletions':0,'insertions':0,'moves':0,'diff_path':0,'Overall':0}
+    data={'deletions':0,'insertions':0,'moves':0,'diff_path':0,'num_conflicts':0,'Overall':0}
 
     for root,dirs,files in os.walk(dir):
         for file in files:
@@ -34,14 +34,14 @@ def run_cs(algo,dir):
                         div=line.split(": ")
                         if (div[0] in data.keys()):
                             data[div[0]]+=float(div[1].strip('\n'))
-    data['Overall']=math.sqrt(math.pow(data['deletions'],2)+math.pow(data['insertions'],2)+math.pow(data['moves'],2)+math.pow(data['diff_path'],2))
+    data['Overall']=math.sqrt(math.pow(data['deletions'],2)+math.pow(data['insertions'],2)+math.pow(data['moves'],2)+math.pow(data['diff_path'],2)+math.pow(data['num_conflicts'],2))
     print(dir+" results:\n")
     print(data)
     
     xaxis=data.keys()
     yaxis=data.values()
 
-    colors = ['red', 'green', 'pink', 'yellow','blue']
+    colors = ['red', 'green', 'pink', 'yellow','purple','blue']
 
     plt.bar(xaxis,yaxis,color=colors)
     plt.title(algo+" Results")
@@ -53,7 +53,7 @@ def run_cs(algo,dir):
 def run_overall(algo):
 
     print("Overall Results: \n")
-    total={'deletions':0,'insertions':0,'moves':0,'diff_path':0,'Overall':0}
+    total={'deletions':0,'insertions':0,'moves':0,'diff_path':0,'num_conflicts':0,'Overall':0}
     for root,dirs,files in os.walk('.'):
         for file in files:
             if file==algo+"_diff.txt":
@@ -64,12 +64,12 @@ def run_overall(algo):
                         if (div[0] in total.keys()):
                             total[div[0]]+=float(div[1].strip('\n'))
 
-    total['Overall']=math.sqrt(math.pow(total['deletions'],2)+math.pow(total['insertions'],2)+math.pow(total['moves'],2)+math.pow(total['diff_path'],2))
+    total['Overall']=math.sqrt(math.pow(total['deletions'],2)+math.pow(total['insertions'],2)+math.pow(total['moves'],2)+math.pow(total['diff_path'],2)+math.pow(total['num_conflicts'],2))
     print(total)
     xaxis=total.keys()
     yaxis=total.values()
 
-    colors = ['red', 'green', 'pink', 'yellow','blue']
+    colors = ['red', 'green', 'pink', 'yellow','purple','blue']
 
     plt.bar(xaxis,yaxis,color=colors)
     plt.title(algo+" Results")

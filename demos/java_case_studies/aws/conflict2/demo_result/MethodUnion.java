@@ -49,10 +49,10 @@ public class DynamoDBSessionStore extends StoreBase{
     private static final String info = name + "/1.0";
     private AmazonDynamoDBClient dynamo;
     private String sessionTableName;
-    private Set<String> keys = Collections.synchronizedSet(new HashSet<String>());
-    private long keysTimestamp=0;
     private final Set<String> keys = Collections.synchronizedSet(new HashSet<String>());
+    private long keysTimestamp=0;
     private static final Log logger = LogFactory.getLog(DynamoDBSessionStore.class);
+
     <<<<<<< left_content.java
 @Override
 	public String getInfo() {
@@ -64,16 +64,20 @@ public String getInfo() {
     }
 >>>>>>> right_content.java
 
+
     @Override
 	public String getStoreName() {
 		return name;
 	}
+
     public void setDynamoClient(AmazonDynamoDBClient dynamo) {
 		this.dynamo = dynamo;
 	}
+
     public void setSessionTableName(String tableName) {
 		this.sessionTableName = tableName;
 	}
+
     @Override
 	public void clear() throws IOException {
 		final Set<String> keysCopy = new HashSet<String>();
@@ -89,6 +93,7 @@ public String getInfo() {
 		}.start();
 
 	}
+
     @Override
 <<<<<<< left_content.java
 	public int getSize() throws IOException {
@@ -109,6 +114,7 @@ public String getInfo() {
     }
 >>>>>>> right_content.java
 
+
     @Override
 	public String[] keys() throws IOException {
 		// refresh the keys stored in memory in every hour.
@@ -123,6 +129,7 @@ public String getInfo() {
 		return keys.toArray(new String[0]);
 
 	}
+
     @Override
 <<<<<<< left_content.java
 	public Session load(String id) throws ClassNotFoundException, IOException {
@@ -239,11 +246,13 @@ public String getInfo() {
      * 
      * @return The context this manager is associated with
      */
+
     @Override
     public void remove(String id) throws IOException {
         DynamoUtils.deleteSession(dynamo, sessionTableName, id);
         keys.remove(id);
     }
+
     private Context getAssociatedContext() {
         try {
             return (Context) getManager().getContainer();
@@ -253,6 +262,7 @@ public String getInfo() {
             throw new IllegalStateException(e);
         }
     }
+
     @Override
 	public void save(Session session) throws IOException {
 
@@ -283,6 +293,7 @@ public String getInfo() {
 		DynamoUtils.storeSession(dynamo, sessionTableName, id, ByteBuffer.wrap(fos.toByteArray()));
 		keys.add(id);
 	}
+
     @Override
 	public void remove(String id) {
 		if (manager.getContainer().getLogger().isDebugEnabled()) {

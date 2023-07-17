@@ -1,6 +1,6 @@
 package io.cucumber.examples.testng;
 import io.cucumber.core.api.TypeRegistryConfigurer;
-import cucumber.api.TypeRegistry;
+import io.cucumber.core.api.TypeRegistry;
 import io.cucumber.datatable.DataTableType;
 import io.cucumber.cucumberexpressions.ParameterType;
 import java.text.SimpleDateFormat;
@@ -14,6 +14,7 @@ import static java.text.DateFormat.getDateInstance;
 import static java.util.Locale.ENGLISH;
 
 public class ParameterTypes implements TypeRegistryConfigurer{
+
 
     @Override
     public void configureTypeRegistry(TypeRegistry typeRegistry) {
@@ -50,6 +51,7 @@ public class ParameterTypes implements TypeRegistryConfigurer{
         ));
 
     }
+
     @Override
     public Locale locale() {
         return ENGLISH;

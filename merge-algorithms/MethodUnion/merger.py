@@ -19,6 +19,7 @@ def body_merge(lang, base, right, left):
     append_body_tree(lang,base,right,left)
     tree.set_classes(lang)
     tree.set_methods(lang)
+    tree.set_fields(lang)
     result=tree.find_body(lang)
     return result
 

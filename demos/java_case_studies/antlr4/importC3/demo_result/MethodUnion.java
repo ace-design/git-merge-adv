@@ -55,6 +55,7 @@ public class SymbolChecks{
     Set<String> tokenIDs = new HashSet<String>();
     Map<String, Set<String>> actionScopeToActionNames = new HashMap<String, Set<String>>();
     public ErrorManager errMgr;
+
     public SymbolChecks(Grammar g, SymbolCollector collector) {
         this.g = g;
         this.collector = collector;
@@ -74,6 +75,7 @@ public class SymbolChecks{
         System.out.println("scopes="+collector.scopes);
          */
     }
+
     public void process() {
         // methods affect fields, but no side-effects outside this object
 		// So, call order sensitive
@@ -85,6 +87,7 @@ public class SymbolChecks{
 		checkForTokenConflicts(collector.tokenIDRefs);  // sets tokenIDs
 		checkForLabelConflicts(g.rules.values());
 	}
+
     public void checkActionRedefinitions(List<GrammarAST> actions) {
 		if ( actions==null ) return;
 		String scope = g.getDefaultActionScope();
@@ -113,6 +116,7 @@ public class SymbolChecks{
             }
         }
     }
+
     public void checkForTokenConflicts(List<GrammarAST> tokenIDRefs) {
 //        for (GrammarAST a : tokenIDRefs) {
 //            Token t = a.token;
@@ -127,6 +131,7 @@ public class SymbolChecks{
      *  defined in surrounding rule.  Also they must have same type
      *  for repeated defs.
      */
+
     public void checkForLabelConflicts(Collection<Rule> rules) {
         for (Rule r : rules) {
             checkForAttributeConflicts(r);
@@ -150,6 +155,7 @@ public class SymbolChecks{
             }
         }
     }
+
     void checkForTypeMismatch(LabelElementPair prevLabelPair,
                                         LabelElementPair labelPair)
     {
@@ -164,6 +170,7 @@ public class SymbolChecks{
                 typeMismatchExpr);
         }
     }
+
     public void checkForLabelConflict(Rule r, GrammarAST labelID) {
 		String name = labelID.getText();
 		if (nameToRuleMap.containsKey(name)) {
@@ -191,6 +198,7 @@ public class SymbolChecks{
 			errMgr.grammarError(etype, g.fileName, labelID.token, name, r.name);
 		}
 	}
+
     public void checkForRuleArgumentAndReturnValueConflicts(Rule r) {
         if ( r.retvals!=null ) {
             Set<String> conflictingKeys = r.retvals.intersection(r.args);
@@ -206,6 +214,7 @@ public class SymbolChecks{
             }
         }
     }
+
     public void checkForAttributeConflicts(Rule r) {
 		checkDeclarationRuleConflicts(r, r.args, nameToRuleMap.keySet(), ErrorType.ARG_CONFLICTS_WITH_RULE);
 		checkDeclarationRuleConflicts(r, r.args, tokenIDs, ErrorType.ARG_CONFLICTS_WITH_TOKEN);
@@ -220,6 +229,7 @@ public class SymbolChecks{
 		checkLocalConflictingDeclarations(r, r.locals, r.args, ErrorType.LOCAL_CONFLICTS_WITH_ARG);
 		checkLocalConflictingDeclarations(r, r.locals, r.retvals, ErrorType.LOCAL_CONFLICTS_WITH_RETVAL);
 	}
+
     public void checkRuleArgs(Grammar g, List<GrammarAST> rulerefs) {
 		if ( rulerefs==null ) return;
 		for (GrammarAST ref : rulerefs) {
@@ -237,6 +247,7 @@ public class SymbolChecks{
 			}
 		}
 	}
+
     protected void checkDeclarationRuleConflicts(@NotNull Rule r, @Nullable AttributeDict attributes, @NotNull Set<String> ruleNames, @NotNull ErrorType errorType) {
 		if (attributes == null) {
 			return;
@@ -253,6 +264,7 @@ public class SymbolChecks{
 			}
 		}
 	}
+
     public void checkForQualifiedRuleIssues(Grammar g, List<GrammarAST> qualifiedRuleRefs) {
 		for (GrammarAST dot : qualifiedRuleRefs) {
 			GrammarAST grammar = (GrammarAST)dot.getChild(0);
@@ -273,6 +285,7 @@ public class SymbolChecks{
 			}
 		}
 	}
+
     protected void checkLocalConflictingDeclarations(@NotNull Rule r, @Nullable AttributeDict attributes, @Nullable AttributeDict referenceAttributes, @NotNull ErrorType errorType) {
 		if (attributes == null || referenceAttributes == null) {
 			return;

@@ -28,6 +28,7 @@ public class AlternatorBatchItemTest extends AlternatorTest{
     public void tearDown() throws Exception {
         deleteAllTables();
     }*/
+
     @Test
 	public void vanillaBatchGetItemTest(){
 		BatchGetItemResult result  = client.batchGetItem(new BatchGetItemRequest());
@@ -40,6 +41,7 @@ public class AlternatorBatchItemTest extends AlternatorTest{
         Assert.assertNotNull(result);
     }
     */
+
     @Test
     public void vanillaBatchWriteItemTest() {
         BatchWriteItemRequest batchWriteItemRequest = new BatchWriteItemRequest();

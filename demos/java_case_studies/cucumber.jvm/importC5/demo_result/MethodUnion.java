@@ -54,6 +54,7 @@ public final class TestNGCucumberRunner extends Blah{
      * @param clazz Which has the {@link CucumberOptions}
      *              and {@link org.testng.annotations.Test} annotations
      */
+
     public TestNGCucumberRunner(Class clazz) {
 
         ClassLoader classLoader = clazz.getClassLoader();
@@ -90,6 +91,7 @@ public final class TestNGCucumberRunner extends Blah{
         TypeRegistryConfigurerSupplier typeRegistryConfigurerSupplier = new ScanningTypeRegistryConfigurerSupplier(classFinder, runtimeOptions);
         this.runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier, objectFactorySupplier, typeRegistryConfigurerSupplier);
     }
+
     public void runScenario(Pickle pickle) throws Throwable {
         //Possibly invoked in a multi-threaded context
         Runner runner = runnerSupplier.get();
@@ -119,6 +121,7 @@ public final class TestNGCucumberRunner extends Blah{
         // noinspection ConstantConditions
         throw error;
     }
+
     public void finish() {
         bus.send(new TestRunFinished(bus.getInstant()));
     }
@@ -127,6 +130,7 @@ public final class TestNGCucumberRunner extends Blah{
      * @return returns the cucumber scenarios as a two dimensional array of {@link PickleWrapper}
      * scenarios combined with their {@link FeatureWrapper} feature.
      */
+
     public Object[][] provideScenarios() {
         try {
             return getFeatures().stream()
@@ -141,6 +145,7 @@ public final class TestNGCucumberRunner extends Blah{
             return new Object[][]{new Object[]{new CucumberExceptionWrapper(e), null}};
         }
     }
+
     private List<CucumberFeature> getFeatures() {
         plugins.setSerialEventBusOnEventListenerPlugins(bus);
 

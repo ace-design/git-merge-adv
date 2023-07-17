@@ -1,7 +1,7 @@
 import copy
 import ast
 from tree_sitter import Language, Parser
-from Node import Pack, Class, Method, Comment
+from Node import Pack, Class, Method, Comment,Field
 from abc import ABC,abstractmethod
 import os
 import copy
@@ -87,6 +87,9 @@ class Java(Lang):
     global all_methods
     all_methods={}
 
+    global all_fields
+    all_fields={}
+
     global top_body
     top_body=[]
 
@@ -122,17 +125,20 @@ class Java(Lang):
             method_spacing=spacing+' '*4
 
 
-            for declaration in class_name.get_declarations():
-                body+=method_spacing+declaration+'\n'
+            # for declaration in class_name.get_declarations():
+            #     body+=method_spacing+declaration+'\n'
 
             for item in result:
                 if item.is_selected():
                     if (type(item)==Method):
-                        body+=method_spacing+item.get_method()+'\n'
+                        body+='\n'+method_spacing+item.get_method()+'\n'
                     elif (type(item)==Class):
                         body=self.output_body(body,item)
                     elif (type(item)==Comment):
                         body+='\n'+method_spacing+item.get_comment()+'\n'
+                    elif (type(item)==Field):
+                        body+=method_spacing+item.get_declaration()+'\n'
+
             body+='\n'+spacing+'}'
         elif (type(class_name)==Comment):
             spacing=class_name.get_indent()*' '
@@ -277,7 +283,6 @@ class Java(Lang):
 
         method_captures+=method_query.captures(tree.root_node)
 
-
         comments = Java_Lang.query("""
             ((block_comment) @name)
         """)
@@ -350,6 +355,16 @@ class Java(Lang):
         #Adds all variable declarations to associ@API(status = API.Status.STABLE)\npublic final class TestNGCucumberRunner ated classes.
         for field in field_captures:
             declaration=field[0].parent.text.decode()
+
+            starting_line=int(field[0].start_point[0])
+            identifier=""
+
+            for child in field[0].parent.children:
+                if (child.type=="variable_declarator"):
+                    for nested_child in child.children:
+                        if nested_child.type=="identifier":
+                            identifier=nested_child.text.decode()
+
             nested_class=""
             for child in field[0].parent.parent.parent.children:
                 if ("body" not in child.type):
@@ -357,7 +372,19 @@ class Java(Lang):
                 else:
                     break
             nested_class=nested_class.strip(" ")
-            class_ref[nested_class].add_declaration(declaration)
+
+            field_obj=Field(identifier,declaration,version,nested_class,starting_line)
+
+            if (nested_class+identifier in all_fields.keys()):
+                if (field_obj not in all_fields[nested_class+identifier]):   
+                    all_fields[nested_class+identifier].append(field_obj)
+                else:
+                    field_obj=all_fields[nested_class+identifier][all_fields[nested_class+identifier].index(field_obj)]
+                    field_obj.add_version(version)
+            else:
+                all_fields[nested_class+identifier]=[field_obj]
+
+            class_ref[nested_class].add_declaration(field_obj)
 
         before="None"
         #Adds all methods to associated classes
@@ -440,6 +467,9 @@ class Java(Lang):
     
     def get_class_ref(self):
         return dict(all_classes)
+    
+    def get_field_ref(self):
+        return dict(all_fields)
 
 
 class Python(Lang):

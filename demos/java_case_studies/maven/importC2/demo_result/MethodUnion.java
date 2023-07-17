@@ -134,12 +134,13 @@ public class DefaultMaven implements Maven{
     private RepositorySystem repoSystem;
     @Requirement
     private SettingsDecrypter settingsDecrypter;
+    @Requirement( optional = true, hint = "simple" )
+    private LocalRepositoryManagerFactory simpleLocalRepositoryManagerFactory;
     @Requirement
     private LegacySupport legacySupport;
     @Requirement
     private EventSpyDispatcher eventSpyDispatcher;
-    @Requirement( optional = true, hint = "simple" )
-    private LocalRepositoryManagerFactory simpleLocalRepositoryManagerFactory;
+
     public MavenExecutionResult execute( MavenExecutionRequest request )
     {
         MavenExecutionResult result;
@@ -169,6 +170,7 @@ public class DefaultMaven implements Maven{
 
         return result;
     }
+
     @SuppressWarnings({"ThrowableInstanceNeverThrown", "ThrowableResultOfMethodCallIgnored"})
     private MavenExecutionResult doExecute( MavenExecutionRequest request )
     {
@@ -322,6 +324,7 @@ public class DefaultMaven implements Maven{
 
         return result;
     }
+
     public RepositorySystemSession newRepositorySession( MavenExecutionRequest request )
     {
         DefaultRepositorySystemSession session = new DefaultRepositorySystemSession();
@@ -478,12 +481,14 @@ public class DefaultMaven implements Maven{
         return session;
     }
 
+
     private String getUserAgent()
     {
         return "Apache-Maven/" + getMavenVersion()
             + " (Java " + System.getProperty( "java.version" ) + "; "
             + System.getProperty( "os.name" ) + " " + System.getProperty( "os.version" ) + ")";
     }
+
     private String getMavenVersion()
     {
         Properties props = new Properties();
@@ -504,6 +509,7 @@ public class DefaultMaven implements Maven{
 
         return props.getProperty( "version", "unknown-version" );
     }
+
     private void validateLocalRepository( MavenExecutionRequest request )
         throws LocalRepositoryNotAccessibleException
     {
@@ -518,6 +524,7 @@ public class DefaultMaven implements Maven{
             throw new LocalRepositoryNotAccessibleException( "Could not create local repository at " + localRepoDir );
         }
     }
+
     private Collection<AbstractMavenLifecycleParticipant> getLifecycleParticipants( Collection<MavenProject> projects )
     {
         Collection<AbstractMavenLifecycleParticipant> lifecycleListeners =
@@ -565,6 +572,7 @@ public class DefaultMaven implements Maven{
 
         return lifecycleListeners;
     }
+
     private MavenExecutionResult processResult( MavenExecutionResult result, Throwable e )
     {
         if ( !result.getExceptions().contains( e ) )
@@ -574,6 +582,7 @@ public class DefaultMaven implements Maven{
 
         return result;
     }
+
     private List<MavenProject> getProjectsForMavenReactor( MavenExecutionRequest request )
         throws ProjectBuildingException
     {
@@ -596,6 +605,7 @@ public class DefaultMaven implements Maven{
         collectProjects( projects, files, request );
         return projects;
     }
+
     private Map<String, MavenProject> getProjectMap( List<MavenProject> projects )
         throws org.apache.maven.DuplicateProjectException
     {
@@ -637,6 +647,7 @@ public class DefaultMaven implements Maven{
 
         return index;
     }
+
     private void collectProjects( List<MavenProject> projects, List<File> files, MavenExecutionRequest request )
         throws ProjectBuildingException
     {
@@ -677,6 +688,7 @@ public class DefaultMaven implements Maven{
             logger.warn( "" );
         }
     }
+
     private void validateActivatedProfiles( List<MavenProject> projects, List<String> activeProfileIds )
     {
         Collection<String> notActivatedProfileIds = new LinkedHashSet<String>( activeProfileIds );
@@ -695,10 +707,12 @@ public class DefaultMaven implements Maven{
                 + "\" could not be activated because it does not exist." );
         }
     }
+
     protected Logger getLogger()
     {
         return logger;
     }
+
     private ProjectDependencyGraph createDependencyGraph( ProjectSorter sorter, MavenExecutionRequest request )
         throws MavenExecutionException
     {
@@ -716,6 +730,7 @@ public class DefaultMaven implements Maven{
 
         return graph;
     }
+
     private List<MavenProject> trimSelectedProjects( List<MavenProject> projects, ProjectDependencyGraph graph,
                                                      MavenExecutionRequest request )
         throws MavenExecutionException
@@ -806,6 +821,7 @@ public class DefaultMaven implements Maven{
 
         return result;
     }
+
     private List<MavenProject> trimResumedProjects( List<MavenProject> projects, MavenExecutionRequest request )
         throws MavenExecutionException
     {
@@ -847,6 +863,7 @@ public class DefaultMaven implements Maven{
 
         return result;
     }
+
     private boolean isMatchingProject( MavenProject project, String selector, File reactorDirectory )
     {
         // [groupId]:artifactId

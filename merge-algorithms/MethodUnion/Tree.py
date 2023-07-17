@@ -9,6 +9,7 @@ class Tree:
         self.root.add_child(self.import_root)
         self.import_ref={}
         self.class_ref={}
+        self.field_ref={}
         self.method_ref={}
         self.all_imports=[]
 
@@ -100,7 +101,15 @@ class Tree:
                 result,sus,versions=self.base_algorithm(self.class_ref,class_val)
                 if (type(result) is str):
                     result=self.class_ref[class_val][0]
-                    extra.append(class_val)
+                result.set_selected()
+    
+    def set_fields(self,lang):
+        self.field_ref=lang.get_field_ref()
+        for field_val in self.field_ref.keys():
+            if (len(self.field_ref[field_val])>0):
+                result,sus,versions=self.base_algorithm(self.field_ref,field_val)
+                if (type(result) is str):
+                    result=self.field_ref[field_val][0]
                 result.set_selected()
 
 

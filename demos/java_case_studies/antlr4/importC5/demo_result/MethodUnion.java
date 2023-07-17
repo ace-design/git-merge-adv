@@ -41,9 +41,11 @@ import org.antlr.v4.runtime.misc.NotNull;
 public class SemanticPipeline{
 
     public Grammar g;
+
     public SemanticPipeline(Grammar g) {
 		this.g = g;
 	}
+
     public void process() {
 		if ( g.ast==null ) return;
 
@@ -110,6 +112,7 @@ public class SemanticPipeline{
 
 		UseDefAnalyzer.trackTokenRuleRefsInActions(g);
 	}
+
     void identifyStartRules(SymbolCollector collector) {
 		for (GrammarAST ref : collector.rulerefs) {
 			String ruleName = ref.getText();
@@ -117,6 +120,7 @@ public class SemanticPipeline{
 			if ( r!=null ) r.isStartRule = false;
 		}
 	}
+
     void assignLexerTokenTypes(Grammar g, List<GrammarAST> tokensDefs) {
 		Grammar G = g.getOutermostGrammar(); // put in root, even if imported
 		for (GrammarAST def : tokensDefs) {
@@ -150,6 +154,7 @@ public class SemanticPipeline{
 		}
 
 	}
+
 
     void assignTokenTypes(Grammar g, List<GrammarAST> tokensDefs,
 						  List<GrammarAST> tokenIDs, List<GrammarAST> terminals)
@@ -191,6 +196,7 @@ public class SemanticPipeline{
 		g.tool.log("semantics", "tokens="+g.tokenNameToTypeMap);
         g.tool.log("semantics", "strings="+g.stringLiteralToTypeMap);
 	}
+
     boolean hasTypeOrMoreCommand(@NotNull Rule r) {
 		GrammarAST ast = r.ast;
 		if (ast == null) {

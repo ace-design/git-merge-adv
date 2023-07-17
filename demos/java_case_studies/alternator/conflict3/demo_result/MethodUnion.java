@@ -15,6 +15,7 @@ public class AlternatorScanTest extends AlternatorTest{
 
     private String tableName;
     private int nbOfItems;
+
     @Before
     public void setUp() {
         tableName = createTableName();
@@ -28,12 +29,14 @@ public class AlternatorScanTest extends AlternatorTest{
             putItemInDb(createIntegerAttribute(i/10+101,i/10+101)); //101~109
         }
     }
+
     @After
     public void tearDown() throws Exception {
         DeleteTableRequest del = new DeleteTableRequest();
         del.setTableName("Testing");
         client.deleteTable(del);
     }
+
     @Test
     public void test() {
         String str1 = "100";
@@ -50,6 +53,7 @@ public class AlternatorScanTest extends AlternatorTest{
 //        else
 //            integer=-1;
     }
+
     @Test
     public void scanWithScanFilterGTTest() {
         ScanRequest request = getBasicReq();
@@ -71,6 +75,7 @@ public class AlternatorScanTest extends AlternatorTest{
             Assert.assertFalse(new Integer(item.get("range").getN()) > new Integer(new AttributeValue().withN("50").getN()));
         }
     }
+
     @Test
     public void scanWithScanFilterGETest() { //Greater or Equal
         ScanRequest request = getBasicReq();
@@ -89,6 +94,7 @@ public class AlternatorScanTest extends AlternatorTest{
             Assert.assertTrue(new Integer(item.get("range").getN()) >= new Integer(new AttributeValue().withN("120").getN()));
         }
     }
+
     @Test
     public void scanWithScanFilterBETWEENTest() {
         ScanRequest request = getBasicReq();
@@ -145,11 +151,13 @@ public class AlternatorScanTest extends AlternatorTest{
         }
     }
 */
+
     protected ScanRequest getBasicReq() {
         ScanRequest req = new ScanRequest();
         req.setTableName(tableName);
         return req;
     }
+
     protected AttributeValue putItemInDb() {
         AttributeValue hash = createStringAttribute();
         Map<String, AttributeValue> item = createGenericItem(hash);
@@ -157,6 +165,7 @@ public class AlternatorScanTest extends AlternatorTest{
         client.putItem(req);
         return hash;
     }
+
     protected AttributeValue putItemInDb(AttributeValue rangeKey) {
         AttributeValue hash = createStringAttribute();
         Map<String, AttributeValue> item = createGenericItem(hash, rangeKey);
@@ -164,18 +173,23 @@ public class AlternatorScanTest extends AlternatorTest{
         client.putItem(req);
         return hash;
     }
+
     protected AttributeValue createStringAttribute() {
         return new AttributeValue(UUID.randomUUID().toString());
     }
+
     protected AttributeValue createIntegerAttribute(int num1, int num2) {
         return new AttributeValue().withN(num1 + (int)(Math.random() * ((num2 - num1) + 1))+"");
     }
+
     protected Map<String, AttributeValue> createGenericItem() {
         return createGenericItem(createStringAttribute(), createStringAttribute());
     }
+
     protected Map<String, AttributeValue> createGenericItem(AttributeValue hash) {
         return createGenericItem(hash, createIntegerAttribute(1,100));
     }
+
     protected Map<String, AttributeValue> createGenericItem(AttributeValue hash, AttributeValue range) {
         Map<String, AttributeValue> map = new HashMap<String, AttributeValue>();
         map.put("id", hash);
@@ -186,6 +200,7 @@ public class AlternatorScanTest extends AlternatorTest{
         map.put("testfield",createStringAttribute());
         return map;
     }
+
     protected String createTableName() {
         return "Table" + UUID.randomUUID().toString().substring(0, 4);
     }

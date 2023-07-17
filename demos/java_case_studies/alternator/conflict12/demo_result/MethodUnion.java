@@ -26,14 +26,17 @@ import com.amazonaws.services.dynamodb.model.ScalarAttributeType;
 public class AlternatorQueryTest extends AlternatorTest{
 
     private String tableName;
+
     @Before
 	public void setUp() throws Exception {
 		tableName = createTableName();
 	}
+
     @After
 	public void tearDown() throws Exception {
 		deleteAllTables();
 	}
+
     @Test
 	public void queryWithHashKey() {
 		// Setup table with items
@@ -51,6 +54,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 		Assert.assertNotSame(result.getItems().size(), 0);
 		Assert.assertEquals(result.getItems().get(0).get("id"), hashKey);
 	}
+
     @Test
     public void queryWithHashKeyNotExist() {
         // Setup table with items
@@ -67,6 +71,7 @@ public class AlternatorQueryTest extends AlternatorTest{
         Assert.assertNotNull(result.getItems());     //result should be null but unfortunately it not.
         Assert.assertSame(result.getItems().size(), 0);
     }
+
     private AttributeValue setupTableWithSeveralItems() {
 		KeySchema schema = new KeySchema()
                 .withHashKeyElement(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S))
@@ -96,6 +101,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 
         return hashKey1;
     }
+
     @Test
 	public void queryWithHashKeyAndAttributesToGetTest() {
         AttributeValue hashKey = setupTableWithSeveralItems();
@@ -116,6 +122,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 		Assert.assertTrue("First item missing 'attr1'.", result.getItems().get(0).containsKey("attr1"));
 		Assert.assertFalse("First item should not contain 'bogusAttr'.", result.getItems().get(0).containsKey("bogusAttr"));
 	}
+
     private AttributeValue setupNumericRangeTableWithSeveralItems() {
 		KeySchema schema = new KeySchema()
                 .withHashKeyElement(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S))
@@ -157,6 +164,7 @@ public class AlternatorQueryTest extends AlternatorTest{
         return hashKey1;
     }
 
+
     @Test
 	public void queryWithHashKeyAndRangeKeyConditionEQTest() {
         AttributeValue hashKey = setupTableWithSeveralItems();
@@ -178,6 +186,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 			Assert.assertEquals(item.get("range").getS(), "Range2");
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndRangeKeyConditionLTTest() {
         AttributeValue hashKey = setupTableWithSeveralItems();
@@ -199,6 +208,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 			Assert.assertTrue(item.get("range").getS().compareTo("Range2") < 0);
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndRangeKeyConditionLETest() {
         AttributeValue hashKey = setupTableWithSeveralItems();
@@ -220,6 +230,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 			Assert.assertTrue(item.get("range").getS().compareTo("Range2") <= 0);
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndRangeKeyConditionGTTest() {
         AttributeValue hashKey = setupTableWithSeveralItems();
@@ -241,6 +252,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 			Assert.assertTrue(item.get("range").getS().compareTo("Range2") > 0);
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndRangeKeyConditionGETest() {
         AttributeValue hashKey = setupTableWithSeveralItems();
@@ -262,6 +274,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 			Assert.assertTrue(item.get("range").getS().compareTo("Range2") >= 0);
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndRangeKeyConditionINTest() {
         AttributeValue hashKey = setupTableWithSeveralItems();
@@ -288,6 +301,7 @@ public class AlternatorQueryTest extends AlternatorTest{
                     );
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndRangeKeyConditionBETWEENTest() {
         AttributeValue hashKey = setupTableWithSeveralItems();
@@ -313,6 +327,7 @@ public class AlternatorQueryTest extends AlternatorTest{
                     );
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndRangeKeyConditionBEGINSWITHTest() {
         AttributeValue hashKey = setupTableWithSeveralItems();
@@ -335,6 +350,7 @@ public class AlternatorQueryTest extends AlternatorTest{
                     );
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndRangeKeyConditionCONTAINSTest() {
         AttributeValue hashKey = setupTableWithSeveralItems();
@@ -375,6 +391,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 		QueryResult result = getClient().query(request);
 		Assert.assertNull(result.getItems());
 	}*/
+
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionEQTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -395,6 +412,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 			Assert.assertEquals(item.get("range").getN(), "2");
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionLTTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -413,6 +431,7 @@ public class AlternatorQueryTest extends AlternatorTest{
         // NOTE: LT is currently a string comparison, so "11" is < "2".
         Assert.assertEquals("Should return two items.", 2, result.getItems().size());
 	}
+
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionLETest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -431,6 +450,7 @@ public class AlternatorQueryTest extends AlternatorTest{
         // NOTE: LE is currently a string comparison, so "11" is <= "2".
         Assert.assertEquals("Should return three items.", 3, result.getItems().size());
 	}
+
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionGTTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -449,6 +469,7 @@ public class AlternatorQueryTest extends AlternatorTest{
         // NOTE: GT is currently a string comparison, so "11" is NOT > "2".
         Assert.assertEquals("Should return three items.", 3, result.getItems().size());
 	}
+
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionGETest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -467,6 +488,7 @@ public class AlternatorQueryTest extends AlternatorTest{
         // NOTE: GE is currently a string comparison, so "11" is NOT > "2".
         Assert.assertEquals("Should return four items.", 4, result.getItems().size());
 	}
+
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionINTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -493,6 +515,7 @@ public class AlternatorQueryTest extends AlternatorTest{
                     );
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionBETWEENTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -511,6 +534,7 @@ public class AlternatorQueryTest extends AlternatorTest{
 		Assert.assertNotNull("No items returned.", result.getItems());
         Assert.assertEquals("Should return two items.", 2, result.getItems().size());
 	}
+
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionBEGINSWITHTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -534,6 +558,7 @@ public class AlternatorQueryTest extends AlternatorTest{
                     );
 		}
 	}
+
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionCONTAINSTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();

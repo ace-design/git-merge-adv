@@ -60,73 +60,72 @@ import java.net.UnknownHostException;
 
 public abstract class WebSocketClient extends AbstractWebSocket implements Runnable, WebSocket{
 
-    protected URI uri = null;
-    private WebSocketImpl engine = null;
-    private Socket socket = null;
-    private SocketFactory socketFactory = null;
-    private OutputStream ostream;
-    private Proxy proxy = Proxy.NO_PROXY;
-    private Thread writeThread;
-    private Thread connectReadThread;
-    private Draft draft;
-    private Map<String,String> headers;
-    private CountDownLatch connectLatch = new CountDownLatch( 1 );
-    private CountDownLatch closeLatch = new CountDownLatch( 1 );
-    private int connectTimeout = 0;
-    private DnsResolver dnsResolver = null;
 
     /**
 	 * The URI this channel is supposed to connect to.
 	 */
+    protected URI uri = null;
 
     /**
 	 * The underlying engine
 	 */
+    private WebSocketImpl engine = null;
 
     /**
 	 * The socket for this WebSocketClient
 	 */
+    private Socket socket = null;
 
     /**
 	 * The SocketFactory for this WebSocketClient
 	 * @since 1.4.0
 	 */
+    private SocketFactory socketFactory = null;
 
     /**
 	 * The used OutputStream
 	 */
+    private OutputStream ostream;
 
     /**
 	 * The used proxy, if any
 	 */
+    private Proxy proxy = Proxy.NO_PROXY;
 
     /**
 	 * The thread to write outgoing message
 	 */
+    private Thread writeThread;
 
     /**
 	 * The thread to connect and read message
 	 */
+    private Thread connectReadThread;
 
     /**
 	 * The draft to use
 	 */
+    private Draft draft;
 
     /**
 	 * The additional headers to use
 	 */
+    private Map<String,String> headers;
 
     /**
 	 * The latch for connectBlocking()
 	 */
+    private CountDownLatch connectLatch = new CountDownLatch( 1 );
 
     /**
 	 * The latch for closeBlocking()
 	 */
+    private CountDownLatch closeLatch = new CountDownLatch( 1 );
 
     /**
 	 * The socket timeout value to be used in milliseconds.
 	 */
+    private int connectTimeout = 0;
 
     /**
 	 * Constructs a WebSocketClient instance and sets it to the connect to the
@@ -142,6 +141,8 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @see InetAddress
 	 * @since 1.4.1
 	 */
+    private DnsResolver dnsResolver = null;
+
     public WebSocketClient( URI serverUri ) {
 		this( serverUri, new Draft_6455());
 	}
@@ -153,6 +154,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param serverUri the server URI to connect to
 	 * @param protocolDraft The draft which should be used for this connection
 	 */
+
     public WebSocketClient( URI serverUri , Draft protocolDraft ) {
 		this( serverUri, protocolDraft, null, 0 );
 	}
@@ -165,6 +167,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param httpHeaders Additional HTTP-Headers
 	 * @since 1.3.8
 	 */
+
     public WebSocketClient( URI serverUri, Map<String,String> httpHeaders) {
 		this(serverUri, new Draft_6455(), httpHeaders);
 	}
@@ -178,6 +181,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param httpHeaders Additional HTTP-Headers
 	 * @since 1.3.8
 	 */
+
     public WebSocketClient( URI serverUri , Draft protocolDraft , Map<String,String> httpHeaders) {
 		this(serverUri, protocolDraft, httpHeaders, 0);
 	}
@@ -191,6 +195,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param httpHeaders Additional HTTP-Headers
 	 * @param connectTimeout The Timeout for the connection
 	 */
+
     public WebSocketClient( URI serverUri , Draft protocolDraft , Map<String,String> httpHeaders , int connectTimeout ) {
 		if( serverUri == null ) {
 			throw new IllegalArgumentException();
@@ -219,6 +224,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Returns the URI that this WebSocketClient is connected to.
 	 * @return the URI connected to
 	 */
+
     public URI getURI() {
 		return uri;
 	}
@@ -228,6 +234,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * For more infos see https://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
 	 * @return The draft used for this client
 	 */
+
     public Draft getDraft() {
 		return draft;
 	}
@@ -236,6 +243,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Returns the socket to allow Hostname Verification
 	 * @return the socket used for this connection
 	 */
+
     public Socket getSocket() {
 		return socket;
 	}
@@ -249,6 +257,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param key Name of the header to add.
 	 * @param value Value of the header to add.
 	 */
+
     public void addHeader(String key, String value){
 		if(headers == null)
 			headers = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
@@ -262,6 +271,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @return the previous value associated with key, or
 	 * null if there was no mapping for key.
 	 */
+
     public String removeHeader(String key) {
 		if(headers == null)
 			return null;
@@ -272,6 +282,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @since 1.4.1
 	 * Clears all previously put headers.
 	 */
+
     public void clearHeaders() {
 		headers = null;
 	}
@@ -280,6 +291,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Reinitiates the websocket connection. This method does not block.
 	 * @since 1.3.8
 	 */
+
     public void reconnect() {
 		reset();
 		connect();
@@ -299,6 +311,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 *
 	 * @since 1.4.1
 	 */
+
     public boolean reconnectBlocking() throws InterruptedException {
 		reset();
 		return connectBlocking();
@@ -308,9 +321,11 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Reset everything relevant to allow a reconnect
 	 * @since 1.3.8
 	 */
+
     public void setDnsResolver(DnsResolver dnsResolver) {
 		this.dnsResolver = dnsResolver;
 	}
+
     private void reset() {
 		Thread current = Thread.currentThread();
 		if (current == writeThread || current == connectReadThread) {
@@ -344,6 +359,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
     /**
 	 * Initiates the websocket connection. This method does not block.
 	 */
+
     public void connect() {
 		if( connectReadThread != null )
 			throw new IllegalStateException( "WebSocketClient objects are not reuseable" );
@@ -357,6 +373,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @return Returns whether it succeeded or not.
 	 * @throws InterruptedException Thrown when the threads get interrupted
 	 */
+
     public boolean connectBlocking() throws InterruptedException {
 		connect();
 		connectLatch.await();
@@ -372,6 +389,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @return Returns whether it succeeded or not.
 	 * @throws InterruptedException Thrown when the threads get interrupted
 	 */
+
     public boolean connectBlocking(long timeout, TimeUnit timeUnit) throws InterruptedException {
 		connect();
 		return connectLatch.await(timeout, timeUnit) && engine.isOpen();
@@ -381,6 +399,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Initiates the websocket close handshake. This method does not block<br>
 	 * In oder to make sure the connection is closed use <code>closeBlocking</code>
 	 */
+
     public void close() {
 		if( writeThread != null ) {
 			engine.close( CloseFrame.NORMAL );
@@ -391,6 +410,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Same as <code>close</code> but blocks until the websocket closed or failed to do so.<br>
 	 * @throws InterruptedException Thrown when the threads get interrupted
 	 */
+
     public void closeBlocking() throws InterruptedException {
 		close();
 		closeLatch.await();
@@ -402,6 +422,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param text
 	 *            The string which will be transmitted.
 	 */
+
     public void send( String text ) {
 		engine.send( text );
 	}
@@ -412,25 +433,31 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param data
 	 *            The byte-Array of data to send to the WebSocket server.
 	 */
+
     public void send( byte[] data ) {
 		engine.send( data );
 	}
+
     @Override
 	public <T> T getAttachment() {
 		return engine.getAttachment();
 	}
+
     @Override
 	public <T> void setAttachment(T attachment) {
 		engine.setAttachment( attachment );
 	}
+
     @Override
 	protected Collection<WebSocket> getConnections() {
 		return Collections.singletonList((WebSocket ) engine );
 	}
+
     @Override
 	public void sendPing() {
 		engine.sendPing( );
 	}
+
     public void run() {
 		InputStream istream;
 		try {
@@ -507,6 +534,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Extract the specified port
 	 * @return the specified port or the default port for the specific scheme
 	 */
+
     private int getPort() {
 		int port = uri.getPort();
 		if( port == -1 ) {
@@ -526,6 +554,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Create and send the handshake to the other endpoint
 	 * @throws InvalidHandshakeException  a invalid handshake was created
 	 */
+
     private void sendHandshake() throws InvalidHandshakeException {
 		String path;
 		String part1 = uri.getRawPath();
@@ -556,6 +585,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
     /**
 	 * This represents the state of the connection.
 	 */
+
     public ReadyState getReadyState() {
 		return engine.getReadyState();
 	}
@@ -563,10 +593,12 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
     /**
 	 * Calls subclass' implementation of <var>onMessage</var>.
 	 */
+
     @Override
 	public final void onWebsocketMessage( WebSocket conn, String message ) {
 		onMessage( message );
 	}
+
     @Override
 	public final void onWebsocketMessage( WebSocket conn, ByteBuffer blob ) {
 		onMessage( blob );
@@ -575,6 +607,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
     /**
 	 * Calls subclass' implementation of <var>onOpen</var>.
 	 */
+
     @Override
 	public final void onWebsocketOpen( WebSocket conn, Handshakedata handshake ) {
 		startConnectionLostTimer();
@@ -585,6 +618,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
     /**
 	 * Calls subclass' implementation of <var>onClose</var>.
 	 */
+
     @Override
 	public final void onWebsocketClose( WebSocket conn, int code, String reason, boolean remote ) {
 		stopConnectionLostTimer();
@@ -598,18 +632,22 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
     /**
 	 * Calls subclass' implementation of <var>onIOError</var>.
 	 */
+
     @Override
 	public final void onWebsocketError( WebSocket conn, Exception ex ) {
 		onError( ex );
 	}
+
     @Override
 	public final void onWriteDemand( WebSocket conn ) {
 		// nothing to do
 	}
+
     @Override
 	public void onWebsocketCloseInitiated( WebSocket conn, int code, String reason ) {
 		onCloseInitiated( code, reason );
 	}
+
     @Override
 	public void onWebsocketClosing( WebSocket conn, int code, String reason, boolean remote ) {
 		onClosing( code, reason, remote );
@@ -621,6 +659,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param code The codes can be looked up here: {@link CloseFrame}
 	 * @param reason Additional information string
 	 */
+
     public void onCloseInitiated( int code, String reason ) {
 		//To overwrite
 	}
@@ -631,6 +670,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param reason Additional information string
 	 * @param remote Returns whether or not the closing of the connection was initiated by the remote host.
 	 */
+
     public void onClosing( int code, String reason, boolean remote ) {
 		//To overwrite
 	}
@@ -639,15 +679,18 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Getter for the engine
 	 * @return the engine
 	 */
+
     public WebSocket getConnection() {
 		return engine;
 	}
+
     @Override
 	public InetSocketAddress getLocalSocketAddress( WebSocket conn ) {
 		if( socket != null )
 			return (InetSocketAddress) socket.getLocalSocketAddress();
 		return null;
 	}
+
     @Override
 	public InetSocketAddress getRemoteSocketAddress( WebSocket conn ) {
 		if( socket != null )
@@ -659,6 +702,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Called after an opening handshake has been performed and the given websocket is ready to be written on.
 	 * @param handshakedata The handshake of the websocket instance
 	 */
+
     public abstract void onOpen( ServerHandshake handshakedata );
 
     /**
@@ -667,6 +711,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @see #onMessage(ByteBuffer)
 	 * @param message The UTF-8 decoded message that was received.
 	 **/
+
     public abstract void onMessage( String message );
 
     /**
@@ -679,6 +724,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param remote
 	 *            Returns whether or not the closing of the connection was initiated by the remote host.
 	 **/
+
     public abstract void onClose( int code, String reason, boolean remote );
 
     /**
@@ -688,6 +734,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 *
 	 * @param ex The exception causing this error
 	 **/
+
     public abstract void onError( Exception ex );
 
     /**
@@ -698,6 +745,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param bytes
 	 *            The binary message that was received.
 	 **/
+
     public void onMessage( ByteBuffer bytes ) {
 		//To overwrite
 	}
@@ -705,9 +753,11 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
  private class WebsocketWriteThread implements Runnable{
 
      private final WebSocketClient webSocketClient;
+
      WebsocketWriteThread(WebSocketClient webSocketClient) {
 			this.webSocketClient = webSocketClient;
 		}
+
      @Override
 		public void run() {
 			Thread.currentThread().setName( "WebSocketWriteThread-" + Thread.currentThread().getId() );
@@ -725,6 +775,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 		 * Write the data into the outstream
 		 * @throws IOException if write or flush did not work
 		 */
+
      private void runWriteData() throws IOException {
 			try {
 				while( !Thread.interrupted() ) {
@@ -744,6 +795,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
      /**
 		 * Closing the socket
 		 */
+
      private void closeSocket() {
 			try {
 				if( socket != null ) {
@@ -759,6 +811,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Method to set a proxy for this connection
 	 * @param proxy the proxy to use for this websocket client
 	 */
+
     public void setProxy( Proxy proxy ) {
 		if( proxy == null )
 			throw new IllegalArgumentException();
@@ -772,6 +825,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @param socket The socket which should be used for the connection
 	 * @deprecated use setSocketFactory
 	 */
+
     @Deprecated
 	public void setSocket( Socket socket ) {
 		if( this.socket != null ) {
@@ -786,65 +840,81 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * The socket will be bound to the uri specified in the constructor.
 	 * @param socketFactory The socket factory which should be used for the connection.
 	 */
+
     public void setSocketFactory(SocketFactory socketFactory) {
 		this.socketFactory = socketFactory;
 	}
+
     @Override
 	public void sendFragmentedFrame(Opcode op, ByteBuffer buffer, boolean fin ) {
 		engine.sendFragmentedFrame( op, buffer, fin );
 	}
+
     @Override
 	public boolean isOpen() {
 		return engine.isOpen();
 	}
+
     @Override
 	public boolean isFlushAndClose() {
 		return engine.isFlushAndClose();
 	}
+
     @Override
 	public boolean isClosed() {
 		return engine.isClosed();
 	}
+
     @Override
 	public boolean isClosing() {
 		return engine.isClosing();
 	}
+
     @Override
 	public boolean hasBufferedData() {
 		return engine.hasBufferedData();
 	}
+
     @Override
 	public void close( int code ) {
 		engine.close( code );
 	}
+
     @Override
 	public void close( int code, String message ) {
 		engine.close( code, message );
 	}
+
     @Override
 	public void closeConnection( int code, String message ) {
 		engine.closeConnection( code, message );
 	}
+
     @Override
 	public void send( ByteBuffer bytes ) {
 		engine.send( bytes );
 	}
+
     @Override
 	public void sendFrame( Framedata framedata ) {
 		engine.sendFrame( framedata );
 	}
+
     @Override
 	public void sendFrame( Collection<Framedata> frames ) {
 		engine.sendFrame( frames );
 	}
+
     @Override
 	public InetSocketAddress getLocalSocketAddress() {
 		return engine.getLocalSocketAddress();
 	}
+
     @Override
 	public InetSocketAddress getRemoteSocketAddress() {
 		return engine.getRemoteSocketAddress();
 	}
+
     @Override
 	public String getResourceDescriptor() {
 		return uri.getPath();
@@ -854,6 +924,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * Method to give some additional info for specific IOExceptions
 	 * @param e the IOException causing a eot.
 	 */
+
     private void handleIOException( IOException e ) {
 		if (e instanceof SSLException) {
 			onError( e );
