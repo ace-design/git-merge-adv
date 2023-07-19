@@ -508,7 +508,13 @@ class Python(Lang):
 
 
 
-    
+    def class_tomethod(self,nod):
+        for child in nod.body:
+            if isinstance(child,ast.Assign):
+
+
+
+
     def getClasses(self,content,version):
         str_content = ""
         pointer = 0
@@ -547,6 +553,69 @@ class Python(Lang):
                 else:
                     all_methods[methodindent+" "+methodName]=[newMethod]
                     methods.append(newMethod)
+            elif isinstance(nod, ast.ClassDef):
+                className = nod.name
+                if "class "+className not in codeseq:
+                    codeseq.insert(pointer,"class "+className)
+                    pointer = pointer+1
+                else:
+                    pointer = (codeseq.index("class "+methodName)) + 1
+                # methodindent= str(nod.col_offset)
+                newClass = Class(className,className,0,None,version,nod)
+
+                #Method declaration is referenced by its signature.
+
+                if (className in all_classes.keys()):
+                    classnod =  all_classes[className]
+                    for child in nod.body:
+                        if isinstance(child,ast.Assign):
+                            if astor.to_source(child) not in classnod.declarations:
+                                classnod.declarations.append(astor.to_source(child))
+                        elif isinstance(child,ast.FunctionDef):
+                            if child.name not in classnod.methods:
+                                classnod.methods.append(child.name)
+                            methodName = child.name
+                        
+                            methodindent= str(child.col_offset)
+                            newMethod = Method(astor.to_source(child),version,None,child)
+                            if (className+" "+methodName in all_methods.keys()):
+                                nodepresent = False
+                                for methodObject in all_methods[className+" "+methodName]:
+                                    if astor.to_source(methodObject.astnode) == astor.to_source(child):
+                                        methodObject.add_version(version)
+                                        nodepresent =  True
+                                if nodepresent == False:
+                                    all_methods[className+" "+methodName].append(newMethod)
+                                    methods.append(newMethod)
+                            else:
+                                all_methods[className+" "+methodName ]=[newMethod]
+                                methods.append(newMethod)
+                else:
+                    all_classes[className]=[newClass]
+                    for child in nod.body:
+                        if isinstance(child,ast.Assign):
+                            newClass.declarations.append(astor.to_source(child))
+                        elif isinstance(child,ast.FunctionDef):
+                            classnod.methods.append(child.name)
+                            methodName = child.name
+                            methodindent= str(child.col_offset)
+                            newMethod = Method(astor.to_source(child),version,None,child)
+                            if (className+" "+methodName in all_methods.keys()):
+                                nodepresent = False
+                                for methodObject in all_methods[className+" "+methodName]:
+                                    if astor.to_source(methodObject.astnode) == astor.to_source(child):
+                                        methodObject.add_version(version)
+                                        nodepresent =  True
+                                if nodepresent == False:
+                                    all_methods[className+" "+methodName].append(newMethod)
+                                    methods.append(newMethod)
+                            else:
+                                all_methods[className+" "+methodName ]=[newMethod]
+                                methods.append(newMethod)
+
+
+
+            
             elif isinstance(nod, ast.ClassDef):
                 pass
 
