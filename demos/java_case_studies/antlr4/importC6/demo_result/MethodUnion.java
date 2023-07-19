@@ -52,9 +52,9 @@ import org.antlr.v4.runtime.misc.IntegerList;
 
 public class ATNSerializer{
 
-    public Grammar g;
-    public ATN atn;
-    public List<IntervalSet> sets = new ArrayList<IntervalSet>();
+    public Grammar g;,
+    public ATN atn;,
+    public List<IntervalSet> sets = new ArrayList<IntervalSet>();,
 
     public ATNSerializer(Grammar g, ATN atn) {
 		this.g = g;

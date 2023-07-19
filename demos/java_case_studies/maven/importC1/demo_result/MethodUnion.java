@@ -64,16 +64,16 @@ import org.eclipse.aether.version.VersionScheme;
 @Component( role = VersionRangeResolver.class )
 public class DefaultVersionRangeResolver implements VersionRangeResolver, Service{
 
-    private static final String MAVEN_METADATA_XML = "maven-metadata.xml";
+    private static final String MAVEN_METADATA_XML = "maven-metadata.xml";,
     @SuppressWarnings( "unused" )
     @Requirement( role = LoggerFactory.class )
-    private Logger logger = NullLoggerFactory.LOGGER;
+    private Logger logger = NullLoggerFactory.LOGGER;,
     @Requirement
-    private MetadataResolver metadataResolver;
+    private MetadataResolver metadataResolver;,
     @Requirement
-    private SyncContextFactory syncContextFactory;
+    private SyncContextFactory syncContextFactory;,
     @Requirement
-    private RepositoryEventDispatcher repositoryEventDispatcher;
+    private RepositoryEventDispatcher repositoryEventDispatcher;,
 
     public DefaultVersionRangeResolver()
     {

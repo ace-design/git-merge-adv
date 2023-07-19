@@ -30,14 +30,14 @@ import org.mongojack.JacksonDBCollection;
 @RunWith(MongoDBTestCaseRunner.class)
 public abstract class MongoDBTestBase{
 
-    private static final Random rand = new Random();
-    private boolean useStreamParser = true;
-    private boolean useStreamSerialiser = false;
-    private static final String dbHostKey = "MONGOJACK_TESTDB_HOST";
-    private static final Map<String, String> environment = System.getenv();
-    protected Mongo mongo;
-    protected DB db;
-    private Set<String> collections;
+    private static final Random rand = new Random();,
+    private boolean useStreamParser = true;,
+    private boolean useStreamSerialiser = false;,
+    private static final String dbHostKey = "MONGOJACK_TESTDB_HOST";,
+    private static final Map<String, String> environment = System.getenv();,
+    protected Mongo mongo;,
+    protected DB db;,
+    private Set<String> collections;,
 
     @Before
     public void connectToDb() throws Exception {

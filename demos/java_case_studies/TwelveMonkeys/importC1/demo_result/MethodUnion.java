@@ -50,17 +50,17 @@ import java.nio.charset.Charset;
 
 public final class TIFFWriter extends MetadataWriter{
 
-    private static final int WORD_LENGTH = 2;
-    private static final int LONGWORD_LENGTH = 4;
-    private static final long ENTRY_LENGTH = 12;
+    private static final int WORD_LENGTH = 2;,
+    private static final int LONGWORD_LENGTH = 4;,
+    private static final long ENTRY_LENGTH = 12;,
 
     public boolean write(final Collection<? extends Entry> entries, final ImageOutputStream stream) throws IOException {
         return write(new IFD(entries), stream);
     }
-    private final boolean longOffsets;
-    private final int offsetSize;
-    private final long entryLength;
-    private final int directoryCountLength;
+    private final boolean longOffsets;,
+    private final int offsetSize;,
+    private final long entryLength;,
+    private final int directoryCountLength;,
 
     public TIFFWriter() {
         this(LONGWORD_LENGTH);
@@ -222,6 +222,10 @@ public final class TIFFWriter extends MetadataWriter{
             stream.writeInt(count);
         }
     }
+
+    public int compare(Entry left, Entry right) {
+                    return (Integer) left.getIdentifier() - (Integer) right.getIdentifier();
+                }
 
     public long computeIFDSize(final Collection<? extends Entry> directory) {
         return directoryCountLength + computeDataSize(new IFD(directory)) + directory.size() * entryLength;

@@ -110,9 +110,9 @@ import com.michelboudreau.alternator.validators.UpdateTableRequestValidator;
 
 class AlternatorDBHandler{
 
-    private final Logger logger = LoggerFactory.getLogger(AlternatorDBHandler.class);
-    private Map<String, Table> tables = new HashMap<String, Table>();
-    private List<Table> tableList = new ArrayList<Table>();
+    private final Logger logger = LoggerFactory.getLogger(AlternatorDBHandler.class);,
+    private Map<String, Table> tables = new HashMap<String, Table>();,
+    private List<Table> tableList = new ArrayList<Table>();,
 
     public AlternatorDBHandler() {
 	}

@@ -49,12 +49,12 @@ import org.antlr.v4.tool.AttributeDict;
 
 public class SymbolChecks{
 
-    Grammar g;
-    SymbolCollector collector;
-    Map<String, Rule> nameToRuleMap = new HashMap<String, Rule>();
-    Set<String> tokenIDs = new HashSet<String>();
-    Map<String, Set<String>> actionScopeToActionNames = new HashMap<String, Set<String>>();
-    public ErrorManager errMgr;
+    Grammar g;,
+    SymbolCollector collector;,
+    Map<String, Rule> nameToRuleMap = new HashMap<String, Rule>();,
+    Set<String> tokenIDs = new HashSet<String>();,
+    Map<String, Set<String>> actionScopeToActionNames = new HashMap<String, Set<String>>();,
+    public ErrorManager errMgr;,
 
     public SymbolChecks(Grammar g, SymbolCollector collector) {
         this.g = g;

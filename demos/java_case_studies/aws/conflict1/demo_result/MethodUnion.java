@@ -32,22 +32,22 @@ import com.amazonaws.util.StringUtils;
 
 public class DynamoDBSessionManager extends PersistentManagerBase{
 
-    private static final String name = "AmazonDynamoDBSessionManager";
-    private static final String info = name + "/2.0";
-    private String regionId = "us-east-1";
-    private String endpoint;
-    private File credentialsFile;
-    private String accessKey;
-    private String secretKey;
-    private long readCapacityUnits = 10;
-    private long writeCapacityUnits = 5;
-    private boolean createIfNotExist = true;
-    private String tableName = DEFAULT_TABLE_NAME;
-    private String proxyHost;
-    private final DynamoDBSessionStore dynamoSessionStore;
-    private Integer proxyPort;
-    private ExpiredSessionReaper expiredSessionReaper;
-    private static final Log logger = LogFactory.getLog(DynamoDBSessionManager.class);
+    private static final String name = "AmazonDynamoDBSessionManager";,
+    private static final String info = name + "/2.0";,
+    private String regionId = "us-east-1";,
+    private String endpoint;,
+    private File credentialsFile;,
+    private String accessKey;,
+    private String secretKey;,
+    private long readCapacityUnits = 10;,
+    private long writeCapacityUnits = 5;,
+    private boolean createIfNotExist = true;,
+    private String tableName = DEFAULT_TABLE_NAME;,
+    private String proxyHost;,
+    private final DynamoDBSessionStore dynamoSessionStore;,
+    private Integer proxyPort;,
+    private ExpiredSessionReaper expiredSessionReaper;,
+    private static final Log logger = LogFactory.getLog(DynamoDBSessionManager.class);,
 
     public DynamoDBSessionManager() {
         dynamoSessionStore = new DynamoDBSessionStore();

@@ -25,7 +25,7 @@ import com.amazonaws.services.dynamodb.model.ScalarAttributeType;
 @ContextConfiguration(locations = {"classpath:/applicationContext.xml"})
 public class AlternatorQueryTest extends AlternatorTest{
 
-    private String tableName;
+    private String tableName;,
 
     @Before
 	public void setUp() throws Exception {

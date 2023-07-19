@@ -64,68 +64,68 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
     /**
 	 * The URI this channel is supposed to connect to.
 	 */
-    protected URI uri = null;
+    protected URI uri = null;,
 
     /**
 	 * The underlying engine
 	 */
-    private WebSocketImpl engine = null;
+    private WebSocketImpl engine = null;,
 
     /**
 	 * The socket for this WebSocketClient
 	 */
-    private Socket socket = null;
+    private Socket socket = null;,
 
     /**
 	 * The SocketFactory for this WebSocketClient
 	 * @since 1.4.0
 	 */
-    private SocketFactory socketFactory = null;
+    private SocketFactory socketFactory = null;,
 
     /**
 	 * The used OutputStream
 	 */
-    private OutputStream ostream;
+    private OutputStream ostream;,
 
     /**
 	 * The used proxy, if any
 	 */
-    private Proxy proxy = Proxy.NO_PROXY;
+    private Proxy proxy = Proxy.NO_PROXY;,
 
     /**
 	 * The thread to write outgoing message
 	 */
-    private Thread writeThread;
+    private Thread writeThread;,
 
     /**
 	 * The thread to connect and read message
 	 */
-    private Thread connectReadThread;
+    private Thread connectReadThread;,
 
     /**
 	 * The draft to use
 	 */
-    private Draft draft;
+    private Draft draft;,
 
     /**
 	 * The additional headers to use
 	 */
-    private Map<String,String> headers;
+    private Map<String,String> headers;,
 
     /**
 	 * The latch for connectBlocking()
 	 */
-    private CountDownLatch connectLatch = new CountDownLatch( 1 );
+    private CountDownLatch connectLatch = new CountDownLatch( 1 );,
 
     /**
 	 * The latch for closeBlocking()
 	 */
-    private CountDownLatch closeLatch = new CountDownLatch( 1 );
+    private CountDownLatch closeLatch = new CountDownLatch( 1 );,
 
     /**
 	 * The socket timeout value to be used in milliseconds.
 	 */
-    private int connectTimeout = 0;
+    private int connectTimeout = 0;,
 
     /**
 	 * Constructs a WebSocketClient instance and sets it to the connect to the
@@ -141,7 +141,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 	 * @see InetAddress
 	 * @since 1.4.1
 	 */
-    private DnsResolver dnsResolver = null;
+    private DnsResolver dnsResolver = null;,
 
     public WebSocketClient( URI serverUri ) {
 		this( serverUri, new Draft_6455());
@@ -219,6 +219,11 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 		setReuseAddr( false );
 		this.engine = new WebSocketImpl( this, protocolDraft );
 	}
+
+    @Override
+			public InetAddress resolve(URI uri) throws UnknownHostException {
+				return InetAddress.getByName(uri.getHost());
+			}
 
     /**
 	 * Returns the URI that this WebSocketClient is connected to.
@@ -750,15 +755,15 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 		//To overwrite
 	}
 
- private class WebsocketWriteThread implements Runnable{
+    private class WebsocketWriteThread implements Runnable{
 
-     private final WebSocketClient webSocketClient;
+        private final WebSocketClient webSocketClient;,
 
-     WebsocketWriteThread(WebSocketClient webSocketClient) {
+        WebsocketWriteThread(WebSocketClient webSocketClient) {
 			this.webSocketClient = webSocketClient;
 		}
 
-     @Override
+        @Override
 		public void run() {
 			Thread.currentThread().setName( "WebSocketWriteThread-" + Thread.currentThread().getId() );
 			try {
@@ -771,12 +776,12 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 			}
 		}
 
-     /**
+        /**
 		 * Write the data into the outstream
 		 * @throws IOException if write or flush did not work
 		 */
 
-     private void runWriteData() throws IOException {
+        private void runWriteData() throws IOException {
 			try {
 				while( !Thread.interrupted() ) {
 					ByteBuffer buffer = engine.outQueue.take();
@@ -792,11 +797,11 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 			}
 		}
 
-     /**
+        /**
 		 * Closing the socket
 		 */
 
-     private void closeSocket() {
+        private void closeSocket() {
 			try {
 				if( socket != null ) {
 					socket.close();
@@ -806,7 +811,7 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 			}
 		}
 
- }
+    }
     /**
 	 * Method to set a proxy for this connection
 	 * @param proxy the proxy to use for this websocket client

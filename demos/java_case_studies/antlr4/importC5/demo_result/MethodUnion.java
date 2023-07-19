@@ -40,7 +40,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 public class SemanticPipeline{
 
-    public Grammar g;
+    public Grammar g;,
 
     public SemanticPipeline(Grammar g) {
 		this.g = g;

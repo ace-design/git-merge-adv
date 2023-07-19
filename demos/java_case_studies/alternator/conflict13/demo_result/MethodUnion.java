@@ -38,14 +38,14 @@ public class AlternatorTest{
      * Set to true to spawn the service in a local sub-process.
      * Set to false if an executable JAR instance of Alternator is running in another process.
      */
-    static protected AlternatorDBClient client;
-    static protected DynamoDBMapper mapper;
-    static boolean									RUN_DB_AS_SERVICE	= true;
-    static protected AlternatorDBInProcessClient inProcessClient;
-    static protected DynamoDBMapper inProcessMapper;
-    private static final boolean SPAWN_LOCAL_DB_SERVICE = true;
-    static protected AlternatorDB db;
-    private ProvisionedThroughput provisionedThroughput;
+    static protected AlternatorDBClient client;,
+    static protected DynamoDBMapper mapper;,
+    static boolean									RUN_DB_AS_SERVICE	= true;,
+    static protected AlternatorDBInProcessClient inProcessClient;,
+    static protected DynamoDBMapper inProcessMapper;,
+    private static final boolean SPAWN_LOCAL_DB_SERVICE = true;,
+    static protected AlternatorDB db;,
+    private ProvisionedThroughput provisionedThroughput;,
 
     public AlternatorTest() {
 		provisionedThroughput = new ProvisionedThroughput();

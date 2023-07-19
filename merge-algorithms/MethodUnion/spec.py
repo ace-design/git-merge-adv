@@ -260,19 +260,30 @@ class Java(Lang):
         byte_rep= str.encode(content)
         tree = parser.parse(byte_rep)
 
-        query = Java_Lang.query("""
-            (class_declaration
-                name: (identifier) @name)
+        class_query = Java_Lang.query("""
+            ((class_declaration) @name)
         """)
 
-        class_captures=query.captures(tree.root_node)
+        class_captures=class_query.captures(tree.root_node)
+
+
+        enum_query=Java_Lang.query("""
+            ((enum_declaration) @name)
+        """)
+
+        enum_captures=class_captures+enum_query.captures(tree.root_node)
 
         field_query = Java_Lang.query("""
             (field_declaration
             	declarator: (variable_declarator) @name)
         """)
 
-        field_captures=field_query.captures(tree.root_node)
+        enum_contant_query = Java_Lang.query("""
+            (enum_constant
+                name:(identifier) @name)
+        """)
+
+        field_captures=field_query.captures(tree.root_node)+enum_contant_query.captures(tree.root_node)
 
         method_query = Java_Lang.query("""
             (constructor_declaration
@@ -301,46 +312,97 @@ class Java(Lang):
 
         all_comments=comments.captures(tree.root_node)+linecomments.captures(tree.root_node)
 
-        for new_class in class_captures:
-            # Tuple of class details including modifiers and name.
-            class_details=new_class[0].parent.children
+        # for new_class in class_captures:
+        #     # Tuple of class details including modifiers and name.
+        #     class_details=new_class[0].parent.children
 
-            indentation=int(class_details[0].start_point[1])
-            starting_line=int(class_details[0].start_point[0])
+        #     indentation=int(class_details[0].start_point[1])
+        #     starting_line=int(class_details[0].start_point[0])
 
-            new_class_name=class_details[2].text.decode()
+        #     new_class_name=class_details[2].text.decode()
 
-            new_full_name=""
+        #     new_full_name=""
 
-            for child in class_details:
-                if child.type!="class_body":
-                    new_full_name+=child.text.decode()+" "
-            new_full_name=new_full_name.strip(" ")
+        #     for child in class_details:
+        #         if child.type!="class_body":
+        #             new_full_name+=child.text.decode()+" "
+        #     new_full_name=new_full_name.strip(" ")
 
 
-            #Stores full class declaration
+        #     #Stores full class declaration
             
-            class_obj=Class(new_class_name,new_full_name,indentation,version,starting_line)
+        #     class_obj=Class(new_class_name,new_full_name,indentation,version,starting_line)
 
-            #If object with same full class declaration is in the list of classes, then class_obj references that object.
-            #Equality relation for class is re-defined in Node.py.
-            if (new_class_name in all_classes.keys()):
-                if (class_obj not in all_classes[new_class_name]):
-                    all_classes[new_class_name].append(class_obj)
-                    class_ref[new_full_name]=class_obj
+        #     #If object with same full class declaration is in the list of classes, then class_obj references that object.
+        #     #Equality relation for class is re-defined in Node.py.
+        #     if (new_class_name in all_classes.keys()):
+        #         if (class_obj not in all_classes[new_class_name]):
+        #             all_classes[new_class_name].append(class_obj)
+        #             class_ref[new_full_name]=class_obj
+        #         else:
+        #             index=all_classes[new_class_name].index(class_obj)
+        #             class_obj=all_classes[new_class_name][index]
+        #             class_ref[new_full_name].add_version(version)
+
+        #     else:
+        #         all_classes[new_class_name]=[class_obj]
+        #         class_ref[new_full_name]=class_obj
+            
+
+        #     # Checks if class is nested in another class. 
+        #     # Adds it as subclass to main class if it is.
+        #     nested_class_details=new_class[0].parent.parent.parent
+        #     if (nested_class_details is None):
+        #         if (class_obj not in bottom_body):
+        #             bottom_body.append(class_obj)
+        #     else:
+        #         full_nested_name=""
+        #         for child in nested_class_details.children:
+        #             if ("body" not in child.type and "block" not in child.type):
+        #                 full_nested_name+=child.text.decode()+" "
+        #             else:
+        #                 full_nested_name=full_nested_name.strip(" ")
+        #                 break
+        #         # if (nested_class_details.children[3].text.decode()[0]!="{"):
+        #         #     nested_class=" "+nested_class_details.children[3].text.decode()
+        #         # else:
+        #         #     nested_class=""
+        #         # nested_class=nested_class.split('{')[0]
+        #         # full_nested_name=nested_class_details.children[0].text.decode()+" "+nested_class_details.children[1].text.decode()+" "+nested_class_details.children[2].text.decode()+nested_class
+        #         class_ref[full_nested_name].add_sub_classes(class_obj)
+
+        for class_val in enum_captures:
+            class_name=""
+            full_class_name=""
+            indentation=int(class_val[0].start_point[1])
+            starting_line=int(class_val[0].start_point[0])
+
+            for child in class_val[0].children:
+                if "body" not in child.type:
+                    full_class_name+=child.text.decode()+" "
+                    if (child.type=="identifier"):
+                        class_name=child.text.decode()
                 else:
-                    index=all_classes[new_class_name].index(class_obj)
-                    class_obj=all_classes[new_class_name][index]
-                    class_ref[new_full_name].add_version(version)
+                    break
+            full_class_name=full_class_name.strip(" ")
+
+
+            class_obj=Class(class_name,full_class_name,indentation,version,starting_line)
+
+            if (class_name in all_classes.keys()):
+                if (class_obj not in all_classes[class_name]):
+                    all_classes[class_name].append(class_obj)
+                    class_ref[full_class_name]=class_obj
+                else:
+                    index=all_classes[class_name].index(class_obj)
+                    class_obj=all_classes[class_name][index]
+                    class_ref[full_class_name].add_version(version)
 
             else:
-                all_classes[new_class_name]=[class_obj]
-                class_ref[new_full_name]=class_obj
-            
+                all_classes[class_name]=[class_obj]
+                class_ref[full_class_name]=class_obj
 
-            # Checks if class is nested in another class. 
-            # Adds it as subclass to main class if it is.
-            nested_class_details=new_class[0].parent.parent.parent
+            nested_class_details=class_val[0].parent.parent
             if (nested_class_details is None):
                 if (class_obj not in bottom_body):
                     bottom_body.append(class_obj)
@@ -352,17 +414,12 @@ class Java(Lang):
                     else:
                         full_nested_name=full_nested_name.strip(" ")
                         break
-                # if (nested_class_details.children[3].text.decode()[0]!="{"):
-                #     nested_class=" "+nested_class_details.children[3].text.decode()
-                # else:
-                #     nested_class=""
-                # nested_class=nested_class.split('{')[0]
-                # full_nested_name=nested_class_details.children[0].text.decode()+" "+nested_class_details.children[1].text.decode()+" "+nested_class_details.children[2].text.decode()+nested_class
                 class_ref[full_nested_name].add_sub_classes(class_obj)
+
 
         #Adds all variable declarations to associ@API(status = API.Status.STABLE)\npublic final class TestNGCucumberRunner ated classes.
         for field in field_captures:
-            declaration=field[0].parent.text.decode()
+            declaration=field[0].parent.text.decode()+","
 
             starting_line=int(field[0].start_point[0])
             identifier=""
@@ -372,9 +429,18 @@ class Java(Lang):
                     for nested_child in child.children:
                         if nested_child.type=="identifier":
                             identifier=nested_child.text.decode()
+                elif (child.type=="identifier"):
+                    identifier=child.text.decode()
 
             nested_class=""
-            for child in field[0].parent.parent.parent.children:
+
+            base=field[0].parent
+            
+            while (base.type!="class_declaration" and base.type!="enum_declaration"):
+                base=base.parent
+
+
+            for child in base.children:
                 if ("body" not in child.type):
                     nested_class+=child.text.decode()+" "
                 else:
@@ -414,13 +480,18 @@ class Java(Lang):
                     if (child.type=="identifier"):
                         method_name=child.text.decode()
 
-            super_class_details=method[0].parent.parent.parent.children
+            
+            base=method[0].parent
+            
+            while (base.type!="class_declaration" and base.type!="enum_declaration"):
+                base=base.parent
 
             super_class=""
-            for child in super_class_details:
-                if (child.type!="class_body"):
+            for child in base.children:
+                if ("body" not in child.type):
                     super_class+=child.text.decode()+" "
-            
+                else:
+                    break
 
             method_obj=Method(method_name,method_description,method_signature,version,super_class,starting_line)
 

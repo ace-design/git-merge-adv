@@ -1,4 +1,5 @@
 import bisect
+import math
 
 class End:
     def __init__(self,dir,leftstartline=None, leftendline=None):
@@ -67,7 +68,7 @@ class Class:
     def __init__(self,name,full_name,indent,version,start_line,nod=None):
         self.version=set()
         self.version.add(version)
-        self.ranking=indent/4
+        self.ranking=math.ceil(indent/4)
         self.start_line=start_line
         self.class_name=name
         self.full_name=full_name

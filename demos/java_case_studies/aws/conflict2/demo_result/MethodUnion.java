@@ -45,13 +45,13 @@ import org.apache.catalina.Loader;
 
 public class DynamoDBSessionStore extends StoreBase{
 
-    private static final String name = "AmazonDynamoDBSessionStore";
-    private static final String info = name + "/1.0";
-    private AmazonDynamoDBClient dynamo;
-    private String sessionTableName;
-    private final Set<String> keys = Collections.synchronizedSet(new HashSet<String>());
-    private long keysTimestamp=0;
-    private static final Log logger = LogFactory.getLog(DynamoDBSessionStore.class);
+    private static final String name = "AmazonDynamoDBSessionStore";,
+    private static final String info = name + "/1.0";,
+    private AmazonDynamoDBClient dynamo;,
+    private String sessionTableName;,
+    private final Set<String> keys = Collections.synchronizedSet(new HashSet<String>());,
+    private long keysTimestamp=0;,
+    private static final Log logger = LogFactory.getLog(DynamoDBSessionStore.class);,
 
     <<<<<<< left_content.java
 @Override
@@ -93,6 +93,13 @@ public String getInfo() {
 		}.start();
 
 	}
+
+    @Override
+			public void run() {
+				for (String sessionId : keysCopy) {
+					remove(sessionId);
+				}
+			}
 
     @Override
 <<<<<<< left_content.java

@@ -37,24 +37,24 @@ import java.util.Set;
 
 public class BufferedTokenStream implements TokenStream{
 
-    protected TokenSource tokenSource;
+    protected TokenSource tokenSource;,
 
     /** Record every single token pulled from the source so we can reproduce
      *  chunks of it later.  The buffer in LookaheadStream overlaps sometimes
      *  as its moving window moves through the input.  This list captures
      *  everything so we can access complete input text.
      */
-    protected List<Token> tokens = new ArrayList<Token>(100);
+    protected List<Token> tokens = new ArrayList<Token>(100);,
 
     /** Track the last mark() call result value for use in rewind(). */
-    protected int lastMarker;
+    protected int lastMarker;,
 
     /** The index into the tokens list of the current token (next token
      *  to consume).  tokens[p] should be LT(1).  p=-1 indicates need
      *  to initialize with first token.  The ctor doesn't get a token.
      *  First call to LT(1) or whatever gets the first token and sets p=0;
      */
-    protected int p = -1;
+    protected int p = -1;,
 
     public BufferedTokenStream() { }
 

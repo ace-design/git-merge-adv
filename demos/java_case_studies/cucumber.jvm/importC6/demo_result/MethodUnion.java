@@ -1,5 +1,5 @@
 package io.cucumber.examples.testng;
-import io.cucumber.core.api.TypeRegistryConfigurer;
+import cucumber.api.TypeRegistryConfigurer;
 import io.cucumber.core.api.TypeRegistry;
 import io.cucumber.datatable.DataTableType;
 import io.cucumber.cucumberexpressions.ParameterType;
