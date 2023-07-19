@@ -125,12 +125,14 @@ class Class:
 
 
 class Method:
-    def __init__(self,des,version,super_class):
+    def __init__(self,des,version,super_class,astnode=None):
         self.method_name=des
         self.super=super_class
         self.version=set()
         self.version.add(version)
         self.selected=False
+        self.astnode = astnode
+
 
     def add_version(self,version):
         self.version.add(version)

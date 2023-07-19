@@ -1,5 +1,6 @@
 from Node import Pack, End, Class, Method
 import merger
+from spec import Python
 
 class Tree:
 
@@ -34,6 +35,8 @@ class Tree:
 
     def find_methods(self,lang):
         body=""
+        if isinstance(lang,Python):
+            return lang.output_methods()
         for branch in self.root.get_children():
             if (type(branch) is Class):
                 body=lang.output_methods(body,branch)
@@ -172,4 +175,40 @@ class Tree:
 
     def add_import(self,path,version):
         self.add_traverse(self.import_root,path,version)
+
+    
+
+    def confilct_resolver(self,lang,conflicted_content):
+        print(conflicted_content)
+        with  open("conflict.py","w") as f:
+            f.write(conflicted_content)
+        with  open("methodres.py","w") as f:
+            f.write("")
+        print("\n=======================================================================================")
+        for i in self.method_ref.keys():
+            print(i)
+            for x in self.method_ref[i]:
+                if x.selected == True:
+                    with  open("methodres.py","a") as f:
+                        f.write(x.method_name)
+
+
+        # conflicted_content = conflicted_content.split("\n")
+        # for lineno in range(len(conflicted_content)):
+        #     if conflicted_content[lineno][0:7] == "<<<<<<<":
+        #         conflictstart= lineno
+        #     if conflicted_content[lineno][0:7] == "=======":
+        #         conflictmid= lineno
+        #     if conflicted_content[lineno][0:7] == ">>>>>>>":
+        #         conflictend= lineno
+        #         break
+        # for line in range(conflicted_content[conflictstart+1])
+        
+            
+                
+
+
+
+        return "Yup"
+                    
     

@@ -5,6 +5,8 @@ from Node import Pack, Class, Method
 from abc import ABC,abstractmethod
 import os
 import copy
+import re
+import astor
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
@@ -38,9 +40,9 @@ class Lang(ABC):
     def output_traverse(node,string,all_imports,suspicious):
         pass
 
-    @abstractmethod
-    def output_methods(writer,class_name):
-        pass
+    # @abstractmethod
+    # def output_methods(writer,class_name):
+    #     pass
 
     # Used to parse the imports to generate a more read-friendly string for tree to split. 
     @abstractmethod
@@ -55,9 +57,9 @@ class Lang(ABC):
     def getClasses(content):
         pass
 
-    @abstractmethod
-    def get_lang():
-        pass
+    # @abstractmethod
+    # def get_lang():
+    #     pass
 
 ## Java Implementation to Abstract Class
 class Java(Lang):
@@ -381,9 +383,17 @@ class Java(Lang):
     
     def get_class_ref(self):
         return dict(all_classes)
-
+    def initialize_body():
+        return ""
 
 class Python(Lang):
+
+
+    global methods
+    methods=[]
+
+    global codeseq
+    codeseq = []
     done=[]
     def generateAST(self,content):
         return ast.parse(content)
@@ -486,6 +496,111 @@ class Python(Lang):
     def getUsages(self,git_content):
         return super().getUsages()
     
-    def getClasses(self,content):
-        return super().getClasses()
-                            
+    def ifinscope(self,codeast):
+        structure = ''
+        pattrn = r'^(Assign)*(ClassDef|FunctionDef)*(If)?$'
+        for nod in codeast.body:
+            structure= structure+ type(nod).__name__
+        if re.match(pattrn, structure):
+            return True
+        else:
+            return False
+
+
+
+    
+    def getClasses(self,content,version):
+        str_content = ""
+        pointer = 0
+        for line in content:
+                if line== "!!!no import anymore!!!":
+                    continue
+                str_content=str_content+line+'\n'
+        content = str_content
+
+
+        codeast = self.generateAST(content)
+        if self.ifinscope(codeast)== False:
+            return "**to_be_handled_by_git**"
+        
+        for nod in codeast.body:
+            if isinstance(nod, ast.FunctionDef):
+                methodName = nod.name
+                if "function "+methodName not in codeseq:
+                    codeseq.insert(pointer,"function "+methodName)
+                    pointer = pointer+1
+                else:
+                    pointer = (codeseq.index("function "+methodName)) + 1
+                methodindent= str(nod.col_offset)
+                newMethod = Method(astor.to_source(nod),version,None,nod)
+
+                #Method declaration is referenced by its signature.
+                if (methodindent+" "+methodName in all_methods.keys()):
+                    nodepresent = False
+                    for methodObject in all_methods[methodindent+" "+methodName]:
+                        if astor.to_source(methodObject.astnode) == astor.to_source(nod):
+                            methodObject.add_version(version)
+                            nodepresent =  True
+                    if nodepresent == False:
+                            all_methods[methodindent+" "+methodName].append(newMethod)
+                            methods.append(newMethod)
+                else:
+                    all_methods[methodindent+" "+methodName]=[newMethod]
+                    methods.append(newMethod)
+            elif isinstance(nod, ast.ClassDef):
+                pass
+
+            elif isinstance(nod, ast.Assign):
+                code =  astor.to_source(nod)
+                if code not in codeseq:
+                    codeseq.insert(pointer,code)
+                    pointer = pointer+1
+                else:
+                    pointer = (codeseq.index(code)) + 1
+            elif isinstance(nod, ast.If):
+                code =  astor.to_source(nod)
+                if code not in codeseq:
+                    codeseq.append(code)
+
+
+        return methods
+    
+    def output_methods(self):
+        print(codeseq)
+        print(all_methods)
+        body  =  self.initialize_body()
+        methodarray = [None]*len(codeseq)
+        for methodname in all_methods.keys():
+            for nod in all_methods[methodname]:
+                if nod.selected == True:
+                    pointer = codeseq.index("function "+methodname.split(" ")[1])
+                    methodarray[pointer] = nod.method_name
+
+        for i  in methodarray:
+            if i:
+                body = body + i + '\n'
+        lastele = codeseq.pop()
+        if lastele == "if ":
+            body = body + lastele
+        return body
+
+    
+    def get_class_ref(self):
+        return {"None":[]}
+    
+    def get_method_ref(self):
+        return dict(all_methods)
+    
+
+
+    def get_lang(self):
+        return "py"
+    
+    def initialize_body(self):
+        body = ""
+        for code in codeseq:
+            if code[0:13]!="if " and code[0:9]!="function " and code[0:6]!="class ":
+                body = body+code+"\n"
+                        
+
+        return body

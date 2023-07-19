@@ -39,8 +39,11 @@ def main():
     base_import,base_content=lang.extractImports(subprocess.check_output(f"cat "+base, shell=True).decode('utf-8'))
 
 
-    result=merger.body_merge(lang,base_content,right_content,left_content)
 
+    result=merger.body_merge(lang,base_content,right_content,left_content)
+    if result == "**to_be_handled_by_git**":
+        print("**to_be_handled_by_git**")
+        return
     lang.getUsages(result)
 
     import_result=merger.import_merge(lang,base_import,right_import,left_import)
