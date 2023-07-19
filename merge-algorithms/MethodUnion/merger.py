@@ -36,27 +36,24 @@ def body_merge(lang, base, right, left):
         return "**to_be_handled_by_git**"
     tree.set_classes(lang)
     tree.set_methods(lang)
-    if isinstance(lang, Python):
-        conflicted_result = git_merge(base,right,left,"py")
-        result=tree.confilct_resolver(lang,conflicted_result)
-    else:
-        result=tree.find_methods(lang)
+
+    result=tree.find_methods(lang)
     return result
 
 def append_tree(lang, base, right, left):
-    leftclass = lang.getClasses(base,"left")
-    if leftclass == "Not in scope" :
+    leftclass = lang.getClasses(left,"left")
+    if leftclass == "**to_be_handled_by_git**" :
         return "**to_be_handled_by_git**"
     tree.add_body(leftclass)
 
     rightclass = lang.getClasses(right,"right")
-    if rightclass == "Not in scope" :
+    if rightclass == "**to_be_handled_by_git**" :
         return "**to_be_handled_by_git**"
     tree.add_body(rightclass)
 
 
     baseclass = lang.getClasses(base,"base")
-    if baseclass == "Not in scope" :
+    if baseclass == "**to_be_handled_by_git**" :
         return "**to_be_handled_by_git**"
     tree.add_body(baseclass)
 
