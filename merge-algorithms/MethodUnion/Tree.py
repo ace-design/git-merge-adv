@@ -1,5 +1,6 @@
 from Node import Pack, End, Class, Method
 import merger
+from spec import Python
 
 class Tree:
 
@@ -34,6 +35,8 @@ class Tree:
 
     def find_methods(self,lang):
         body=""
+        if isinstance(lang,Python):
+            return lang.output_methods()
         for branch in self.root.get_children():
             if (type(branch) is Class):
                 body=lang.output_methods(body,branch)
