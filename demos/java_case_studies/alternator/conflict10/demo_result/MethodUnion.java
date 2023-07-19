@@ -43,7 +43,7 @@ import com.michelboudreau.alternator.enums.AttributeValueType;
 @ContextConfiguration(locations = {"classpath:/applicationContext.xml"})
 public class AlternatorItemTest extends AlternatorTest{
 
-    private String tableName;
+    private String tableName;,
 
     @Before
     public void setUp() throws Exception {

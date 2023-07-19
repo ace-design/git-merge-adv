@@ -41,12 +41,12 @@ import static java.util.stream.Collectors.toList;
 @API(status = API.Status.STABLE)
 public final class TestNGCucumberRunner extends Blah{
 
-    private final EventBus bus;
-    private final Predicate<CucumberPickle> filters;
-    private final ThreadLocalRunnerSupplier runnerSupplier;
-    private final RuntimeOptions runtimeOptions;
-    private final Plugins plugins;
-    private final FeaturePathFeatureSupplier featureSupplier;
+    private final EventBus bus;,
+    private final Predicate<CucumberPickle> filters;,
+    private final ThreadLocalRunnerSupplier runnerSupplier;,
+    private final RuntimeOptions runtimeOptions;,
+    private final Plugins plugins;,
+    private final FeaturePathFeatureSupplier featureSupplier;,
 
     /**
      * Bootstrap the cucumber runtime

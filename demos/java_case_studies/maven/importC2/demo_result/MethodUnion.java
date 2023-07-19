@@ -115,31 +115,31 @@ import org.eclipse.aether.util.repository.SimpleResolutionErrorPolicy;
 public class DefaultMaven implements Maven{
 
     @Requirement
-    private Logger logger;
+    private Logger logger;,
     @Requirement
-    protected ProjectBuilder projectBuilder;
+    protected ProjectBuilder projectBuilder;,
     @Requirement
-    private LifecycleStarter lifecycleStarter;
+    private LifecycleStarter lifecycleStarter;,
     @Requirement
-    protected PlexusContainer container;
+    protected PlexusContainer container;,
     @Requirement
-    MavenExecutionRequestPopulator populator;
+    MavenExecutionRequestPopulator populator;,
     @Requirement
-    private ExecutionEventCatapult eventCatapult;
+    private ExecutionEventCatapult eventCatapult;,
     @Requirement
-    private ArtifactHandlerManager artifactHandlerManager;
+    private ArtifactHandlerManager artifactHandlerManager;,
     @Requirement( optional = true, hint = "ide" )
-    private WorkspaceReader workspaceRepository;
+    private WorkspaceReader workspaceRepository;,
     @Requirement
-    private RepositorySystem repoSystem;
+    private RepositorySystem repoSystem;,
     @Requirement
-    private SettingsDecrypter settingsDecrypter;
+    private SettingsDecrypter settingsDecrypter;,
     @Requirement( optional = true, hint = "simple" )
-    private LocalRepositoryManagerFactory simpleLocalRepositoryManagerFactory;
+    private LocalRepositoryManagerFactory simpleLocalRepositoryManagerFactory;,
     @Requirement
-    private LegacySupport legacySupport;
+    private LegacySupport legacySupport;,
     @Requirement
-    private EventSpyDispatcher eventSpyDispatcher;
+    private EventSpyDispatcher eventSpyDispatcher;,
 
     public MavenExecutionResult execute( MavenExecutionRequest request )
     {

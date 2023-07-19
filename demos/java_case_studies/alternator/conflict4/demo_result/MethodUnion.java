@@ -17,7 +17,7 @@ import java.util.ArrayList;
 @ContextConfiguration(locations = {"classpath:/applicationContext.xml"})
 public class AlternatorBatchItemTest extends AlternatorTest{
 
-    private String tableName;
+    private String tableName;,
 
     /*  @Before
     public void setUp() throws Exception {

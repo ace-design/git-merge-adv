@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 public class Slf4jMavenTransferListener extends AbstractTransferListener{
 
-    protected final Logger out;
+    protected final Logger out;,
 
     public Slf4jMavenTransferListener( Logger out )
     {

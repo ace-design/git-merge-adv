@@ -88,17 +88,17 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
 
     @SuppressWarnings( "unused" )
     @Requirement( role = LoggerFactory.class )
-    private Logger logger = NullLoggerFactory.LOGGER;
+    private Logger logger = NullLoggerFactory.LOGGER;,
     @Requirement
-    private RemoteRepositoryManager remoteRepositoryManager;
+    private RemoteRepositoryManager remoteRepositoryManager;,
     @Requirement
-    private VersionResolver versionResolver;
+    private VersionResolver versionResolver;,
     @Requirement
-    private ArtifactResolver artifactResolver;
+    private ArtifactResolver artifactResolver;,
     @Requirement
-    private RepositoryEventDispatcher repositoryEventDispatcher;
+    private RepositoryEventDispatcher repositoryEventDispatcher;,
     @Requirement
-    private ModelBuilder modelBuilder;
+    private ModelBuilder modelBuilder;,
 
     public DefaultArtifactDescriptorReader()
     {

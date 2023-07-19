@@ -29,18 +29,18 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
     /**
 	 * The URI this channel is supposed to connect to.
 	 */
-    protected URI uri = null;
-    private WebSocketImpl engine = null;
-    private Socket socket = null;
-    private InputStream istream;
-    private OutputStream ostream;
-    private Proxy proxy = Proxy.NO_PROXY;
-    private Thread writeThread;
-    private Draft draft;
-    private Map<String,String> headers;
-    private CountDownLatch connectLatch = new CountDownLatch( 1 );
-    private CountDownLatch closeLatch = new CountDownLatch( 1 );
-    private int connectTimeout = 0;
+    protected URI uri = null;,
+    private WebSocketImpl engine = null;,
+    private Socket socket = null;,
+    private InputStream istream;,
+    private OutputStream ostream;,
+    private Proxy proxy = Proxy.NO_PROXY;,
+    private Thread writeThread;,
+    private Draft draft;,
+    private Map<String,String> headers;,
+    private CountDownLatch connectLatch = new CountDownLatch( 1 );,
+    private CountDownLatch closeLatch = new CountDownLatch( 1 );,
+    private int connectTimeout = 0;,
 
     /** This open a websocket connection as specified by rfc6455 */
 
@@ -350,10 +350,10 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
     public void onFragment( Framedata frame ) {
 	}
 
- private class WebsocketWriteThread implements Runnable{
+    private class WebsocketWriteThread implements Runnable{
 
 
-     @Override
+        @Override
 		public void run() {
 			Thread.currentThread().setName( "WebsocketWriteThread" );
 			try {
@@ -369,7 +369,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 			}
 		}
 
- }
+    }
     public void setProxy( Proxy proxy ) {
 		if( proxy == null )
 			throw new IllegalArgumentException();

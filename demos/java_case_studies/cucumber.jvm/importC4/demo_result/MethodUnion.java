@@ -45,11 +45,11 @@ import static java.util.stream.Collectors.toList;
 @API(status = API.Status.STABLE)
 public final class Cucumber extends ParentRunner<FeatureRunner>{
 
-    private final List<FeatureRunner> children;
-    private final EventBus bus;
-    private final List<CucumberFeature> features;
-    private final Plugins plugins;
-    private boolean multiThreadingAssumed = false;
+    private final List<FeatureRunner> children;,
+    private final EventBus bus;,
+    private final List<CucumberFeature> features;,
+    private final Plugins plugins;,
+    private boolean multiThreadingAssumed = false;,
 
     /**
      * Constructor called by JUnit.
@@ -125,7 +125,7 @@ public final class Cucumber extends ParentRunner<FeatureRunner>{
 
     class RunCucumber extends Statement{
 
-        private final Statement runFeatures;
+        private final Statement runFeatures;,
 
         RunCucumber(Statement runFeatures) {
             this.runFeatures = runFeatures;

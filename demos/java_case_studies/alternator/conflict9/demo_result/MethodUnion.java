@@ -40,8 +40,8 @@ import com.amazonaws.services.dynamodb.model.UpdateTableResult;
 
 public class AlternatorDBInProcessClient extends AmazonWebServiceClient implements AmazonDynamoDB{
 
-    private static final Log log = LogFactory.getLog(AlternatorDBInProcessClient.class);
-    private AlternatorDBHandler handler = new AlternatorDBHandler();
+    private static final Log log = LogFactory.getLog(AlternatorDBInProcessClient.class);,
+    private AlternatorDBHandler handler = new AlternatorDBHandler();,
 
     public AlternatorDBInProcessClient() {
 		this(new ClientConfiguration());

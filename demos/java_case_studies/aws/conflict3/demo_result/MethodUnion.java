@@ -51,8 +51,8 @@ import com.amazonaws.services.dynamodbv2.model.Select;
 
 public class DynamoUtils{
 
-    public static final String SESSION_ID_KEY = "sessionId";
-    public static final String SESSION_DATA_ATTRIBUTE = "sessionData";
+    public static final String SESSION_ID_KEY = "sessionId";,
+    public static final String SESSION_DATA_ATTRIBUTE = "sessionData";,
 
     public static Map<String, AttributeValue> loadItemBySessionId(AmazonDynamoDB dynamo,
                                                                   String tableName,

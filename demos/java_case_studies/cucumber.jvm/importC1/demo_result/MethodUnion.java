@@ -48,21 +48,21 @@ import static java.util.Locale.ROOT;
 
 public final class TestNGFormatter implements EventListener, StrictAware{
 
-    private final Writer writer;
-    private final Document document;
-    private final Element results;
-    private final Element suite;
-    private final Element test;
-    private Element clazz;
-    private Element root;
-    private TestCase testCase;
-    private boolean strict = false;
-    private URI currentFeatureFile = null;
-    private String previousTestCaseName;
-    private int exampleNumber;
-    private Instant started;
-    private final Map<URI, String> featuresNames = new HashMap<>();
-    private final FeatureParser parser = new FeatureParser(UUID::randomUUID);
+    private final Writer writer;,
+    private final Document document;,
+    private final Element results;,
+    private final Element suite;,
+    private final Element test;,
+    private Element clazz;,
+    private Element root;,
+    private TestCase testCase;,
+    private boolean strict = false;,
+    private URI currentFeatureFile = null;,
+    private String previousTestCaseName;,
+    private int exampleNumber;,
+    private Instant started;,
+    private final Map<URI, String> featuresNames = new HashMap<>();,
+    private final FeatureParser parser = new FeatureParser(UUID::randomUUID);,
 
     public TestNGFormatter(OutputStream out) {
         this.writer = new UTF8OutputStreamWriter(out);
@@ -203,10 +203,10 @@ public final class TestNGFormatter implements EventListener, StrictAware{
 
     final class TestCase{
 
-        private final List<PickleStepTestStep> steps = new ArrayList<>();
-        private final List<Result> results = new ArrayList<>();
-        private final List<Result> hooks = new ArrayList<>();
-        private final io.cucumber.plugin.event.TestCase testCase;
+        private final List<PickleStepTestStep> steps = new ArrayList<>();,
+        private final List<Result> results = new ArrayList<>();,
+        private final List<Result> hooks = new ArrayList<>();,
+        private final io.cucumber.plugin.event.TestCase testCase;,
 
         TestCase(io.cucumber.plugin.event.TestCase testCase) {
             this.testCase = testCase;

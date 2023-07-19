@@ -24,21 +24,21 @@ public final class RuntimeOptions implements
     io.cucumber.core.filter.Options,
     io.cucumber.core.backend.Options{
 
-    private final List<URI> glue = new ArrayList<>();
-    private final List<String> tagExpressions = new ArrayList<>();
-    private final List<Pattern> nameFilters = new ArrayList<>();
-    private final List<FeatureWithLines> featurePaths = new ArrayList<>();
-    private boolean dryRun;
-    private boolean strict = false;
-    private boolean monochrome = false;
-    private boolean wip = false;
-    private SnippetType snippetType = SnippetType.UNDERSCORE;
-    private int threads = 1;
-    private PickleOrder pickleOrder = StandardPickleOrders.lexicalUriOrder();
-    private int count = 0;
-    private final List<Plugin> formatters = new ArrayList<>();
-    private final List<Plugin> summaryPrinters = new ArrayList<>();
-    private Class<? extends ObjectFactory> objectFactoryClass;
+    private final List<URI> glue = new ArrayList<>();,
+    private final List<String> tagExpressions = new ArrayList<>();,
+    private final List<Pattern> nameFilters = new ArrayList<>();,
+    private final List<FeatureWithLines> featurePaths = new ArrayList<>();,
+    private boolean dryRun;,
+    private boolean strict = false;,
+    private boolean monochrome = false;,
+    private boolean wip = false;,
+    private SnippetType snippetType = SnippetType.UNDERSCORE;,
+    private int threads = 1;,
+    private PickleOrder pickleOrder = StandardPickleOrders.lexicalUriOrder();,
+    private int count = 0;,
+    private final List<Plugin> formatters = new ArrayList<>();,
+    private final List<Plugin> summaryPrinters = new ArrayList<>();,
+    private Class<? extends ObjectFactory> objectFactoryClass;,
 
     private RuntimeOptions() {
 

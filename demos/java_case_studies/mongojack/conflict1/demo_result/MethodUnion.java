@@ -64,15 +64,15 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"UnusedReturnValue"})
 public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<TResult>{
 
-    private static final AtomicReference<ObjectMapper> DEFAULT_OBJECT_MAPPER = new AtomicReference<>();
-    private final ObjectMapper objectMapper;
-    private final JacksonCodecRegistry jacksonCodecRegistry;
+    private static final AtomicReference<ObjectMapper> DEFAULT_OBJECT_MAPPER = new AtomicReference<>();,
+    private final ObjectMapper objectMapper;,
+    private final JacksonCodecRegistry jacksonCodecRegistry;,
     @SuppressWarnings("FieldCanBeLocal")
-    private final Class<?> view;
-    private final Class<TResult> valueClass;
-    private final JavaType type;
-    private final com.mongodb.client.MongoCollection<TResult> mongoCollection;
-    private final SerializationOptions serializationOptions;
+    private final Class<?> view;,
+    private final Class<TResult> valueClass;,
+    private final JavaType type;,
+    private final com.mongodb.client.MongoCollection<TResult> mongoCollection;,
+    private final SerializationOptions serializationOptions;,
 
     /**
      * Private.
@@ -661,8 +661,8 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
 
     public static final class JacksonMongoCollectionBuilder{
 
-        private ObjectMapper objectMapper;
-        private Class<?> view;
+        private ObjectMapper objectMapper;,
+        private Class<?> view;,
 
         private JacksonMongoCollectionBuilder() {
         }
@@ -684,7 +684,7 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
          * @param view The jackson view class
          * @return the builder
          */
-        private SerializationOptions serializationOptions = SerializationOptions.builder().build();
+        private SerializationOptions serializationOptions = SerializationOptions.builder().build();,
 
         @SuppressWarnings("unused")
         public JacksonMongoCollectionBuilder withView(Class<?> view) {

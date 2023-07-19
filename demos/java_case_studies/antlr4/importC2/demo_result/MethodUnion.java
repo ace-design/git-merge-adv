@@ -92,15 +92,15 @@ import java.util.ArrayList;
 public class ParserATNFactory implements ATNFactory{
 
     @NotNull
-	public final Grammar g;
+	public final Grammar g;,
     @NotNull
-	public final ATN atn;
-    public Rule currentRule;
-    public int currentOuterAlt;
+	public final ATN atn;,
+    public Rule currentRule;,
+    public int currentOuterAlt;,
     protected final List<Triple<Rule, ATNState, ATNState>> preventEpsilonClosureBlocks =
-		new ArrayList<Triple<Rule, ATNState, ATNState>>();
+		new ArrayList<Triple<Rule, ATNState, ATNState>>();,
     protected final List<Triple<Rule, ATNState, ATNState>> preventEpsilonOptionalBlocks =
-		new ArrayList<Triple<Rule, ATNState, ATNState>>();
+		new ArrayList<Triple<Rule, ATNState, ATNState>>();,
 
     public ParserATNFactory(@NotNull Grammar g) {
 		if (g == null) {

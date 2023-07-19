@@ -28,21 +28,21 @@ import static org.mockito.Mockito.*;
 
 public class ImageServletResponseImplTestCase{
 
-    private static final String CONTENT_TYPE_BMP = "image/bmp";
-    private static final String CONTENT_TYPE_FOO = "foo/bar";
-    private static final String CONTENT_TYPE_GIF = "image/gif";
-    private static final String CONTENT_TYPE_JPEG = "image/jpeg";
-    private static final String CONTENT_TYPE_PNG = "image/png";
-    private static final String CONTENT_TYPE_TEXT = "text/plain";
-    private static final String IMAGE_NAME_PNG = "12monkeys-splash.png";
-    private static final String IMAGE_NAME_GIF = "tux.gif";
-    private static final String IMAGE_NAME_PNG_INDEXED = "star.png";
-    private static final Dimension IMAGE_DIMENSION_PNG = new Dimension(300, 410);
-    private static final Dimension IMAGE_DIMENSION_GIF = new Dimension(250, 250);
-    private HttpServletRequest request;
-    private static final Dimension IMAGE_DIMENSION_PNG_INDEXED = new Dimension(199, 192);
-    private ServletContext context;
-    private static final int STREAM_DEFAULT_SIZE = 2000;
+    private static final String CONTENT_TYPE_BMP = "image/bmp";,
+    private static final String CONTENT_TYPE_FOO = "foo/bar";,
+    private static final String CONTENT_TYPE_GIF = "image/gif";,
+    private static final String CONTENT_TYPE_JPEG = "image/jpeg";,
+    private static final String CONTENT_TYPE_PNG = "image/png";,
+    private static final String CONTENT_TYPE_TEXT = "text/plain";,
+    private static final String IMAGE_NAME_PNG = "12monkeys-splash.png";,
+    private static final String IMAGE_NAME_GIF = "tux.gif";,
+    private static final String IMAGE_NAME_PNG_INDEXED = "star.png";,
+    private static final Dimension IMAGE_DIMENSION_PNG = new Dimension(300, 410);,
+    private static final Dimension IMAGE_DIMENSION_GIF = new Dimension(250, 250);,
+    private HttpServletRequest request;,
+    private static final Dimension IMAGE_DIMENSION_PNG_INDEXED = new Dimension(199, 192);,
+    private ServletContext context;,
+    private static final int STREAM_DEFAULT_SIZE = 2000;,
 
     @Before
     public void init() throws Exception {
@@ -305,6 +305,18 @@ public class ImageServletResponseImplTestCase{
         catch (InvocationTargetException ignore) {
         }
     }
+
+    public void run() {
+                    JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+                    panel.add(new BlackLabel("expected", expected));
+                    panel.add(new BlackLabel("actual", actual));
+                    if (diff != null) {
+                        panel.add(new BlackLabel("diff", diff));
+                    }
+                    JScrollPane scroll = new JScrollPane(panel);
+                    scroll.setBorder(BorderFactory.createEmptyBorder());
+                    JOptionPane.showMessageDialog(null, scroll);
+                }
 
     @Test
     public void testTranscodeResponseIndexedCM() throws IOException {
@@ -1507,8 +1519,8 @@ public class ImageServletResponseImplTestCase{
 
     private static class BlackLabel extends JLabel{
 
-        private final Paint checkeredBG;
-        private boolean opaque = true;
+        private final Paint checkeredBG;,
+        private boolean opaque = true;,
 
         public BlackLabel(final String text, final BufferedImage outImage) {
             super(text, new BufferedImageIcon(outImage), JLabel.CENTER);

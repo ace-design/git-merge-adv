@@ -13,8 +13,8 @@ import java.util.*;
 @ContextConfiguration(locations = {"classpath:/applicationContext.xml"})
 public class AlternatorScanTest extends AlternatorTest{
 
-    private String tableName;
-    private int nbOfItems;
+    private String tableName;,
+    private int nbOfItems;,
 
     @Before
     public void setUp() {

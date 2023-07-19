@@ -115,21 +115,21 @@ import static org.junit.Assert.*;
 
 public abstract class BaseTest{
 
-    private static final Logger LOGGER = Logger.getLogger(BaseTest.class.getName());
-    public static final String newline = System.getProperty("line.separator");
-    public static final String pathSep = System.getProperty("path.separator");
-    public static final boolean TEST_IN_SAME_PROCESS = Boolean.parseBoolean(System.getProperty("antlr.testinprocess"));
+    private static final Logger LOGGER = Logger.getLogger(BaseTest.class.getName());,
+    public static final String newline = System.getProperty("line.separator");,
+    public static final String pathSep = System.getProperty("path.separator");,
+    public static final boolean TEST_IN_SAME_PROCESS = Boolean.parseBoolean(System.getProperty("antlr.testinprocess"));,
 
     /**
      * Build up the full classpath we need, including the surefire path (if present)
      */
-    public static final String CLASSPATH = System.getProperty("java.class.path");
-    public String tmpdir = null;
+    public static final String CLASSPATH = System.getProperty("java.class.path");,
+    public String tmpdir = null;,
 
     /** If error during parser execution, store stderr here; can't return
      *  stdout and stderr.  This doesn't trap errors from running antlr.
      */
-    protected String stderrDuringParse;
+    protected String stderrDuringParse;,
     @org.junit.Rule
 	public final TestRule testWatcher = new TestWatcher() {
 
@@ -139,7 +139,13 @@ public abstract class BaseTest{
 			eraseTempDir();
 		}
 
-	};
+	};,
+
+    @Override
+		protected void succeeded(Description description) {
+			// remove tmpdir if no error.
+			eraseTempDir();
+		}
 
     @Before
 	public void setUp() throws Exception {
@@ -859,22 +865,22 @@ public abstract class BaseTest{
 		}
 	}
 
- public static class StreamVacuum implements Runnable{
+    public static class StreamVacuum implements Runnable{
 
-     StringBuilder buf = new StringBuilder();
-     BufferedReader in;
-     Thread sucker;
+        StringBuilder buf = new StringBuilder();,
+        BufferedReader in;,
+        Thread sucker;,
 
-     public StreamVacuum(InputStream in) {
+        public StreamVacuum(InputStream in) {
 			this.in = new BufferedReader( new InputStreamReader(in) );
 		}
 
-     public void start() {
+        public void start() {
 			sucker = new Thread(this);
 			sucker.start();
 		}
 
-     @Override
+        @Override
 		public void run() {
 			try {
 				String line = in.readLine();
@@ -889,18 +895,18 @@ public abstract class BaseTest{
 			}
 		}
 
-     /** wait for the thread to finish */
+        /** wait for the thread to finish */
 
-     public void join() throws InterruptedException {
+        public void join() throws InterruptedException {
 			sucker.join();
 		}
 
-     @Override
+        @Override
 		public String toString() {
 			return buf.toString();
 		}
 
- }
+    }
     protected void checkGrammarSemanticsError(ErrorQueue equeue,
 											  GrammarSemanticsMessage expectedMessage)
 		throws Exception
@@ -967,7 +973,7 @@ public abstract class BaseTest{
 
 
         public FilteringTokenStream(TokenSource src) { super(src); }
-        Set<Integer> hide = new HashSet<Integer>();
+        Set<Integer> hide = new HashSet<Integer>();,
 
         @Override
         protected boolean sync(int i) {
@@ -1177,48 +1183,48 @@ public abstract class BaseTest{
 		assertFalse(text.isEmpty());
 	}
 
- public static class IntTokenStream implements TokenStream{
+    public static class IntTokenStream implements TokenStream{
 
-     IntegerList types;
-     int p=0;
+        IntegerList types;,
+        int p=0;,
 
-     public IntTokenStream(IntegerList types) { this.types = types; }
+        public IntTokenStream(IntegerList types) { this.types = types; }
 
-     @Override
+        @Override
 		public void consume() { p++; }
 
-     @Override
+        @Override
 		public int LA(int i) { return LT(i).getType(); }
 
-     @Override
+        @Override
 		public int mark() {
 			return index();
 		}
 
-     @Override
+        @Override
 		public int index() { return p; }
 
-     @Override
+        @Override
 		public void release(int marker) {
 			seek(marker);
 		}
 
-     @Override
+        @Override
 		public void seek(int index) {
 			p = index;
 		}
 
-     @Override
+        @Override
 		public int size() {
 			return types.size();
 		}
 
-     @Override
+        @Override
 		public String getSourceName() {
 			return null;
 		}
 
-     @Override
+        @Override
 		public Token LT(int i) {
 			CommonToken t;
 			int rawIndex = p + i - 1;
@@ -1228,41 +1234,41 @@ public abstract class BaseTest{
 			return t;
 		}
 
-     @Override
+        @Override
 		public Token get(int i) {
 			return new org.antlr.v4.runtime.CommonToken(types.get(i));
 		}
 
-     @Override
+        @Override
 		public TokenSource getTokenSource() {
 			return null;
 		}
 
-     @NotNull
+        @NotNull
 		@Override
 		public String getText() {
 			throw new UnsupportedOperationException("can't give strings");
 		}
 
-     @NotNull
+        @NotNull
 		@Override
 		public String getText(Interval interval) {
 			throw new UnsupportedOperationException("can't give strings");
 		}
 
-     @NotNull
+        @NotNull
 		@Override
 		public String getText(RuleContext ctx) {
 			throw new UnsupportedOperationException("can't give strings");
 		}
 
-     @NotNull
+        @NotNull
 		@Override
 		public String getText(Token start, Token stop) {
 			throw new UnsupportedOperationException("can't give strings");
 		}
 
- }
+    }
     /** Sort a list */
 
     public <T extends Comparable<? super T>> List<T> sort(List<T> data) {

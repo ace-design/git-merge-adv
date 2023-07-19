@@ -54,10 +54,10 @@ import com.openhtmltopdf.util.ThreadCtx;
 
 public class BlockBox extends Box implements InlinePaintable{
 
-    public static final int POSITION_VERTICALLY = 1;
-    public static final int POSITION_HORIZONTALLY = 2;
-    public static final int POSITION_BOTH = POSITION_VERTICALLY | POSITION_HORIZONTALLY;
-    public static final int CONTENT_UNKNOWN = 0;
+    public static final int POSITION_VERTICALLY = 1;,
+    public static final int POSITION_HORIZONTALLY = 2;,
+    public static final int POSITION_BOTH = POSITION_VERTICALLY | POSITION_HORIZONTALLY;,
+    public static final int CONTENT_UNKNOWN = 0;,
 
     /**
      * What type of direct child content this block box contains.
@@ -66,31 +66,39 @@ public class BlockBox extends Box implements InlinePaintable{
      * If this constraint is not met by the original document, the {@link BoxBuilder}
      * will insert {@link AnonymousBlockBox} with inline content.
      */
-    public static final int CONTENT_INLINE = 1;
-    public static final int CONTENT_BLOCK = 2;
-    public static final int CONTENT_EMPTY = 4;
-    protected static final int NO_BASELINE = Integer.MIN_VALUE;
-    private MarkerData _markerData;
-    private int _listCounter;
-    private PersistentBFC _persistentBFC;
-    private Box _staticEquivalent;
-    private boolean _needPageClear;
-    private ReplacedElement _replacedElement;
-    private List<Styleable> _inlineContent;
-    private boolean _topMarginCalculated;
-    private boolean _bottomMarginCalculated;
-    private MarginCollapseResult _pendingCollapseCalculation;
-    private int _minWidth;
-    private int _maxWidth;
-    private boolean _minMaxCalculated;
-    private boolean _dimensionsCalculated;
-    private boolean _needShrinkToFitCalculatation;
-    private CascadedStyle _firstLineStyle;
-    private CascadedStyle _firstLetterStyle;
-    private FloatedBoxData _floatedBoxData;
-    private int _childrenHeight;
-    private boolean _fromCaptionedTable;
-    private boolean _isReplaced;
+    public static final int CONTENT_INLINE = 1;,
+    public static final int CONTENT_BLOCK = 2;,
+    public static final int CONTENT_EMPTY = 4;,
+    protected static final int NO_BASELINE = Integer.MIN_VALUE;,
+    private MarkerData _markerData;,
+
+    public static enum ContentType{
+
+        UNKNOWN,
+        INLINE,
+        BLOCK,
+        EMPTY,
+
+    }    private int _listCounter;,
+    private PersistentBFC _persistentBFC;,
+    private Box _staticEquivalent;,
+    private boolean _needPageClear;,
+    private ReplacedElement _replacedElement;,
+    private List<Styleable> _inlineContent;,
+    private boolean _topMarginCalculated;,
+    private boolean _bottomMarginCalculated;,
+    private MarginCollapseResult _pendingCollapseCalculation;,
+    private int _minWidth;,
+    private int _maxWidth;,
+    private boolean _minMaxCalculated;,
+    private boolean _dimensionsCalculated;,
+    private boolean _needShrinkToFitCalculatation;,
+    private CascadedStyle _firstLineStyle;,
+    private CascadedStyle _firstLetterStyle;,
+    private FloatedBoxData _floatedBoxData;,
+    private int _childrenHeight;,
+    private boolean _fromCaptionedTable;,
+    private boolean _isReplaced;,
 
     public BlockBox() {
         super();
@@ -101,7 +109,7 @@ public class BlockBox extends Box implements InlinePaintable{
     	super.setElement(element);
     	_isReplaced = ThreadCtx.get().sharedContext().getReplacedElementFactory().isReplacedElement(element);
     }
-    private ContentType _childrenContentType = ContentType.UNKNOWN;
+    private ContentType _childrenContentType = ContentType.UNKNOWN;,
 
     public BlockBox copyOf() {
         BlockBox result = new BlockBox();
@@ -2261,6 +2269,14 @@ public class BlockBox extends Box implements InlinePaintable{
         }
     }
 
+    @Override
+                        public void operate(Box floater) {
+                            PaintingInfo info = floater.calcPaintingInfo(c, useCache);
+                            moveIfGreater(
+                                    result.getOuterMarginCorner(),
+                                    info.getOuterMarginCorner());
+                        }
+
     public int findOffset(Box box) {
         int ccount = getChildCount();
         for (int i = 0; i < ccount; i++) {
@@ -2279,8 +2295,8 @@ public class BlockBox extends Box implements InlinePaintable{
 
     private static class LastLineBoxContext{
 
-        public int current;
-        public LineBox line;
+        public int current;,
+        public LineBox line;,
 
         public LastLineBoxContext(int i) {
             this.current = i;
@@ -2489,8 +2505,8 @@ public class BlockBox extends Box implements InlinePaintable{
 
     public static class MarginCollapseResult{
 
-        private int maxPositive;
-        private int maxNegative;
+        private int maxPositive;,
+        private int maxNegative;,
 
         public void update(int value) {
             if (value < 0 && value < maxNegative) {

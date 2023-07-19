@@ -17,24 +17,24 @@ import java.util.TreeSet;
 
 public final class RuntimeOptionsBuilder{
 
-    private final List<String> parsedTagFilters = new ArrayList<>();
-    private final List<Pattern> parsedNameFilters = new ArrayList<>();
-    private Map<URI, Set<Integer>> parsedLineFilters = new HashMap<>();
-    private List<URI> parsedFeaturePaths = new ArrayList<>();
-    private final List<URI> parsedGlue = new ArrayList<>();
-    private final ParsedPluginData parsedPluginData = new ParsedPluginData();
-    private List<FeatureWithLines> parsedRerunPaths = null;
-    private List<String> parsedJunitOptions = new ArrayList<>();
-    private boolean parsedIsRerun = false;
-    private Integer parsedThreads = null;
-    private Boolean parsedDryRun = null;
-    private Boolean parsedStrict = null;
-    private Boolean parsedMonochrome = null;
-    private SnippetType parsedSnippetType = null;
-    private Boolean parsedWip = null;
-    private PickleOrder parsedPickleOrder = null;
-    private Class<? extends ObjectFactory> parsedObjectFactoryClass = null;
-    private Integer parsedCount = null;
+    private final List<String> parsedTagFilters = new ArrayList<>();,
+    private final List<Pattern> parsedNameFilters = new ArrayList<>();,
+    private Map<URI, Set<Integer>> parsedLineFilters = new HashMap<>();,
+    private List<URI> parsedFeaturePaths = new ArrayList<>();,
+    private final List<URI> parsedGlue = new ArrayList<>();,
+    private final ParsedPluginData parsedPluginData = new ParsedPluginData();,
+    private List<FeatureWithLines> parsedRerunPaths = null;,
+    private List<String> parsedJunitOptions = new ArrayList<>();,
+    private boolean parsedIsRerun = false;,
+    private Integer parsedThreads = null;,
+    private Boolean parsedDryRun = null;,
+    private Boolean parsedStrict = null;,
+    private Boolean parsedMonochrome = null;,
+    private SnippetType parsedSnippetType = null;,
+    private Boolean parsedWip = null;,
+    private PickleOrder parsedPickleOrder = null;,
+    private Class<? extends ObjectFactory> parsedObjectFactoryClass = null;,
+    private Integer parsedCount = null;,
 
     public RuntimeOptionsBuilder addRerun(Collection<FeatureWithLines> featureWithLines) {
         if (parsedRerunPaths == null) {
@@ -243,8 +243,8 @@ public final class RuntimeOptionsBuilder{
 
     static final class ParsedPluginData{
 
-        private ParsedPlugins formatters = new ParsedPlugins();
-        private ParsedPlugins summaryPrinters = new ParsedPlugins();
+        private ParsedPlugins formatters = new ParsedPlugins();,
+        private ParsedPlugins summaryPrinters = new ParsedPlugins();,
 
         void addPluginName(String name, boolean isAddPlugin) {
             PluginOption pluginOption = PluginOption.parse(name);
@@ -279,8 +279,8 @@ public final class RuntimeOptionsBuilder{
 
         private static class ParsedPlugins{
 
-            private List<Options.Plugin> names = new ArrayList<>();
-            private boolean clobber = false;
+            private List<Options.Plugin> names = new ArrayList<>();,
+            private boolean clobber = false;,
 
             void addName(Options.Plugin name, boolean isAddOption) {
                 names.add(name);
@@ -307,8 +307,8 @@ public final class RuntimeOptionsBuilder{
 
     private static class ParsedOptionNames{
 
-        private List<String> names = new ArrayList<>();
-        private boolean clobber = false;
+        private List<String> names = new ArrayList<>();,
+        private boolean clobber = false;,
 
         void addName(String name, boolean isAddOption) {
             names.add(name);
