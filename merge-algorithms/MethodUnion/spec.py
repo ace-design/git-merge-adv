@@ -748,7 +748,7 @@ class Python(Lang):
                             methodName = child.name
                         
                             methodindent= str(child.col_offset)
-                            newMethod = Method(astor.to_source(child),version,None,child)
+                            newMethod = Method(methodName,astor.to_source(child),methodName,version,None,0,child)
                             if (className+" "+methodName in all_methods.keys()):
                                 nodepresent = False
                                 for methodObject in all_methods[className+" "+methodName]:
@@ -770,7 +770,7 @@ class Python(Lang):
                             newClass.methods.append(child.name)
                             methodName = child.name
                             methodindent= str(child.col_offset)
-                            newMethod = Method(astor.to_source(child),version,None,child)
+                            newMethod = Method(methodName,astor.to_source(child),methodName,version,None,0,child)
                             if (className+" "+methodName in all_methods.keys()):
                                 nodepresent = False
                                 for methodObject in all_methods[className+" "+methodName]:
@@ -805,7 +805,7 @@ class Python(Lang):
 
         return methods
     
-    def output_methods(self):
+    def output_body(self):
         print(codeseq)
         print(all_methods)
         body  =  self.initialize_body()
@@ -815,7 +815,7 @@ class Python(Lang):
                 for nod in all_methods[methodname]:
                     if nod.selected == True:
                         pointer = codeseq.index("function "+methodname.split(" ")[1])
-                        codearray[pointer] = nod.method_name
+                        codearray[pointer] = nod.full_method
         for classname in all_classes.keys():
             classobj = all_classes[classname][0]
             if classobj.version == set("base"):
@@ -828,7 +828,7 @@ class Python(Lang):
             for metho in classobj.methods:
                 for mo in all_methods[classname+' '+metho]:
                     if mo.selected == True:
-                        methodcode = mo.method_name
+                        methodcode = mo.full_method
                 # print(methodcode)
                 # print(add_indent(methodcode,indent))
                 classcode = classcode + add_indent(methodcode,indent)+'\n'
@@ -852,6 +852,9 @@ class Python(Lang):
     
     def get_method_ref(self):
         return dict(all_methods)
+    
+    def get_field_ref(self):
+        return {"None":[]}
     
 
 

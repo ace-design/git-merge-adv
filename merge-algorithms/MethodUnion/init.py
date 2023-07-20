@@ -42,7 +42,7 @@ def main():
     result=merger.body_merge(lang,base_content,right_content,left_content)
     if result == "**to_be_handled_by_git**":
         print("**to_be_handled_by_git**")
-        result=merger.git_merge(lang,base_content,right_content,left_content)
+        result=merger.git_merge(base_content,right_content,left_content,lang.get_lang())
     lang.getUsages(result)
 
     import_result=merger.import_merge(lang,base_import,right_import,left_import)

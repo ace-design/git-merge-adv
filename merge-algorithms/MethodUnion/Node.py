@@ -256,7 +256,7 @@ class Method:
         return self.selected
 
     def __eq__(self,obj):
-        return (self.full_method==obj.get_method() and self.super==obj.get_super())
+        return (type(obj)==Method and self.full_method==obj.get_method() and self.super==obj.get_super())
     
     def __hash__(self):
         return hash(self.get_method()) 

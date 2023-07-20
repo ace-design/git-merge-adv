@@ -22,7 +22,6 @@ def clean(type):
 def git_merge(base,right,left,language):
 
     #Temporary files to perform git 3-way merge algorithm.
-
     writefile("base_content."+language,base)
     writefile("right_content."+language,right)
     writefile("left_content."+language,left)
