@@ -32,6 +32,11 @@ Language.build_library(
 Java_Lang = Language(path+'/build/my-languages.so', 'java')
 
 
+def add_indent(string, indent):
+    lines = string.split("\n")  # Split the string into individual lines
+    indented_lines = [indent + line for line in lines]  # Add the indent to each line
+    indented_string = "\n".join(indented_lines)  # Join the lines back together with newline characters
+    return indented_string
 
 ## Abstract Class Definition (Best you can do with Python lol)
 class Lang(ABC):
@@ -507,8 +512,6 @@ class Python(Lang):
             return False
 
 
-
-    
     def getClasses(self,content,version):
         str_content = ""
         pointer = 0
@@ -548,6 +551,70 @@ class Python(Lang):
                     all_methods[methodindent+" "+methodName]=[newMethod]
                     methods.append(newMethod)
             elif isinstance(nod, ast.ClassDef):
+                className = nod.name
+                if "class "+className not in codeseq:
+                    codeseq.insert(pointer,"class "+className)
+                    pointer = pointer+1
+                else:
+                    pointer = (codeseq.index("class "+methodName)) + 1
+                # methodindent= str(nod.col_offset)
+                newClass = Class(className,className,0,None,version,nod)
+
+                #Method declaration is referenced by its signature.
+
+                if (className in all_classes.keys()):
+                    classnod =  all_classes[className]
+                    classnod.add_version(version)
+                    for child in nod.body:
+                        if isinstance(child,ast.Assign):
+                            if astor.to_source(child) not in classnod.declarations:
+                                classnod.declarations.append(astor.to_source(child))
+                        elif isinstance(child,ast.FunctionDef):
+                            if child.name not in classnod.methods:
+                                classnod.methods.append(child.name)
+                            methodName = child.name
+                        
+                            methodindent= str(child.col_offset)
+                            newMethod = Method(astor.to_source(child),version,None,child)
+                            if (className+" "+methodName in all_methods.keys()):
+                                nodepresent = False
+                                for methodObject in all_methods[className+" "+methodName]:
+                                    if astor.to_source(methodObject.astnode) == astor.to_source(child):
+                                        methodObject.add_version(version)
+                                        nodepresent =  True
+                                if nodepresent == False:
+                                    all_methods[className+" "+methodName].append(newMethod)
+                                    methods.append(newMethod)
+                            else:
+                                all_methods[className+" "+methodName ]=[newMethod]
+                                methods.append(newMethod)
+                else:
+                    all_classes[className]=[newClass]
+                    for child in nod.body:
+                        if isinstance(child,ast.Assign):
+                            newClass.declarations.append(astor.to_source(child))
+                        elif isinstance(child,ast.FunctionDef):
+                            newClass.methods.append(child.name)
+                            methodName = child.name
+                            methodindent= str(child.col_offset)
+                            newMethod = Method(astor.to_source(child),version,None,child)
+                            if (className+" "+methodName in all_methods.keys()):
+                                nodepresent = False
+                                for methodObject in all_methods[className+" "+methodName]:
+                                    if astor.to_source(methodObject.astnode) == astor.to_source(child):
+                                        methodObject.add_version(version)
+                                        nodepresent =  True
+                                if nodepresent == False:
+                                    all_methods[className+" "+methodName].append(newMethod)
+                                    methods.append(newMethod)
+                            else:
+                                all_methods[className+" "+methodName ]=[newMethod]
+                                methods.append(newMethod)
+
+
+
+            
+            elif isinstance(nod, ast.ClassDef):
                 pass
 
             elif isinstance(nod, ast.Assign):
@@ -569,18 +636,40 @@ class Python(Lang):
         print(codeseq)
         print(all_methods)
         body  =  self.initialize_body()
-        methodarray = [None]*len(codeseq)
+        codearray = [None]*len(codeseq)
         for methodname in all_methods.keys():
-            for nod in all_methods[methodname]:
-                if nod.selected == True:
-                    pointer = codeseq.index("function "+methodname.split(" ")[1])
-                    methodarray[pointer] = nod.method_name
+            if methodname.split(" ")[0]=="0":
+                for nod in all_methods[methodname]:
+                    if nod.selected == True:
+                        pointer = codeseq.index("function "+methodname.split(" ")[1])
+                        codearray[pointer] = nod.method_name
+        for classname in all_classes.keys():
+            classobj = all_classes[classname][0]
+            if classobj.version == set("base"):
+                continue
+            classcode = ''
+            indent = "    "
+            classcode = classcode+ (astor.to_source(classobj.node)).split("\n")[0]+'\n'
+            for i in classobj.declarations:
+                classcode = classcode + indent+i
+            for metho in classobj.methods:
+                for mo in all_methods[classname+' '+metho]:
+                    if mo.selected == True:
+                        methodcode = mo.method_name
+                # print(methodcode)
+                # print(add_indent(methodcode,indent))
+                classcode = classcode + add_indent(methodcode,indent)+'\n'
+            
 
-        for i  in methodarray:
+            pointer = codeseq.index("class "+classname)
+            codearray[pointer] = classcode
+
+
+        for i  in codearray:
             if i:
                 body = body + i + '\n'
         lastele = codeseq.pop()
-        if lastele == "if ":
+        if lastele[0:3] == "if ":
             body = body + lastele
         return body
 
@@ -599,7 +688,7 @@ class Python(Lang):
     def initialize_body(self):
         body = ""
         for code in codeseq:
-            if code[0:13]!="if " and code[0:9]!="function " and code[0:6]!="class ":
+            if code[0:3]!="if " and code[0:9]!="function " and code[0:6]!="class ":
                 body = body+code+"\n"
                         
 
