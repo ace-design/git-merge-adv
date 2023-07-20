@@ -1,0 +1,6 @@
+deletions: 1106.0
+insertions: 2183.0
+moves: 1312.0
+diff_path: 111.0
+num_conflicts: 82.0
+Overall: 2780.1284143003177

@@ -254,12 +254,6 @@ public String getInfo() {
      * @return The context this manager is associated with
      */
 
-    @Override
-    public void remove(String id) throws IOException {
-        DynamoUtils.deleteSession(dynamo, sessionTableName, id);
-        keys.remove(id);
-    }
-
     private Context getAssociatedContext() {
         try {
             return (Context) getManager().getContainer();

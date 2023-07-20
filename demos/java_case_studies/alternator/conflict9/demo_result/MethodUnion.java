@@ -70,11 +70,6 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
 		return handler.batchWriteItem(batchWriteItemRequest);
 	}
 
-    public PutItemResult putItem(PutItemRequest putItemRequest)
-			throws AmazonServiceException, AmazonClientException, ConditionalCheckFailedException {
-		return handler.putItem(putItemRequest);
-	}
-
     public DescribeTableResult describeTable(DescribeTableRequest describeTableRequest)
 			throws AmazonServiceException, AmazonClientException {
 		return handler.describeTable(describeTableRequest);
@@ -97,10 +92,17 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
 
 
     public PutItemResult putItem(PutItemRequest putItemRequest)
+<<<<<<< left_content.java
+			throws AmazonServiceException, AmazonClientException, ConditionalCheckFailedException {
+		return handler.putItem(putItemRequest);
+	}
+=======
 			throws AmazonServiceException, AmazonClientException {
 
             return handler.putItem(putItemRequest);
 }
+>>>>>>> right_content.java
+
 
     public BatchGetItemResult batchGetItem(BatchGetItemRequest batchGetItemRequest)
 			throws AmazonServiceException, AmazonClientException {
