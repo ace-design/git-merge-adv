@@ -56,7 +56,7 @@ class MainRoot:
 
 
 class Class:
-    def __init__(self,name,full_name,indent,closer,version):
+    def __init__(self,name,full_name,indent,closer,version,nod):
         self.version=set()
         self.version.add(version)
         self.closing=closer
@@ -67,6 +67,7 @@ class Class:
         self.sub_classes=[]
         self.declarations=[]
         self.selected=False
+        self.node = nod
     
     def add_method(self,method,version):
         if (method not in self.methods):
