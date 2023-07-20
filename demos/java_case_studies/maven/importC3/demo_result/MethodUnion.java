@@ -41,6 +41,7 @@ public class Slf4jMavenTransferListener extends AbstractTransferListener{
         this.out = LoggerFactory.getLogger( Slf4jMavenTransferListener.class );
     }
 
+
     @Override
     public void transferInitiated( TransferEvent event )
     {

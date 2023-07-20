@@ -17,12 +17,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.awt.image.IndexColorModel;
 import java.io.IOException;
+import java.awt.image.IndexColorModel;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.lang.reflect.InvocationTargetException;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -284,72 +282,35 @@ public class ImageServletResponseImplTestCase{
         verify(response).getOutputStream();
     }
 
-    private static void showIt(final BufferedImage expected, final BufferedImage actual, final BufferedImage diff) {
+    
+
+    
+
+    
+
+    private static BufferedImage flatten(final BufferedImage pImage, final Color pBackgroundColor) {
+        BufferedImage image = ImageUtil.toBuffered(pImage, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g = image.createGraphics();
         try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                public void run() {
-                    JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-                    panel.add(new BlackLabel("expected", expected));
-                    panel.add(new BlackLabel("actual", actual));
-                    if (diff != null) {
-                        panel.add(new BlackLabel("diff", diff));
-                    }
-                    JScrollPane scroll = new JScrollPane(panel);
-                    scroll.setBorder(BorderFactory.createEmptyBorder());
-                    JOptionPane.showMessageDialog(null, scroll);
-                }
-            });
+            g.setComposite(AlphaComposite.DstOver);
+            g.setColor(pBackgroundColor);
+            g.fillRect(0, 0, pImage.getWidth(), pImage.getHeight());
         }
-        catch (InterruptedException ignore) {
+        finally {
+            g.dispose();
         }
-        catch (InvocationTargetException ignore) {
-        }
+
+        return image;
     }
 
-    public void run() {
-                    JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-                    panel.add(new BlackLabel("expected", expected));
-                    panel.add(new BlackLabel("actual", actual));
-                    if (diff != null) {
-                        panel.add(new BlackLabel("diff", diff));
-                    }
-                    JScrollPane scroll = new JScrollPane(panel);
-                    scroll.setBorder(BorderFactory.createEmptyBorder());
-                    JOptionPane.showMessageDialog(null, scroll);
-                }
-
-    @Test
-    public void testTranscodeResponseIndexedCM() throws IOException {
-        // Custom setup
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getContextPath()).thenReturn("/ape");
-        when(request.getRequestURI()).thenReturn("/ape/" + IMAGE_NAME_GIF);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        HttpServletResponse response = mock(HttpServletResponse.class);
-        when(response.getOutputStream()).thenReturn(new OutputStreamAdapter(out));
-
-        ImageServletResponseImpl imageResponse = new ImageServletResponseImpl(request, response, context);
-        fakeResponse(request, imageResponse);
-
-        // Force transcode to JPEG
-        imageResponse.setOutputContentType("image/jpeg");
-
-        // Flush image to wrapped response
-        imageResponse.flush();
-
-        assertTrue("Content has no data", out.size() > 0);
-
-        // Test that image data is still readable
-        BufferedImage outImage = ImageIO.read(new ByteArrayInputStream(out.toByteArray()));
-        assertNotNull(outImage);
-        assertEquals(IMAGE_DIMENSION_GIF.width, outImage.getWidth());
-        assertEquals(IMAGE_DIMENSION_GIF.height, outImage.getHeight());
-
-        BufferedImage image = flatten(ImageIO.read(context.getResource("/" + IMAGE_NAME_GIF)), Color.WHITE);
-
-        assertSimilarImage(image, outImage, 96f);
-    }
+    /**
+     * Makes sure images are the same, taking JPEG artifacts into account.
+     *
+     * @param pExpected the expected image
+     * @param pActual the actual image
+     * @param pArtifactThreshold the maximum allowed difference between the expected and actual pixel value
+     */
 
     @Test
     public void testTranscodeResponseIndexColorModelGIFToJPEG() throws IOException {
@@ -390,29 +351,6 @@ public class ImageServletResponseImplTestCase{
         assertSimilarImage(image, outImage, 96f);
     }
 
-    private static BufferedImage flatten(final BufferedImage pImage, final Color pBackgroundColor) {
-        BufferedImage image = ImageUtil.toBuffered(pImage, BufferedImage.TYPE_INT_ARGB);
-
-        Graphics2D g = image.createGraphics();
-        try {
-            g.setComposite(AlphaComposite.DstOver);
-            g.setColor(pBackgroundColor);
-            g.fillRect(0, 0, pImage.getWidth(), pImage.getHeight());
-        }
-        finally {
-            g.dispose();
-        }
-
-        return image;
-    }
-
-    /**
-     * Makes sure images are the same, taking JPEG artifacts into account.
-     *
-     * @param pExpected the expected image
-     * @param pActual the actual image
-     * @param pArtifactThreshold the maximum allowed difference between the expected and actual pixel value
-     */
 
     private void assertSimilarImage(final BufferedImage pExpected, final BufferedImage pActual, final float pArtifactThreshold) {
         for (int y = 0; y < pExpected.getHeight(); y++) {
@@ -482,6 +420,7 @@ public class ImageServletResponseImplTestCase{
             assertSimilarImageTransparent(image, outImage, 10f);
         }
     }
+
 
     @Test
     public void testNotFoundInput() throws IOException {
@@ -614,6 +553,7 @@ public class ImageServletResponseImplTestCase{
             throw assertionError;
         }
     }
+
 
     @Test
     public void testReplaceResponse() throws IOException {
@@ -1107,16 +1047,6 @@ public class ImageServletResponseImplTestCase{
     }
 
     @Test
-    public void testGetAOIAbsolute() {
-        assertEquals(new Rectangle(10, 10, 100, 100), ImageServletResponseImpl.getAOI(200, 200, 10, 10, 100, 100, false, false));
-    }
-
-    @Test
-    public void testGetAOIAbsoluteOverflowX() {
-        assertEquals(new Rectangle(10, 10, 90, 100), ImageServletResponseImpl.getAOI(100, 200, 10, 10, 100, 100, false, false));
-    }
-
-    @Test
     public void testReadWithNonSquareUniformSourceRegionAndResize() throws IOException {
         Rectangle sourceRegion = new Rectangle(-1, -1, 170, 300);
         Dimension size = new Dimension(150, 120);
@@ -1180,66 +1110,6 @@ public class ImageServletResponseImplTestCase{
     }
 
     @Test
-    public void testGetAOIAbsoluteOverflowW() {
-        assertEquals(new Rectangle(0, 10, 100, 100), ImageServletResponseImpl.getAOI(100, 200, 0, 10, 110, 100, false, false));
-    }
-
-    @Test
-    public void testGetAOIAbsoluteOverflowY() {
-        assertEquals(new Rectangle(10, 10, 100, 90), ImageServletResponseImpl.getAOI(200, 100, 10, 10, 100, 100, false, false));
-    }
-
-    @Test
-    public void testGetAOIAbsoluteOverflowH() {
-        assertEquals(new Rectangle(10, 0, 100, 100), ImageServletResponseImpl.getAOI(200, 100, 10, 0, 100, 110, false, false));
-    }
-
-    @Test
-    public void testGetAOIUniformCenteredS2SUp() {
-        assertEquals(new Rectangle(0, 0, 100, 100), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 333, 333, false, true));
-    }
-
-    @Test
-    public void testGetAOIUniformCenteredS2SDown() {
-        assertEquals(new Rectangle(0, 0, 100, 100), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 33, 33, false, true));
-    }
-
-    @Test
-    public void testGetAOIUniformCenteredS2SNormalized() {
-        assertEquals(new Rectangle(0, 0, 100, 100), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 100, 100, false, true));
-    }
-
-    @Test
-    public void testGetAOIUniformCenteredS2W() {
-        assertEquals(new Rectangle(0, 25, 100, 50), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 200, 100, false, true));
-    }
-
-    @Test
-    public void testGetAOIUniformCenteredS2WNormalized() {
-        assertEquals(new Rectangle(0, 25, 100, 50), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 100, 50, false, true));
-    }
-
-    @Test
-    public void testGetAOIUniformCenteredS2N() {
-        assertEquals(new Rectangle(25, 0, 50, 100), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 100, 200, false, true));
-    }
-
-    @Test
-    public void testGetAOIUniformCenteredS2NNormalized() {
-        assertEquals(new Rectangle(25, 0, 50, 100), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 50, 100, false, true));
-    }
-
-    @Test
-    public void testGetAOIUniformCenteredW2S() {
-        assertEquals(new Rectangle(50, 0, 100, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 333, 333, false, true));
-    }
-
-    @Test
-    public void testGetAOIUniformCenteredW2SNormalized() {
-        assertEquals(new Rectangle(50, 0, 100, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 100, 100, false, true));
-    }
-
-    @Test
     public void testReadWithAllNegativeSourceRegion() throws IOException {
         Rectangle sourceRegion = new Rectangle(-1, -1, -1, -1);
         Dimension size = new Dimension(100, 120);
@@ -1282,247 +1152,135 @@ public class ImageServletResponseImplTestCase{
         verify(response).setContentType(CONTENT_TYPE_PNG);
     }
 
-    @Test
-    public void testGetAOIUniformCenteredW2W() {
-        assertEquals(new Rectangle(0, 0, 200, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 100, 50, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredW2WW() {
-        assertEquals(new Rectangle(0, 25, 200, 50), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 200, 50, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredW2WN() {
-        assertEquals(new Rectangle(25, 0, 150, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 75, 50, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredW2WNNormalized() {
-        assertEquals(new Rectangle(25, 0, 150, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 150, 100, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredW2WNormalized() {
-        assertEquals(new Rectangle(0, 0, 200, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 200, 100, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredW2N() {
-        assertEquals(new Rectangle(75, 0, 50, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 100, 200, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredW2NNormalized() {
-        assertEquals(new Rectangle(75, 0, 50, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 50, 100, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredN2S() {
-        assertEquals(new Rectangle(0, 50, 100, 100), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 333, 333, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredN2SNormalized() {
-        assertEquals(new Rectangle(0, 50, 100, 100), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 100, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredN2W() {
-        assertEquals(new Rectangle(0, 75, 100, 50), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 200, 100, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredN2WNormalized() {
-        assertEquals(new Rectangle(0, 75, 100, 50), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 50, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredN2N() {
-        assertEquals(new Rectangle(0, 0, 100, 200), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 50, 100, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredN2NN() {
-        assertEquals(new Rectangle(25, 0, 50, 200), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 25, 100, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredN2NW() {
-        assertEquals(new Rectangle(0, 33, 100, 133), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 75, 100, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredN2NWNormalized() {
-        assertEquals(new Rectangle(0, 37, 100, 125), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 125, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOIUniformCenteredN2NNormalized() {
-        assertEquals(new Rectangle(0, 0, 100, 200), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 200, false, true));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredS2SUp() {
-        assertEquals(new Rectangle(0, 0, 100, 100), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 333, 333, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredS2SDown() {
-        assertEquals(new Rectangle(33, 33, 33, 33), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 33, 33, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredS2SSame() {
-        assertEquals(new Rectangle(0, 0, 100, 100), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 100, 100, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredS2WOverflow() {
-        assertEquals(new Rectangle(0, 0, 100, 100), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 200, 100, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredS2W() {
-        assertEquals(new Rectangle(40, 45, 20, 10), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 20, 10, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredS2WMax() {
-        assertEquals(new Rectangle(0, 25, 100, 50), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 100, 50, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredS2NOverflow() {
-        assertEquals(new Rectangle(0, 0, 100, 100), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 100, 200, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredS2N() {
-        assertEquals(new Rectangle(45, 40, 10, 20), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 10, 20, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredS2NMax() {
-        assertEquals(new Rectangle(25, 0, 50, 100), ImageServletResponseImpl.getAOI(100, 100, -1, -1, 50, 100, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2SOverflow() {
-        assertEquals(new Rectangle(0, 0, 200, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 333, 333, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2S() {
-        assertEquals(new Rectangle(75, 25, 50, 50), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 50, 50, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2SMax() {
-        assertEquals(new Rectangle(50, 0, 100, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 100, 100, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2WOverflow() {
-        assertEquals(new Rectangle(0, 0, 200, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 300, 200, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2W() {
-        assertEquals(new Rectangle(50, 25, 100, 50), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 100, 50, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2WW() {
-        assertEquals(new Rectangle(10, 40, 180, 20), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 180, 20, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2WN() {
-        assertEquals(new Rectangle(62, 25, 75, 50), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 75, 50, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2WSame() {
-        assertEquals(new Rectangle(0, 0, 200, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 200, 100, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2NOverflow() {
-        assertEquals(new Rectangle(50, 0, 100, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 100, 200, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2N() {
-        assertEquals(new Rectangle(83, 25, 33, 50), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 33, 50, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredW2NMax() {
-        assertEquals(new Rectangle(75, 0, 50, 100), ImageServletResponseImpl.getAOI(200, 100, -1, -1, 50, 100, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2S() {
-        assertEquals(new Rectangle(33, 83, 33, 33), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 33, 33, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2SMax() {
-        assertEquals(new Rectangle(0, 50, 100, 100), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 100, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2WOverflow() {
-        assertEquals(new Rectangle(0, 50, 100, 100), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 200, 100, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2W() {
-        assertEquals(new Rectangle(40, 95, 20, 10), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 20, 10, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2WMax() {
-        assertEquals(new Rectangle(0, 75, 100, 50), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 50, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2N() {
-        assertEquals(new Rectangle(45, 90, 10, 20), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 10, 20, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2NSame() {
-        assertEquals(new Rectangle(0, 0, 100, 200), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 200, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2NN() {
-        assertEquals(new Rectangle(37, 50, 25, 100), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 25, 100, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2NW() {
-        assertEquals(new Rectangle(12, 50, 75, 100), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 75, 100, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2NWMax() {
-        assertEquals(new Rectangle(0, 37, 100, 125), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 125, false, false));
-    }
+    
 
-    @Test
-    public void testGetAOICenteredN2NMax() {
-        assertEquals(new Rectangle(0, 0, 100, 200), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 200, false, false));
-    }
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     private static class BlackLabel extends JLabel{
 
         private final Paint checkeredBG;,
         private boolean opaque = true;,
 
-        public BlackLabel(final String text, final BufferedImage outImage) {
+        <<<<<<< left_content.java
+public BlackLabel(final String text, final BufferedImage outImage) {
             super(text, new BufferedImageIcon(outImage), JLabel.CENTER);
             setOpaque(true);
             setBackground(Color.BLACK);
@@ -1533,11 +1291,15 @@ public class ImageServletResponseImplTestCase{
 
             checkeredBG = createTexture();
         }
+=======
+>>>>>>> right_content.java
+
 
         @Override
         public boolean isOpaque() {
             return opaque && super.isOpaque();
         }
+
 
         @Override
         protected void paintComponent(Graphics graphics) {
@@ -1562,6 +1324,7 @@ public class ImageServletResponseImplTestCase{
             }
         }
 
+
         private static Paint createTexture() {
             GraphicsConfiguration graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
             BufferedImage pattern = graphicsConfiguration.createCompatibleImage(20, 20);
@@ -1579,6 +1342,7 @@ public class ImageServletResponseImplTestCase{
 
             return new TexturePaint(pattern, new Rectangle(pattern.getWidth(), pattern.getHeight()));
         }
+
 
     }
     private static class MockLogger implements Answer<Void>{
@@ -1598,6 +1362,7 @@ public class ImageServletResponseImplTestCase{
 
             return null;
         }
+
 
     }
 }

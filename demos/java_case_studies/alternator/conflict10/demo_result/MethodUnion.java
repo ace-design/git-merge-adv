@@ -171,6 +171,17 @@ public class AlternatorItemTest extends AlternatorTest{
     }
 
     @Test
+    public void getItemWithoutKeyTest() {
+        GetItemRequest request = new GetItemRequest();
+        request.setTableName(tableName);
+		try {
+			getClient().getItem(request);
+			Assert.assertTrue(false);// Should have thrown an exception
+		} catch (AmazonServiceException ase) {
+		}
+    }
+
+    @Test
     public void updateItemInTableTest() {
         AttributeValue hash = putItemInDb();
         Map<String, AttributeValueUpdate> attrToUp = new HashMap<String, AttributeValueUpdate>();
@@ -183,17 +194,6 @@ public class AlternatorItemTest extends AlternatorTest{
         UpdateItemResult res = getClient().updateItem(request);
         Assert.assertNotNull(res);
         Assert.assertNotNull(res.getAttributes());
-    }
-
-    @Test
-    public void getItemWithoutKeyTest() {
-        GetItemRequest request = new GetItemRequest();
-        request.setTableName(tableName);
-		try {
-			getClient().getItem(request);
-			Assert.assertTrue(false);// Should have thrown an exception
-		} catch (AmazonServiceException ase) {
-		}
     }
 
     @Test
@@ -216,17 +216,6 @@ public class AlternatorItemTest extends AlternatorTest{
     }
 
     @Test
-    public void deleteItem() {
-        KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
-        createTable(tableName, schema);
-        AttributeValue hash = new AttributeValue("ad"); //createStringAttribute();
-        getClient().putItem(new PutItemRequest().withTableName(tableName).withItem(createGenericItem(hash)));
-        DeleteItemRequest request = new DeleteItemRequest().withTableName(tableName).withKey(new Key(hash));
-        DeleteItemResult result = getClient().deleteItem(request);
-        Assert.assertNotNull(result.getConsumedCapacityUnits());
-    }
-
-    @Test
     public void updateItemWithoutKeyTest() {
         AttributeValue hash = putItemInDb();
         Map<String, AttributeValueUpdate> attrToUp = new HashMap<String, AttributeValueUpdate>();
@@ -243,6 +232,17 @@ public class AlternatorItemTest extends AlternatorTest{
 			Assert.assertTrue(false);// Should have thrown an exception
 		} catch (AmazonServiceException ase) {
 		}
+    }
+
+    @Test
+    public void deleteItem() {
+        KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
+        createTable(tableName, schema);
+        AttributeValue hash = new AttributeValue("ad"); //createStringAttribute();
+        getClient().putItem(new PutItemRequest().withTableName(tableName).withItem(createGenericItem(hash)));
+        DeleteItemRequest request = new DeleteItemRequest().withTableName(tableName).withKey(new Key(hash));
+        DeleteItemResult result = getClient().deleteItem(request);
+        Assert.assertNotNull(result.getConsumedCapacityUnits());
     }
 
     @Test

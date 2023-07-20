@@ -63,14 +63,14 @@ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
 
 public class DomainResourceTest{
 
-    private static final IStandaloneCartridge CARTRIDGE_JBOSSAS_7 = new StandaloneCartridge("jbossas-7");,
-    private static final IStandaloneCartridge CARTRIDGE_JENKINS_14 = new StandaloneCartridge("jenkins-1.4");,
-    private static final IEmbeddableCartridge EMBEDDABLE_CARTRIDGE_MYSQL_51 = new EmbeddableCartridge("mysql-5.1");,
-    private static final IEmbeddableCartridge EMBEDDABLE_CARTRIDGE_MONGODB_22 = new EmbeddableCartridge("mongodb-2.2");,
     private IUser user;,
+    private static final IStandaloneCartridge CARTRIDGE_JBOSSAS_7 = new StandaloneCartridge("jbossas-7");,
     private IDomain domain;,
+    private static final IStandaloneCartridge CARTRIDGE_JENKINS_14 = new StandaloneCartridge("jenkins-1.4");,
     private IHttpClient clientMock;,
+    private static final IEmbeddableCartridge EMBEDDABLE_CARTRIDGE_MYSQL_51 = new EmbeddableCartridge("mysql-5.1");,
     private HttpClientMockDirector mockDirector;,
+    private static final IEmbeddableCartridge EMBEDDABLE_CARTRIDGE_MONGODB_22 = new EmbeddableCartridge("mongodb-2.2");,
     @Rule
 	public ExpectedException expectedException = ExpectedException.none();,
     @Rule
@@ -310,7 +310,9 @@ public class DomainResourceTest{
 				.hasApplications(1);
 	}
 
-    @Test
+
+    <<<<<<< left_content.java
+@Test
 	public void shouldCreateApplication() throws Throwable {
 		// pre-conditions
 		mockDirector
@@ -335,6 +337,9 @@ public class DomainResourceTest{
 		assertThat(LinkRetriever.retrieveLinks(app)).hasSize(18);
 		assertThat(domain.getApplications()).hasSize(1).contains(app);
 	}
+=======
+>>>>>>> right_content.java
+
 
     @Test
 	public void shouldUpdateDownloadableStandaloneCartridgeAfterDeploy() throws Throwable {
@@ -362,6 +367,7 @@ public class DomainResourceTest{
 			.hasDisplayName("Go 1.1")
 			.hasUrl(Cartridges.GO_DOWNLOAD_URL);
 	}
+
 
     @Test
 	public void shouldCreateApplicationWithEmbeddedCartridges() throws Throwable {
@@ -399,6 +405,7 @@ public class DomainResourceTest{
 		assertThat(domain.getApplications()).hasSize(1).contains(app);
 	}
 
+
     @Test
     public void shouldRequestCreateApplicationWithDownloadableCartridge() throws Throwable {    	
         // pre-conditions
@@ -421,6 +428,7 @@ public class DomainResourceTest{
 								.add(new ParameterValueMap().add(IOpenShiftJsonConstants.PROPERTY_URL, Cartridges.FOREMAN_DOWNLOAD_URL))
 								.add(new ParameterValueMap().add(IOpenShiftJsonConstants.PROPERTY_NAME, Cartridges.mysql51().getName()))));
     }
+
 
     @Test
 	public void shouldHaveMessagesWhenCreating() throws Throwable {
@@ -538,16 +546,6 @@ public class DomainResourceTest{
 		);
 	}
 
-    @Test(expected = OpenShiftException.class)
-	public void shouldNotCreateApplicationWithMissingCartridge() throws Throwable {
-		// pre-conditions
-		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_NOAPPS);
-		// operation
-		domain.createApplication("foo", null, null, null);
-		// verifications
-		// expected exception
-	}
-
     @Test
 	public void shouldRequestCreateApplicationWithEmbeddableCartridges() throws Throwable {
 		// pre-conditions
@@ -584,6 +582,42 @@ public class DomainResourceTest{
 										Cartridges.MYSQL_51_NAME))));
 	}
 
+    @Test(expected = OpenShiftException.class)
+	public void shouldNotCreateApplicationWithMissingName() throws Throwable {
+		// pre-conditions
+		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_1EMBEDDED);
+		// operation
+		domain.createApplication(null, Cartridges.as7(), null, null);
+		// verifications
+		// expected exception
+	}
+
+    @Test(expected = OpenShiftException.class)
+	public void shouldNotCreateApplicationWithMissingCartridge() throws Throwable {
+		// pre-conditions
+		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_NOAPPS);
+		// operation
+		domain.createApplication("foo", null, null, null);
+		// verifications
+		// expected exception
+	}
+
+    @Test
+	public void shouldNotRecreateExistingApplication() throws Throwable {
+		// pre-conditions
+		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_1EMBEDDED);
+		// operation
+		try {
+			domain.createApplication("springeap6", Cartridges.as7(), null, null);
+			// expect an exception
+			fail("Expected exception here...");
+		} catch (OpenShiftException e) {
+			// OK
+		}
+		// verifications
+		assertThat(domain.getApplications()).hasSize(2);
+	}
+
     @Test
 	public void shouldGetApplicationByNameCaseInsensitive() throws Throwable {
 		// pre-conditions
@@ -617,16 +651,6 @@ public class DomainResourceTest{
 		fail("not implemented yet");
 	}
 
-    @Test(expected = OpenShiftException.class)
-	public void shouldNotCreateApplicationWithMissingName() throws Throwable {
-		// pre-conditions
-		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_1EMBEDDED);
-		// operation
-		domain.createApplication(null, Cartridges.as7(), null, null);
-		// verifications
-		// expected exception
-	}
-
     @Test
 	@Ignore
 	public void shouldNotifyAfterDomainUpdated() throws Throwable {
@@ -637,22 +661,6 @@ public class DomainResourceTest{
 	@Ignore
 	public void shouldNotifyAfterDomainDestroyed() throws Throwable {
 		fail("not implemented yet");
-	}
-
-    @Test
-	public void shouldNotRecreateExistingApplication() throws Throwable {
-		// pre-conditions
-		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_1EMBEDDED);
-		// operation
-		try {
-			domain.createApplication("springeap6", Cartridges.as7(), null, null);
-			// expect an exception
-			fail("Expected exception here...");
-		} catch (OpenShiftException e) {
-			// OK
-		}
-		// verifications
-		assertThat(domain.getApplications()).hasSize(2);
 	}
 
     @Test

@@ -80,6 +80,7 @@ public class DefaultVersionRangeResolver implements VersionRangeResolver, Servic
         // enable default constructor
     }
 
+
     @Inject
     DefaultVersionRangeResolver( MetadataResolver metadataResolver, SyncContextFactory syncContextFactory,
                                  RepositoryEventDispatcher repositoryEventDispatcher, LoggerFactory loggerFactory )
@@ -90,6 +91,7 @@ public class DefaultVersionRangeResolver implements VersionRangeResolver, Servic
         setRepositoryEventDispatcher( repositoryEventDispatcher );
     }
 
+
     public void initService( ServiceLocator locator )
     {
         setLoggerFactory( locator.getService( LoggerFactory.class ) );
@@ -98,17 +100,20 @@ public class DefaultVersionRangeResolver implements VersionRangeResolver, Servic
         setRepositoryEventDispatcher( locator.getService( RepositoryEventDispatcher.class ) );
     }
 
+
     public DefaultVersionRangeResolver setLoggerFactory( LoggerFactory loggerFactory )
     {
         this.logger = NullLoggerFactory.getSafeLogger( loggerFactory, getClass() );
         return this;
     }
 
+
     void setLogger( LoggerFactory loggerFactory )
     {
         // plexus support
         setLoggerFactory( loggerFactory );
     }
+
 
     public DefaultVersionRangeResolver setMetadataResolver( MetadataResolver metadataResolver )
     {
@@ -120,6 +125,7 @@ public class DefaultVersionRangeResolver implements VersionRangeResolver, Servic
         return this;
     }
 
+
     public DefaultVersionRangeResolver setSyncContextFactory( SyncContextFactory syncContextFactory )
     {
         if ( syncContextFactory == null )
@@ -130,6 +136,7 @@ public class DefaultVersionRangeResolver implements VersionRangeResolver, Servic
         return this;
     }
 
+
     public DefaultVersionRangeResolver setRepositoryEventDispatcher( RepositoryEventDispatcher repositoryEventDispatcher )
     {
         if ( repositoryEventDispatcher == null )
@@ -139,6 +146,7 @@ public class DefaultVersionRangeResolver implements VersionRangeResolver, Servic
         this.repositoryEventDispatcher = repositoryEventDispatcher;
         return this;
     }
+
 
     public VersionRangeResult resolveVersionRange( RepositorySystemSession session, VersionRangeRequest request )
         throws VersionRangeResolutionException
@@ -192,6 +200,7 @@ public class DefaultVersionRangeResolver implements VersionRangeResolver, Servic
 
         return result;
     }
+
 
     private Map<String, ArtifactRepository> getVersions( RepositorySystemSession session, VersionRangeResult result,
                                                          VersionRangeRequest request )
@@ -251,6 +260,7 @@ public class DefaultVersionRangeResolver implements VersionRangeResolver, Servic
         return versionIndex;
     }
 
+
     private Versioning readVersions( RepositorySystemSession session, RequestTrace trace, Metadata metadata,
                                      ArtifactRepository repository, VersionRangeResult result )
     {
@@ -294,6 +304,7 @@ public class DefaultVersionRangeResolver implements VersionRangeResolver, Servic
         return ( versioning != null ) ? versioning : new Versioning();
     }
 
+
     private void invalidMetadata( RepositorySystemSession session, RequestTrace trace, Metadata metadata,
                                   ArtifactRepository repository, Exception exception )
     {
@@ -305,5 +316,6 @@ public class DefaultVersionRangeResolver implements VersionRangeResolver, Servic
 
         repositoryEventDispatcher.dispatch( event.build() );
     }
+
 
 }

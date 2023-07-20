@@ -86,6 +86,15 @@ public class ConfigLoaderTest{
   }
 
     @Test
+  public void testDatabase() throws IOException, SAXException {
+    Configuration config = ConfigLoader.load("classpath:config-database.xml");
+    Database db = config.getDatabase(false);
+    LuceneDatabase lucene = (LuceneDatabase) db;
+    assertEquals("/tmp/ct-visma-1", lucene.getPath());
+  }
+
+
+    @Test
   public void testParameterOfNothing() throws IOException, SAXException {
     try {
       ConfigLoader.load("classpath:config-no-object.xml");
@@ -96,14 +105,6 @@ public class ConfigLoaderTest{
   }
 
     @Test
-  public void testDatabase() throws IOException, SAXException {
-    Configuration config = ConfigLoader.load("classpath:config-database.xml");
-    Database db = config.getDatabase(false);
-    LuceneDatabase lucene = (LuceneDatabase) db;
-    assertEquals("/tmp/ct-visma-1", lucene.getPath());
-  }
-
-    @Test
   public void testCustomComparator() throws IOException, SAXException {
     Configuration config = ConfigLoader.load("classpath:config-custom-comparator.xml");
     
@@ -111,5 +112,6 @@ public class ConfigLoaderTest{
     
     assertEquals(1, comparators.size());
   }
+
 
 }

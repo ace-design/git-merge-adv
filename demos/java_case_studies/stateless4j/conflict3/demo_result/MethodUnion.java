@@ -25,17 +25,15 @@ public class StateConfiguration <TState , TTrigger >{
     private final StateRepresentation<TState, TTrigger> representation;,
     private final Func2<TState, StateRepresentation<TState, TTrigger>> lookup;,
 
-    public StateConfiguration(StateRepresentation<TState, TTrigger> representation, Func2<TState, StateRepresentation<TState, TTrigger>> lookup) {
-        this.representation = Enforce.argumentNotNull(representation, "representation");
-        this.lookup = Enforce.argumentNotNull(lookup, "lookup");
-    }
-
     public StateConfiguration(final StateRepresentation<TState, TTrigger> representation, final Func2<TState, StateRepresentation<TState, TTrigger>> lookup) {
         assert representation != null : "representation is null";
         assert lookup != null : "lookup is null";
         this.representation = representation;
         this.lookup = lookup;
     }
+
+
+    
 
     /**
      * Accept the specified trigger and transition to the destination state
@@ -59,15 +57,13 @@ public class StateConfiguration <TState , TTrigger >{
      * @return The reciever
      */
 
-    public StateConfiguration<TState, TTrigger> permitIf(TTrigger trigger, TState destinationState, Func<Boolean> guard) {
-        enforceNotIdentityTransition(destinationState);
-        return publicPermitIf(trigger, destinationState, guard);
-    }
-
     public StateConfiguration<TState, TTrigger> permitIf(TTrigger trigger, TState destinationState, FuncBoolean guard) {
         enforceNotIdentityTransition(destinationState);
         return publicPermitIf(trigger, destinationState, guard);
     }
+
+
+    
 
     /**
      * Accept the specified trigger, execute exit actions and re-execute entry actions. Reentry behaves as though the
@@ -96,13 +92,12 @@ public class StateConfiguration <TState , TTrigger >{
      * @return The reciever
      */
 
-    public StateConfiguration<TState, TTrigger> permitReentryIf(TTrigger trigger, Func<Boolean> guard) {
-        return publicPermitIf(trigger, representation.getUnderlyingState(), guard);
-    }
-
     public StateConfiguration<TState, TTrigger> permitReentryIf(TTrigger trigger, FuncBoolean guard) {
         return publicPermitIf(trigger, representation.getUnderlyingState(), guard);
     }
+
+
+    
 
     /**
      * ignore the specified trigger when in the configured state
@@ -129,11 +124,16 @@ public class StateConfiguration <TState , TTrigger >{
         return this;
     }
 
-    public StateConfiguration<TState, TTrigger> ignoreIf(TTrigger trigger, Func<Boolean> guard) {
+
+    <<<<<<< left_content.java
+public StateConfiguration<TState, TTrigger> ignoreIf(TTrigger trigger, Func<Boolean> guard) {
         assert guard != null : "guard is null";
         representation.addTriggerBehaviour(new IgnoredTriggerBehaviour<TState, TTrigger>(trigger, guard));
         return this;
     }
+=======
+>>>>>>> right_content.java
+
 
     /**
      * Specify an action that will execute when transitioning into the configured state
@@ -192,6 +192,8 @@ public class StateConfiguration <TState , TTrigger >{
             }
         });
     }
+
+    
 
     /**
      * Specify an action that will execute when transitioning into the configured state
@@ -290,6 +292,8 @@ public class StateConfiguration <TState , TTrigger >{
         return this;
     }
 
+    
+
     /**
      * Specify an action that will execute when transitioning into the configured state
      *
@@ -332,14 +336,6 @@ public class StateConfiguration <TState , TTrigger >{
         return this;
     }
 
-    @SuppressWarnings("unchecked")
-            public void doIt(Transition<TState, TTrigger> t, Object[] args) {
-                entryAction.doIt(
-                        (TArg0) args[0],
-                        (TArg1) args[1],
-                        (TArg2) args[2], t);
-            }
-
     /**
      * Specify an action that will execute when transitioning from the configured state
      *
@@ -355,10 +351,6 @@ public class StateConfiguration <TState , TTrigger >{
             }
         });
     }
-
-    public void doIt(Transition<TState, TTrigger> arg1) {
-                exitAction.doIt();
-            }
 
     public StateConfiguration<TState, TTrigger> onExit(Action1<Transition<TState, TTrigger>> exitAction) {
         assert exitAction != null : "exitAction is null";
@@ -465,7 +457,9 @@ public class StateConfiguration <TState , TTrigger >{
         }, guard);
     }
 
-    public StateConfiguration<TState, TTrigger> permitDynamicIf(TTrigger trigger, final Func<TState> destinationStateSelector, Func<Boolean> guard) {
+
+    <<<<<<< left_content.java
+public StateConfiguration<TState, TTrigger> permitDynamicIf(TTrigger trigger, final Func<TState> destinationStateSelector, Func<Boolean> guard) {
         assert destinationStateSelector != null : "destinationStateSelector is null";
         return publicPermitDynamicIf(trigger, new Func2<Object[], TState>() {
             public TState call(Object[] arg0) {
@@ -473,6 +467,9 @@ public class StateConfiguration <TState , TTrigger >{
             }
         }, guard);
     }
+=======
+>>>>>>> right_content.java
+
 
     public TState call(Object[] arg0) {
                 return destinationStateSelector.call();
@@ -504,7 +501,9 @@ public class StateConfiguration <TState , TTrigger >{
         );
     }
 
-    public <TArg0> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters1<TArg0, TState, TTrigger> trigger, final Func2<TArg0, TState> destinationStateSelector, Func<Boolean> guard) {
+
+    <<<<<<< left_content.java
+public <TArg0> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters1<TArg0, TState, TTrigger> trigger, final Func2<TArg0, TState> destinationStateSelector, Func<Boolean> guard) {
         assert trigger != null : "trigger is null";
         assert destinationStateSelector != null : "destinationStateSelector is null";
         return publicPermitDynamicIf(
@@ -518,6 +517,9 @@ public class StateConfiguration <TState , TTrigger >{
                 guard
         );
     }
+=======
+>>>>>>> right_content.java
+
 
     
 
@@ -550,7 +552,9 @@ public class StateConfiguration <TState , TTrigger >{
         );
     }
 
-    public <TArg0, TArg1> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters2<TArg0, TArg1, TState, TTrigger> trigger, final Func3<TArg0, TArg1, TState> destinationStateSelector, Func<Boolean> guard) {
+
+    <<<<<<< left_content.java
+public <TArg0, TArg1> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters2<TArg0, TArg1, TState, TTrigger> trigger, final Func3<TArg0, TArg1, TState> destinationStateSelector, Func<Boolean> guard) {
         assert trigger != null : "trigger is null";
         assert destinationStateSelector != null : "destinationStateSelector is null";
         return publicPermitDynamicIf(
@@ -566,6 +570,9 @@ public class StateConfiguration <TState , TTrigger >{
                 guard
         );
     }
+=======
+>>>>>>> right_content.java
+
 
     /**
      * Accept the specified trigger and transition to the destination state, calculated dynamically by the supplied
@@ -598,7 +605,9 @@ public class StateConfiguration <TState , TTrigger >{
         );
     }
 
-    public <TArg0, TArg1, TArg2> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters3<TArg0, TArg1, TArg2, TState, TTrigger> trigger, final Func4<TArg0, TArg1, TArg2, TState> destinationStateSelector, Func<Boolean> guard) {
+
+    <<<<<<< left_content.java
+public <TArg0, TArg1, TArg2> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters3<TArg0, TArg1, TArg2, TState, TTrigger> trigger, final Func4<TArg0, TArg1, TArg2, TState> destinationStateSelector, Func<Boolean> guard) {
         assert trigger != null : "trigger is null";
         assert destinationStateSelector != null : "destinationStateSelector is null";
         return publicPermitDynamicIf(
@@ -615,6 +624,9 @@ public class StateConfiguration <TState , TTrigger >{
                 }, guard
         );
     }
+=======
+>>>>>>> right_content.java
+
 
     void enforceNotIdentityTransition(TState destination) {
         if (destination.equals(representation.getUnderlyingState())) {
@@ -632,11 +644,16 @@ public class StateConfiguration <TState , TTrigger >{
         return this;
     }
 
-    StateConfiguration<TState, TTrigger> publicPermitIf(TTrigger trigger, TState destinationState, Func<Boolean> guard) {
+
+    <<<<<<< left_content.java
+StateConfiguration<TState, TTrigger> publicPermitIf(TTrigger trigger, TState destinationState, Func<Boolean> guard) {
         assert guard != null : "guard is null";
         representation.addTriggerBehaviour(new TransitioningTriggerBehaviour<>(trigger, destinationState, guard));
         return this;
     }
+=======
+>>>>>>> right_content.java
+
 
     StateConfiguration<TState, TTrigger> publicPermitDynamic(TTrigger trigger, Func2<Object[], TState> destinationStateSelector) {
         return publicPermitDynamicIf(trigger, destinationStateSelector, NO_GUARD);
@@ -649,11 +666,16 @@ public class StateConfiguration <TState , TTrigger >{
         return this;
     }
 
-    StateConfiguration<TState, TTrigger> publicPermitDynamicIf(TTrigger trigger, Func2<Object[], TState> destinationStateSelector, Func<Boolean> guard) {
+
+    <<<<<<< left_content.java
+StateConfiguration<TState, TTrigger> publicPermitDynamicIf(TTrigger trigger, Func2<Object[], TState> destinationStateSelector, Func<Boolean> guard) {
         assert destinationStateSelector != null : "destinationStateSelector is null";
         assert guard != null : "guard is null";
         representation.addTriggerBehaviour(new DynamicTriggerBehaviour<>(trigger, destinationStateSelector, guard));
         return this;
     }
+=======
+>>>>>>> right_content.java
+
 
 }

@@ -397,25 +397,6 @@ public class ParserATNFactory implements ATNFactory{
 	 * TODO: Set alt number (1..n) in the states?
 	 */
 
-    protected Handle makeBlock(BlockStartState start, GrammarAST blkAST, List<Handle> alts) {
-		BlockEndState end = newState(BlockEndState.class, blkAST);
-		start.endState = end;
-		for (Handle alt : alts) {
-			// hook alts up to decision block
-			epsilon(start, alt.left);
-			epsilon(alt.right, end);
-			// no back link in ATN so must walk entire alt to see if we can
-			// strip out the epsilon to 'end' state
-			TailEpsilonRemover opt = new TailEpsilonRemover(atn);
-			opt.visit(alt.left);
-		}
-		Handle h = new Handle(start, end);
-//		FASerializer ser = new FASerializer(g, h.left);
-//		System.out.println(blkAST.toStringTree()+":\n"+ser);
-		blkAST.atnState = start;
-		return h;
-	}
-
     @Override
 	public Handle block(BlockAST blkAST, GrammarAST ebnfRoot, List<Handle> alts) {
 		if ( ebnfRoot==null ) {
@@ -448,6 +429,8 @@ public class ParserATNFactory implements ATNFactory{
 		return null;
 	}
 
+    
+
     @NotNull
 	@Override
 	public Handle alt(@NotNull List<Handle> els) {
@@ -474,18 +457,6 @@ public class ParserATNFactory implements ATNFactory{
 		return h;
 	}
 
-    /**
-	 * From {@code (A)?} build either:
-	 *
-	 * <pre>
-	 *  o--A->o
-	 *  |     ^
-	 *  o---->|
-	 * </pre>
-	 *
-	 * or, if {@code A} is a block, just add an empty alt to the end of the
-	 * block
-	 */
 
     @NotNull
 	public Handle elemList(@NotNull List<Handle> els) {
@@ -519,6 +490,19 @@ public class ParserATNFactory implements ATNFactory{
 	}
 
     /**
+	 * From {@code (A)?} build either:
+	 *
+	 * <pre>
+	 *  o--A->o
+	 *  |     ^
+	 *  o---->|
+	 * </pre>
+	 *
+	 * or, if {@code A} is a block, just add an empty alt to the end of the
+	 * block
+	 */
+
+    /**
 	 * From {@code (blk)+} build
 	 *
 	 * <pre>
@@ -545,22 +529,6 @@ public class ParserATNFactory implements ATNFactory{
 		optAST.atnState = blk.left;
 		return blk;
 	}
-
-    /**
-	 * From {@code (blk)*} build {@code ( blk+ )?} with *two* decisions, one for
-	 * entry and one for choosing alts of {@code blk}.
-	 *
-	 * <pre>
-	 *   |-------------|
-	 *   v             |
-	 *   o--[o-blk-o]->o  o
-	 *   |                ^
-	 *   -----------------|
-	 * </pre>
-	 *
-	 * Note that the optional bypass must jump outside the loop as
-	 * {@code (A|B)*} is not the same thing as {@code (A|B|)+}.
-	 */
 
     @NotNull
 	@Override
@@ -597,17 +565,21 @@ public class ParserATNFactory implements ATNFactory{
 		return new Handle(blkStart, end);
 	}
 
-    /** Build an atom with all possible values in its label. */
-
-    @NotNull
-	@Override
-	public Handle wildcard(GrammarAST node) {
-		ATNState left = newState(node);
-		ATNState right = newState(node);
-		left.addTransition(new WildcardTransition(right));
-		node.atnState = left;
-		return new Handle(left, right);
-	}
+    /**
+	 * From {@code (blk)*} build {@code ( blk+ )?} with *two* decisions, one for
+	 * entry and one for choosing alts of {@code blk}.
+	 *
+	 * <pre>
+	 *   |-------------|
+	 *   v             |
+	 *   o--[o-blk-o]->o  o
+	 *   |                ^
+	 *   -----------------|
+	 * </pre>
+	 *
+	 * Note that the optional bypass must jump outside the loop as
+	 * {@code (A|B)*} is not the same thing as {@code (A|B|)+}.
+	 */
 
     @NotNull
 	@Override
@@ -645,6 +617,18 @@ public class ParserATNFactory implements ATNFactory{
 		return new Handle(entry, end);
 	}
 
+    /** Build an atom with all possible values in its label. */
+
+    @NotNull
+	@Override
+	public Handle wildcard(GrammarAST node) {
+		ATNState left = newState(node);
+		ATNState right = newState(node);
+		left.addTransition(new WildcardTransition(right));
+		node.atnState = left;
+		return new Handle(left, right);
+	}
+
     /** Define all the rule begin/end ATNStates to solve forward reference
 	 *  issues.
 	 */
@@ -664,6 +648,18 @@ public class ParserATNFactory implements ATNFactory{
 		}
 	}
 
+    protected void epsilon(ATNState a, @NotNull ATNState b) {
+		epsilon(a, b, false);
+	}
+
+    protected void epsilon(ATNState a, @NotNull ATNState b, boolean prepend) {
+		if ( a!=null ) {
+			int index = prepend ? 0 : a.getNumberOfTransitions();
+			a.addTransition(index, new EpsilonTransition(b));
+		}
+	}
+
+
     /** Add an EOF transition to any rule end ATNState that points to nothing
      *  (i.e., for all those rules not invoked by another rule).  These
      *  are start symbols then.
@@ -672,10 +668,6 @@ public class ParserATNFactory implements ATNFactory{
 	 *  not invoked by another rule (they can only be invoked from outside).
 	 *  These are the start rules.
      */
-
-    protected void epsilon(ATNState a, @NotNull ATNState b) {
-		epsilon(a, b, false);
-	}
 
     public int addEOFTransitionToStartRules() {
 		int n = 0;
@@ -690,23 +682,6 @@ public class ParserATNFactory implements ATNFactory{
 		return n;
 	}
 
-    protected void epsilon(ATNState a, @NotNull ATNState b, boolean prepend) {
-		if ( a!=null ) {
-			int index = prepend ? 0 : a.getNumberOfTransitions();
-			a.addTransition(index, new EpsilonTransition(b));
-		}
-	}
-
-    @Override
-	public Handle label(Handle t) {
-		return t;
-	}
-
-    @Override
-	public Handle listLabel(Handle t) {
-		return t;
-	}
-
     public void addRuleFollowLinks() {
         for (ATNState p : atn.states) {
             if ( p!=null &&
@@ -719,16 +694,14 @@ public class ParserATNFactory implements ATNFactory{
         }
     }
 
-    @NotNull
-	@Override
-	public ATNState newState() { return newState(null); }
+    @Override
+	public Handle label(Handle t) {
+		return t;
+	}
 
-    public boolean expectNonGreedy(@NotNull BlockAST blkAST) {
-		if ( blockHasWildcardAlt(blkAST) ) {
-			return true;
-		}
-
-		return false;
+    @Override
+	public Handle listLabel(Handle t) {
+		return t;
 	}
 
     @NotNull
@@ -759,6 +732,18 @@ public class ParserATNFactory implements ATNFactory{
 		throw new UnsupportedOperationException(message, cause);
 	}
 
+    @NotNull
+	@Override
+	public ATNState newState() { return newState(null); }
+
+    public boolean expectNonGreedy(@NotNull BlockAST blkAST) {
+		if ( blockHasWildcardAlt(blkAST) ) {
+			return true;
+		}
+
+		return false;
+	}
+
     /**
 	 * {@code (BLOCK (ALT .))} or {@code (BLOCK (ALT 'a') (ALT .))}.
 	 */
@@ -777,6 +762,14 @@ public class ParserATNFactory implements ATNFactory{
 		return false;
 	}
 
+    @NotNull
+	public ATNState newState(@Nullable GrammarAST node) {
+		ATNState n = new BasicState();
+		n.setRuleIndex(currentRule.index);
+		atn.addState(n);
+		return n;
+	}
+
     @Override
 	public Handle lexerAltCommands(Handle alt, Handle cmds) {
 		return null;
@@ -785,14 +778,6 @@ public class ParserATNFactory implements ATNFactory{
     @Override
 	public String lexerCallCommand(GrammarAST ID, GrammarAST arg) {
 		return null;
-	}
-
-    @NotNull
-	public ATNState newState(@Nullable GrammarAST node) {
-		ATNState n = new BasicState();
-		n.setRuleIndex(currentRule.index);
-		atn.addState(n);
-		return n;
 	}
 
     @Override

@@ -43,32 +43,32 @@ public class CompileMojo extends AbstractLessCssMojo{
     private boolean compress;,
 
     /**
-	 * The character encoding the LESS compiler will use for writing the CSS stylesheets.
-	 * 
-	 * @parameter expression="${lesscss.encoding}" default-value="${project.build.sourceEncoding}"
-	 */
-
-    /**
 	 * When <code>true</code> the plugin will watch for changes in LESS files and compile if it detects one.
 	 * 
 	 * @parameter expression="${lesscss.watch}" default-value="false"
 	 */
-    private String encoding;,
     protected boolean watch=false;,
-
-    /**
-	 * When <code>true</code> forces the LESS compiler to always compile the LESS sources. By default LESS sources are only compiled when modified (including imports) or the CSS stylesheet does not exists.
-	 * 
-	 * @parameter expression="${lesscss.force}" default-value="false"
-	 */
 
     /**
 	 * When <code>true</code> the plugin will watch for changes in LESS files and compile if it detects one.
 	 * 
 	 * @parameter expression="${lesscss.watchInterval}" default-value="1000"
 	 */
-    private boolean force;,
     private int watchInterval=1000;,
+
+    /**
+	 * The character encoding the LESS compiler will use for writing the CSS stylesheets.
+	 * 
+	 * @parameter expression="${lesscss.encoding}" default-value="${project.build.sourceEncoding}"
+	 */
+    private String encoding;,
+
+    /**
+	 * When <code>true</code> forces the LESS compiler to always compile the LESS sources. By default LESS sources are only compiled when modified (including imports) or the CSS stylesheet does not exists.
+	 * 
+	 * @parameter expression="${lesscss.force}" default-value="false"
+	 */
+    private boolean force;,
 
     /**
 	 * The location of the LESS JavasSript file.
@@ -76,6 +76,13 @@ public class CompileMojo extends AbstractLessCssMojo{
 	 * @parameter
 	 */
     private File lessJs;,
+
+    /**
+	 * The location of the NodeJS executable.
+	 *
+	 * @parameter
+	 */
+    private String nodeExecutable;,
 
     /**
 	 * Execute the MOJO.
@@ -165,13 +172,6 @@ public class CompileMojo extends AbstractLessCssMojo{
 	}
 
 
-    /**
-	 * The location of the NodeJS executable.
-	 *
-	 * @parameter
-	 */
-    private String nodeExecutable;,
-
     private void compileIfChanged(String[] files, Object lessCompiler) throws MojoExecutionException {
 		try {
 			for (String file : files) {
@@ -223,6 +223,7 @@ public class CompileMojo extends AbstractLessCssMojo{
 		}
 	}
 
+
     private Object initLessCompiler() throws MojoExecutionException {
 		if (nodeExecutable != null) {
 			NodeJsLessCompiler lessCompiler;
@@ -251,5 +252,6 @@ public class CompileMojo extends AbstractLessCssMojo{
 			return lessCompiler;
 		}
 	}
+
 
 }

@@ -19,9 +19,9 @@ public class ConfigurationImpl implements Configuration{
     private List<Property> proplist;,
     private Collection<Property> lookups;,
     private List<Comparator> customComparators;,
-    private Database database;,
     private Database database1;,
     private Database database2;,
+    private Database database;,
 
     public ConfigurationImpl() {
     this.datasources = new ArrayList();
@@ -93,9 +93,18 @@ public class ConfigurationImpl implements Configuration{
     return thedb;
   }
 
-    public void setDatabase(Database database) {
-    this.database = database;
+
+    
+
+    public void addDatabase(Database database) {
+    if (database1 == null)
+      database1 = database;
+    else if (database2 == null)
+      database2 = database;
+    else
+      throw new DukeConfigException("Too many database objects configured");
   }
+
 
     /**
    * The probability threshold used to decide whether two records
@@ -106,15 +115,6 @@ public class ConfigurationImpl implements Configuration{
 
     public double getThreshold() {
     return threshold;
-  }
-
-    public void addDatabase(Database database) {
-    if (database1 == null)
-      database1 = database;
-    else if (database2 == null)
-      database2 = database;
-    else
-      throw new DukeConfigException("Too many database objects configured");
   }
 
     /**
@@ -328,9 +328,11 @@ public class ConfigurationImpl implements Configuration{
 	return this.customComparators;
   }
 
+
     @Override
   public void addCustomComparator(Comparator comparator) { 
 	this.customComparators.add(comparator);
   }
+
 
 }

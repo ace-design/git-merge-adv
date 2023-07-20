@@ -65,16 +65,16 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     public static final String ETL_AUDIT_IGNORE_SERVICE_TOPIC_LIST = "etl.audit.ignore.service.topic.list";,
     public static final String CAMUS_WORK_ALLOCATOR_CLASS = "camus.work.allocator.class";,
     public static final String CAMUS_WORK_ALLOCATOR_DEFAULT = "com.linkedin.camus.workallocater.BaseAllocator";,
-    private static Logger log = null;,
     private static final int RETRY_TIMES = 1;,
+    private static final int BACKOFF_UNIT_MILLISECONDS = 1000;,
+    public static final int NUM_TRIES_FETCH_FROM_LEADER = 3;,
+    private static Logger log = null;,
+    public static final int NUM_TRIES_TOPIC_METADATA = 3;,
 
     public EtlInputFormat() {
     if (log == null)
       log = Logger.getLogger(getClass());
   }
-    public static final int NUM_TRIES_FETCH_FROM_LEADER = 3;,
-    private static final int BACKOFF_UNIT_MILLISECONDS = 1000;,
-    public static final int NUM_TRIES_TOPIC_METADATA = 3;,
     public static boolean reportJobFailureDueToSkippedMsg = false;,
 
     public static void setLogger(Logger log) {
@@ -145,7 +145,9 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return topicMetadataList;
   }
 
-    public List<TopicMetadata> getKafkaMetadata(JobContext context) {
+
+    <<<<<<< left_content.java
+public List<TopicMetadata> getKafkaMetadata(JobContext context) {
     ArrayList<String> metaRequestTopics = new ArrayList<String>();
     CamusJob.startTiming("kafkaSetupTime");
     String brokerString = CamusJob.getKafkaBrokers(context);
@@ -190,16 +192,11 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     CamusJob.stopTiming("kafkaSetupTime");
     return topicMetadataList;
   }
+=======
+>>>>>>> right_content.java
 
-    private SimpleConsumer createConsumer(JobContext context, String broker) {
-    if (!broker.matches(".+:\\d+"))
-      throw new InvalidParameterException("The kakfa broker " + broker + " must follow address:port pattern");
-    String[] hostPort = broker.split(":");
-    SimpleConsumer consumer =
-        new SimpleConsumer(hostPort[0], Integer.valueOf(hostPort[1]), CamusJob.getKafkaTimeoutValue(context),
-            CamusJob.getKafkaBufferSize(context), CamusJob.getKafkaClientName(context));
-    return consumer;
-  }
+
+    
 
     /**
    * Gets the latest offsets and create the requests as needed
@@ -216,6 +213,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return createSimpleConsumer(context, hostPort[0], Integer.valueOf(hostPort[1]));
   }
 
+
     public SimpleConsumer createSimpleConsumer(JobContext context, String host, int port) {
     SimpleConsumer consumer =
         new SimpleConsumer(host, port,
@@ -223,6 +221,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
             CamusJob.getKafkaClientName(context));
     return consumer;
   }
+
 
     /**
    * Gets the latest offsets and create the requests as needed
@@ -335,6 +334,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     }
     return null;
   }
+
 
     @Override
   public List<InputSplit> getSplits(JobContext context) throws IOException, InterruptedException {
@@ -498,6 +498,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return sb.toString();
   }
 
+
     @Override
       public int compare(CamusRequest r1, CamusRequest r2) {
         return r1.getTopic().compareTo(r2.getTopic());
@@ -546,19 +547,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     writer.close();
   }
 
-    public static void setWorkAllocator(JobContext job, Class<WorkAllocator> val) {
-    job.getConfiguration().setClass(CAMUS_WORK_ALLOCATOR_CLASS, val, WorkAllocator.class);
-  }
-
-    public static WorkAllocator getWorkAllocator(JobContext job) {
-    try {
-      return (WorkAllocator) job.getConfiguration()
-          .getClass(CAMUS_WORK_ALLOCATOR_CLASS, Class.forName(CAMUS_WORK_ALLOCATOR_DEFAULT)).newInstance();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
     public PartitionMetadata refreshPartitionMetadataOnLeaderNotAvailable(PartitionMetadata partitionMetadata,
       TopicMetadata topicMetadata, JobContext context, int retryTimes) throws InterruptedException {
     int retryCounter = 0;
@@ -592,9 +580,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return partitionMetadata;
   }
 
-    public static void setMoveToLatestTopics(JobContext job, String val) {
-    job.getConfiguration().set(KAFKA_MOVE_TO_LAST_OFFSET_LIST, val);
-  }
 
     private void writeRequests(List<CamusRequest> requests, JobContext context) throws IOException {
     FileSystem fs = FileSystem.get(context.getConfiguration());
@@ -613,26 +598,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
       writer.append(r, NullWritable.get());
     }
     writer.close();
-  }
-
-    public static String[] getMoveToLatestTopics(JobContext job) {
-    return job.getConfiguration().getStrings(KAFKA_MOVE_TO_LAST_OFFSET_LIST);
-  }
-
-    public static void setKafkaClientBufferSize(JobContext job, int val) {
-    job.getConfiguration().setInt(KAFKA_CLIENT_BUFFER_SIZE, val);
-  }
-
-    public static int getKafkaClientBufferSize(JobContext job) {
-    return job.getConfiguration().getInt(KAFKA_CLIENT_BUFFER_SIZE, 2 * 1024 * 1024);
-  }
-
-    public static void setKafkaClientTimeout(JobContext job, int val) {
-    job.getConfiguration().setInt(KAFKA_CLIENT_SO_TIMEOUT, val);
-  }
-
-    public static int getKafkaClientTimeout(JobContext job) {
-    return job.getConfiguration().getInt(KAFKA_CLIENT_SO_TIMEOUT, 60000);
   }
 
     private Map<CamusRequest, EtlKey> getPreviousOffsets(Path[] inputs, JobContext context) throws IOException {
@@ -661,6 +626,43 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
       }
     }
     return offsetKeysMap;
+  }
+
+    public static void setWorkAllocator(JobContext job, Class<WorkAllocator> val) {
+    job.getConfiguration().setClass(CAMUS_WORK_ALLOCATOR_CLASS, val, WorkAllocator.class);
+  }
+
+    public static WorkAllocator getWorkAllocator(JobContext job) {
+    try {
+      return (WorkAllocator) job.getConfiguration()
+          .getClass(CAMUS_WORK_ALLOCATOR_CLASS, Class.forName(CAMUS_WORK_ALLOCATOR_DEFAULT)).newInstance();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+    public static void setMoveToLatestTopics(JobContext job, String val) {
+    job.getConfiguration().set(KAFKA_MOVE_TO_LAST_OFFSET_LIST, val);
+  }
+
+    public static String[] getMoveToLatestTopics(JobContext job) {
+    return job.getConfiguration().getStrings(KAFKA_MOVE_TO_LAST_OFFSET_LIST);
+  }
+
+    public static void setKafkaClientBufferSize(JobContext job, int val) {
+    job.getConfiguration().setInt(KAFKA_CLIENT_BUFFER_SIZE, val);
+  }
+
+    public static int getKafkaClientBufferSize(JobContext job) {
+    return job.getConfiguration().getInt(KAFKA_CLIENT_BUFFER_SIZE, 2 * 1024 * 1024);
+  }
+
+    public static void setKafkaClientTimeout(JobContext job, int val) {
+    job.getConfiguration().setInt(KAFKA_CLIENT_SO_TIMEOUT, val);
+  }
+
+    public static int getKafkaClientTimeout(JobContext job) {
+    return job.getConfiguration().getInt(KAFKA_CLIENT_SO_TIMEOUT, 60000);
   }
 
     public static void setKafkaMaxPullHrs(JobContext job, int val) {
@@ -699,9 +701,23 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     job.getConfiguration().setBoolean(ETL_IGNORE_SCHEMA_ERRORS, val);
   }
 
+    public static String[] getKafkaBlacklistTopic(JobContext job) {
+    return getKafkaBlacklistTopic(job.getConfiguration());
+  }
+
     public static boolean getEtlIgnoreSchemaErrors(JobContext job) {
     return job.getConfiguration().getBoolean(ETL_IGNORE_SCHEMA_ERRORS, false);
   }
+
+    public static String[] getKafkaBlacklistTopic(Configuration conf) {
+    final String blacklistStr = conf.get(KAFKA_BLACKLIST_TOPIC);
+    if (blacklistStr != null && !blacklistStr.isEmpty()) {
+      return conf.getStrings(KAFKA_BLACKLIST_TOPIC);
+    } else {
+      return new String[] {};
+    }
+  }
+
 
     public static void setEtlAuditIgnoreServiceTopicList(JobContext job, String topics) {
     job.getConfiguration().set(ETL_AUDIT_IGNORE_SERVICE_TOPIC_LIST, topics);
@@ -715,35 +731,13 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     job.getConfiguration().setClass(CAMUS_MESSAGE_DECODER_CLASS, cls, MessageDecoder.class);
   }
 
+    public static String[] getKafkaWhitelistTopic(JobContext job) {
+    return getKafkaWhitelistTopic(job.getConfiguration());
+  }
+
     public static Class<MessageDecoder> getMessageDecoderClass(JobContext job) {
     return (Class<MessageDecoder>) job.getConfiguration().getClass(CAMUS_MESSAGE_DECODER_CLASS,
         KafkaAvroMessageDecoder.class);
-  }
-
-    private class OffsetFileFilter implements PathFilter{
-
-
-        @Override
-    public boolean accept(Path arg0) {
-      return arg0.getName().startsWith(EtlMultiOutputFormat.OFFSET_PREFIX);
-    }
-
-    }
-    public static String[] getKafkaBlacklistTopic(JobContext job) {
-    return getKafkaBlacklistTopic(job.getConfiguration());
-  }
-
-    public static String[] getKafkaBlacklistTopic(Configuration conf) {
-    final String blacklistStr = conf.get(KAFKA_BLACKLIST_TOPIC);
-    if (blacklistStr != null && !blacklistStr.isEmpty()) {
-      return conf.getStrings(KAFKA_BLACKLIST_TOPIC);
-    } else {
-      return new String[] {};
-    }
-  }
-
-    public static String[] getKafkaWhitelistTopic(JobContext job) {
-    return getKafkaWhitelistTopic(job.getConfiguration());
   }
 
     public static String[] getKafkaWhitelistTopic(Configuration conf) {
@@ -755,10 +749,20 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     }
   }
 
+
     public static Class<MessageDecoder> getMessageDecoderClass(JobContext job, String topicName) {
     Class<MessageDecoder> topicDecoder =
         (Class<MessageDecoder>) job.getConfiguration().getClass(CAMUS_MESSAGE_DECODER_CLASS + "." + topicName, null);
     return topicDecoder == null ? getMessageDecoderClass(job) : topicDecoder;
   }
 
+    private class OffsetFileFilter implements PathFilter{
+
+
+        @Override
+    public boolean accept(Path arg0) {
+      return arg0.getName().startsWith(EtlMultiOutputFormat.OFFSET_PREFIX);
+    }
+
+    }
 }

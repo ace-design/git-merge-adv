@@ -134,6 +134,12 @@ public class ApplicationAssert implements AssertExtension{
 		assertEquals(domain.getSuffix(), matcher.group(3));
 	}
 
+    public ApplicationAssert hasGearProfile(IGearProfile gearProfile) {
+		assertThat(application.getGearProfile()).isEqualTo(gearProfile);
+		return this;
+	}
+
+
     public ApplicationAssert hasEmbeddedCartridges(LatestEmbeddableCartridge... selectors)
 			throws OpenShiftException {
 		for (LatestEmbeddableCartridge selector : selectors) {
@@ -142,31 +148,15 @@ public class ApplicationAssert implements AssertExtension{
 		return this;
 	}
 
-    public ApplicationAssert hasGearProfile(IGearProfile gearProfile) {
-		assertThat(application.getGearProfile()).isEqualTo(gearProfile);
-		return this;
-	}
-
     public ApplicationAssert hasApplicationScale(ApplicationScale applicationScale) {
 		assertThat(application.getApplicationScale()).isEqualTo(applicationScale);
 		return this;
 	}
 
+
     public ApplicationAssert hasEmbeddedCartridge(LatestEmbeddableCartridge selector)
 			throws OpenShiftException {
 		hasEmbeddedCartridge(selector.get(application));
-		return this;
-	}
-
-    public ApplicationAssert hasEmbeddableCartridges(String... embeddableCartridgeNames) throws OpenShiftException {
-		if (embeddableCartridgeNames.length == 0) {
-			assertEquals(0, application.getEmbeddedCartridges().size());
-		}
-
-		for (String cartridgeName : embeddableCartridgeNames) {
-			assertTrue(application.hasEmbeddedCartridge(cartridgeName));
-		}
-
 		return this;
 	}
 
@@ -179,11 +169,8 @@ public class ApplicationAssert implements AssertExtension{
 		return this;
 	}
 
-    public ApplicationAssert hasEmbeddableCartridges(int numberOf) {
-		assertNotNull(application.getEmbeddedCartridges());
-		assertEquals(numberOf, application.getEmbeddedCartridges().size());
-		return this;
-	}
+
+    
 
     public ApplicationAssert hasEmbeddedCartridge(IEmbeddableCartridge cartridge)
 			throws OpenShiftException {
@@ -192,13 +179,6 @@ public class ApplicationAssert implements AssertExtension{
 		return this;
 	}
 
-    public ApplicationAssert hasNotEmbeddableCartridges(String... embeddableCartridgeNames) throws OpenShiftException {		
-		for (String cartridgeName : embeddableCartridgeNames) {
-			assertFalse(application.hasEmbeddedCartridge(cartridgeName));
-		}
-
-		return this;
-	}
 
     public ApplicationAssert hasEmbeddedCartridgeNames(String... embeddableCartridgeNames) throws OpenShiftException {
 		if (embeddableCartridgeNames.length == 0) {
@@ -211,6 +191,24 @@ public class ApplicationAssert implements AssertExtension{
 
 		return this;
 	}
+
+
+    
+
+    public ApplicationAssert hasEmbeddableCartridges(int numberOf) {
+		assertNotNull(application.getEmbeddedCartridges());
+		assertEquals(numberOf, application.getEmbeddedCartridges().size());
+		return this;
+	}
+
+    public ApplicationAssert hasNotEmbeddableCartridgeNames(String... embeddableCartridgeNames) throws OpenShiftException {		
+		for (String cartridgeName : embeddableCartridgeNames) {
+			assertFalse(application.hasEmbeddedCartridge(cartridgeName));
+		}
+
+		return this;
+	}
+
 
     public ApplicationAssert hasNotEmbeddableCartridges(LatestEmbeddableCartridge... selectors) throws OpenShiftException {
 		for (LatestEmbeddableCartridge selector : selectors) {
@@ -232,18 +230,6 @@ public class ApplicationAssert implements AssertExtension{
 		return this;
 	}
 
-    public ApplicationAssert hasNotEmbeddableCartridgeNames(String... embeddableCartridgeNames) throws OpenShiftException {		
-		for (String cartridgeName : embeddableCartridgeNames) {
-			assertFalse(application.hasEmbeddedCartridge(cartridgeName));
-		}
-
-		return this;
-	}
-
-    public void hasNotEmbeddableCartridge(String name) {
-		assertNull(getEmbeddableCartridge(name));
-	}
-
     public ApplicationAssert hasNotEmbeddableCartridge(LatestEmbeddableCartridge constraint) {
 		hasNotEmbeddableCartridge(constraint.get(application));
 		return this;
@@ -252,6 +238,17 @@ public class ApplicationAssert implements AssertExtension{
     public ApplicationAssert hasNotEmbeddableCartridge(IEmbeddableCartridge cartridge) {
 		hasNotEmbeddableCartridge(cartridge.getName());
 		return this;
+	}
+
+    public ApplicationAssert assertThatDoesntContainCartridges(Collection<IEmbeddableCartridge> shouldNotBeContained, List<IEmbeddedCartridge> cartridges) {
+		for(IEmbeddableCartridge shouldNot : shouldNotBeContained) {
+			assertFalse(cartridges.contains(shouldNot));
+		}
+		return this;
+	}
+
+    public void hasNotEmbeddableCartridge(String name) {
+		assertNull(getEmbeddableCartridge(name));
 	}
 
     private IEmbeddedCartridge getEmbeddableCartridge(String name) {
@@ -265,9 +262,9 @@ public class ApplicationAssert implements AssertExtension{
 		return matchingCartridge;
 	}
 
-    public ApplicationAssert assertThatDoesntContainCartridges(Collection<IEmbeddableCartridge> shouldNotBeContained, List<IEmbeddedCartridge> cartridges) {
-		for(IEmbeddableCartridge shouldNot : shouldNotBeContained) {
-			assertFalse(cartridges.contains(shouldNot));
+    public ApplicationAssert assertThatContainsCartridges(Collection<IEmbeddableCartridge> shouldBeContained, List<IEmbeddedCartridge> cartridgesToCheck) {
+		for (IEmbeddableCartridge cartridge : shouldBeContained) {
+			assertTrue(cartridgesToCheck.contains(cartridge));
 		}
 		return this;
 	}
@@ -285,18 +282,6 @@ public class ApplicationAssert implements AssertExtension{
 		assertThat(messages).isNotNull();
 		List<Message> matchingMessages = messages.getBy(field, severity);
 		assertThat(matchingMessages).isNotEmpty();
-		return this;
-	}
-
-    public ApplicationAssert assertThatContainsCartridges(Collection<IEmbeddableCartridge> shouldBeContained, List<IEmbeddedCartridge> cartridgesToCheck) {
-		for (IEmbeddableCartridge cartridge : shouldBeContained) {
-			assertTrue(cartridgesToCheck.contains(cartridge));
-		}
-		return this;
-	}
-
-    public ApplicationAssert hasDomain(IDomain domain) {
-		assertThat(application.getDomain()).isEqualTo(domain);
 		return this;
 	}
 
@@ -319,5 +304,11 @@ public class ApplicationAssert implements AssertExtension{
 		}
 		return this;
 	}
+
+    public ApplicationAssert hasDomain(IDomain domain) {
+		assertThat(application.getDomain()).isEqualTo(domain);
+		return this;
+	}
+
 
 }

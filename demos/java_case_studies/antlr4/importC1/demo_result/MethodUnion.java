@@ -504,6 +504,26 @@ public abstract class BaseTest{
 								 debug);
 	}
 
+    public ParseTree execStartRule(String startRuleName, Parser parser)
+		throws IllegalAccessException, InvocationTargetException,
+			   NoSuchMethodException
+	{
+		Method startRule = null;
+		Object[] args = null;
+		try {
+			startRule = parser.getClass().getMethod(startRuleName);
+		}
+		catch (NoSuchMethodException nsme) {
+			// try with int _p arg for recursive func
+			startRule = parser.getClass().getMethod(startRuleName, int.class);
+			args = new Integer[] {0};
+		}
+		ParseTree result = (ParseTree)startRule.invoke(parser, args);
+//		System.out.println("parse tree = "+result.toStringTree(parser));
+		return result;
+	}
+
+
     public ParseTree execParser(String startRuleName, String input,
 								String parserName, String lexerName)
 		throws Exception
@@ -544,36 +564,6 @@ public abstract class BaseTest{
 	}
 
 
-    public ParseTree execStartRule(String startRuleName, Parser parser)
-		throws IllegalAccessException, InvocationTargetException,
-			   NoSuchMethodException
-	{
-		Method startRule = null;
-		Object[] args = null;
-		try {
-			startRule = parser.getClass().getMethod(startRuleName);
-		}
-		catch (NoSuchMethodException nsme) {
-			// try with int _p arg for recursive func
-			startRule = parser.getClass().getMethod(startRuleName, int.class);
-			args = new Integer[] {0};
-		}
-		ParseTree result = (ParseTree)startRule.invoke(parser, args);
-//		System.out.println("parse tree = "+result.toStringTree(parser));
-		return result;
-	}
-
-    /** Return true if all is well */
-
-    protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
-													String grammarStr,
-													@Nullable String parserName,
-													String lexerName,
-													String... extraOptions)
-	{
-		return rawGenerateAndBuildRecognizer(grammarFileName, grammarStr, parserName, lexerName, false, extraOptions);
-	}
-
     public Pair<Parser, Lexer> getParserAndLexer(String input,
 												 String parserName, String lexerName)
 		throws Exception
@@ -592,6 +582,44 @@ public abstract class BaseTest{
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		Parser parser = pctor.newInstance(tokens);
 		return new Pair<Parser, Lexer>(parser, lexer);
+	}
+
+
+    public Class<?> loadClassFromTempDir(String name) throws Exception {
+		ClassLoader loader =
+			new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() },
+							   ClassLoader.getSystemClassLoader());
+		return loader.loadClass(name);
+	}
+
+
+    public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
+<<<<<<< left_content.java
+		return loadClassFromTempDir(name).asSubclass(Lexer.class);
+=======
+		return (Class<? extends Lexer>)loadClassFromTempDir(name);
+>>>>>>> right_content.java
+	}
+
+
+    public Class<? extends Parser> loadParserClassFromTempDir(String name) throws Exception {
+<<<<<<< left_content.java
+		return loadClassFromTempDir(name).asSubclass(Parser.class);
+=======
+		return (Class<? extends Parser>)loadClassFromTempDir(name);
+>>>>>>> right_content.java
+	}
+
+
+    /** Return true if all is well */
+
+    protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
+													String grammarStr,
+													@Nullable String parserName,
+													String lexerName,
+													String... extraOptions)
+	{
+		return rawGenerateAndBuildRecognizer(grammarFileName, grammarStr, parserName, lexerName, false, extraOptions);
 	}
 
     protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
@@ -624,31 +652,6 @@ public abstract class BaseTest{
 		boolean allIsWell = compile(files.toArray(new String[files.size()]));
 		return allIsWell;
 	}
-
-    public Class<?> loadClassFromTempDir(String name) throws Exception {
-		ClassLoader loader =
-			new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() },
-							   ClassLoader.getSystemClassLoader());
-		return loader.loadClass(name);
-	}
-
-    public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
-<<<<<<< left_content.java
-		return loadClassFromTempDir(name).asSubclass(Lexer.class);
-=======
-		return (Class<? extends Lexer>)loadClassFromTempDir(name);
->>>>>>> right_content.java
-	}
-
-
-    public Class<? extends Parser> loadParserClassFromTempDir(String name) throws Exception {
-<<<<<<< left_content.java
-		return loadClassFromTempDir(name).asSubclass(Parser.class);
-=======
-		return (Class<? extends Parser>)loadClassFromTempDir(name);
->>>>>>> right_content.java
-	}
-
 
     protected String rawExecRecognizer(String parserName,
 									   String lexerName,

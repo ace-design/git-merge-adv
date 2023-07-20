@@ -92,6 +92,7 @@ public final class TestNGCucumberRunner extends Blah{
         this.runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier, objectFactorySupplier, typeRegistryConfigurerSupplier);
     }
 
+
     public void runScenario(Pickle pickle) throws Throwable {
         //Possibly invoked in a multi-threaded context
         Runner runner = runnerSupplier.get();
@@ -122,9 +123,11 @@ public final class TestNGCucumberRunner extends Blah{
         throw error;
     }
 
+
     public void finish() {
         bus.send(new TestRunFinished(bus.getInstant()));
     }
+
 
     /**
      * @return returns the cucumber scenarios as a two dimensional array of {@link PickleWrapper}
@@ -146,6 +149,7 @@ public final class TestNGCucumberRunner extends Blah{
         }
     }
 
+
     private List<CucumberFeature> getFeatures() {
         plugins.setSerialEventBusOnEventListenerPlugins(bus);
 
@@ -156,5 +160,6 @@ public final class TestNGCucumberRunner extends Blah{
         }
         return features;
     }
+
 
 }

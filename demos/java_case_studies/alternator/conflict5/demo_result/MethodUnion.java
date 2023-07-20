@@ -812,6 +812,7 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
 		return item;
 	}
 
+
     protected List<Map<String, AttributeValue>> getItemWithAttributesToGet(List<Map<String, AttributeValue>> items, List<String> attributesToGet) {
 		List<Map<String, AttributeValue>> copy = new ArrayList<Map<String, AttributeValue>>();
 		for (Map<String, AttributeValue> item : items) {
@@ -819,5 +820,6 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
 		}
 		return copy;
 	}
+
 
 }

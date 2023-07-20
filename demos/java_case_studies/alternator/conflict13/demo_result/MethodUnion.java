@@ -38,12 +38,12 @@ public class AlternatorTest{
      * Set to true to spawn the service in a local sub-process.
      * Set to false if an executable JAR instance of Alternator is running in another process.
      */
+    static boolean									RUN_DB_AS_SERVICE	= true;,
+    private static final boolean SPAWN_LOCAL_DB_SERVICE = true;,
     static protected AlternatorDBClient client;,
     static protected DynamoDBMapper mapper;,
-    static boolean									RUN_DB_AS_SERVICE	= true;,
     static protected AlternatorDBInProcessClient inProcessClient;,
     static protected DynamoDBMapper inProcessMapper;,
-    private static final boolean SPAWN_LOCAL_DB_SERVICE = true;,
     static protected AlternatorDB db;,
     private ProvisionedThroughput provisionedThroughput;,
 
@@ -77,6 +77,12 @@ public class AlternatorTest{
 		client = value;
 	}
 
+    @Test
+    public void noOpTest() {
+        Assert.isTrue(true);
+    }
+
+
     protected AmazonDynamoDB getClient() {
         if (RUN_DB_AS_SERVICE) {
             return client;
@@ -86,11 +92,6 @@ public class AlternatorTest{
             }
             return inProcessClient;
         }
-    }
-
-    @Test
-    public void noOpTest() {
-        Assert.isTrue(true);
     }
 
     protected DynamoDBMapper getMapper() {
@@ -181,12 +182,13 @@ public class AlternatorTest{
 		return new AttributeValue().withN(Math.round(Math.random() * 1000)+"");
 	}
 
-    protected Map<String, AttributeValue> createGenericItem() {
-		return createGenericItem(createStringAttribute(), createStringAttribute());
-	}
-
     protected AttributeValue createNumberAttribute(Integer value) {
 		return new AttributeValue().withN(value.toString());
+	}
+
+
+    protected Map<String, AttributeValue> createGenericItem() {
+		return createGenericItem(createStringAttribute(), createStringAttribute());
 	}
 
     protected Map<String, AttributeValue> createGenericItem(AttributeValue hash) {

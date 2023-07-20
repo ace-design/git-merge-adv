@@ -44,8 +44,8 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
     private boolean createIfNotExist = true;,
     private String tableName = DEFAULT_TABLE_NAME;,
     private String proxyHost;,
-    private final DynamoDBSessionStore dynamoSessionStore;,
     private Integer proxyPort;,
+    private final DynamoDBSessionStore dynamoSessionStore;,
     private ExpiredSessionReaper expiredSessionReaper;,
     private static final Log logger = LogFactory.getLog(DynamoDBSessionManager.class);,
 
@@ -110,9 +110,11 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
         this.proxyHost = proxyHost;
     }
 
+
     public void setProxyPort(Integer proxyPort) {
         this.proxyPort = proxyPort;
     }
+
 
     @Override
     protected void initInternal() throws LifecycleException {
@@ -141,10 +143,14 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
     }
 
 
-    @Override
+    <<<<<<< left_content.java
+@Override
     protected synchronized void stopInternal() throws LifecycleException {
         super.stopInternal();
     }
+=======
+>>>>>>> right_content.java
+
 
     private void initDynamoTable(AmazonDynamoDBClient dynamo) {
         boolean tableExists = DynamoUtils.doesTableExist(dynamo, this.tableName);
@@ -204,34 +210,20 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
      *         context.xml. False otherwise
      */
 
-    public static void debug(String s) {
-        logger.debug(s);
-    }
-
     private boolean credentialsExistInContextConfig() {
         return accessKey != null || secretKey != null;
     }
 
-    public static void warn(String s) {
-        logger.warn(s);
-    }
 
     /**
      * @return True if both the access key and secret key were set in context.xml config. False
      *         otherwise
      */
 
-    public static void warn(String s, Exception e) {
-        logger.warn(s, e);
-    }
-
     private boolean credentialsInContextConfigAreValid() {
         return StringUtils.isNullOrEmpty(accessKey) || StringUtils.isNullOrEmpty(secretKey);
     }
 
-    public static void error(String s) {
-        logger.error(s);
-    }
 
     private ClientConfiguration initClientConfiguration() {
         ClientConfiguration clientConfiguration = new ClientConfiguration();
@@ -248,6 +240,23 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
         }
 
         return clientConfiguration;
+    }
+
+
+    public static void debug(String s) {
+        logger.debug(s);
+    }
+
+    public static void warn(String s) {
+        logger.warn(s);
+    }
+
+    public static void warn(String s, Exception e) {
+        logger.warn(s, e);
+    }
+
+    public static void error(String s) {
+        logger.error(s);
     }
 
     public static void error(String s, Exception e) {

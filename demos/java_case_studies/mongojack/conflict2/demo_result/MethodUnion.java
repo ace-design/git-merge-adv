@@ -31,17 +31,22 @@ import org.mongojack.JacksonDBCollection;
 public abstract class MongoDBTestBase{
 
     private static final Random rand = new Random();,
-    private boolean useStreamParser = true;,
-    private boolean useStreamSerialiser = false;,
     private static final String dbHostKey = "MONGOJACK_TESTDB_HOST";,
     private static final Map<String, String> environment = System.getenv();,
+    private boolean useStreamParser = true;,
+    private boolean useStreamSerialiser = false;,
     protected Mongo mongo;,
     protected DB db;,
     private Set<String> collections;,
 
     @Before
     public void connectToDb() throws Exception {
-        mongo = new Mongo();
+        String testDbHost = "localhost";
+        if (environment.containsKey(dbHostKey)) {
+            testDbHost = environment.get(dbHostKey);
+        }
+
+        mongo = new Mongo(testDbHost);
         db = mongo.getDB("unittest");
         collections = new HashSet<String>();
     }
@@ -61,13 +66,19 @@ public abstract class MongoDBTestBase{
      * @return The collection
      */
 
+    /**
+     * Get a collection with a random name.  Should grant some degree of isolation from tests running in parallel.
+     *
+     * @return The collection
+     */
+
     protected DBCollection getCollection(String name) {
         collections.add(name);
         return db.getCollection(name);
     }
 
     /**
-     * Get a collection with a random name.  Should grant some degree of isolation from tests running in parallel.
+     * Get a collection with a random name. Should grant some degree of isolation from tests running in parallel.
      *
      * @return The collection
      */
@@ -85,12 +96,6 @@ public abstract class MongoDBTestBase{
         }
         return getCollection(name.toString());
     }
-
-    /**
-     * Get a collection with a random name. Should grant some degree of isolation from tests running in parallel.
-     *
-     * @return The collection
-     */
 
     protected <T, K> JacksonDBCollection<T, K> configure(JacksonDBCollection<T, K> collection) {
         if (useStreamParser) {
@@ -118,16 +123,17 @@ public abstract class MongoDBTestBase{
         return configure(JacksonDBCollection.wrap(getCollection(collectionName), type, keyType));
     }
 
+    protected <T, K> JacksonDBCollection<T, K> getCollection(Class<T> type, Class<K> keyType, ObjectMapper mapper) {
+        return configure(JacksonDBCollection.wrap(getCollection(), type, keyType, mapper));
+    }
+
+
     public void setUseStreamParser(boolean useStreamParser) {
         this.useStreamParser = useStreamParser;
     }
 
     public void setUseStreamSerialiser(boolean useStreamSerialiser) {
         this.useStreamSerialiser = useStreamSerialiser;
-    }
-
-    protected <T, K> JacksonDBCollection<T, K> getCollection(Class<T> type, Class<K> keyType, ObjectMapper mapper) {
-        return configure(JacksonDBCollection.wrap(getCollection(), type, keyType, mapper));
     }
 
 }

@@ -156,6 +156,35 @@ public class SemanticPipeline{
 	}
 
 
+    boolean hasTypeOrMoreCommand(@NotNull Rule r) {
+		GrammarAST ast = r.ast;
+		if (ast == null) {
+			return false;
+		}
+
+		GrammarAST altActionAst = (GrammarAST)ast.getFirstDescendantWithType(ANTLRParser.LEXER_ALT_ACTION);
+		if (altActionAst == null) {
+			// the rule isn't followed by any commands
+			return false;
+		}
+
+		// first child is the alt itself, subsequent are the actions
+		for (int i = 1; i < altActionAst.getChildCount(); i++) {
+			GrammarAST node = (GrammarAST)altActionAst.getChild(i);
+			if (node.getType() == ANTLRParser.LEXER_ACTION_CALL) {
+				if ("type".equals(node.getChild(0).getText())) {
+					return true;
+				}
+			}
+			else if ("more".equals(node.getText())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
     void assignTokenTypes(Grammar g, List<GrammarAST> tokensDefs,
 						  List<GrammarAST> tokenIDs, List<GrammarAST> terminals)
 	{
@@ -195,34 +224,6 @@ public class SemanticPipeline{
 
 		g.tool.log("semantics", "tokens="+g.tokenNameToTypeMap);
         g.tool.log("semantics", "strings="+g.stringLiteralToTypeMap);
-	}
-
-    boolean hasTypeOrMoreCommand(@NotNull Rule r) {
-		GrammarAST ast = r.ast;
-		if (ast == null) {
-			return false;
-		}
-
-		GrammarAST altActionAst = (GrammarAST)ast.getFirstDescendantWithType(ANTLRParser.LEXER_ALT_ACTION);
-		if (altActionAst == null) {
-			// the rule isn't followed by any commands
-			return false;
-		}
-
-		// first child is the alt itself, subsequent are the actions
-		for (int i = 1; i < altActionAst.getChildCount(); i++) {
-			GrammarAST node = (GrammarAST)altActionAst.getChild(i);
-			if (node.getType() == ANTLRParser.LEXER_ACTION_CALL) {
-				if ("type".equals(node.getChild(0).getText())) {
-					return true;
-				}
-			}
-			else if ("more".equals(node.getText())) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 }

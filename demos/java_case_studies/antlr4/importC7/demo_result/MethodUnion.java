@@ -44,8 +44,8 @@ import org.antlr.v4.runtime.*;
 
 public class LexerATNSimulator extends ATNSimulator{
 
-    public static final RuleContext EMPTY_LEXER_RULE_CONTEXT = new RuleContext();,
     public static boolean debug = false;,
+    public static final RuleContext EMPTY_LEXER_RULE_CONTEXT = new RuleContext();,
     public static boolean dfa_debug = false;,
     public static final int MAX_DFA_EDGE = 127;,
     private boolean trace = false;,
@@ -718,12 +718,12 @@ public class LexerATNSimulator extends ATNSimulator{
 		return dfa[mode];
 	}
 
-    /** Get the text of the current token */
-
     @NotNull
 	public String getText(@NotNull CharStream input) {
 		return input.getText(Interval.of(startIndex, input.index()));
 	}
+
+    /** Get the text of the current token */
 
     public int getLine() {
 		return line;

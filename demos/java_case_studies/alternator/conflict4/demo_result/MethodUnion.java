@@ -1,11 +1,9 @@
 package com.michelboudreau.test;
 import com.amazonaws.services.dynamodb.model.*;
-import com.amazonaws.services.dynamodb.model.BatchGetItemRequest;
-import com.amazonaws.services.dynamodb.model.BatchGetItemResult;
-import com.amazonaws.services.dynamodb.model.BatchWriteItemRequest;
-import com.amazonaws.services.dynamodb.model.BatchWriteItemResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import com.amazonaws.services.dynamodb.model.BatchWriteItemRequest;
+import com.amazonaws.services.dynamodb.model.BatchWriteItemResult;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
@@ -29,10 +27,7 @@ public class AlternatorBatchItemTest extends AlternatorTest{
         deleteAllTables();
     }*/
 
-    @Test
-	public void vanillaBatchGetItemTest(){
-		BatchGetItemResult result  = client.batchGetItem(new BatchGetItemRequest());
-	}
+    
 
     /*
     @Test
@@ -42,7 +37,9 @@ public class AlternatorBatchItemTest extends AlternatorTest{
     }
     */
 
-    @Test
+    <<<<<<< left_content.java
+=======
+@Test
     public void vanillaBatchWriteItemTest() {
         BatchWriteItemRequest batchWriteItemRequest = new BatchWriteItemRequest();
         BatchWriteItemResult result;
@@ -83,5 +80,7 @@ public class AlternatorBatchItemTest extends AlternatorTest{
             requestItems = result.getUnprocessedItems();
         } while (result.getUnprocessedItems().size() > 0);
     }
+>>>>>>> right_content.java
+
 
 }

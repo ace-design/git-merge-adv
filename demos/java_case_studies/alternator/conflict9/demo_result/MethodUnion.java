@@ -109,10 +109,6 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
 		return handler.batchGetItem(batchGetItemRequest);
 	}
 
-    public ListTablesResult listTables() throws AmazonServiceException, AmazonClientException {
-		return listTables(new ListTablesRequest());
-	}
-
     public CreateTableResult createTable(CreateTableRequest createTableRequest)
 			throws AmazonServiceException, AmazonClientException {
 <<<<<<< left_content.java
@@ -123,6 +119,10 @@ public class AlternatorDBInProcessClient extends AmazonWebServiceClient implemen
 >>>>>>> right_content.java
 	}
 
+
+    public ListTablesResult listTables() throws AmazonServiceException, AmazonClientException {
+		return listTables(new ListTablesRequest());
+	}
 
     public UpdateTableResult updateTable(UpdateTableRequest updateTableRequest)
 			throws AmazonServiceException, AmazonClientException {

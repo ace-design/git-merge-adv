@@ -66,20 +66,26 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     public static final String ETL_AUDIT_IGNORE_SERVICE_TOPIC_LIST = "etl.audit.ignore.service.topic.list";,
     public static final String CAMUS_WORK_ALLOCATOR_CLASS = "camus.work.allocator.class";,
     public static final String CAMUS_WORK_ALLOCATOR_DEFAULT = "com.linkedin.camus.workallocater.BaseAllocator";,
+    public static boolean reportJobFailureDueToOffsetOutOfRange = false;,
+    public static final int NUM_TRIES_FETCH_FROM_LEADER = 3;,
+    public static boolean useMockRequestForUnitTest = false;,
+    public static final int NUM_TRIES_TOPIC_METADATA = 3;,
     private static Logger log = null;,
+    public static boolean reportJobFailureDueToSkippedMsg = false;,
 
     public EtlInputFormat() {
     if (log == null)
       log = Logger.getLogger(getClass());
   }
-    public static final int NUM_TRIES_FETCH_FROM_LEADER = 3;,
-    public static boolean reportJobFailureDueToOffsetOutOfRange = false;,
-    public static final int NUM_TRIES_TOPIC_METADATA = 3;,
-    public static boolean useMockRequestForUnitTest = false;,
-    public static boolean reportJobFailureDueToSkippedMsg = false;,
 
     public static void setLogger(Logger log) {
     EtlInputFormat.log = log;
+  }
+
+    @Override
+  public RecordReader<EtlKey, CamusWrapper> createRecordReader(InputSplit split, TaskAttemptContext context)
+      throws IOException, InterruptedException {
+    return new EtlRecordReader(this, split, context);
   }
 
     /**
@@ -88,12 +94,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
    * @param context
    * @return
    */
-
-    @Override
-  public RecordReader<EtlKey, CamusWrapper> createRecordReader(InputSplit split, TaskAttemptContext context)
-      throws IOException, InterruptedException {
-    return new EtlRecordReader(this, split, context);
-  }
 
     /**
    * Gets the metadata from Kafka
@@ -148,15 +148,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return topicMetadataList;
   }
 
-    private SimpleConsumer createConsumer(JobContext context, String broker) {
-    if (!broker.matches(".+:\\d+"))
-      throw new InvalidParameterException("The kakfa broker " + broker + " must follow address:port pattern");
-    String[] hostPort = broker.split(":");
-    SimpleConsumer consumer =
-        new SimpleConsumer(hostPort[0], Integer.valueOf(hostPort[1]), CamusJob.getKafkaTimeoutValue(context),
-            CamusJob.getKafkaBufferSize(context), CamusJob.getKafkaClientName(context));
-    return consumer;
-  }
+    
 
     /**
    * Gets the latest offsets and create the requests as needed
@@ -173,6 +165,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return createSimpleConsumer(context, hostPort[0], Integer.valueOf(hostPort[1]));
   }
 
+
     public SimpleConsumer createSimpleConsumer(JobContext context, String host, int port) {
     SimpleConsumer consumer =
         new SimpleConsumer(host, port,
@@ -180,6 +173,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
             CamusJob.getKafkaClientName(context));
     return consumer;
   }
+
 
     /**
    * Gets the latest offsets and create the requests as needed
@@ -292,6 +286,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     }
     return null;
   }
+
 
     @Override
   public List<InputSplit> getSplits(JobContext context) throws IOException, InterruptedException {
@@ -457,6 +452,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return sb.toString();
   }
 
+
     @Override
       public int compare(CamusRequest r1, CamusRequest r2) {
         return r1.getTopic().compareTo(r2.getTopic());
@@ -518,10 +514,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     }
   }
 
-    public static void setMoveToLatestTopics(JobContext job, String val) {
-    job.getConfiguration().set(KAFKA_MOVE_TO_LAST_OFFSET_LIST, val);
-  }
-
     private void writeRequests(List<CamusRequest> requests, JobContext context) throws IOException {
     FileSystem fs = FileSystem.get(context.getConfiguration());
     Path output = FileOutputFormat.getOutputPath(context);
@@ -541,24 +533,16 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     writer.close();
   }
 
+    public static void setMoveToLatestTopics(JobContext job, String val) {
+    job.getConfiguration().set(KAFKA_MOVE_TO_LAST_OFFSET_LIST, val);
+  }
+
     public static String[] getMoveToLatestTopics(JobContext job) {
     return job.getConfiguration().getStrings(KAFKA_MOVE_TO_LAST_OFFSET_LIST);
   }
 
     public static void setKafkaClientBufferSize(JobContext job, int val) {
     job.getConfiguration().setInt(KAFKA_CLIENT_BUFFER_SIZE, val);
-  }
-
-    public static int getKafkaClientBufferSize(JobContext job) {
-    return job.getConfiguration().getInt(KAFKA_CLIENT_BUFFER_SIZE, 2 * 1024 * 1024);
-  }
-
-    public static void setKafkaClientTimeout(JobContext job, int val) {
-    job.getConfiguration().setInt(KAFKA_CLIENT_SO_TIMEOUT, val);
-  }
-
-    public static int getKafkaClientTimeout(JobContext job) {
-    return job.getConfiguration().getInt(KAFKA_CLIENT_SO_TIMEOUT, 60000);
   }
 
     private Map<CamusRequest, EtlKey> getPreviousOffsets(Path[] inputs, JobContext context) throws IOException {
@@ -587,6 +571,18 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
       }
     }
     return offsetKeysMap;
+  }
+
+    public static int getKafkaClientBufferSize(JobContext job) {
+    return job.getConfiguration().getInt(KAFKA_CLIENT_BUFFER_SIZE, 2 * 1024 * 1024);
+  }
+
+    public static void setKafkaClientTimeout(JobContext job, int val) {
+    job.getConfiguration().setInt(KAFKA_CLIENT_SO_TIMEOUT, val);
+  }
+
+    public static int getKafkaClientTimeout(JobContext job) {
+    return job.getConfiguration().getInt(KAFKA_CLIENT_SO_TIMEOUT, 60000);
   }
 
     public static void setKafkaMaxPullHrs(JobContext job, int val) {
@@ -652,6 +648,10 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return topicDecoder == null ? getMessageDecoderClass(job) : topicDecoder;
   }
 
+    public static String[] getKafkaBlacklistTopic(JobContext job) {
+    return getKafkaBlacklistTopic(job.getConfiguration());
+  }
+
     private class OffsetFileFilter implements PathFilter{
 
 
@@ -661,10 +661,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     }
 
     }
-    public static String[] getKafkaBlacklistTopic(JobContext job) {
-    return getKafkaBlacklistTopic(job.getConfiguration());
-  }
-
     public static String[] getKafkaBlacklistTopic(Configuration conf) {
     final String blacklistStr = conf.get(KAFKA_BLACKLIST_TOPIC);
     if (blacklistStr != null && !blacklistStr.isEmpty()) {
@@ -673,6 +669,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
       return new String[] {};
     }
   }
+
 
     public static String[] getKafkaWhitelistTopic(JobContext job) {
     return getKafkaWhitelistTopic(job.getConfiguration());
@@ -686,5 +683,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
       return new String[] {};
     }
   }
+
 
 }

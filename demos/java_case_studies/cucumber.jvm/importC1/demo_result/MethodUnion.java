@@ -29,21 +29,19 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URL;
 import java.net.URI;
 import java.time.Duration;
+import java.net.URL;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import static io.cucumber.core.exception.ExceptionUtils.printStackTrace;
 import static java.time.Duration.ZERO;
 import static java.time.format.DateTimeFormatter.ISO_INSTANT;
+import static io.cucumber.core.exception.ExceptionUtils.printStackTrace;
 import static java.util.Locale.ROOT;
 
 public final class TestNGFormatter implements EventListener, StrictAware{
@@ -79,7 +77,9 @@ public final class TestNGFormatter implements EventListener, StrictAware{
         }
     }
 
-    @SuppressWarnings("WeakerAccess") // Used by plugin factory
+
+    <<<<<<< left_content.java
+@SuppressWarnings("WeakerAccess") // Used by plugin factory
     public TestNGFormatter(URL url) throws IOException {
         this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
         try {
@@ -94,6 +94,9 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             throw new CucumberException("Error initializing DocumentBuilder.", e);
         }
     }
+=======
+>>>>>>> right_content.java
+
 
     @Override
     public void setEventPublisher(EventPublisher publisher) {
@@ -266,11 +269,7 @@ public final class TestNGFormatter implements EventListener, StrictAware{
             }
         }
 
-        private String printStrackTrace(Result failed) {
-            StringWriter stringWriter = new StringWriter();
-            failed.getError().printStackTrace(new PrintWriter(stringWriter));
-            return stringWriter.toString();
-        }
+        
 
         private String calculateTotalDurationString() {
             Duration totalDuration = ZERO;
