@@ -18,6 +18,33 @@ def main():
 
     run_cs(algo,dir)
     run_overall(algo)
+    compile_all(dir)
+
+
+def compile_all(dir):
+    comparison={}
+    for root,dirs,files in os.walk(dir+'/images/numerical_data'):
+        for file in files:
+            if ".txt" in file:
+                with open(os.path.join(root,file),'r') as reader:
+                    lines=reader.readlines()
+                    for line in lines:
+                        if "Overall" in line:
+                            comparison[file.strip(".txt")]=float(line.split(":")[-1].strip('\n'))
+
+
+    xaxis=comparison.keys()
+    yaxis=comparison.values()
+
+    plt.bar(xaxis,yaxis)
+    plt.title("Comparison Results")
+    plt.xlabel('Measurement')
+    plt.ylabel('Quantity')
+    plt.savefig(dir+'/images/Comparison.png')
+    plt.clf()
+    plt.cla()
+    plt.close()    
+    print(comparison)
 
 
 #Find all data associated with the desired algorithm in specified case studies path.
@@ -37,6 +64,10 @@ def run_cs(algo,dir):
     data['Overall']=math.sqrt(math.pow(data['deletions'],2)+math.pow(data['insertions'],2)+math.pow(data['moves'],2)+math.pow(data['diff_path'],2)+math.pow(data['num_conflicts'],2))
     print(dir+" results:\n")
     print(data)
+
+    with open(dir+'/images/numerical_data/'+algo+'.txt','w') as writer:
+        for val in data.keys():
+            writer.write(val+": "+str(data[val])+'\n')
     
     xaxis=data.keys()
     yaxis=data.values()
@@ -48,6 +79,9 @@ def run_cs(algo,dir):
     plt.xlabel('Measurement')
     plt.ylabel('Quantity')
     plt.savefig(dir+'/images/'+algo+'.png')
+    plt.clf()
+    plt.cla()
+    plt.close()
 
 # Find data associated with algorithm accross all case studies in demo.
 def run_overall(algo):
@@ -76,6 +110,9 @@ def run_overall(algo):
     plt.xlabel('Measurement')
     plt.ylabel('Quantity')
     plt.savefig('images/'+algo+'.png')
+    plt.clf()
+    plt.cla()
+    plt.close()
 
 
         

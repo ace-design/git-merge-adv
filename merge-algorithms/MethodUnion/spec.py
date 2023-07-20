@@ -271,7 +271,7 @@ class Java(Lang):
             ((enum_declaration) @name)
         """)
 
-        enum_captures=class_captures+enum_query.captures(tree.root_node)
+        class_captures=class_captures+enum_query.captures(tree.root_node)
 
         field_query = Java_Lang.query("""
             (field_declaration
@@ -371,7 +371,7 @@ class Java(Lang):
         #         # full_nested_name=nested_class_details.children[0].text.decode()+" "+nested_class_details.children[1].text.decode()+" "+nested_class_details.children[2].text.decode()+nested_class
         #         class_ref[full_nested_name].add_sub_classes(class_obj)
 
-        for class_val in enum_captures:
+        for class_val in class_captures:
             class_name=""
             full_class_name=""
             indentation=int(class_val[0].start_point[1])
@@ -472,7 +472,7 @@ class Java(Lang):
             method_signature=""
 
             for child in method[0].parent.children:
-                if child.type=="block" or "body" in child.type:
+                if child.type=="block" or "body" in child.type or child.type=="throws":
                     break
                 else:
                     if (child.type!="modifiers" and "type" not in child.type):

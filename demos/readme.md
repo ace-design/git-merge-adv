@@ -20,7 +20,7 @@ Combining the results from the java and python case studies, we get the followin
 
 Execute run_algo.py:
 
-`python3 run_algo.py --cs <path to case study folder> --algo <name of desired algorithm> --lang <language used in case study>`
+`python3 run_algo.py --cs <path to case study folder> --algo <name of desired algorithm> --lang <language used in case study> --purpose <all or spec>`
 
 Execute run_analysis.py:
 

@@ -1,0 +1,15 @@
+hash,left,right,base,file
+f9253d8,c50c5d2d,2a2a487b,b361e764,duke-core/src/test/java/no/priv/garshol/duke/cleaners/RegexpCleanerTest.java
+6767497,56978826,7fb9b5e5,04b3b5bb,src/main/java/no/priv/garshol/duke/Configuration.java
+6767497,56978826,7fb9b5e5,04b3b5bb,src/main/java/no/priv/garshol/duke/ConfigurationImpl.java
+6767497,56978826,7fb9b5e5,04b3b5bb,src/test/java/no/priv/garshol/duke/test/ConfigLoaderTest.java
+5dc0d9b,ee34bb1f,8bbc85f0,3ac26c5b,buildNumber.properties
+b06cd30,3727c18a,c15d7c60,a89e350e,buildNumber.properties
+b06cd30,3727c18a,c15d7c60,a89e350e,src/main/java/no/priv/garshol/duke/databases/LuceneDatabase.java
+892bd56,a1a7b8bb,2babc618,d9f82440,buildNumber.properties
+adadb18,b442f53c,cf65de37,7a64c37c,buildNumber.properties
+7c65f5e,af05b4da,80e3abb6,ea243a3a,buildNumber.properties
+7c65f5e,af05b4da,80e3abb6,ea243a3a,src/main/java/no/priv/garshol/duke/LuceneDatabase.java
+45acc6d,5044768d,70c2975c,6f8ccf45,buildNumber.properties
+bf52872,9103675d,f4d6716b,6bc4d478,buildNumber.properties
+6ad464e,8195b17b,6bc4d478,9d433ef7,buildNumber.properties
