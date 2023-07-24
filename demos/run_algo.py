@@ -32,17 +32,21 @@ def main():
             run_gumtree_jdime(output_path)
     else:
         for subdir, dirs, files in os.walk(output_path):
-            for d in dirs:
-                if ("importC" in d or "conflict" in d):
-                    print("\nExecute "+os.path.join(subdir, d)+":")
-                    print(os.path.join(subdir, d),lang)
-                    exec_algo(algo,os.path.join(subdir, d),lang)
+            try:   
+                for d in dirs:
+                    if ("importC" in d or "conflict" in d):
+                        print("\nExecute "+os.path.join(subdir, d)+":")
+                        print(os.path.join(subdir, d),lang)
+                        exec_algo(algo,os.path.join(subdir, d),lang)
 
-                    run_gumtree(os.path.join(subdir,d),lang,algo)
+                        run_gumtree(os.path.join(subdir,d),lang,algo)
 
-                    if (lang=="java"):
-                        run_gumtree_spork(os.path.join(subdir,d))
-                        run_gumtree_jdime(os.path.join(subdir,d))
+                        if (lang=="java"):
+                            run_gumtree_spork(os.path.join(subdir,d))
+                            run_gumtree_jdime(os.path.join(subdir,d))
+            except Exception as e:
+                print(f"error in executing the casestudy {d} in {subdir}")
+                print(e)
 
     # for dir in os.walk(output_path)
 
@@ -95,8 +99,7 @@ def get_case_study(case_study,output_path):
 # Looks for all import deletions, moves and insertions found in gumtree textdiff output.
 def search_gumtree(result,new):
     if (len(result)==1 and result[0]==''):
-        print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
-        exit(0)
+        raise RuntimeError("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
 
     dict={
     'deletions':re.compile(r'\ndelete-(tree|node)'),
@@ -133,8 +136,8 @@ def search_gumtree(result,new):
 
 def search_gumtree_full(result,new,num_conflicts):
     if (len(result)==1 and result[0]==''):
-        print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
-        exit(0)
+        raise RuntimeError("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
+
 
     dict={
     'deletions':re.compile(r'\ndelete'),
