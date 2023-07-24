@@ -729,14 +729,14 @@ class Python(Lang):
                     codeseq.insert(pointer,"class "+className)
                     pointer = pointer+1
                 else:
-                    pointer = (codeseq.index("class "+methodName)) + 1
+                    pointer = (codeseq.index("class "+className)) + 1
                 # methodindent= str(nod.col_offset)
                 newClass = Class(className,className,0,version,0,nod)
 
                 #Method declaration is referenced by its signature.
 
                 if (className in all_classes.keys()):
-                    classnod =  all_classes[className]
+                    classnod =  all_classes[className][0]
                     classnod.add_version(version)
                     for child in nod.body:
                         if isinstance(child,ast.Assign):
