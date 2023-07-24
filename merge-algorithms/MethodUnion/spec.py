@@ -806,8 +806,6 @@ class Python(Lang):
         return methods
     
     def output_body(self):
-        print(codeseq)
-        print(all_methods)
         body  =  self.initialize_body()
         codearray = [None]*len(codeseq)
         for methodname in all_methods.keys():
@@ -844,6 +842,8 @@ class Python(Lang):
         lastele = codeseq.pop()
         if lastele[0:3] == "if ":
             body = body + lastele
+        
+        print("Algorithm run successfully")
         return body
 
     
