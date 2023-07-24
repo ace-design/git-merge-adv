@@ -63,7 +63,7 @@ class Tree:
         self.method_ref=lang.get_method_ref()
         for method_val in self.method_ref.keys():
             result,sus,versions=self.base_algorithm(self.method_ref,method_val)
-            if (type(result) is str or sus):
+            if (type(result) is str):
                 # self.method_ref[method_val][0].set_selected()
                 extra.append(method_val)
             else:
@@ -199,38 +199,5 @@ class Tree:
                 result.set_selected()
 
 
-
-
-    def base_algorithm(self,references,node):
-        paths=list(references[node])
-
-        if (len(paths)==1):
-            versions=list(paths[0].get_version())
-            if (len(versions)==1 or len(versions)==2):
-                return paths[0],True,versions #updater=versions
-            else:
-                return paths[0],False,versions #False because 3 versions include same
-        elif (len(paths)==2):
-            versions=list(paths[0].get_version())
-            versions_2=list(paths[1].get_version())
-            if (len(versions)==2 or len(versions_2)==2):
-                if (len(versions)==2):
-                    if (versions_2[0]=="base"):
-                        return paths[0],False,versions
-                    else:
-                        return paths[1],False,versions_2
-                else:
-                    return paths[0],False,versions
-            else:
-                if (versions[0]=="base"):
-                    return paths[1],True,versions_2
-                elif (versions_2[0]=="base"):
-                    return paths[0],True,versions
-                else:
-                    return "Conflicting",None,None
-                    # extra[current_sum]=self.map[dir]
-        else:
-            return "Conflicting",None,None
-            # extra[current_sum]=self.map[dir]
 
     

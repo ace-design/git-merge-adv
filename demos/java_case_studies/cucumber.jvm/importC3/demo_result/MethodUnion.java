@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.TreeSet;
 
 public final class RuntimeOptionsBuilder{
 
@@ -43,7 +44,6 @@ public final class RuntimeOptionsBuilder{
         return this;
     }
 
-
     public RuntimeOptionsBuilder addFeature(FeatureWithLines featureWithLines) {
         parsedFeaturePaths.add(featureWithLines);
         return this;
@@ -54,14 +54,29 @@ public final class RuntimeOptionsBuilder{
         return this;
     }
 
-    
+    private RuntimeOptionsBuilder addLineFilters(FeatureWithLines featureWithLines) {
+        URI key = featureWithLines.uri();
+        Set<Integer> lines = featureWithLines.lines();
+        if (lines.isEmpty()) {
+            return null;
+        }
+        if (this.parsedLineFilters.containsKey(key)) {
+            this.parsedLineFilters.get(key).addAll(lines);
+        } else {
+            this.parsedLineFilters.put(key, new TreeSet<>(lines));
+        }
+        return this;
+    }
 
     public RuntimeOptionsBuilder addNameFilter(Pattern pattern) {
         this.parsedNameFilters.add(pattern);
         return this;
     }
 
-    
+    public RuntimeOptionsBuilder addJunitOption(String junitOption) {
+        this.parsedJunitOptions.add(junitOption);
+        return this;
+    }
 
     public RuntimeOptionsBuilder addPluginName(String name, boolean isAddPlugin) {
         this.parsedPluginData.addPluginName(name, isAddPlugin);
@@ -183,7 +198,9 @@ public final class RuntimeOptionsBuilder{
         return setMonochrome(true);
     }
 
-    
+    public void setIsRerun(boolean isRerun) {
+        this.parsedIsRerun = isRerun;
+    }
 
     public RuntimeOptionsBuilder setPickleOrder(PickleOrder pickleOrder) {
         this.parsedPickleOrder = pickleOrder;
@@ -228,7 +245,6 @@ public final class RuntimeOptionsBuilder{
         this.parsedObjectFactoryClass = objectFactoryClass;
     }
 
-
     static final class ParsedPluginData{
 
         private ParsedPlugins formatters = new ParsedPlugins();,
@@ -245,13 +261,11 @@ public final class RuntimeOptionsBuilder{
             }
         }
 
-
         void addDefaultSummaryPrinterIfNotPresent() {
             if (summaryPrinters.names.isEmpty()) {
                 addPluginName("summary", false);
             }
         }
-
 
         void addDefaultFormatterIfNotPresent() {
             if (formatters.names.isEmpty()) {
@@ -259,16 +273,13 @@ public final class RuntimeOptionsBuilder{
             }
         }
 
-
         void updateFormatters(List<Options.Plugin> formatter) {
             this.formatters.updateNameList(formatter);
         }
 
-
         void updateSummaryPrinters(List<Options.Plugin> pluginSummaryPrinterNames) {
             summaryPrinters.updateNameList(pluginSummaryPrinterNames);
         }
-
 
         private static class ParsedPlugins{
 
@@ -282,7 +293,6 @@ public final class RuntimeOptionsBuilder{
                 }
             }
 
-
             void updateNameList(List<Options.Plugin> nameList) {
                 if (!names.isEmpty()) {
                     if (clobber) {
@@ -292,7 +302,6 @@ public final class RuntimeOptionsBuilder{
                 }
             }
 
-
         }
     }
     private static class ParsedOptionNames{
@@ -300,9 +309,21 @@ public final class RuntimeOptionsBuilder{
         private List<String> names = new ArrayList<>();,
         private boolean clobber = false;,
 
-        
+        void addName(String name, boolean isAddOption) {
+            names.add(name);
+            if (!isAddOption) {
+                clobber = true;
+            }
+        }
 
-        
+        void updateNameList(List<String> nameList) {
+            if (!names.isEmpty()) {
+                if (clobber) {
+                    nameList.clear();
+                }
+                nameList.addAll(names);
+            }
+        }
 
     }
 }

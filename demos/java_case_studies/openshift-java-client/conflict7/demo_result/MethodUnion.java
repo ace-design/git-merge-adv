@@ -132,7 +132,26 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return createApplication(name, cartridge, scale, gearProfile, initialGitUrl, IHttpClient.NO_TIMEOUT);
 	}
 
-    
+    public IApplication createApplication(final String name, final IStandaloneCartridge cartridge,
+			final ApplicationScale scale, final IGearProfile gearProfile, String initialGitUrl, int timeout)
+			throws OpenShiftException {
+		if (name == null) {
+			throw new OpenShiftException("Application name is mandatory but none was given.");
+		}
+		// this would trigger lazy loading list of available applications.
+		// this is needed anyhow since we're adding the new app to the list of
+		// available apps
+		if (hasApplicationByName(name)) {
+			throw new OpenShiftException("Application with name \"{0}\" already exists.", name);
+		}
+
+		ApplicationResourceDTO applicationDTO =
+				new CreateApplicationRequest().execute(name, cartridge, scale, gearProfile, initialGitUrl, timeout);
+		IApplication application = new ApplicationResource(applicationDTO, cartridge, this);
+
+		getOrLoadApplications().add(application);
+		return application;
+	}
 
     public IApplication createApplication(final String name, final IStandaloneCartridge cartridge,
 			final ApplicationScale scale, final IGearProfile gearProfile, String initialGitUrl, int timeout,
@@ -156,12 +175,15 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 		return application;
 	}
 
-
     public boolean hasApplicationByName(String name) throws OpenShiftException {
 		return getApplicationByName(name) != null;
 	}
 
-    
+    @Override
+    public IApplication createApplication(String name, IStandaloneCartridge cartridge, ApplicationScale scale, IGearProfile gearProfile, String initialGitUrl, long timeout) throws OpenShiftException {
+        //TODO
+        throw new UnsupportedOperationException();
+    }
 
     public IApplication getApplicationByName(String name) throws OpenShiftException {
 		Assert.notNull(name);
@@ -323,9 +345,7 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
 			return super.execute(timeout, parameters.toArray());
 		}
 
-
-        <<<<<<< left_content.java
-public ApplicationResourceDTO execute(final String name, final IStandaloneCartridge cartridge,
+        public ApplicationResourceDTO execute(final String name, final IStandaloneCartridge cartridge,
 				final ApplicationScale scale, final IGearProfile gearProfile, final String initialGitUrl, final int timeout) throws OpenShiftException {
 			if (cartridge == null) {
 				throw new OpenShiftException("Application cartridge is mandatory but was not given.");
@@ -344,12 +364,8 @@ public ApplicationResourceDTO execute(final String name, final IStandaloneCartri
                 return super.execute(timeout, (ServiceParameter[]) parameters.toArray(new ServiceParameter[parameters.size()]));
             }
 		}
-=======
->>>>>>> right_content.java
 
-
-        <<<<<<< left_content.java
-private List<ServiceParameter> addCartridgeParameter(IStandaloneCartridge cartridge, List<ServiceParameter> parameters) {
+        private List<ServiceParameter> addCartridgeParameter(IStandaloneCartridge cartridge, List<ServiceParameter> parameters) {
 			if (cartridge == null) {
 				return parameters;
 			}
@@ -362,20 +378,34 @@ private List<ServiceParameter> addCartridgeParameter(IStandaloneCartridge cartri
             }
             return parameters;
 		}
-=======
->>>>>>> right_content.java
 
+        private List<ServiceParameter> addScaleParameter(ApplicationScale scale, List<ServiceParameter> parameters) {
+			if (scale == null) {
+				return parameters;
+			}
+			parameters.add(new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_SCALE, scale.getValue()));
+			return parameters;
+		}
 
-        
+        private List<ServiceParameter> addGearProfileParameter(IGearProfile gearProfile, List<ServiceParameter> parameters) {
+			if (gearProfile == null) {
+				return parameters;
+			}
+			parameters.add(new ServiceParameter(IOpenShiftJsonConstants.PROPERTY_GEAR_PROFILE, gearProfile.getName()));
+			return parameters;
+		}
 
-        
-
-        
+        private List<ServiceParameter> addStringParameter(String parameterName, String value, List<ServiceParameter> parameters) {
+			if (value == null) {
+				return parameters;
+			}
+			parameters.add(new ServiceParameter(parameterName, value));
+			return parameters;
+		}
 
         private boolean isDownloadableCartridge(ICartridge cartridge) {
             return cartridge.getName().matches(URL_REGEX);
         }
-
 
     }
     private class UpdateDomainRequest extends ServiceRequest{

@@ -188,6 +188,17 @@ class TestRSA(unittest.TestCase):
     """
 
     def test_encrypt_decrypt(self):
+<<<<<<< left_content.py
+        self.assertEqual(7, decrypt(encrypt(7, 23, 143), 47, 143))
+
+    def test_key_generator(self):
+        n, e, d = generate_key(8, seed='test')
+        data = 2
+        en = encrypt(data, e, n)
+        dec = decrypt(en, d, n)
+        self.assertEqual(data, dec)
+
+=======
         self.assertEqual(7,decrypt(encrypt(7, 23, 143), 47, 143))
     # def test_key_generator(self): # this test takes a while!
     #     for i in range(100):
@@ -197,6 +208,7 @@ class TestRSA(unittest.TestCase):
     #         en = encrypt(data, e, n)
     #         dec = decrypt(en, d, n)
     #         self.assertEqual(data,dec)
+>>>>>>> right_content.py
 
 if __name__ == "__main__":
     unittest.main()

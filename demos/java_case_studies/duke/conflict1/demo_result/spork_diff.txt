@@ -1,6 +1,6 @@
 deletions: 0
 insertions: 0
-moves: 6
+moves: 0
 diff_path: 0
 num_conflicts: 0
-Overall: 6.0
+Overall: 0.0

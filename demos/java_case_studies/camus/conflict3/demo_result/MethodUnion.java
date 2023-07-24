@@ -255,7 +255,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return null;
   }
 
-
     private String generateLogWarnForSkippedTopics(Map<TopicAndPartition, PartitionOffsetRequestInfo> offsetInfo, SimpleConsumer consumer) {
     StringBuilder sb = new StringBuilder();
     sb.append("The following topics will be skipped due to failure in fetching latest offsets from leader "
@@ -265,7 +264,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     }
     return sb.toString();
   }
-
 
     public String createTopicRegEx(HashSet<String> topicsSet) {
     String regex = "";
@@ -586,7 +584,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     }
   }
 
-
     public static void setKafkaMaxPullHrs(JobContext job, int val) {
     job.getConfiguration().setInt(KAFKA_MAX_PULL_HRS, val);
   }
@@ -615,7 +612,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
       return new String[] {};
     }
   }
-
 
     public static void setKafkaMaxHistoricalDays(JobContext job, int val) {
     job.getConfiguration().setInt(KAFKA_MAX_HISTORICAL_DAYS, val);

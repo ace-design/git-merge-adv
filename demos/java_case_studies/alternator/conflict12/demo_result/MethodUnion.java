@@ -395,7 +395,6 @@ public class AlternatorQueryTest extends AlternatorTest{
 		}
 	}
 
-
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionLTTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -414,7 +413,6 @@ public class AlternatorQueryTest extends AlternatorTest{
         // NOTE: LT is currently a string comparison, so "11" is < "2".
         Assert.assertEquals("Should return two items.", 2, result.getItems().size());
 	}
-
 
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionLETest() {
@@ -435,7 +433,6 @@ public class AlternatorQueryTest extends AlternatorTest{
         Assert.assertEquals("Should return three items.", 3, result.getItems().size());
 	}
 
-
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionGTTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -455,7 +452,6 @@ public class AlternatorQueryTest extends AlternatorTest{
         Assert.assertEquals("Should return three items.", 3, result.getItems().size());
 	}
 
-
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionGETest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -474,7 +470,6 @@ public class AlternatorQueryTest extends AlternatorTest{
         // NOTE: GE is currently a string comparison, so "11" is NOT > "2".
         Assert.assertEquals("Should return four items.", 4, result.getItems().size());
 	}
-
 
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionINTest() {
@@ -503,7 +498,6 @@ public class AlternatorQueryTest extends AlternatorTest{
 		}
 	}
 
-
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionBETWEENTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -522,7 +516,6 @@ public class AlternatorQueryTest extends AlternatorTest{
 		Assert.assertNotNull("No items returned.", result.getItems());
         Assert.assertEquals("Should return two items.", 2, result.getItems().size());
 	}
-
 
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionBEGINSWITHTest() {
@@ -548,7 +541,6 @@ public class AlternatorQueryTest extends AlternatorTest{
 		}
 	}
 
-
     @Test
 	public void queryWithHashKeyAndNumericRangeKeyConditionCONTAINSTest() {
         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
@@ -572,7 +564,6 @@ public class AlternatorQueryTest extends AlternatorTest{
                     );
 		}
 	}
-
 
     /*
 	@Test

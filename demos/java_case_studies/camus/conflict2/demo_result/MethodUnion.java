@@ -145,9 +145,7 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return topicMetadataList;
   }
 
-
-    <<<<<<< left_content.java
-public List<TopicMetadata> getKafkaMetadata(JobContext context) {
+    public List<TopicMetadata> getKafkaMetadata(JobContext context) {
     ArrayList<String> metaRequestTopics = new ArrayList<String>();
     CamusJob.startTiming("kafkaSetupTime");
     String brokerString = CamusJob.getKafkaBrokers(context);
@@ -192,11 +190,16 @@ public List<TopicMetadata> getKafkaMetadata(JobContext context) {
     CamusJob.stopTiming("kafkaSetupTime");
     return topicMetadataList;
   }
-=======
->>>>>>> right_content.java
 
-
-    
+    private SimpleConsumer createConsumer(JobContext context, String broker) {
+    if (!broker.matches(".+:\\d+"))
+      throw new InvalidParameterException("The kakfa broker " + broker + " must follow address:port pattern");
+    String[] hostPort = broker.split(":");
+    SimpleConsumer consumer =
+        new SimpleConsumer(hostPort[0], Integer.valueOf(hostPort[1]), CamusJob.getKafkaTimeoutValue(context),
+            CamusJob.getKafkaBufferSize(context), CamusJob.getKafkaClientName(context));
+    return consumer;
+  }
 
     /**
    * Gets the latest offsets and create the requests as needed
@@ -213,7 +216,6 @@ public List<TopicMetadata> getKafkaMetadata(JobContext context) {
     return createSimpleConsumer(context, hostPort[0], Integer.valueOf(hostPort[1]));
   }
 
-
     public SimpleConsumer createSimpleConsumer(JobContext context, String host, int port) {
     SimpleConsumer consumer =
         new SimpleConsumer(host, port,
@@ -221,7 +223,6 @@ public List<TopicMetadata> getKafkaMetadata(JobContext context) {
             CamusJob.getKafkaClientName(context));
     return consumer;
   }
-
 
     /**
    * Gets the latest offsets and create the requests as needed
@@ -334,7 +335,6 @@ public List<TopicMetadata> getKafkaMetadata(JobContext context) {
     }
     return null;
   }
-
 
     @Override
   public List<InputSplit> getSplits(JobContext context) throws IOException, InterruptedException {
@@ -498,7 +498,6 @@ public List<TopicMetadata> getKafkaMetadata(JobContext context) {
     return sb.toString();
   }
 
-
     @Override
       public int compare(CamusRequest r1, CamusRequest r2) {
         return r1.getTopic().compareTo(r2.getTopic());
@@ -579,7 +578,6 @@ public List<TopicMetadata> getKafkaMetadata(JobContext context) {
     }
     return partitionMetadata;
   }
-
 
     private void writeRequests(List<CamusRequest> requests, JobContext context) throws IOException {
     FileSystem fs = FileSystem.get(context.getConfiguration());
@@ -718,7 +716,6 @@ public List<TopicMetadata> getKafkaMetadata(JobContext context) {
     }
   }
 
-
     public static void setEtlAuditIgnoreServiceTopicList(JobContext job, String topics) {
     job.getConfiguration().set(ETL_AUDIT_IGNORE_SERVICE_TOPIC_LIST, topics);
   }
@@ -748,7 +745,6 @@ public List<TopicMetadata> getKafkaMetadata(JobContext context) {
       return new String[] {};
     }
   }
-
 
     public static Class<MessageDecoder> getMessageDecoderClass(JobContext job, String topicName) {
     Class<MessageDecoder> topicDecoder =

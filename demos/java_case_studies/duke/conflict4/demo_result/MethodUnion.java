@@ -93,8 +93,9 @@ public class ConfigurationImpl implements Configuration{
     return thedb;
   }
 
-
-    
+    public void setDatabase(Database database) {
+    this.database = database;
+  }
 
     public void addDatabase(Database database) {
     if (database1 == null)
@@ -104,7 +105,6 @@ public class ConfigurationImpl implements Configuration{
     else
       throw new DukeConfigException("Too many database objects configured");
   }
-
 
     /**
    * The probability threshold used to decide whether two records
@@ -328,11 +328,9 @@ public class ConfigurationImpl implements Configuration{
 	return this.customComparators;
   }
 
-
     @Override
   public void addCustomComparator(Comparator comparator) { 
 	this.customComparators.add(comparator);
   }
-
 
 }

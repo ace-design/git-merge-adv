@@ -184,7 +184,6 @@ public class SemanticPipeline{
 		return false;
 	}
 
-
     void assignTokenTypes(Grammar g, List<GrammarAST> tokensDefs,
 						  List<GrammarAST> tokenIDs, List<GrammarAST> terminals)
 	{

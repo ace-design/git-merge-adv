@@ -131,7 +131,6 @@ public class LuceneDatabase implements Database{
     this.boost_mode = boost_mode;
   }
 
-
     /**
    * Add the record to the index.
    */
@@ -392,7 +391,33 @@ public class LuceneDatabase implements Database{
    * @param required Iff true, return only records matching this value.
    */
 
-    
+    protected void parseTokens(BooleanQuery parent, String fieldName,
+                             String value, boolean required) {
+    value = escapeLucene(value);
+    if (value.length() == 0)
+      return;
+
+    try {
+      TokenStream tokenStream =
+        analyzer.tokenStream(fieldName, new StringReader(value));
+      tokenStream.reset();
+      CharTermAttribute attr =
+        tokenStream.getAttribute(CharTermAttribute.class);
+			
+      while (tokenStream.incrementToken()) {
+        String term = attr.toString();
+        Query termQuery;
+        if (fuzzy_search && isFuzzy(fieldName))
+          termQuery = new FuzzyQuery(new Term(fieldName, term));
+        else
+          termQuery = new TermQuery(new Term(fieldName, term));
+        parent.add(termQuery, required ? Occur.MUST : Occur.SHOULD);
+      }
+    } catch (IOException e) {
+      throw new DukeException("Error parsing input string '"+value+"' "+
+                              "in field " + fieldName);
+    }
+  }
 
     private void parseTokens(BooleanQuery parent, String fieldName,
                              String value, boolean required, double probability) {
@@ -426,7 +451,6 @@ public class LuceneDatabase implements Database{
                               "in field " + fieldName);
     }
   }
-
 
     private boolean isFuzzy(String fieldName) {
     Comparator c = config.getPropertyByName(fieldName).getComparator();
@@ -561,6 +585,5 @@ public class LuceneDatabase implements Database{
       boost = (float) Math.sqrt(1.0 / ((1.0 - probability) * 2.0));
     return boost;
   }
-
 
 }

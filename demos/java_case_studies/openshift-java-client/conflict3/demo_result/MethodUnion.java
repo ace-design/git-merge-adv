@@ -139,7 +139,6 @@ public class ApplicationAssert implements AssertExtension{
 		return this;
 	}
 
-
     public ApplicationAssert hasEmbeddedCartridges(LatestEmbeddableCartridge... selectors)
 			throws OpenShiftException {
 		for (LatestEmbeddableCartridge selector : selectors) {
@@ -152,7 +151,6 @@ public class ApplicationAssert implements AssertExtension{
 		assertThat(application.getApplicationScale()).isEqualTo(applicationScale);
 		return this;
 	}
-
 
     public ApplicationAssert hasEmbeddedCartridge(LatestEmbeddableCartridge selector)
 			throws OpenShiftException {
@@ -169,8 +167,17 @@ public class ApplicationAssert implements AssertExtension{
 		return this;
 	}
 
+    public ApplicationAssert hasEmbeddableCartridges(String... embeddableCartridgeNames) throws OpenShiftException {
+		if (embeddableCartridgeNames.length == 0) {
+			assertEquals(0, application.getEmbeddedCartridges().size());
+		}
 
-    
+		for (String cartridgeName : embeddableCartridgeNames) {
+			assertTrue(application.hasEmbeddedCartridge(cartridgeName));
+		}
+
+		return this;
+	}
 
     public ApplicationAssert hasEmbeddedCartridge(IEmbeddableCartridge cartridge)
 			throws OpenShiftException {
@@ -178,7 +185,6 @@ public class ApplicationAssert implements AssertExtension{
 
 		return this;
 	}
-
 
     public ApplicationAssert hasEmbeddedCartridgeNames(String... embeddableCartridgeNames) throws OpenShiftException {
 		if (embeddableCartridgeNames.length == 0) {
@@ -192,8 +198,13 @@ public class ApplicationAssert implements AssertExtension{
 		return this;
 	}
 
+    public ApplicationAssert hasNotEmbeddableCartridges(String... embeddableCartridgeNames) throws OpenShiftException {		
+		for (String cartridgeName : embeddableCartridgeNames) {
+			assertFalse(application.hasEmbeddedCartridge(cartridgeName));
+		}
 
-    
+		return this;
+	}
 
     public ApplicationAssert hasEmbeddableCartridges(int numberOf) {
 		assertNotNull(application.getEmbeddedCartridges());
@@ -208,7 +219,6 @@ public class ApplicationAssert implements AssertExtension{
 
 		return this;
 	}
-
 
     public ApplicationAssert hasNotEmbeddableCartridges(LatestEmbeddableCartridge... selectors) throws OpenShiftException {
 		for (LatestEmbeddableCartridge selector : selectors) {
@@ -309,6 +319,5 @@ public class ApplicationAssert implements AssertExtension{
 		assertThat(application.getDomain()).isEqualTo(domain);
 		return this;
 	}
-
 
 }

@@ -429,7 +429,24 @@ public class ParserATNFactory implements ATNFactory{
 		return null;
 	}
 
-    
+    protected Handle makeBlock(BlockStartState start, GrammarAST blkAST, List<Handle> alts) {
+		BlockEndState end = newState(BlockEndState.class, blkAST);
+		start.endState = end;
+		for (Handle alt : alts) {
+			// hook alts up to decision block
+			epsilon(start, alt.left);
+			epsilon(alt.right, end);
+			// no back link in ATN so must walk entire alt to see if we can
+			// strip out the epsilon to 'end' state
+			TailEpsilonRemover opt = new TailEpsilonRemover(atn);
+			opt.visit(alt.left);
+		}
+		Handle h = new Handle(start, end);
+//		FASerializer ser = new FASerializer(g, h.left);
+//		System.out.println(blkAST.toStringTree()+":\n"+ser);
+		blkAST.atnState = start;
+		return h;
+	}
 
     @NotNull
 	@Override
@@ -456,7 +473,6 @@ public class ParserATNFactory implements ATNFactory{
 
 		return h;
 	}
-
 
     @NotNull
 	public Handle elemList(@NotNull List<Handle> els) {
@@ -658,7 +674,6 @@ public class ParserATNFactory implements ATNFactory{
 			a.addTransition(index, new EpsilonTransition(b));
 		}
 	}
-
 
     /** Add an EOF transition to any rule end ATNState that points to nothing
      *  (i.e., for all those rules not invoked by another rule).  These

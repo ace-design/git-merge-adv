@@ -44,31 +44,25 @@ public final class RuntimeOptions implements
 
     }
 
-
     public static RuntimeOptions defaultOptions() {
         return new RuntimeOptions();
     }
-
 
     public int getCount() {
         return count;
     }
 
-
     List<Plugin> getFormatters() {
         return formatters;
     }
-
 
     List<Plugin> getSummaryPrinter() {
         return summaryPrinters;
     }
 
-
     public boolean isMultiThreaded() {
         return getThreads() > 1;
     }
-
 
     @Override
     public List<Plugin> plugins() {
@@ -78,29 +72,24 @@ public final class RuntimeOptions implements
         return plugins;
     }
 
-
     @Override
     public List<URI> getGlue() {
         return unmodifiableList(glue);
     }
-
 
     @Override
     public boolean isStrict() {
         return strict;
     }
 
-
     @Override
     public boolean isDryRun() {
         return dryRun;
     }
 
-
     public boolean isWip() {
         return wip;
     }
-
 
     @Override
     public List<URI> getFeaturePaths() {
@@ -111,52 +100,43 @@ public final class RuntimeOptions implements
             .collect(Collectors.toList()));
     }
 
-
     @Override
     public List<String> getTagExpressions() {
         return unmodifiableList(tagExpressions);
     }
-
 
     @Override
     public List<Pattern> getNameFilters() {
         return unmodifiableList(nameFilters);
     }
 
-
     void setCount(int count) {
         this.count = count;
     }
-
 
     void setFeaturePaths(List<FeatureWithLines> featurePaths) {
         this.featurePaths.clear();
         this.featurePaths.addAll(featurePaths);
     }
 
-
     void setGlue(List<URI> parsedGlue) {
         glue.clear();
         glue.addAll(parsedGlue);
     }
-
 
     void setNameFilters(List<Pattern> nameFilters) {
         this.nameFilters.clear();
         this.nameFilters.addAll(nameFilters);
     }
 
-
     void setPickleOrder(PickleOrder pickleOrder) {
         this.pickleOrder = pickleOrder;
     }
-
 
     void setTagExpressions(List<String> tagExpressions) {
         this.tagExpressions.clear();
         this.tagExpressions.addAll(tagExpressions);
     }
-
 
     @Override
     public Map<URI, Set<Integer>> getLineFilters() {
@@ -173,74 +153,60 @@ public final class RuntimeOptions implements
         return unmodifiableMap(lineFilters);
     }
 
-
     @Override
     public int getLimitCount() {
         return getCount();
     }
-
 
     @Override
     public boolean isMonochrome() {
         return monochrome;
     }
 
-
     @Override
     public SnippetType getSnippetType() {
         return snippetType;
     }
-
 
     @Override
     public Class<? extends ObjectFactory> getObjectFactoryClass() {
         return objectFactoryClass;
     }
 
-
     public int getThreads() {
         return threads;
     }
-
 
     public PickleOrder getPickleOrder() {
         return pickleOrder;
     }
 
-
     void setDryRun(boolean dryRun) {
         this.dryRun = dryRun;
     }
-
 
     void setMonochrome(boolean monochrome) {
         this.monochrome = monochrome;
     }
 
-
     void setSnippetType(SnippetType snippetType) {
         this.snippetType = snippetType;
     }
-
 
     void setStrict(boolean strict) {
         this.strict = strict;
     }
 
-
     void setThreads(int threads) {
         this.threads = threads;
     }
-
 
     void setWip(boolean wip) {
         this.wip = wip;
     }
 
-
     void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
         this.objectFactoryClass = objectFactoryClass;
     }
-
 
 }

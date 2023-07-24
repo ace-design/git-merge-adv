@@ -34,7 +34,6 @@ class AlternatorDBHandler{
         }
     }
 
-
     public void restore(String persistence){
         try {
             File dbFile = new File(persistence);
@@ -53,7 +52,6 @@ class AlternatorDBHandler{
         }
     }
 
-
     public ObjectMapper createObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY)
@@ -66,7 +64,6 @@ class AlternatorDBHandler{
 
         return mapper;
     }
-
 
     public String handle(HttpServletRequest request) throws LimitExceededException, InternalServerErrorException, ResourceInUseException, ResourceNotFoundException, ConditionalCheckFailedException {
         AmazonWebServiceRequestParser parser = new AmazonWebServiceRequestParser(request);
@@ -754,7 +751,6 @@ class AlternatorDBHandler{
         }
     }
 
-
     private void GTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, Condition cond, String k) {
         if (cond.getAttributeValueList().size() == 1) {
             if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
@@ -785,7 +781,6 @@ class AlternatorDBHandler{
         }
     }
 
-
     private void LTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, Condition cond, String k) {
         if (cond.getAttributeValueList().size() == 1) {
             if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
@@ -807,13 +802,11 @@ class AlternatorDBHandler{
         }
     }
 
-
     private void EQHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         if (item.get(k).equals(attributeValue)) {
              items.add(item);
         }
     }
-
 
     private void GTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
@@ -837,7 +830,6 @@ class AlternatorDBHandler{
         }
     }
 
-
     private void LTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
             if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
@@ -860,18 +852,15 @@ class AlternatorDBHandler{
         }
     }
 
-
     private void GEHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         EQHandle(items, item, attributeValue, k);
         GTHandle(items, item, attributeValue, k);
     }
 
-
     private void LEHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         EQHandle(items, item, attributeValue, k);
         LTHandle(items, item, attributeValue, k);
     }
-
 
     private void BETWEENHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue1, AttributeValue attributeValue2, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
@@ -898,6 +887,5 @@ class AlternatorDBHandler{
             //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
         }
     }
-
 
 }

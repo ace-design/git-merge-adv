@@ -84,6 +84,7 @@ def exec_algo(algo,case_study,lang):
         exit(0)
 
 
+
 # Copies desired case study to demo folder.
 def get_case_study(case_study,output_path):
     try:
@@ -98,7 +99,7 @@ def get_case_study(case_study,output_path):
         exit(0)
 
 # Looks for all import deletions, moves and insertions found in gumtree textdiff output.
-def search_gumtree(result,new):
+def search_gumtree(result):
     if (len(result)==1 and result[0]==''):
         raise RuntimeError("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
 
@@ -130,12 +131,14 @@ def search_gumtree(result,new):
         total+=math.pow(value,2)
     total=math.sqrt(total)
 
-    with open(new,'w') as writer:
-        for key in data.keys():
-            writer.write(key+": "+str(data[key])+"\n")
-        writer.write("Overall: "+str(total))
+    return data,total
 
-def search_gumtree_full(result,new,num_conflicts):
+    # with open(new,'w') as writer:
+    #     for key in data.keys():
+    #         writer.write(key+": "+str(data[key])+"\n")
+    #     writer.write("Overall: "+str(total))
+
+def search_gumtree_full(result,new,num_conflicts,existing_data=None, existing_total=None):
     if (len(result)==1 and result[0]==''):
         raise RuntimeError("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
 
@@ -147,14 +150,27 @@ def search_gumtree_full(result,new,num_conflicts):
     'diff_path':re.compile(r'\nupdate')
     }
 
-    data={'deletions':0,'insertions':0,'moves':0,'diff_path':0,'num_conflicts':num_conflicts}
+    if existing_data:
+        data=existing_data
+        data['num_conflicts']=num_conflicts
+        total=existing_total
+    else:
+        data={'deletions':0,'insertions':0,'moves':0,'diff_path':0,'num_conflicts':num_conflicts}
+        total=0
 
     for val in result:
         for key,rx in dict.items():
             match=rx.search(val)
             if (match):
-                data[key]+=1
-    total=0
+                try:
+                    range=re.findall(r'\[.*?\]',val)[0]
+                    start=int(range.split(',')[0].strip('['))
+                    end=int(range.split(',')[1].strip(']'))
+                    if (end-start>1 and 'import' not in val and "Import" not in val):
+                        data[key]+=1
+                except:
+                    pass
+
     for value in data.values():
         total+=math.pow(value,2)
     total=math.sqrt(total)
@@ -235,12 +251,17 @@ def run_gumtree(output_path,lang,algo):
 
     match lang:
         case "py":
-            result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+            import_result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+            import_data,import_total=search_gumtree(import_result)
+            body_result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+            search_gumtree_full(body_result,new,num_conflicts,import_data,import_total)
         case "java":
             result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+            import_data,import_total=search_gumtree(result)
+            search_gumtree_full(result,new,num_conflicts,import_data,import_total)
     subprocess.run(['rm',new_result])
     # search_gumtree(result,new)
-    search_gumtree_full(result,new,num_conflicts)
+    # search_gumtree_full(result,new,num_conflicts)
 
 
 if __name__=="__main__":

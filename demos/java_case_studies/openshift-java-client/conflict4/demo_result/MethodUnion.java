@@ -310,9 +310,7 @@ public class DomainResourceTest{
 				.hasApplications(1);
 	}
 
-
-    <<<<<<< left_content.java
-@Test
+    @Test
 	public void shouldCreateApplication() throws Throwable {
 		// pre-conditions
 		mockDirector
@@ -337,9 +335,6 @@ public class DomainResourceTest{
 		assertThat(LinkRetriever.retrieveLinks(app)).hasSize(18);
 		assertThat(domain.getApplications()).hasSize(1).contains(app);
 	}
-=======
->>>>>>> right_content.java
-
 
     @Test
 	public void shouldUpdateDownloadableStandaloneCartridgeAfterDeploy() throws Throwable {
@@ -367,7 +362,6 @@ public class DomainResourceTest{
 			.hasDisplayName("Go 1.1")
 			.hasUrl(Cartridges.GO_DOWNLOAD_URL);
 	}
-
 
     @Test
 	public void shouldCreateApplicationWithEmbeddedCartridges() throws Throwable {
@@ -405,7 +399,6 @@ public class DomainResourceTest{
 		assertThat(domain.getApplications()).hasSize(1).contains(app);
 	}
 
-
     @Test
     public void shouldRequestCreateApplicationWithDownloadableCartridge() throws Throwable {    	
         // pre-conditions
@@ -428,7 +421,6 @@ public class DomainResourceTest{
 								.add(new ParameterValueMap().add(IOpenShiftJsonConstants.PROPERTY_URL, Cartridges.FOREMAN_DOWNLOAD_URL))
 								.add(new ParameterValueMap().add(IOpenShiftJsonConstants.PROPERTY_NAME, Cartridges.mysql51().getName()))));
     }
-
 
     @Test
 	public void shouldHaveMessagesWhenCreating() throws Throwable {

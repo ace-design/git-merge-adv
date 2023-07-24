@@ -148,11 +148,9 @@ public class UrlConnectionHttpClient implements IHttpClient{
 		return put(url, NO_TIMEOUT, parameters);
 	}
 
-
     public IMediaType getRequestMediaType() {
         return requestMediaType;
     }
-
 
     @Override
 	public String put(URL url, int timeout, RequestParameter... parameters)
@@ -160,36 +158,25 @@ public class UrlConnectionHttpClient implements IHttpClient{
 		return request(HttpMethod.PUT, url, timeout, parameters);
 	}
 
-
     public void setRequestMediaType(IMediaType requestMediaType) {
         this.requestMediaType = requestMediaType;
     }
 
-
-    <<<<<<< left_content.java
-public String put(Map<String, Object> parameters, URL url)
+    public String put(Map<String, Object> parameters, URL url)
 			throws SocketTimeoutException, EncodingException, HttpClientException {
 		return put(requestMediaType.encodeParameters(parameters), url);
 	}
-=======
->>>>>>> right_content.java
-
 
     protected String put(String data, URL url, RequestParameter... parameters) throws HttpClientException,
 			SocketTimeoutException {
 		return request(HttpMethod.PUT, url, NO_TIMEOUT, parameters);
 	}
 
-
-    <<<<<<< left_content.java
-@Override
+    @Override
 	public String put(Map<String, Object> parameters, URL url, int timeout) 
 			throws HttpClientException, SocketTimeoutException, EncodingException {
 		return put(parameters, url, timeout, requestMediaType);
 	}
-=======
->>>>>>> right_content.java
-
 
     @Override
 	public String post(URL url, RequestParameter... parameters)
@@ -197,12 +184,10 @@ public String put(Map<String, Object> parameters, URL url)
 		return request(HttpMethod.POST, url, NO_TIMEOUT, parameters);
 	}
 
-
     @Override
     public String put(Map<String, Object> parameters, URL url, int timeout, IMediaType mediaType) throws HttpClientException, SocketTimeoutException, EncodingException {
         return write(mediaType.encodeParameters(parameters), HttpMethod.PUT.toString(), url, timeout, mediaType);
     }
-
 
     @Override
 	public String post(URL url, int timeout, RequestParameter... parameters)
@@ -210,29 +195,19 @@ public String put(Map<String, Object> parameters, URL url)
 		return request(HttpMethod.POST, url, timeout, parameters);
 	}
 
-
-    <<<<<<< left_content.java
-protected String put(String data, URL url) throws HttpClientException, SocketTimeoutException {
+    protected String put(String data, URL url) throws HttpClientException, SocketTimeoutException {
 		return write(data, HttpMethod.PUT.toString(), url, NO_TIMEOUT, requestMediaType);
 	}
-=======
->>>>>>> right_content.java
-
 
     @Override
 	public String delete(URL url, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException {
 		return request(HttpMethod.DELETE, url, NO_TIMEOUT, parameters);
 	}
 
-
-    <<<<<<< left_content.java
-public String post(Map<String, Object> parameters, URL url)
+    public String post(Map<String, Object> parameters, URL url)
 			throws SocketTimeoutException, EncodingException, HttpClientException {
 		return post(requestMediaType.encodeParameters(parameters), url);
 	}
-=======
->>>>>>> right_content.java
-
 
     @Override
 	public String delete(URL url, int timeout, RequestParameter... parameters)
@@ -240,23 +215,14 @@ public String post(Map<String, Object> parameters, URL url)
 		return request(HttpMethod.DELETE, url, timeout, parameters);
 	}
 
-
-    <<<<<<< left_content.java
-protected String post(String data, URL url) throws HttpClientException, SocketTimeoutException {
+    protected String post(String data, URL url) throws HttpClientException, SocketTimeoutException {
 		return write(data, HttpMethod.POST.toString(), url, NO_TIMEOUT, requestMediaType);
 	}
-=======
->>>>>>> right_content.java
 
-
-    <<<<<<< left_content.java
-public String post(Map<String, Object> data, URL url, int timeout) 
+    public String post(Map<String, Object> data, URL url, int timeout) 
 			throws HttpClientException, SocketTimeoutException, EncodingException {
         return post(data, url, timeout, requestMediaType);
 	}
-=======
->>>>>>> right_content.java
-
 
     @Override
 	public String delete(URL url)
@@ -285,40 +251,49 @@ public String post(Map<String, Object> data, URL url, int timeout)
 		}
 	}
 
-
     @Override
     public String post(Map<String, Object> parameters, URL url, int timeout, IMediaType mediaType) throws HttpClientException, SocketTimeoutException, EncodingException {
         return write(mediaType.encodeParameters(parameters), HttpMethod.POST.toString(), url, timeout, mediaType);
     }
 
-
-    <<<<<<< left_content.java
-public String delete(Map<String, Object> parameters, URL url)
+    public String delete(Map<String, Object> parameters, URL url)
 			throws HttpClientException, SocketTimeoutException, EncodingException {
 		return delete(requestMediaType.encodeParameters(parameters), url);
 	}
-=======
->>>>>>> right_content.java
 
+    protected String write(String data, String requestMethod, URL url, int timeout)
+			throws SocketTimeoutException, HttpClientException {
+		HttpURLConnection connection = null;
+		try {
+			connection = createConnection(username, password, authKey, authIV, userAgent, url, timeout);
+			connection.setRequestMethod(requestMethod);
+			connection.setDoOutput(true);
+			if (data != null) {
+				LOGGER.trace("Sending \"{}\" to {}", data, url);
+				StreamUtils.writeTo(data.getBytes(), connection.getOutputStream());
+			}
+			return StreamUtils.readToString(connection.getInputStream());
+		} catch (SocketTimeoutException e) {
+			throw e;
+		} catch (IOException e) {
+			throw createException(e, connection);
+		} finally {
+			disconnect(connection);
+		}
 
-    
+	}
 
-    <<<<<<< left_content.java
-@Override
+    @Override
 	public String delete(Map<String, Object> parameters, URL url, int timeout) throws HttpClientException,
 			SocketTimeoutException,
             EncodingException {
 		return delete(parameters, url, timeout, requestMediaType);
 	}
-=======
->>>>>>> right_content.java
-
 
     @Override
     public String delete(Map<String, Object> parameters, URL url, int timeout, IMediaType mediaType) throws HttpClientException, SocketTimeoutException, EncodingException {
         return write(mediaType.encodeParameters(parameters), HttpMethod.DELETE.toString(), url, timeout, mediaType);
     }
-
 
     private void disconnect(HttpURLConnection connection) {
 		if (connection != null) {
@@ -326,13 +301,9 @@ public String delete(Map<String, Object> parameters, URL url)
 		}
 	}
 
-    <<<<<<< left_content.java
-protected String delete(String data, URL url) throws HttpClientException, SocketTimeoutException {
+    protected String delete(String data, URL url) throws HttpClientException, SocketTimeoutException {
 		return write(data, HttpMethod.DELETE.toString(), url, NO_TIMEOUT, requestMediaType);
 	}
-=======
->>>>>>> right_content.java
-
 
     private HttpClientException createException(IOException ioe, HttpURLConnection connection)
 			throws SocketTimeoutException {
@@ -380,7 +351,6 @@ protected String delete(String data, URL url) throws HttpClientException, Socket
 
 	}
 
-
     protected String createErrorMessage(IOException ioe, HttpURLConnection connection) throws IOException {
 		String errorMessage = StreamUtils.readToString(connection.getErrorStream());
 		if (!StringUtils.isEmpty(errorMessage)) {
@@ -420,7 +390,29 @@ protected String delete(String data, URL url) throws HttpClientException, Socket
 		}
 	}
 
-    
+    protected HttpURLConnection createConnection(String username, String password, String authKey, String authIV,
+			String userAgent, URL url, int timeout) throws IOException {
+		LOGGER.trace(
+				"creating connection to {} using username \"{}\" and password \"{}\"", new Object[] { url, username,
+						password });
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		setSSLChecks(url, connection);
+		setAuthorisation(username, password, authKey, authIV, connection);
+		connection.setUseCaches(false);
+		connection.setDoInput(true);
+		connection.setAllowUserInteraction(false);
+		setConnectTimeout(connection);
+		setReadTimeout(timeout, connection);
+		// wont work when switching http->https
+		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4620571
+		connection.setInstanceFollowRedirects(true);
+		setAcceptHeader(connection);
+		setUserAgent(connection);
+
+		connection.setRequestProperty(PROPERTY_CONTENT_TYPE, requestMediaType.getType());
+
+		return connection;
+	}
 
     private void setUserAgent(HttpURLConnection connection) {
 		String userAgent = this.userAgent;
@@ -461,7 +453,6 @@ protected String delete(String data, URL url) throws HttpClientException, Socket
 
 		return connection;
 	}
-
 
     private void setAcceptHeader(HttpURLConnection connection) {
 		StringBuilder builder =
@@ -525,7 +516,6 @@ protected String delete(String data, URL url) throws HttpClientException, Socket
     protected IMediaType getMediaType() {
 		return requestMediaType;
 	}
-
 
     private int getSystemPropertyInteger(String key) {
 		try {

@@ -148,7 +148,15 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return topicMetadataList;
   }
 
-    
+    private SimpleConsumer createConsumer(JobContext context, String broker) {
+    if (!broker.matches(".+:\\d+"))
+      throw new InvalidParameterException("The kakfa broker " + broker + " must follow address:port pattern");
+    String[] hostPort = broker.split(":");
+    SimpleConsumer consumer =
+        new SimpleConsumer(hostPort[0], Integer.valueOf(hostPort[1]), CamusJob.getKafkaTimeoutValue(context),
+            CamusJob.getKafkaBufferSize(context), CamusJob.getKafkaClientName(context));
+    return consumer;
+  }
 
     /**
    * Gets the latest offsets and create the requests as needed
@@ -165,7 +173,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     return createSimpleConsumer(context, hostPort[0], Integer.valueOf(hostPort[1]));
   }
 
-
     public SimpleConsumer createSimpleConsumer(JobContext context, String host, int port) {
     SimpleConsumer consumer =
         new SimpleConsumer(host, port,
@@ -173,7 +180,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
             CamusJob.getKafkaClientName(context));
     return consumer;
   }
-
 
     /**
    * Gets the latest offsets and create the requests as needed
@@ -286,7 +292,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     }
     return null;
   }
-
 
     @Override
   public List<InputSplit> getSplits(JobContext context) throws IOException, InterruptedException {
@@ -451,7 +456,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     }
     return sb.toString();
   }
-
 
     @Override
       public int compare(CamusRequest r1, CamusRequest r2) {
@@ -670,7 +674,6 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
     }
   }
 
-
     public static String[] getKafkaWhitelistTopic(JobContext job) {
     return getKafkaWhitelistTopic(job.getConfiguration());
   }
@@ -683,6 +686,5 @@ public class EtlInputFormat extends InputFormat<EtlKey, CamusWrapper>{
       return new String[] {};
     }
   }
-
 
 }

@@ -95,8 +95,20 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
         this.type = this.objectMapper.constructType(valueClass);
     }
 
-
-    
+    private JacksonMongoCollection(
+        com.mongodb.client.MongoCollection<TResult> mongoCollection,
+        ObjectMapper objectMapper,
+        Class<TResult> valueClass,
+        Class<?> view
+    ) {
+        this.objectMapper = objectMapper != null ? objectMapper : getDefaultObjectMapper();
+        this.view = view;
+        jacksonCodecRegistry = new JacksonCodecRegistry(this.objectMapper, this.view);
+        jacksonCodecRegistry.addCodecForClass(valueClass);
+        this.mongoCollection = mongoCollection.withDocumentClass(valueClass).withCodecRegistry(jacksonCodecRegistry);
+        this.valueClass = valueClass;
+        this.type = this.objectMapper.constructType(valueClass);
+    }
 
     private JacksonMongoCollection(
         MongoCollection<TResult> mongoCollection,
@@ -115,8 +127,21 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
         this.type = this.objectMapper.constructType(valueClass);
     }
 
-
-    
+    private JacksonMongoCollection(
+        final ObjectMapper objectMapper,
+        final JacksonCodecRegistry jacksonCodecRegistry,
+        final Class<?> view,
+        final Class<TResult> valueClass,
+        final JavaType type,
+        final MongoCollection<TResult> mongoCollection
+    ) {
+        this.objectMapper = objectMapper;
+        this.jacksonCodecRegistry = jacksonCodecRegistry;
+        this.view = view;
+        this.valueClass = valueClass;
+        this.type = type;
+        this.mongoCollection = mongoCollection;
+    }
 
     private JacksonMongoCollection(
         final ObjectMapper objectMapper,
@@ -135,7 +160,6 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
         this.mongoCollection = mongoCollection;
         this.serializationOptions = serializationOptions;
     }
-
 
     /**
      * A utility to get the DEFAULT_OBJECT_MAPPER which sets it lazily, so it's never constructed if we don't use it.
@@ -435,7 +459,6 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
         return serializationOptions;
     }
 
-
     /**
      * Serialize the fields of the given object using the object mapper
      * for this collection.
@@ -684,7 +707,6 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
             return build(client.getDatabase(databaseName), collectionName, valueType, uuidRepresentation);
         }
 
-
         /**
          * Builds a {@link JacksonMongoCollection}. Required parameters are set here.
          *
@@ -700,11 +722,9 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
             return this;
         }
 
-
         public <CT> JacksonMongoCollection<CT> build(MongoClient client, String databaseName, Class<CT> valueType, final UuidRepresentation uuidRepresentation) {
             return build(client.getDatabase(databaseName), valueType, uuidRepresentation);
         }
-
 
         /**
          * Builds a {@link JacksonMongoCollection}. Required parameters are set here.
@@ -716,12 +736,13 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
          * @return A constructed collection meeting the MongoCollection interface.
          */
 
-        
+        public <CT> JacksonMongoCollection<CT> build(MongoClient client, String databaseName, String collectionName, Class<CT> valueType) {
+            return build(client.getDatabase(databaseName), collectionName, valueType);
+        }
 
         public <CT> JacksonMongoCollection<CT> build(MongoDatabase database, String collectionName, Class<CT> valueType, final UuidRepresentation uuidRepresentation) {
             return build(database.getCollection(collectionName, valueType), valueType, uuidRepresentation);
         }
-
 
         /**
          * Builds a {@link JacksonMongoCollection}. Required parameters are set here.
@@ -732,7 +753,9 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
          * @return A constructed collection meeting the MongoCollection interface.
          */
 
-        
+        public <CT> JacksonMongoCollection<CT> build(MongoClient client, String databaseName, Class<CT> valueType) {
+            return build(client.getDatabase(databaseName), valueType);
+        }
 
         public <CT> JacksonMongoCollection<CT> build(MongoDatabase database, Class<CT> valueType, final UuidRepresentation uuidRepresentation) {
             final org.mongojack.MongoCollection annotation = valueType.getAnnotation(org.mongojack.MongoCollection.class);
@@ -742,8 +765,9 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
             return build(database.getCollection(annotation.name(), valueType), valueType, uuidRepresentation);
         }
 
-
-        
+        public <CT> JacksonMongoCollection<CT> build(MongoDatabase database, String collectionName, Class<CT> valueType) {
+            return build(database.getCollection(collectionName, valueType), valueType);
+        }
 
         /**
          * Builds a {@link JacksonMongoCollection}. Required parameters are set here.
@@ -758,16 +782,17 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
             return new JacksonMongoCollection<>(mongoCollection, this.objectMapper, valueType, view, uuidRepresentation);
         }
 
+        public <CT> JacksonMongoCollection<CT> build(MongoDatabase database, Class<CT> valueType) {
+            final org.mongojack.MongoCollection annotation = valueType.getAnnotation(org.mongojack.MongoCollection.class);
+            if (annotation == null) {
+                throw new IllegalArgumentException("You can only use the builder methods without explicit collection names if you have a class annotated with org.mongojack.MongoCollection");
+            }
+            return build(database.getCollection(annotation.name(), valueType), valueType);
+        }
 
-        
-
-        <<<<<<< left_content.java
-public <CT> JacksonMongoCollection<CT> build(com.mongodb.client.MongoCollection<CT> mongoCollection, Class<CT> valueType) {
+        public <CT> JacksonMongoCollection<CT> build(com.mongodb.client.MongoCollection<CT> mongoCollection, Class<CT> valueType) {
             return new JacksonMongoCollection<>(mongoCollection, this.objectMapper, valueType, view, serializationOptions);
         }
-=======
->>>>>>> right_content.java
-
 
     }
 }

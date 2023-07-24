@@ -199,7 +199,21 @@ public class SymbolChecks{
 		}
 	}
 
-    
+    public void checkForRuleArgumentAndReturnValueConflicts(Rule r) {
+        if ( r.retvals!=null ) {
+            Set<String> conflictingKeys = r.retvals.intersection(r.args);
+            if (conflictingKeys!=null) {
+				for (String key : conflictingKeys) {
+					errMgr.grammarError(
+						ErrorType.ARG_RETVAL_CONFLICT,
+						g.fileName,
+						((GrammarAST) r.ast.getChild(0)).token,
+						key,
+						r.name);
+				}
+            }
+        }
+    }
 
     public void checkForAttributeConflicts(Rule r) {
 		checkDeclarationRuleConflicts(r, r.args, nameToRuleMap.keySet(), ErrorType.ARG_CONFLICTS_WITH_RULE);
@@ -215,7 +229,6 @@ public class SymbolChecks{
 		checkLocalConflictingDeclarations(r, r.locals, r.args, ErrorType.LOCAL_CONFLICTS_WITH_ARG);
 		checkLocalConflictingDeclarations(r, r.locals, r.retvals, ErrorType.LOCAL_CONFLICTS_WITH_RETVAL);
 	}
-
 
     public void checkRuleArgs(Grammar g, List<GrammarAST> rulerefs) {
 		if ( rulerefs==null ) return;
@@ -251,7 +264,6 @@ public class SymbolChecks{
 			}
 		}
 	}
-
 
     public void checkForQualifiedRuleIssues(Grammar g, List<GrammarAST> qualifiedRuleRefs) {
 		for (GrammarAST dot : qualifiedRuleRefs) {
@@ -289,6 +301,5 @@ public class SymbolChecks{
 				r.name);
 		}
 	}
-
 
 }

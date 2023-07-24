@@ -225,7 +225,6 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
 				return InetAddress.getByName(uri.getHost());
 			}
 
-
     /**
 	 * Returns the URI that this WebSocketClient is connected to.
 	 * @return the URI connected to
@@ -331,7 +330,6 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
     public void setDnsResolver(DnsResolver dnsResolver) {
 		this.dnsResolver = dnsResolver;
 	}
-
 
     private void reset() {
 		Thread current = Thread.currentThread();

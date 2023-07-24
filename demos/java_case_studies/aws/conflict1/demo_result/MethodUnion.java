@@ -110,11 +110,9 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
         this.proxyHost = proxyHost;
     }
 
-
     public void setProxyPort(Integer proxyPort) {
         this.proxyPort = proxyPort;
     }
-
 
     @Override
     protected void initInternal() throws LifecycleException {
@@ -143,14 +141,10 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
     }
 
 
-    <<<<<<< left_content.java
-@Override
+    @Override
     protected synchronized void stopInternal() throws LifecycleException {
         super.stopInternal();
     }
-=======
->>>>>>> right_content.java
-
 
     private void initDynamoTable(AmazonDynamoDBClient dynamo) {
         boolean tableExists = DynamoUtils.doesTableExist(dynamo, this.tableName);
@@ -214,7 +208,6 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
         return accessKey != null || secretKey != null;
     }
 
-
     /**
      * @return True if both the access key and secret key were set in context.xml config. False
      *         otherwise
@@ -223,7 +216,6 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
     private boolean credentialsInContextConfigAreValid() {
         return StringUtils.isNullOrEmpty(accessKey) || StringUtils.isNullOrEmpty(secretKey);
     }
-
 
     private ClientConfiguration initClientConfiguration() {
         ClientConfiguration clientConfiguration = new ClientConfiguration();
@@ -241,7 +233,6 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
 
         return clientConfiguration;
     }
-
 
     public static void debug(String s) {
         logger.debug(s);

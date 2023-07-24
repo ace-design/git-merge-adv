@@ -72,7 +72,6 @@ public class DynamoUtils{
         return null;
     }
 
-
     public static List<String> loadKeys(AmazonDynamoDB dynamo, String tableName) {
 		ScanRequest request = new ScanRequest(tableName);
 		request.setSelect(Select.SPECIFIC_ATTRIBUTES);
@@ -94,7 +93,6 @@ public class DynamoUtils{
 		return list;
 	}
 
-
     public static void deleteSession(AmazonDynamoDB dynamo, String tableName, String sessionId) {
 		Map<String, AttributeValue> key = newAttributeValueMap();
 		key.put(SESSION_ID_KEY, new AttributeValue(sessionId));
@@ -115,8 +113,7 @@ public class DynamoUtils{
 	}
 
 
-    <<<<<<< left_content.java
-public static ByteBuffer loadItemBySessionId(AmazonDynamoDB dynamo, String tableName, String sessionId) {
+    public static ByteBuffer loadItemBySessionId(AmazonDynamoDB dynamo, String tableName, String sessionId) {
 		Map<String, AttributeValue> key = newAttributeValueMap();
 		key.put(SESSION_ID_KEY, new AttributeValue(sessionId));
 		GetItemRequest request = new GetItemRequest(tableName, key);
@@ -133,13 +130,8 @@ public static ByteBuffer loadItemBySessionId(AmazonDynamoDB dynamo, String table
 		}
 		return null;
 	}
-=======
->>>>>>> right_content.java
 
-
-    <<<<<<< left_content.java
-=======
-public static void storeSession(AmazonDynamoDB dynamo, String tableName, Session session) throws IOException {
+    public static void storeSession(AmazonDynamoDB dynamo, String tableName, Session session) throws IOException {
         Map<String, Object> sessionAttributes = new HashMap<String, Object>();
 
         HttpSession httpSession = session.getSession();
@@ -174,8 +166,6 @@ public static void storeSession(AmazonDynamoDB dynamo, String tableName, Session
             DynamoDBSessionManager.error("Unable to save session " + session.getId(), e);
         }
     }
->>>>>>> right_content.java
-
 
     public static void storeSession(AmazonDynamoDB dynamo, String tableName, String sessionId, ByteBuffer byteBuffer)
 			throws IOException {
@@ -192,7 +182,6 @@ public static void storeSession(AmazonDynamoDB dynamo, String tableName, Session
 			DynamoDBSessionManager.error("Unable to save session " + sessionId, e);
 		}
 	}
-
 
     public static boolean doesTableExist(AmazonDynamoDBClient dynamo, String tableName) {
 <<<<<<< left_content.java
@@ -296,7 +285,24 @@ public static void storeSession(AmazonDynamoDB dynamo, String tableName, Session
 	}
 
 
-    
+    public static void createSessionTable(AmazonDynamoDBClient dynamo, String tableName, long readCapacityUnits, long writeCapacityUnits) {
+        CreateTableRequest request = new CreateTableRequest().withTableName(tableName);
+        addClientMarker(request);
+
+        request.withKeySchema(new KeySchemaElement()
+            .withAttributeName(SessionTableAttributes.SESSION_ID_KEY)
+            .withKeyType(KeyType.HASH));
+
+        request.withAttributeDefinitions(new AttributeDefinition()
+            .withAttributeName(SessionTableAttributes.SESSION_ID_KEY)
+            .withAttributeType(ScalarAttributeType.S));
+
+        request.setProvisionedThroughput(new ProvisionedThroughput()
+            .withReadCapacityUnits(readCapacityUnits)
+            .withWriteCapacityUnits(writeCapacityUnits));
+
+        dynamo.createTable(request);
+    }
 
     public static void createSessionTable(AmazonDynamoDBClient dynamo,
                                           String tableName,
@@ -320,7 +326,6 @@ public static void storeSession(AmazonDynamoDB dynamo, String tableName, Session
         dynamo.createTable(request);
     }
 
-
     public static void createSessionTable(AmazonDynamoDBClient dynamo, String tableName, long readCapacityUnits,
 			long writeCapacityUnits) {
 		CreateTableRequest request = new CreateTableRequest().withTableName(tableName);
@@ -337,14 +342,9 @@ public static void storeSession(AmazonDynamoDB dynamo, String tableName, Session
 		dynamo.createTable(request);
 	}
 
-
-    <<<<<<< left_content.java
-public static void addClientMarker(AmazonWebServiceRequest request) {
+    public static void addClientMarker(AmazonWebServiceRequest request) {
 		request.getRequestClientOptions().addClientMarker("DynamoSessionManager/2.0");
 	}
-=======
->>>>>>> right_content.java
-
 
     private static Map<String, AttributeValue> newAttributeValueMap() {
 		return new HashMap<String, AttributeValue>();
@@ -353,6 +353,5 @@ public static void addClientMarker(AmazonWebServiceRequest request) {
     public static void appendUserAgent(AmazonWebServiceRequest request) {
         request.getRequestClientOptions().appendUserAgent("DynamoSessionManager/1.0");
     }
-
 
 }

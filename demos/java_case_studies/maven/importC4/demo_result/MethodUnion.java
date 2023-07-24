@@ -105,7 +105,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         // enable no-arg constructor
     }
 
-
     @Inject
     DefaultArtifactDescriptorReader( RemoteRepositoryManager remoteRepositoryManager, VersionResolver versionResolver,
                                      ArtifactResolver artifactResolver, ModelBuilder modelBuilder,
@@ -118,7 +117,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         setLoggerFactory( loggerFactory );
         setRepositoryEventDispatcher( repositoryEventDispatcher );
     }
-
 
     public void initService( ServiceLocator locator )
     {
@@ -134,20 +132,17 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         }
     }
 
-
     public DefaultArtifactDescriptorReader setLoggerFactory( LoggerFactory loggerFactory )
     {
         this.logger = NullLoggerFactory.getSafeLogger( loggerFactory, getClass() );
         return this;
     }
 
-
     void setLogger( LoggerFactory loggerFactory )
     {
         // plexus support
         setLoggerFactory( loggerFactory );
     }
-
 
     public DefaultArtifactDescriptorReader setRemoteRepositoryManager( RemoteRepositoryManager remoteRepositoryManager )
     {
@@ -159,7 +154,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         return this;
     }
 
-
     public DefaultArtifactDescriptorReader setVersionResolver( VersionResolver versionResolver )
     {
         if ( versionResolver == null )
@@ -169,7 +163,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         this.versionResolver = versionResolver;
         return this;
     }
-
 
     public DefaultArtifactDescriptorReader setArtifactResolver( ArtifactResolver artifactResolver )
     {
@@ -181,7 +174,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         return this;
     }
 
-
     public DefaultArtifactDescriptorReader setRepositoryEventDispatcher( RepositoryEventDispatcher repositoryEventDispatcher )
     {
         if ( repositoryEventDispatcher == null )
@@ -192,7 +184,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         return this;
     }
 
-
     public DefaultArtifactDescriptorReader setModelBuilder( ModelBuilder modelBuilder )
     {
         if ( modelBuilder == null )
@@ -202,7 +193,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         this.modelBuilder = modelBuilder;
         return this;
     }
-
 
     public ArtifactDescriptorResult readArtifactDescriptor( RepositorySystemSession session,
                                                             ArtifactDescriptorRequest request )
@@ -261,7 +251,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
 
         return result;
     }
-
 
     private Model loadPom( RepositorySystemSession session, ArtifactDescriptorRequest request,
                            ArtifactDescriptorResult result )
@@ -387,7 +376,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         }
     }
 
-
     private Properties toProperties( Map<String, String> dominant, Map<String, String> recessive )
     {
         Properties props = new Properties();
@@ -402,7 +390,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         return props;
     }
 
-
     private Relocation getRelocation( Model model )
     {
         Relocation relocation = null;
@@ -413,7 +400,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         }
         return relocation;
     }
-
 
     private void setArtifactProperties( ArtifactDescriptorResult result, Model model )
     {
@@ -431,7 +417,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
             result.setArtifact( artifact.setProperties( props ) );
         }
     }
-
 
     private Dependency convert( org.apache.maven.model.Dependency dependency, ArtifactTypeRegistry stereotypes )
     {
@@ -464,12 +449,10 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         return result;
     }
 
-
     private Exclusion convert( org.apache.maven.model.Exclusion exclusion )
     {
         return new Exclusion( exclusion.getGroupId(), exclusion.getArtifactId(), "*", "*" );
     }
-
 
     private void missingDescriptor( RepositorySystemSession session, RequestTrace trace, Artifact artifact,
                                     Exception exception )
@@ -482,7 +465,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         repositoryEventDispatcher.dispatch( event.build() );
     }
 
-
     private void invalidDescriptor( RepositorySystemSession session, RequestTrace trace, Artifact artifact,
                                     Exception exception )
     {
@@ -494,7 +476,6 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         repositoryEventDispatcher.dispatch( event.build() );
     }
 
-
     private int getPolicy( RepositorySystemSession session, Artifact artifact, ArtifactDescriptorRequest request )
     {
         ArtifactDescriptorPolicy policy = session.getArtifactDescriptorPolicy();
@@ -504,6 +485,5 @@ public class DefaultArtifactDescriptorReader implements ArtifactDescriptorReader
         }
         return policy.getPolicy( session, new ArtifactDescriptorPolicyRequest( artifact, request.getRequestContext() ) );
     }
-
 
 }

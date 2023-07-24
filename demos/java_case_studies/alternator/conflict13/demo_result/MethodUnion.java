@@ -82,7 +82,6 @@ public class AlternatorTest{
         Assert.isTrue(true);
     }
 
-
     protected AmazonDynamoDB getClient() {
         if (RUN_DB_AS_SERVICE) {
             return client;
@@ -185,7 +184,6 @@ public class AlternatorTest{
     protected AttributeValue createNumberAttribute(Integer value) {
 		return new AttributeValue().withN(value.toString());
 	}
-
 
     protected Map<String, AttributeValue> createGenericItem() {
 		return createGenericItem(createStringAttribute(), createStringAttribute());

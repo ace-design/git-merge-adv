@@ -223,7 +223,6 @@ public class CompileMojo extends AbstractLessCssMojo{
 		}
 	}
 
-
     private Object initLessCompiler() throws MojoExecutionException {
 		if (nodeExecutable != null) {
 			NodeJsLessCompiler lessCompiler;
@@ -252,6 +251,5 @@ public class CompileMojo extends AbstractLessCssMojo{
 			return lessCompiler;
 		}
 	}
-
 
 }

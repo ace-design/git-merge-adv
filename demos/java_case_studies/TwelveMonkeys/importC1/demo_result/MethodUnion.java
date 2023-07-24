@@ -61,7 +61,6 @@ public final class TIFFWriter extends MetadataWriter{
         this(LONGWORD_LENGTH);
     }
 
-
     public TIFFWriter(int offsetSize) {
         this.offsetSize = Validate.isTrue(offsetSize == 4 || offsetSize == 8, offsetSize, "offsetSize must be 4 for TIFF or 8 for BigTIFF");
 
@@ -69,7 +68,6 @@ public final class TIFFWriter extends MetadataWriter{
         directoryCountLength = longOffsets ? 8 : WORD_LENGTH;
         entryLength = 2 * WORD_LENGTH + 2 * offsetSize;
     }
-
 
     public boolean write(final Collection<? extends Entry> entries, final ImageOutputStream stream) throws IOException {
         return write(new IFD(entries), stream);
@@ -182,7 +180,9 @@ public final class TIFFWriter extends MetadataWriter{
         return ifdOffset;
     }
 
-    
+    public long computeIFDSize(final Collection<Entry> directory) {
+        return WORD_LENGTH + computeDataSize(new IFD(directory)) + directory.size() * ENTRY_LENGTH;
+    }
 
     private void writeDirectoryCount(ImageOutputStream stream, int count) throws IOException {
         if (longOffsets) {
@@ -193,7 +193,6 @@ public final class TIFFWriter extends MetadataWriter{
         }
     }
 
-
     private void writeValueCount(ImageOutputStream stream, int count) throws IOException {
         if (longOffsets) {
             stream.writeLong(count);
@@ -203,11 +202,9 @@ public final class TIFFWriter extends MetadataWriter{
         }
     }
 
-
     public long computeIFDSize(final Collection<? extends Entry> directory) {
         return directoryCountLength + computeDataSize(new IFD(directory)) + directory.size() * entryLength;
     }
-
 
     private long computeDataSize(final Directory directory) {
         long dataSize = 0;
@@ -466,7 +463,13 @@ public final class TIFFWriter extends MetadataWriter{
         }
     }
 
-    
+    private int assertIntegerOffset(long offset) throws IIOException {
+        if (offset > Integer.MAX_VALUE - (long) Integer.MIN_VALUE) {
+            throw new IIOException("Integer overflow for TIFF stream");
+        }
+
+        return (int) offset;
+    }
 
     private void writeValueAt(final long dataOffset, final Object value, final short type, final ImageOutputStream stream) throws IOException {
         writeOffset(stream, dataOffset);
@@ -485,11 +488,9 @@ public final class TIFFWriter extends MetadataWriter{
         }
     }
 
-
     public int offsetSize() {
         return offsetSize;
     }
-
 
     private int assertIntegerOffset(final long offset) throws IIOException {
         if (offset < 0 || offset > Integer.MAX_VALUE - (long) Integer.MIN_VALUE) {
@@ -499,7 +500,6 @@ public final class TIFFWriter extends MetadataWriter{
         return (int) offset;
     }
 
-
     private long assertLongOffset(final long offset) throws IIOException {
         if (offset < 0) {
             throw new IIOException("Long overflow for BigTIFF stream");
@@ -507,6 +507,5 @@ public final class TIFFWriter extends MetadataWriter{
 
         return offset;
     }
-
 
 }

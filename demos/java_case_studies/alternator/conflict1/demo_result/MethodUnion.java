@@ -860,7 +860,6 @@ class AlternatorDBHandler{
         }
     }
 
-
     private void GTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
             if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
@@ -882,7 +881,6 @@ class AlternatorDBHandler{
             //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
         }
     }
-
 
     private void LTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
@@ -906,12 +904,10 @@ class AlternatorDBHandler{
         }
     }
 
-
     private void GEHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         EQHandle(items, item, attributeValue, k);
         GTHandle(items, item, attributeValue, k);
     }
-
 
     protected Map<String, AttributeValue> getItemWithAttributesToGet(Map<String, AttributeValue> item, List<String> attributesToGet) {
 		if (attributesToGet == null) {
@@ -926,12 +922,10 @@ class AlternatorDBHandler{
 		return item;
 	}
 
-
     private void LEHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         EQHandle(items, item, attributeValue, k);
         LTHandle(items, item, attributeValue, k);
     }
-
 
     private void BETWEENHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue1, AttributeValue attributeValue2, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
@@ -959,7 +953,6 @@ class AlternatorDBHandler{
         }
     }
 
-
     protected List<Map<String, AttributeValue>> getItemWithAttributesToGet(List<Map<String, AttributeValue>> items, List<String> attributesToGet) {
 		List<Map<String, AttributeValue>> copy = new ArrayList<Map<String, AttributeValue>>();
 		for (Map<String, AttributeValue> item : items) {
@@ -967,6 +960,5 @@ class AlternatorDBHandler{
 		}
 		return copy;
 	}
-
 
 }

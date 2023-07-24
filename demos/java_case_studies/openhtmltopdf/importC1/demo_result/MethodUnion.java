@@ -1147,7 +1147,6 @@ public class BlockBox extends Box implements InlinePaintable{
         return false;
     }
 
-
     /**
      * Checks if this box established a block formatting context and if so
      * removes the last bfc from the stack.
@@ -1159,7 +1158,6 @@ public class BlockBox extends Box implements InlinePaintable{
             c.popBFC();
         }
     }
-
 
     /**
      * Checks if this box establishes a block formatting context and if
@@ -1173,7 +1171,6 @@ public class BlockBox extends Box implements InlinePaintable{
             c.pushBFC(bfc);
         }
     }
-
 
     protected boolean isAllowHeightToShrink() {
         return true;
@@ -1429,7 +1426,9 @@ public class BlockBox extends Box implements InlinePaintable{
         }
     }
 
-    
+    public void setChildrenContentType(int contentType) {
+        _childrenContentType = contentType;
+    }
 
     /**
      * See {@link ContentType}
@@ -1442,7 +1441,6 @@ public class BlockBox extends Box implements InlinePaintable{
     public void setChildrenContentType(ContentType contentType) {
         _childrenContentType = contentType;
     }
-
 
     /**
      * See {@link #setInlineContent(List)}
@@ -1832,7 +1830,20 @@ public class BlockBox extends Box implements InlinePaintable{
         return false;
     }
 
-    
+    @Deprecated
+    private ReplacedElement fitReplacedElement(LayoutContext c,
+            ReplacedElement re)
+    {
+        int maxImageWidth = getCSSFitToWidth(c);
+        if (maxImageWidth > -1 && re.getIntrinsicWidth() > maxImageWidth)
+        {
+            double oldWidth = (double)re.getIntrinsicWidth();
+            double scale = ((double)maxImageWidth)/oldWidth;
+            re = c.getReplacedElementFactory().createReplacedElement(
+                    c, this, c.getUac(), maxImageWidth, (int)Math.rint(scale * (double)re.getIntrinsicHeight()));
+        }
+        return re;
+    }
 
     private void recalcMargin(LayoutContext c) {
         if (isTopMarginCalculated() && isBottomMarginCalculated()) {

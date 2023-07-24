@@ -777,7 +777,6 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
         }
     }
 
-
     private void GTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
             if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
@@ -799,7 +798,6 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
             //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
         }
     }
-
 
     private void LTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
@@ -823,18 +821,15 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
         }
     }
 
-
     private void GEHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         EQHandle(items, item, attributeValue, k);
         GTHandle(items, item, attributeValue, k);
     }
 
-
     private void LEHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
         EQHandle(items, item, attributeValue, k);
         LTHandle(items, item, attributeValue, k);
     }
-
 
     private void BETWEENHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue1, AttributeValue attributeValue2, String k) {
         if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
@@ -861,7 +856,6 @@ protected Object batchWriteItem(BatchWriteItemRequest request) {
             //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
         }
     }
-
 
     protected Map<String, AttributeValue> getItemWithAttributesToGet(Map<String, AttributeValue> item, List<String> attributesToGet) {
 		if (attributesToGet == null) {

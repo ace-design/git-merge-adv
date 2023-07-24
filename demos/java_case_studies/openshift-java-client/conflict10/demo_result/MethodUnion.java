@@ -18,6 +18,7 @@ import com.openshift.internal.client.RequestParameter;
 import com.openshift.internal.client.utils.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class FormUrlEncodedMediaType implements IMediaType{
 
@@ -30,17 +31,13 @@ public class FormUrlEncodedMediaType implements IMediaType{
 		return IHttpClient.MEDIATYPE_APPLICATION_FORMURLENCODED;
 	}
 
-    <<<<<<< left_content.java
-public String encodeParameters(Map<String, Object> parameters) throws EncodingException {
+    public String encodeParameters(Map<String, Object> parameters) throws EncodingException {
         try {
             return toUrlEncoded(parameters);
         } catch (UnsupportedEncodingException e) {
             throw new EncodingException(e);
         }
     }
-=======
->>>>>>> right_content.java
-
 
     @Override
 	public void write(RequestParameter[] parameters, OutputStream out) throws IOException {
@@ -54,8 +51,17 @@ public String encodeParameters(Map<String, Object> parameters) throws EncodingEx
 		}
 	}
 
-
-    
+    private String toUrlEncoded(Map<String, Object> parameters) throws UnsupportedEncodingException {
+		if (parameters == null
+				|| parameters.isEmpty()) {
+			return null;
+		}
+		StringBuilder builder = new StringBuilder();
+		for (Entry<String, Object> entry : parameters.entrySet()) {
+			append(entry.getKey(), URLEncoder.encode(String.valueOf(entry.getValue()), UTF8), builder);
+		}
+		return builder.toString();
+	}
 
     @Override
 	public void write(String name, String value, OutputStream out) throws IOException {
@@ -64,8 +70,14 @@ public String encodeParameters(Map<String, Object> parameters) throws EncodingEx
 		out.write(URLEncoder.encode(value, UTF8).getBytes());
 	}
 
-
-    
+    private void append(String name, Object value, StringBuilder builder) {
+		if (builder.length() > 0) {
+			builder.append(IHttpClient.AMPERSAND);
+		}
+		builder.append(name)
+				.append(IHttpClient.EQUALS)
+				.append(value.toString());
+	}
 
     @Override
 	public void write(String name, List<String> values, OutputStream out) throws IOException {
@@ -88,6 +100,5 @@ public String encodeParameters(Map<String, Object> parameters) throws EncodingEx
 			firstValueWritten = true;
 		}
 	}
-
 
 }

@@ -58,37 +58,30 @@ public class BufferedTokenStream implements TokenStream{
 
     public BufferedTokenStream() { }
 
-
     public BufferedTokenStream(TokenSource tokenSource) {
         this.tokenSource = tokenSource;
     }
 
-
     @Override
     public TokenSource getTokenSource() { return tokenSource; }
 
-
     @Override
 	public int index() { return p; }
-
 
     @Override
     public int mark() {
 		return 0;
 	}
 
-
     @Override
 	public void release(int marker) {
 		// no resources to release
 	}
 
-
     public void reset() {
         p = 0;
         lastMarker = 0;
     }
-
 
     @Override
     public void seek(int index) {
@@ -99,10 +92,8 @@ public class BufferedTokenStream implements TokenStream{
         p = index;
     }
 
-
     @Override
     public int size() { return tokens.size(); }
-
 
     /** Move the input pointer to the next incoming token.  The stream
      *  must become active with LT(1) available.  consume() simply
@@ -119,7 +110,6 @@ public class BufferedTokenStream implements TokenStream{
         sync(p);
     }
 
-
     /** Make sure index i in tokens has a token. */
 
     protected void sync(int i) {
@@ -127,7 +117,6 @@ public class BufferedTokenStream implements TokenStream{
         //System.out.println("sync("+i+") needs "+n);
         if ( n > 0 ) fetch(n);
     }
-
 
     /** add n elements to buffer */
 
@@ -142,7 +131,6 @@ public class BufferedTokenStream implements TokenStream{
         }
     }
 
-
     @Override
     public Token get(int i) {
         if ( i < 0 || i >= tokens.size() ) {
@@ -150,7 +138,6 @@ public class BufferedTokenStream implements TokenStream{
         }
         return tokens.get(i);
     }
-
 
     /** Get all tokens from start..stop inclusively */
 
@@ -167,16 +154,13 @@ public class BufferedTokenStream implements TokenStream{
 		return subset;
 	}
 
-
     @Override
 	public int LA(int i) { return LT(i).getType(); }
-
 
     protected Token LB(int k) {
         if ( (p-k)<0 ) return null;
         return tokens.get(p-k);
     }
-
 
     @Override
     public Token LT(int k) {
@@ -194,9 +178,7 @@ public class BufferedTokenStream implements TokenStream{
         return tokens.get(i);
     }
 
-
     protected void setup() { sync(0); p = 0; }
-
 
     /** Reset this token stream by setting its token source. */
 
@@ -206,14 +188,11 @@ public class BufferedTokenStream implements TokenStream{
         p = -1;
     }
 
-
     public List<Token> getTokens() { return tokens; }
-
 
     public List<Token> getTokens(int start, int stop) {
         return getTokens(start, stop, null);
     }
-
 
     /** Given a start and stop index, return a List of all tokens in
      *  the token type BitSet.  Return null if no tokens were found.  This
@@ -244,13 +223,11 @@ public class BufferedTokenStream implements TokenStream{
         return filteredTokens;
     }
 
-
     public List<Token> getTokens(int start, int stop, int ttype) {
 		HashSet<Integer> s = new HashSet<Integer>(ttype);
 		s.add(ttype);
 		return getTokens(start,stop, s);
     }
-
 
     /** Given a starting index, return the index of the next token on channel.
 	 *  Return i if tokens[i] is on channel.  Return -1 if there are no tokens
@@ -270,7 +247,6 @@ public class BufferedTokenStream implements TokenStream{
 		return i;
 	}
 
-
     /** Given a starting index, return the index of the previous token on channel.
 	 *  Return i if tokens[i] is on channel. Return -1 if there are no tokens
 	 *  on channel between i and 0.
@@ -282,7 +258,6 @@ public class BufferedTokenStream implements TokenStream{
 		}
 		return i;
 	}
-
 
     /** Collect all tokens on specified channel to the right of
 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL or
@@ -306,7 +281,6 @@ public class BufferedTokenStream implements TokenStream{
 		return filterForChannel(from, to, channel);
 	}
 
-
     /** Collect all hidden tokens (any off-default channel) to the right of
 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL
 	 *  of EOF.
@@ -315,7 +289,6 @@ public class BufferedTokenStream implements TokenStream{
     public List<Token> getHiddenTokensToRight(int tokenIndex) {
 		return getHiddenTokensToRight(tokenIndex, -1);
 	}
-
 
     /** Collect all tokens on specified channel to the left of
 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
@@ -338,7 +311,6 @@ public class BufferedTokenStream implements TokenStream{
 		return filterForChannel(from, to, channel);
 	}
 
-
     /** Collect all hidden tokens (any off-default channel) to the left of
 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
 	 */
@@ -346,7 +318,6 @@ public class BufferedTokenStream implements TokenStream{
     public List<Token> getHiddenTokensToLeft(int tokenIndex) {
 		return getHiddenTokensToLeft(tokenIndex, -1);
 	}
-
 
     protected List<Token> filterForChannel(int from, int to, int channel) {
 		List<Token> hidden = new ArrayList<Token>();
@@ -363,10 +334,8 @@ public class BufferedTokenStream implements TokenStream{
 		return hidden;
 	}
 
-
     @Override
     public String getSourceName() {	return tokenSource.getSourceName();	}
-
 
     /** Get the text of all tokens in this buffer. */
 
@@ -377,7 +346,6 @@ public class BufferedTokenStream implements TokenStream{
 		fill();
 		return getText(Interval.of(0,size()-1));
 	}
-
 
     @NotNull
     @Override
@@ -397,13 +365,11 @@ public class BufferedTokenStream implements TokenStream{
 		return buf.toString();
     }
 
-
     @NotNull
 	@Override
 	public String getText(RuleContext ctx) {
 		return getText(ctx.getSourceInterval());
 	}
-
 
     @NotNull
     @Override
@@ -414,7 +380,6 @@ public class BufferedTokenStream implements TokenStream{
 
 		return "";
     }
-
 
     /** Get all tokens from lexer until EOF */
 
@@ -429,6 +394,5 @@ public class BufferedTokenStream implements TokenStream{
             sync(i);
         }
     }
-
 
 }

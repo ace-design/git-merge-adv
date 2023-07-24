@@ -1364,7 +1364,11 @@ class Blob(Feature):
         tmean = sps.tmean(distances,(min,x+sd))
         return tmean
 
+<<<<<<< left_content.py
+    def getConvexityDefects(self, returnPoints=False):
+=======
     def getConvexityDefects(self):
+>>>>>>> right_content.py
         """
         **SUMMARY**
 
@@ -1372,24 +1376,56 @@ class Blob(Feature):
 
         **PARAMETERS**
 
+<<<<<<< left_content.py
+        *returnPoints* - Bool(False). 
+                         If False: Returns FeatureSet of Line(start point, end point) 
+                         and Corner(far point)
+                         If True: Returns a list of tuples
+                         (start point, end point, far point)
+        **RETURNS**
+
+        FeatureSet - A FeatureSet of Line and Corner objects
+                     OR
+                     A list of (start point, end point, far point)
+                     See PARAMETERS.
+=======
         **RETURNS**
 
         FeatureSet - A FeatureSet of Line objects.
+>>>>>>> right_content.py
 
         **EXAMPLE**
 
         >>> img = Image('lenna')
         >>> blobs = img.findBlobs()
         >>> blob = blobs[-1]
+<<<<<<< left_content.py
+        >>> lines, farpoints = blob.getConvexityDefects()
+        >>> lines.draw()
+        >>> farpoints.draw(color=Color.RED, width=-1)
+        >>> img.show()
+
+        >>> points = blob.getConvexityDefects(returnPoints=True)
+        >>> startpoints = zip(*points)[0]
+        >>> endpoints = zip(*points)[0]
+        >>> farpoints = zip(*points)[0]
+        >>> print startpoints, endpoints, farpoints
+=======
         >>> feat = blob.getConvexityDefects()
         >>> feat.draw()
         >>> img.show()
+>>>>>>> right_content.py
         """
         def cvFallback():
             chull = cv.ConvexHull2(self.mContour, cv.CreateMemStorage(), return_points=False)
             defects = cv.ConvexityDefects(self.mContour, chull, cv.CreateMemStorage())
+<<<<<<< left_content.py
+            points = [(defect[0], defect[1], defect[2]) for defect in defects]
+            return points
+=======
             features = FeatureSet([Line(self.image, (defect[0], defect[1])) for defect in defects])
             return features
+>>>>>>> right_content.py
 
         try:
             import cv2
@@ -1400,6 +1436,21 @@ class Blob(Feature):
                 if isinstance(defects, type(None)):
                     warnings.warn("Unable to find defects. Returning Empty FeatureSet.")
                     defects = []
+<<<<<<< left_content.py
+                points = [(self.mContour[defect[0][0]], self.mContour[defect[0][1]], self.mContour[defect[0][2]]) for defect in defects]
+            else:
+                points = cvFallback()
+        except ImportError:
+            points = cvFallback()
+
+        if returnPoints:
+            return FeatureSet(points)
+        else:
+            lines = FeatureSet([Line(self.image, (start, end)) for start, end, far in points])
+            farpoints = FeatureSet([Corner(self.image, far[0], far[1]) for start, end, far in points]) 
+            features = FeatureSet([lines, farpoints])
+            return features
+=======
                 features = FeatureSet([Line(self.image, (self.mContour[defect[0][0]], self.mContour[defect[0][1]])) for defect in defects])
             else:
                 features = cvFallback()
@@ -1407,6 +1458,7 @@ class Blob(Feature):
             features = cvFallback()
         
         return features
+>>>>>>> right_content.py
 
 
 

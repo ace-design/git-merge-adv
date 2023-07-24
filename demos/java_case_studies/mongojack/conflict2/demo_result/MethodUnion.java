@@ -127,7 +127,6 @@ public abstract class MongoDBTestBase{
         return configure(JacksonDBCollection.wrap(getCollection(), type, keyType, mapper));
     }
 
-
     public void setUseStreamParser(boolean useStreamParser) {
         this.useStreamParser = useStreamParser;
     }

@@ -93,7 +93,6 @@ public class ConfigLoaderTest{
     assertEquals("/tmp/ct-visma-1", lucene.getPath());
   }
 
-
     @Test
   public void testParameterOfNothing() throws IOException, SAXException {
     try {
@@ -112,6 +111,5 @@ public class ConfigLoaderTest{
     
     assertEquals(1, comparators.size());
   }
-
 
 }

@@ -523,7 +523,6 @@ public abstract class BaseTest{
 		return result;
 	}
 
-
     public ParseTree execParser(String startRuleName, String input,
 								String parserName, String lexerName)
 		throws Exception
@@ -584,14 +583,12 @@ public abstract class BaseTest{
 		return new Pair<Parser, Lexer>(parser, lexer);
 	}
 
-
     public Class<?> loadClassFromTempDir(String name) throws Exception {
 		ClassLoader loader =
 			new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() },
 							   ClassLoader.getSystemClassLoader());
 		return loader.loadClass(name);
 	}
-
 
     public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
 <<<<<<< left_content.java
