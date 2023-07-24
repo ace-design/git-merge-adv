@@ -28,6 +28,7 @@ from blaze.utils import example,normalize
 import tempfile
 from odo.utils import tmpfile
 from blaze.interactive import iscorescalar
+import math
 
 
 sa = pytest.importorskip('sqlalchemy')

@@ -1,7 +1,7 @@
 from datetime import timedelta
 from operator import methodcaller
 import itertools
-import tempfile
+import tempfile,math
 
 import pytest
 

@@ -1,0 +1,4 @@
+deletions: 2
+insertions: 0
+moves: 4
+diff_path: 0
