@@ -39,6 +39,7 @@ vectors_3des = load_vectors_from_file('CMAC/nist-800-38b-3des.txt',
 fake_key = b'\x00' * 16
 
 @pytest.mark.requires_backend_interface(interface=CMACBackend)
+class TestCMAC(object):
     @pytest.mark.supported(only_if=lambda backend: backend.
         cmac_algorithm_supported(AES(fake_key)), skip_message=
         'Does not support CMAC.')

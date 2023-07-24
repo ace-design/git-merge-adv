@@ -32,21 +32,22 @@ def main():
             run_gumtree_jdime(output_path)
     else:
         for subdir, dirs, files in os.walk(output_path):
-            try:   
                 for d in dirs:
-                    if ("importC" in d or "conflict" in d):
-                        print("\nExecute "+os.path.join(subdir, d)+":")
-                        print(os.path.join(subdir, d),lang)
-                        exec_algo(algo,os.path.join(subdir, d),lang)
+                    try:
+                        if ("importC" in d or "conflict" in d):
+                            print("\nExecute "+os.path.join(subdir, d)+":")
+                            print(os.path.join(subdir, d),lang)
+                            exec_algo(algo,os.path.join(subdir, d),lang)
 
-                        run_gumtree(os.path.join(subdir,d),lang,algo)
+                            run_gumtree(os.path.join(subdir,d),lang,algo)
 
-                        if (lang=="java"):
-                            run_gumtree_spork(os.path.join(subdir,d))
-                            run_gumtree_jdime(os.path.join(subdir,d))
-            except Exception as e:
-                print(f"error in executing the casestudy {d} in {subdir}")
-                print(e)
+                            if (lang=="java"):
+                                run_gumtree_spork(os.path.join(subdir,d))
+                                run_gumtree_jdime(os.path.join(subdir,d))
+                    except Exception as e:
+                        print(f"error in executing the casestudy {d} in {subdir}")
+                        print(e)
+                
 
     # for dir in os.walk(output_path)
 

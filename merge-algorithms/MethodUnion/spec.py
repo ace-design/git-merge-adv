@@ -607,6 +607,8 @@ class Python(Lang):
                     else :
                         formatted_imports.append(["import",f'{alias.name} as {alias.asname}',nod.lineno,nod.end_lineno])
             if isinstance(nod, ast.ImportFrom):
+                if nod.module == None:
+                    nod.module = '.'
                 for alias in nod.names:
                     if alias.asname == None :
                         formatted_imports.append([f"from {nod.module} import",alias.name,nod.lineno,nod.end_lineno])
@@ -820,7 +822,12 @@ class Python(Lang):
                 continue
             classcode = ''
             indent = "    "
-            classcode = classcode+ (astor.to_source(classobj.node)).split("\n")[0]+'\n'
+            if classobj.node.decorator_list == []:
+                classcode = classcode+ (astor.to_source(classobj.node)).split("\n")[0]+'\n'
+            else:
+                temp = (astor.to_source(classobj.node)).split("\n")
+                classcode = classcode+ (temp)[0]+'\n'+temp[1]+'\n'
+
             for i in classobj.declarations:
                 classcode = classcode + indent+i
             for metho in classobj.methods:
@@ -842,7 +849,6 @@ class Python(Lang):
         lastele = codeseq.pop()
         if lastele[0:3] == "if ":
             body = body + lastele
-        
         print("Algorithm run successfully")
         return body
 

@@ -2,12 +2,12 @@ import datetime
 from types import MethodType
 from datashape import dshape
 from datashape.util.testing import assert_dshape_equal
-from odo import append
+from odo import append,into
 from odo.backends.csv import CSV
 from blaze import discover,transform
 from blaze.compatibility import pickle
 from blaze.expr import symbol
-from blaze.interactive import Data,compute,concrete_head,expr_repr,to_html,data,iscorescalar,iscoresequence,iscoretype,coerce_core,into
+from blaze.interactive import Data,compute,concrete_head,expr_repr,to_html,data,iscorescalar,iscoresequence,iscoretype,coerce_core
 from blaze.utils import tmpfile,example
 tdata = ('Alice', 100), ('Bob', 200)
 
