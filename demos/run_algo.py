@@ -3,6 +3,8 @@ import subprocess
 import re
 import os
 import math
+import csv 
+import pandas as pd
 
 def parsing():
     parser = argparse.ArgumentParser(description='Enter path to case study, which merge algorithm and language of case study')
@@ -19,27 +21,33 @@ def main():
     lang=get_suffix(parsing().lang)
     purpose=parsing().purpose
 
-    output_path=case_study.strip("../")
+    reference_path=case_study.strip("../")
+
+    output_path=parsing().lang+'_case_studies/demo_results/'+algo+'/'
 
     if (purpose=="spec"):
-        get_case_study(case_study,output_path)
-        exec_algo(algo,output_path,lang)
+        # get_case_study(case_study,output_path)
+        case_study=reference_path.split('/')[-2]+'-'+reference_path.split('/')[-1]
+        output_path+=case_study
+        exec_algo(algo,reference_path,output_path,lang)
 
-        run_gumtree(output_path,lang,algo)
+        run_gumtree(reference_path,output_path,lang,algo)
 
         if (lang=="java"):
-            run_gumtree_spork(output_path)
-            run_gumtree_jdime(output_path)
+            run_gumtree_spork(reference_path)
+            run_gumtree_jdime(reference_path)
     else:
-        for subdir, dirs, files in os.walk(output_path):
+        for subdir, dirs, files in os.walk(reference_path):
                 for d in dirs:
                     try:
                         if ("importC" in d or "conflict" in d):
                             print("\nExecute "+os.path.join(subdir, d)+":")
                             print(os.path.join(subdir, d),lang)
-                            exec_algo(algo,os.path.join(subdir, d),lang)
+                            added_output_path=output_path+subdir.split('/')[-1]+'-'+d
+                            print(added_output_path)
+                            exec_algo(algo,os.path.join(subdir, d),added_output_path,lang)
 
-                            run_gumtree(os.path.join(subdir,d),lang,algo)
+                            run_gumtree(os.path.join(subdir,d),added_output_path,lang,algo)
 
                             if (lang=="java"):
                                 run_gumtree_spork(os.path.join(subdir,d))
@@ -64,39 +72,16 @@ def get_suffix(lang):
 
 
 
-def exec_algo(algo,case_study,lang):
+def exec_algo(algo,reference_case_study,output_path,lang):
     try:
         # action=input("\nEnter 0 if testing new algorithm\nEnter 1 if executing gumtree again due to previous errors.\n")
         algo_path="../merge-algorithms/"+algo+'/init.py'
-        subprocess.run(['mkdir','-p',case_study+"/demo_result/"])
-        subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang,'--file',case_study+"/base."+lang])
-        # if (action=="0"):
-        #     algo_path="../merge-algorithms/"+algo+'/init.py'
-        #     subprocess.run(['mkdir','-p',case_study+"/demo_result/"])
-        #     subprocess.run(['python3', algo_path,'--left',case_study+"/left."+lang,'--right',case_study+"/right."+lang,'--base',case_study+"/base."+lang,'--out',case_study+"/demo_result/"+algo+"."+lang,'--file',case_study+"/base."+lang])
-        # elif (action=="1"):
-        #     pass
-        # else:
-        #     print("Not a valid answer. Ended program.")
-        #     exit(0)
+        subprocess.run(['python3', algo_path,'--left',reference_case_study+"/left."+lang,'--right',reference_case_study+"/right."+lang,'--base',reference_case_study+"/base."+lang,'--out',output_path+"."+lang,'--file',reference_case_study+"/base."+lang])
     except:
         print("path not found")
         exit(0)
 
 
-
-# Copies desired case study to demo folder.
-def get_case_study(case_study,output_path):
-    try:
-        if (os.path.exists(output_path)):
-            pass
-        else:
-            subprocess.run(['mkdir','-p',output_path])
-            adjusted=output_path.rfind("/")
-            subprocess.run(['cp','-r',case_study,output_path[:adjusted]])
-    except:
-        print("path not found")
-        exit(0)
 
 # Looks for all import deletions, moves and insertions found in gumtree textdiff output.
 def search_gumtree(result):
@@ -138,10 +123,9 @@ def search_gumtree(result):
     #         writer.write(key+": "+str(data[key])+"\n")
     #     writer.write("Overall: "+str(total))
 
-def search_gumtree_full(result,new,num_conflicts,existing_data=None, existing_total=None):
+def search_gumtree_full(result,new,num_conflicts,existing_data, existing_total,output):
     if (len(result)==1 and result[0]==''):
         raise RuntimeError("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
-
 
     dict={
     'deletions':re.compile(r'\ndelete'),
@@ -175,18 +159,37 @@ def search_gumtree_full(result,new,num_conflicts,existing_data=None, existing_to
         total+=math.pow(value,2)
     total=math.sqrt(total)
 
-    with open(new,'w') as writer:
-        for key in data.keys():
-            writer.write(key+": "+str(data[key])+"\n")
-        writer.write("Overall: "+str(total))
 
+    exists=False
+
+    df=pd.read_csv(new)
+
+
+    if output in df['project'].values:
+        for key in data.keys():
+            df.loc[df['project']==output, key]=data[key]
+        df.to_csv(new,index=False)
+    else:
+        data={
+            'project':[output],
+            'deletions': [data['deletions']],
+            'insertions': [data['insertions']],
+            'moves': [data['moves']],
+            'diff_path': [data['diff_path']],
+            'num_conflicts': [data['num_conflicts']],
+            'overall': [total] 
+        }
+        df=pd.DataFrame(data)
+        df.to_csv(new, mode='a', index=False, header=False)
+    
 # Compares spork version to desired version (Java )
-def run_gumtree_spork(output_path):
-    desired=output_path+"/desired.java"
-    result=output_path+"/spork_result.java"
+def run_gumtree_spork(reference_path):
+    desired=reference_path+"/desired.java"
+    result=reference_path+"/spork_result.java"
+    new="java_case_studies/demo_results/spork.csv"
 
     without_git=subprocess.run(['cat',result],capture_output=True, text=True)
-    new_result=output_path+"/demo_result/without_git.java"
+    new_result="without_git.java"
 
     num_conflicts=0
     with open(new_result,'w') as writer:
@@ -195,25 +198,32 @@ def run_gumtree_spork(output_path):
                 writer.write(line+'\n')
             elif ("<<<<<<<" in line):
                 num_conflicts+=1
-    new=output_path+"/demo_result/spork_diff.txt"
+
+
+    if not os.path.isfile(new):
+        columns=['project','deletions','insertions','moves','diff_path','num_conflicts','overall']
+        df=pd.DataFrame(columns=columns)
+        df.to_csv(new,index=False)
 
     result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
     
-    if (len(result)==1 and result[0]==''):
-        print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
-        exit(0)
+    import_data,import_total=search_gumtree(result)
+    search_gumtree_full(result,new,num_conflicts,import_data,import_total,reference_path.split('/')[-2]+'-'+reference_path.split('/')[-1])
+
+    # if (len(result)==1 and result[0]==''):
+    #     print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
+    #     exit(0)
     subprocess.run(['rm',new_result])
 
-    search_gumtree_full(result,new,num_conflicts)
     
 # Compares jdime version to desired version
-def run_gumtree_jdime(output_path):
-    desired=output_path+"/desired.java"
-    result=output_path+"/jdime.java"
-    new=output_path+"/demo_result/jdime_diff.txt"
+def run_gumtree_jdime(reference_path):
+    desired=reference_path+"/desired.java"
+    result=reference_path+"/jdime.java"
+    new="java_case_studies/demo_results/jdime.csv"
 
     without_git=subprocess.run(['cat',result],capture_output=True, text=True)
-    new_result=output_path+"/demo_result/without_git.java"
+    new_result="without_git.java"
 
     num_conflicts=0
     with open(new_result,'w') as writer:
@@ -222,23 +232,31 @@ def run_gumtree_jdime(output_path):
                 writer.write(line+'\n')
             elif ("<<<<<<<" in line):
                 num_conflicts+=1
-    
-    result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
 
+
+    if not os.path.isfile(new):
+        columns=['project','deletions','insertions','moves','diff_path','num_conflicts','overall']
+        df=pd.DataFrame(columns=columns)
+        df.to_csv(new,index=False)
+
+    result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
     
-    if (len(result)==1 and result[0]==''):
-        print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
-        exit(0)
+    import_data,import_total=search_gumtree(result)
+    search_gumtree_full(result,new,num_conflicts,import_data,import_total,reference_path.split('/')[-2]+'-'+reference_path.split('/')[-1])
+
+    # if (len(result)==1 and result[0]==''):
+    #     print("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
+    #     exit(0)
     subprocess.run(['rm',new_result])
 
-    search_gumtree_full(result,new,num_conflicts)
+
 
 # Compares inputted algorithm version to desired version. 
-def run_gumtree(output_path,lang,algo):
-    desired=output_path+"/desired."+lang
-    result=output_path+"/demo_result/"+algo+"."+lang
-    without_git=subprocess.run(['cat',result],capture_output=True, text=True)
-    new_result=output_path+"/demo_result/without_git."+lang
+def run_gumtree(reference_path,output_path,lang,algo):
+    desired=reference_path+"/desired."+lang
+    result=output_path
+    without_git=subprocess.run(['cat',result+'.java'],capture_output=True, text=True)
+    new_result='without_git.'+lang
 
     num_conflicts=0
     with open(new_result,'w') as writer:
@@ -247,19 +265,29 @@ def run_gumtree(output_path,lang,algo):
                 writer.write(line+'\n')
             elif ("<<<<<<<" in line):
                 num_conflicts+=1
-    new=output_path+"/demo_result/"+algo+"_diff.txt"
+
+    new=output_path[0:output_path.rfind('/')].replace('/'+algo,'')+'/'+algo+'.csv'
+    print(new)
+
+
+
+    if not os.path.isfile(new):
+        columns=['project','deletions','insertions','moves','diff_path','num_conflicts','overall']
+        df=pd.DataFrame(columns=columns)
+        df.to_csv(new,index=False)
+
 
     match lang:
         case "py":
             import_result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
             import_data,import_total=search_gumtree(import_result)
             body_result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
-            search_gumtree_full(body_result,new,num_conflicts,import_data,import_total)
+            search_gumtree_full(body_result,new,num_conflicts,import_data,import_total,result.split('/')[-1])
         case "java":
-            result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
-            import_data,import_total=search_gumtree(result)
-            search_gumtree_full(result,new,num_conflicts,import_data,import_total)
-    subprocess.run(['rm',new_result])
+            import_result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+            import_data,import_total=search_gumtree(import_result)
+            search_gumtree_full(import_result,new,num_conflicts,import_data,import_total,result.split('/')[-1])
+    # subprocess.run(['rm',new_result])
     # search_gumtree(result,new)
     # search_gumtree_full(result,new,num_conflicts)
 
