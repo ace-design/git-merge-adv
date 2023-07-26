@@ -25,6 +25,10 @@ def main():
 
     output_path=parsing().lang+'_case_studies/demo_results/'+algo+'/'
 
+    if not os.path.isdir(output_path):
+        subprocess.run(['mkdir',output_path])
+
+
     if (purpose=="spec"):
         # get_case_study(case_study,output_path)
         case_study=reference_path.split('/')[-2]+'-'+reference_path.split('/')[-1]
@@ -287,7 +291,7 @@ def run_gumtree(reference_path,output_path,lang,algo):
             import_result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
             import_data,import_total=search_gumtree(import_result)
             search_gumtree_full(import_result,new,num_conflicts,import_data,import_total,result.split('/')[-1])
-    # subprocess.run(['rm',new_result])
+    subprocess.run(['rm',new_result])
     # search_gumtree(result,new)
     # search_gumtree_full(result,new,num_conflicts)
 
