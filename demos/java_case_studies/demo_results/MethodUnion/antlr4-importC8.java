@@ -550,6 +550,10 @@ public class TestPerformance extends BaseTest{
                     }
                 }
 
-    void parseFile(CharStream input);
+    protected interface JavaParserFactory{
 
+
+        void parseFile(CharStream input);
+
+    }
 }

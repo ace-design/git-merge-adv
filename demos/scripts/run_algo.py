@@ -188,6 +188,8 @@ def search_gumtree_full(result,new,num_conflicts,existing_data, existing_total,o
     
 # Compares spork version to desired version (Java )
 def run_gumtree_spork(reference_path):
+    gumtree_path=reference_path.split("java_case_studies")[0]+'dependencies/gumtree.jar'
+    print(gumtree_path)
     desired=reference_path+"/desired.java"
     result=reference_path+"/spork_result.java"
     new="java_case_studies/demo_results/spork.csv"
@@ -209,7 +211,7 @@ def run_gumtree_spork(reference_path):
         df=pd.DataFrame(columns=columns)
         df.to_csv(new,index=False)
 
-    result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+    result=subprocess.run(['java','-jar',gumtree_path,'textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
     
     import_data,import_total=search_gumtree(result)
     search_gumtree_full(result,new,num_conflicts,import_data,import_total,reference_path.split('/')[-2]+'-'+reference_path.split('/')[-1])
@@ -222,6 +224,8 @@ def run_gumtree_spork(reference_path):
     
 # Compares jdime version to desired version
 def run_gumtree_jdime(reference_path):
+    gumtree_path=reference_path.split("java_case_studies")[0]+'dependencies/gumtree.jar'
+
     desired=reference_path+"/desired.java"
     result=reference_path+"/jdime.java"
     new="java_case_studies/demo_results/jdime.csv"
@@ -243,7 +247,7 @@ def run_gumtree_jdime(reference_path):
         df=pd.DataFrame(columns=columns)
         df.to_csv(new,index=False)
 
-    result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+    result=subprocess.run(['java','-jar',gumtree_path,'textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
     
     import_data,import_total=search_gumtree(result)
     search_gumtree_full(result,new,num_conflicts,import_data,import_total,reference_path.split('/')[-2]+'-'+reference_path.split('/')[-1])
@@ -257,6 +261,12 @@ def run_gumtree_jdime(reference_path):
 
 # Compares inputted algorithm version to desired version. 
 def run_gumtree(reference_path,output_path,lang,algo):
+    if ('java_case_studies' in reference_path):
+        gumtree_path=reference_path.split("java_case_studies")[0]+'dependencies/gumtree.jar'
+    else:
+        gumtree_path=reference_path.split("python_case_studies")[0]+'dependencies/gumtree.jar'
+
+    print(gumtree_path)
     desired=reference_path+"/desired."+lang
     result=output_path
     without_git=subprocess.run(['cat',result+'.java'],capture_output=True, text=True)
@@ -283,12 +293,12 @@ def run_gumtree(reference_path,output_path,lang,algo):
 
     match lang:
         case "py":
-            import_result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','theta',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+            import_result=subprocess.run(['java','-jar',gumtree_path,'textdiff','-m','theta',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
             import_data,import_total=search_gumtree(import_result)
-            body_result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+            body_result=subprocess.run(['java','-jar',gumtree_path,'textdiff','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
             search_gumtree_full(body_result,new,num_conflicts,import_data,import_total,result.split('/')[-1])
         case "java":
-            import_result=subprocess.run(['java','-jar','gumtree.jar','textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
+            import_result=subprocess.run(['java','-jar',gumtree_path,'textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
             import_data,import_total=search_gumtree(import_result)
             search_gumtree_full(import_result,new,num_conflicts,import_data,import_total,result.split('/')[-1])
     subprocess.run(['rm',new_result])

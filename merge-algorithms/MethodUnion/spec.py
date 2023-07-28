@@ -271,19 +271,26 @@ class Java(Lang):
             ((enum_declaration) @name)
         """)
 
-        class_captures=class_captures+enum_query.captures(tree.root_node)
+        interface_query=Java_Lang.query("""
+            ((interface_declaration) @name)
+        """)
+
+        class_captures=class_captures+enum_query.captures(tree.root_node)+interface_query.captures(tree.root_node)
 
         field_query = Java_Lang.query("""
-            (field_declaration
-            	declarator: (variable_declarator) @name)
+            ((field_declaration) @name)
         """)
 
         enum_contant_query = Java_Lang.query("""
-            (enum_constant
-                name:(identifier) @name)
+            ((enum_constant) @name)
         """)
 
-        field_captures=field_query.captures(tree.root_node)+enum_contant_query.captures(tree.root_node)
+
+        interface_contant_query = Java_Lang.query("""
+            ((constant_declaration) @name)
+        """)
+
+        field_captures=field_query.captures(tree.root_node)+enum_contant_query.captures(tree.root_node)+interface_contant_query.captures(tree.root_node)
 
         method_query = Java_Lang.query("""
             (constructor_declaration
@@ -419,12 +426,12 @@ class Java(Lang):
 
         #Adds all variable declarations to associ@API(status = API.Status.STABLE)\npublic final class TestNGCucumberRunner ated classes.
         for field in field_captures:
-            declaration=field[0].parent.text.decode()+","
+            declaration=field[0].text.decode()+","
 
             starting_line=int(field[0].start_point[0])
             identifier=""
 
-            for child in field[0].parent.children:
+            for child in field[0].children:
                 if (child.type=="variable_declarator"):
                     for nested_child in child.children:
                         if nested_child.type=="identifier":
@@ -434,9 +441,10 @@ class Java(Lang):
 
             nested_class=""
 
-            base=field[0].parent
+
+            base=field[0]
             
-            while (base.type!="class_declaration" and base.type!="enum_declaration"):
+            while (base.type!="class_declaration" and base.type!="enum_declaration" and base.type!="interface_declaration"):
                 base=base.parent
 
 
@@ -483,7 +491,7 @@ class Java(Lang):
             
             base=method[0].parent
             
-            while (base.type!="class_declaration" and base.type!="enum_declaration"):
+            while (base.type!="class_declaration" and base.type!="enum_declaration" and base.type!="interface_declaration"):
                 base=base.parent
 
             super_class=""
@@ -511,11 +519,11 @@ class Java(Lang):
 
 
         for comment in all_comments:
-            if (comment[0].type=="block_comment" and (comment[0].parent.type=="class_body") and comment[0].text.decode() not in top_body):
+            if (comment[0].type=="block_comment" and (comment[0].parent.type=="class_body" or comment[0].parent.type=="interface_body" or comment[0].parent.type=="enum_body") and comment[0].text.decode() not in top_body):
                 main_class=""
                 starting_line=int(comment[0].start_point[0])
                 for child in comment[0].parent.parent.children:
-                    if child.type!="block" and child.type!="class_body":
+                    if child.type!="block" and child.type!="class_body" and child.type!="interface_body" and child.type!="enum_body":
                         main_class+=child.text.decode()+" "
                     else:
                         break

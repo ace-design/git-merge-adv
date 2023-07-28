@@ -72,9 +72,33 @@ public class BlockBox extends Box implements InlinePaintable{
 
     public static enum ContentType{
 
+
+        /**
+         * The box builder has not yet run to
+         * create our child boxes. The box builder can be run
+         * with {@link BlockBox#ensureChildren(LayoutContext)}.
+         */
         UNKNOWN,
+
+        /**
+         * This block box contains inline content in the {@link BlockBox#getInlineContent()}
+         * property. If it has also been laid out it will contain
+         * children in {@link Box#getChildren()} and associated methods.
+         * Children will be only {@link LineBox} objects.
+         */
         INLINE,
+
+        /**
+         * This block box's direct children consist only of
+         * {@link BlockBox} and subclassed objects.
+         * The method {@link BlockBox#setInlineContent(List)} must not be used
+         * with block content.
+         */
         BLOCK,
+
+        /**
+         * This block box is empty but may still have border, etc.
+         */
         EMPTY,
 
     }    protected static final int NO_BASELINE = Integer.MIN_VALUE;,

@@ -574,8 +574,21 @@ public class LuceneDatabase implements Database{
 
     public enum BoostMode{
 
+
+        /**
+     * Boost fields at query time.
+     */
         QUERY,
+
+        /**
+     * Boost fields at index time. This means records must be
+     * reindexed to change the boosting.
+     */
         INDEX,
+
+        /**
+     * Don't boost fields.
+     */
         NONE,
 
     }
