@@ -67,10 +67,10 @@ def find_files(repo,line,count,ext,lang):
 
 
     if os.path.isfile("results/base"+ext) and os.path.isfile("results/left"+ext) and os.path.isfile("results/right"+ext):
-        if not os.path.isdir("../../demos/"+lang+"_case_studies/"+repo_name):
-            subprocess.run(['mkdir','../../demos/'+lang+'_case_studies/'+repo_name])
+        if not os.path.isdir("../../demos/"+lang+"_case_studies/reference_repos/"+repo_name):
+            subprocess.run(['mkdir','../../demos/'+lang+'_case_studies/reference_repos/'+repo_name])
         print("COPIED")
-        subprocess.run(['cp','-r','results','../../demos/'+lang+'_case_studies/'+repo_name+"/conflict"+str(count)])
+        subprocess.run(['cp','-r','results','../../demos/'+lang+'_case_studies/reference_repos/'+repo_name+"/conflict"+str(count)])
 
 
 

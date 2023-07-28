@@ -1,0 +1,6620 @@
+===
+match
+---
+name: cmac [6277,6281]
+name: cmac [5632,5636]
+===
+match
+---
+name: parametrize [1882,1893]
+name: parametrize [1364,1375]
+===
+match
+---
+simple_stmt [4764,4784]
+simple_stmt [4163,4183]
+===
+match
+---
+name: hazmat [934,940]
+name: hazmat [399,405]
+===
+match
+---
+simple_stmt [2003,2031]
+simple_stmt [1485,1513]
+===
+match
+---
+with_stmt [4462,4535]
+with_stmt [3883,3956]
+===
+match
+---
+name: CMAC [964,968]
+name: CMAC [429,433]
+===
+match
+---
+string: "key" [2529,2534]
+string: 'key' [1997,2002]
+===
+match
+---
+trailer [1987,1994]
+trailer [1469,1476]
+===
+match
+---
+trailer [3864,3875]
+trailer [3300,3311]
+===
+match
+---
+atom_expr [1981,1994]
+atom_expr [1463,1476]
+===
+match
+---
+name: update [5263,5269]
+name: update [4648,4654]
+===
+match
+---
+name: load_vectors_from_file [1500,1522]
+name: load_vectors_from_file [1001,1023]
+===
+match
+---
+name: self [5070,5074]
+name: self [4456,4460]
+===
+match
+---
+name: raises [5220,5226]
+name: raises [4605,4611]
+===
+match
+---
+operator: , [594,595]
+operator: , [47,48]
+===
+match
+---
+name: copy_cmac [6265,6274]
+name: copy_cmac [5620,5629]
+===
+match
+---
+atom_expr [3388,3421]
+atom_expr [2839,2872]
+===
+match
+---
+suite [5324,5349]
+suite [4708,4733]
+===
+match
+---
+name: cmac [2074,2078]
+name: cmac [1555,1559]
+===
+match
+---
+operator: = [3891,3892]
+operator: = [3327,3328]
+===
+match
+---
+atom_expr [5753,5777]
+atom_expr [5122,5146]
+===
+match
+---
+simple_stmt [3723,3745]
+simple_stmt [3161,3183]
+===
+match
+---
+name: AES [6395,6398]
+name: AES [5754,5757]
+===
+match
+---
+expr_stmt [5708,5738]
+expr_stmt [5078,5108]
+===
+match
+---
+trailer [3343,3372]
+trailer [2794,2823]
+===
+match
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [6125,6160]
+string: b'2b7e151628aed2a6abf7158809cf4f3c' [5480,5515]
+===
+match
+---
+suite [5395,5424]
+suite [4778,4807]
+===
+match
+---
+name: AES [5531,5534]
+name: AES [4905,4908]
+===
+match
+---
+decorator [1695,1865]
+decorator [1194,1347]
+===
+match
+---
+operator: = [4132,4133]
+operator: = [3562,3563]
+===
+match
+---
+arglist [1175,1224]
+arglist [674,727]
+===
+match
+---
+suite [6110,6344]
+suite [5465,5699]
+===
+match
+---
+name: AES [4967,4970]
+name: AES [4357,4360]
+===
+match
+---
+operator: , [3052,3053]
+operator: , [2506,2507]
+===
+match
+---
+parameters [4739,4754]
+parameters [4138,4153]
+===
+match
+---
+trailer [4562,4708]
+trailer [3987,4107]
+===
+match
+---
+trailer [5298,5305]
+trailer [4682,4689]
+===
+match
+---
+operator: @ [4865,4866]
+operator: @ [4268,4269]
+===
+match
+---
+trailer [2595,2605]
+trailer [2063,2073]
+===
+match
+---
+name: pytest [2964,2970]
+name: pytest [2418,2424]
+===
+match
+---
+expr_stmt [1578,1601]
+expr_stmt [1078,1101]
+===
+match
+---
+name: cmac [6304,6308]
+name: cmac [5659,5663]
+===
+match
+---
+trailer [5806,5808]
+trailer [5175,5177]
+===
+match
+---
+simple_stmt [916,969]
+simple_stmt [381,434]
+===
+match
+---
+simple_stmt [6600,6632]
+simple_stmt [5959,5991]
+===
+match
+---
+name: backend [6561,6568]
+name: backend [5921,5928]
+===
+match
+---
+trailer [5901,5906]
+trailer [5273,5278]
+===
+match
+---
+suite [4755,4860]
+suite [4154,4259]
+===
+match
+---
+name: key [4845,4848]
+name: key [4244,4247]
+===
+match
+---
+simple_stmt [3381,3432]
+simple_stmt [2832,2883]
+===
+match
+---
+name: TripleDES [904,913]
+name: TripleDES [368,377]
+===
+match
+---
+funcdef [5039,5424]
+funcdef [4425,4807]
+===
+match
+---
+name: ARC4 [898,902]
+name: ARC4 [358,362]
+===
+match
+---
+trailer [3362,3371]
+trailer [2813,2822]
+===
+match
+---
+trailer [4060,4070]
+trailer [3495,3505]
+===
+match
+---
+param [1958,1964]
+param [1440,1446]
+===
+match
+---
+atom_expr [2964,3011]
+atom_expr [2418,2465]
+===
+match
+---
+operator: = [6497,6498]
+operator: = [5857,5858]
+===
+match
+---
+arglist [1272,1321]
+arglist [770,823]
+===
+match
+---
+simple_stmt [6169,6200]
+simple_stmt [5524,5555]
+===
+match
+---
+operator: @ [4540,4541]
+operator: @ [3965,3966]
+===
+match
+---
+trailer [5723,5728]
+trailer [5093,5098]
+===
+match
+---
+suite [1690,6344]
+suite [1189,5699]
+===
+match
+---
+name: self [4740,4744]
+name: self [4139,4143]
+===
+match
+---
+name: key [6119,6122]
+name: key [5474,5477]
+===
+match
+---
+simple_stmt [3753,3775]
+simple_stmt [3191,3213]
+===
+match
+---
+operator: , [6559,6560]
+operator: , [5919,5920]
+===
+match
+---
+trailer [6611,6620]
+trailer [5970,5979]
+===
+match
+---
+name: AES [5996,5999]
+name: AES [5355,5358]
+===
+match
+---
+expr_stmt [4315,4356]
+expr_stmt [3737,3778]
+===
+match
+---
+operator: = [1587,1588]
+operator: = [1087,1088]
+===
+match
+---
+name: u [5882,5883]
+name: u [5250,5251]
+===
+match
+---
+operator: , [2488,2489]
+operator: , [1956,1957]
+===
+match
+---
+arith_expr [1435,1483]
+arith_expr [936,984]
+===
+match
+---
+name: cmac [5791,5795]
+name: cmac [5160,5164]
+===
+match
+---
+trailer [5346,5348]
+trailer [4730,4732]
+===
+match
+---
+trailer [5412,5421]
+trailer [4795,4804]
+===
+match
+---
+name: copy_cmac [6323,6332]
+name: copy_cmac [5678,5687]
+===
+match
+---
+name: backend [2490,2497]
+name: backend [1958,1965]
+===
+match
+---
+name: backend [2657,2664]
+name: backend [2124,2131]
+===
+match
+---
+atom_expr [2522,2535]
+atom_expr [1990,2003]
+===
+match
+---
+atom_expr [6418,6432]
+atom_expr [5777,5791]
+===
+match
+---
+name: mark [1612,1616]
+name: mark [1111,1115]
+===
+match
+---
+trailer [5795,5802]
+trailer [5164,5171]
+===
+match
+---
+trailer [2108,2113]
+trailer [1589,1594]
+===
+match
+---
+atom_expr [5531,5544]
+atom_expr [4905,4918]
+===
+match
+---
+trailer [2639,2649]
+trailer [2106,2116]
+===
+match
+---
+operator: = [3106,3107]
+operator: = [2560,2561]
+===
+match
+---
+atom_expr [3926,3975]
+atom_expr [3361,3410]
+===
+match
+---
+name: params [2554,2560]
+name: params [2022,2028]
+===
+match
+---
+name: mark [1703,1707]
+name: mark [1202,1206]
+===
+match
+---
+simple_stmt [3131,3153]
+simple_stmt [2585,2607]
+===
+match
+---
+name: supported [2796,2805]
+name: supported [2267,2276]
+===
+match
+---
+operator: = [1979,1980]
+operator: = [1461,1462]
+===
+match
+---
+expr_stmt [6437,6488]
+expr_stmt [5796,5848]
+===
+match
+---
+param [3691,3696]
+param [3129,3134]
+===
+match
+---
+atom_expr [2686,2713]
+atom_expr [2153,2180]
+===
+match
+---
+arglist [2086,2123]
+arglist [1567,1604]
+===
+match
+---
+trailer [2098,2108]
+trailer [1579,1589]
+===
+match
+---
+string: "params" [1894,1902]
+string: 'params' [1376,1384]
+===
+match
+---
+atom_expr [5828,5852]
+atom_expr [5196,5220]
+===
+match
+---
+atom_expr [6451,6488]
+atom_expr [5810,5848]
+===
+match
+---
+simple_stmt [2182,2233]
+simple_stmt [1663,1714]
+===
+match
+---
+trailer [3629,3641]
+trailer [3067,3079]
+===
+match
+---
+name: vectors_3des [1485,1497]
+name: vectors_3des [986,998]
+===
+match
+---
+expr_stmt [6119,6160]
+expr_stmt [5474,5515]
+===
+match
+---
+atom_expr [2081,2124]
+atom_expr [1562,1605]
+===
+match
+---
+operator: , [748,749]
+operator: , [199,200]
+===
+match
+---
+name: TripleDES [3931,3940]
+name: TripleDES [3366,3375]
+===
+match
+---
+param [4912,4919]
+param [4306,4313]
+===
+match
+---
+name: fake_key [5535,5543]
+name: fake_key [4909,4917]
+===
+match
+---
+string: "output" [3900,3908]
+string: 'output' [3336,3344]
+===
+match
+---
+name: u [5807,5808]
+name: u [5176,5177]
+===
+match
+---
+param [5634,5639]
+param [5004,5009]
+===
+match
+---
+trailer [5305,5323]
+trailer [4689,4707]
+===
+match
+---
+name: key1 [3071,3075]
+name: key1 [2525,2529]
+===
+match
+---
+name: pytest [2239,2245]
+name: pytest [1724,1730]
+===
+match
+---
+trailer [6458,6463]
+trailer [5817,5822]
+===
+match
+---
+expr_stmt [3267,3323]
+expr_stmt [2718,2774]
+===
+match
+---
+string: "key3" [3145,3151]
+string: 'key3' [2599,2605]
+===
+match
+---
+name: six [5878,5881]
+name: six [5246,5249]
+===
+match
+---
+atom_expr [2086,2114]
+atom_expr [1567,1595]
+===
+match
+---
+decorated [3437,4088]
+decorated [2892,3523]
+===
+match
+---
+simple_stmt [4365,4396]
+simple_stmt [3787,3818]
+===
+match
+---
+atom_expr [5156,5164]
+atom_expr [4542,4550]
+===
+match
+---
+name: backend [3045,3052]
+name: backend [2499,2506]
+===
+match
+---
+operator: @ [1604,1605]
+operator: @ [1103,1104]
+===
+match
+---
+name: six [667,670]
+name: six [115,118]
+===
+match
+---
+comparison [2730,2777]
+comparison [2197,2244]
+===
+match
+---
+import_name [612,627]
+import_name [63,78]
+===
+match
+---
+suite [5778,5814]
+suite [5147,5183]
+===
+match
+---
+atom_expr [2742,2768]
+atom_expr [2209,2235]
+===
+match
+---
+atom_expr [3760,3774]
+atom_expr [3198,3212]
+===
+match
+---
+trailer [4887,5034]
+trailer [4290,4420]
+===
+match
+---
+name: binascii [619,627]
+name: binascii [70,78]
+===
+match
+---
+atom_expr [4404,4452]
+atom_expr [3826,3874]
+===
+match
+---
+name: key [4315,4318]
+name: key [3737,3740]
+===
+match
+---
+funcdef [4713,4860]
+funcdef [4112,4259]
+===
+match
+---
+argument [5461,5545]
+argument [4839,4919]
+===
+match
+---
+name: cmac [4512,4516]
+name: cmac [3933,3937]
+===
+match
+---
+name: cmac [6607,6611]
+name: cmac [5966,5970]
+===
+match
+---
+expr_stmt [3723,3744]
+expr_stmt [3161,3182]
+===
+match
+---
+with_stmt [5287,5349]
+with_stmt [4671,4733]
+===
+match
+---
+trailer [2260,2407]
+trailer [1745,1875]
+===
+match
+---
+parameters [3690,3713]
+parameters [3128,3151]
+===
+match
+---
+name: AES [1797,1800]
+name: AES [1283,1286]
+===
+match
+---
+suite [6704,6898]
+suite [6062,6255]
+===
+match
+---
+trailer [2219,2221]
+trailer [1700,1702]
+===
+match
+---
+trailer [3336,3343]
+trailer [2787,2794]
+===
+match
+---
+trailer [3995,4024]
+trailer [3430,3459]
+===
+match
+---
+trailer [2250,2260]
+trailer [1735,1745]
+===
+match
+---
+assert_stmt [4033,4087]
+assert_stmt [3468,3522]
+===
+match
+---
+trailer [5441,5451]
+trailer [4828,4838]
+===
+match
+---
+name: pytest [652,658]
+name: pytest [101,107]
+===
+match
+---
+trailer [4620,4655]
+trailer [4036,4067]
+===
+match
+---
+arglist [3279,3322]
+arglist [2730,2773]
+===
+match
+---
+string: b"foo" [5270,5276]
+string: b'foo' [4655,4661]
+===
+match
+---
+name: backend [4297,4304]
+name: backend [3719,3726]
+===
+match
+---
+name: AlreadyFinalized [5306,5322]
+name: AlreadyFinalized [4690,4706]
+===
+match
+---
+name: key3 [3834,3838]
+name: key3 [3271,3275]
+===
+match
+---
+name: ciphers [861,868]
+name: ciphers [317,324]
+===
+match
+---
+trailer [1643,1666]
+trailer [1142,1165]
+===
+match
+---
+name: key [2109,2112]
+name: key [1590,1593]
+===
+match
+---
+param [2490,2498]
+param [1958,1966]
+===
+match
+---
+decorator [1869,1917]
+decorator [1351,1399]
+===
+match
+---
+trailer [2987,3011]
+trailer [2441,2465]
+===
+match
+---
+atom_expr [3344,3371]
+atom_expr [2795,2822]
+===
+match
+---
+operator: = [2277,2278]
+operator: = [1753,1754]
+===
+match
+---
+atom_expr [3279,3313]
+atom_expr [2730,2764]
+===
+match
+---
+trailer [1266,1322]
+trailer [769,824]
+===
+match
+---
+operator: , [2996,2997]
+operator: , [2450,2451]
+===
+match
+---
+name: fake_key [3549,3557]
+name: fake_key [2991,2999]
+===
+match
+---
+name: backend [4921,4928]
+name: backend [4315,4322]
+===
+match
+---
+name: cmac_algorithm_supported [5958,5982]
+name: cmac_algorithm_supported [5330,5354]
+===
+match
+---
+trailer [3641,3665]
+trailer [3079,3103]
+===
+match
+---
+trailer [5841,5852]
+trailer [5209,5220]
+===
+match
+---
+name: params [3893,3899]
+name: params [3329,3335]
+===
+match
+---
+atom_expr [5485,5545]
+atom_expr [4863,4919]
+===
+match
+---
+name: print_function [596,610]
+name: print_function [48,62]
+===
+match
+---
+assert_stmt [6297,6343]
+assert_stmt [5652,5698]
+===
+match
+---
+atom_expr [4596,4655]
+atom_expr [4012,4067]
+===
+match
+---
+name: key [3960,3963]
+name: key [3395,3398]
+===
+match
+---
+expr_stmt [4764,4783]
+expr_stmt [4163,4182]
+===
+match
+---
+name: binascii [2686,2694]
+name: binascii [2153,2161]
+===
+match
+---
+name: test_copy_with_backend [6072,6094]
+name: test_copy_with_backend [5427,5449]
+===
+match
+---
+suite [1966,2233]
+suite [1448,1714]
+===
+match
+---
+name: message [3196,3203]
+name: message [2648,2655]
+===
+match
+---
+simple_stmt [3814,3839]
+simple_stmt [3251,3276]
+===
+match
+---
+atom_expr [4052,4078]
+atom_expr [3487,3513]
+===
+match
+---
+simple_stmt [2074,2125]
+simple_stmt [1555,1606]
+===
+match
+---
+name: cmac [2730,2734]
+name: cmac [2197,2201]
+===
+match
+---
+atom_expr [4634,4648]
+atom_expr [4046,4060]
+===
+match
+---
+name: cmac_algorithm_supported [1759,1783]
+name: cmac_algorithm_supported [1258,1282]
+===
+match
+---
+name: backend [3697,3704]
+name: backend [3135,3142]
+===
+match
+---
+expr_stmt [1485,1576]
+expr_stmt [986,1076]
+===
+match
+---
+name: only_if [5461,5468]
+name: only_if [4839,4846]
+===
+match
+---
+funcdef [4267,4535]
+funcdef [3689,3956]
+===
+match
+---
+name: binascii [2145,2153]
+name: binascii [1626,1634]
+===
+match
+---
+operator: = [6123,6124]
+operator: = [5478,5479]
+===
+match
+---
+name: backend [6367,6374]
+name: backend [5726,5733]
+===
+match
+---
+string: b"0102030405" [4770,4783]
+string: b'0102030405' [4169,4182]
+===
+match
+---
+name: only_if [5926,5933]
+name: only_if [5289,5296]
+===
+match
+---
+arglist [6181,6198]
+arglist [5536,5553]
+===
+match
+---
+operator: , [1902,1903]
+operator: , [1384,1385]
+===
+match
+---
+name: test_invalid_verify [4271,4290]
+name: test_invalid_verify [3693,3712]
+===
+match
+---
+name: cryptography [677,689]
+name: cryptography [124,136]
+===
+match
+---
+trailer [3459,3612]
+trailer [2914,3050]
+===
+match
+---
+with_stmt [4792,4860]
+with_stmt [4191,4259]
+===
+match
+---
+expr_stmt [5658,5699]
+expr_stmt [5028,5069]
+===
+match
+---
+decorated [1604,6344]
+decorated [1103,5699]
+===
+match
+---
+operator: = [4579,4580]
+operator: = [3995,3996]
+===
+match
+---
+name: unhexlify [2640,2649]
+name: unhexlify [2107,2116]
+===
+match
+---
+name: backend [3484,3491]
+name: backend [2930,2937]
+===
+match
+---
+decorated [5894,6344]
+decorated [5266,5699]
+===
+match
+---
+simple_stmt [1130,1226]
+simple_stmt [634,729]
+===
+match
+---
+name: backend [4746,4753]
+name: backend [4145,4152]
+===
+match
+---
+name: mark [5437,5441]
+name: mark [4824,4828]
+===
+match
+---
+trailer [2419,2424]
+trailer [1887,1892]
+===
+match
+---
+operator: = [2620,2621]
+operator: = [2087,2088]
+===
+match
+---
+import_from [546,610]
+import_from [0,62]
+===
+match
+---
+operator: = [6771,6772]
+operator: = [6129,6130]
+===
+match
+---
+name: pretend [6418,6425]
+name: pretend [5777,5784]
+===
+match
+---
+trailer [1881,1893]
+trailer [1363,1375]
+===
+match
+---
+name: primitives [941,951]
+name: primitives [406,416]
+===
+match
+---
+simple_stmt [6208,6257]
+simple_stmt [5563,5612]
+===
+match
+---
+atom_expr [3241,3257]
+atom_expr [2693,2709]
+===
+match
+---
+operator: = [1833,1834]
+operator: = [1311,1312]
+===
+match
+---
+trailer [1717,1864]
+trailer [1216,1346]
+===
+match
+---
+trailer [4115,4262]
+trailer [3554,3684]
+===
+match
+---
+string: '' [5809,5811]
+string: '' [5178,5180]
+===
+match
+---
+atom_expr [1605,1666]
+atom_expr [1104,1165]
+===
+match
+---
+trailer [2153,2163]
+trailer [1634,1644]
+===
+match
+---
+name: unhexlify [3353,3362]
+name: unhexlify [2804,2813]
+===
+match
+---
+expr_stmt [3131,3152]
+expr_stmt [2585,2606]
+===
+match
+---
+atom_expr [2340,2353]
+atom_expr [1812,1825]
+===
+match
+---
+name: output [3232,3238]
+name: output [2684,2690]
+===
+match
+---
+lambdef [5469,5545]
+lambdef [4847,4919]
+===
+match
+---
+name: skip_message [2364,2376]
+name: skip_message [1828,1840]
+===
+match
+---
+name: params [3241,3247]
+name: params [2693,2699]
+===
+match
+---
+parameters [6701,6703]
+parameters [6059,6061]
+===
+match
+---
+operator: = [1339,1340]
+operator: = [841,842]
+===
+match
+---
+name: params [3054,3060]
+name: params [2508,2514]
+===
+match
+---
+operator: = [2011,2012]
+operator: = [1493,1494]
+===
+match
+---
+arith_expr [3820,3838]
+arith_expr [3257,3275]
+===
+match
+---
+trailer [1758,1783]
+trailer [1248,1282]
+===
+match
+---
+argument [4219,4256]
+argument [3637,3683]
+===
+match
+---
+name: TypeError [4811,4820]
+name: TypeError [4210,4219]
+===
+match
+---
+simple_stmt [546,611]
+simple_stmt [0,63]
+===
+match
+---
+name: pretend_backend [6881,6896]
+name: pretend_backend [6238,6253]
+===
+match
+---
+name: TypeError [5767,5776]
+name: TypeError [5136,5145]
+===
+match
+---
+expr_stmt [3919,3975]
+expr_stmt [3354,3410]
+===
+match
+---
+operator: = [5567,5568]
+operator: = [4933,4934]
+===
+match
+---
+name: fake_key [4971,4979]
+name: fake_key [4361,4369]
+===
+match
+---
+name: backend [6101,6108]
+name: backend [5456,5463]
+===
+match
+---
+suite [4306,4535]
+suite [3728,3956]
+===
+match
+---
+atom_expr [4040,4079]
+atom_expr [3475,3514]
+===
+match
+---
+name: fake_key [1801,1809]
+name: fake_key [1287,1295]
+===
+match
+---
+funcdef [2464,2778]
+funcdef [1932,2245]
+===
+match
+---
+name: skip_message [3569,3581]
+name: skip_message [3003,3015]
+===
+match
+---
+name: supported [4878,4887]
+name: supported [4281,4290]
+===
+match
+---
+operator: = [3924,3925]
+operator: = [3359,3360]
+===
+match
+---
+name: pytest [4094,4100]
+name: pytest [3533,3539]
+===
+match
+---
+import_as_names [893,913]
+import_as_names [349,378]
+===
+match
+---
+operator: @ [1869,1870]
+operator: @ [1351,1352]
+===
+match
+---
+trailer [4181,4209]
+trailer [3620,3635]
+===
+match
+---
+simple_stmt [3332,3373]
+simple_stmt [2783,2824]
+===
+match
+---
+atom_expr [2133,2173]
+atom_expr [1614,1654]
+===
+match
+---
+arglist [1894,1915]
+arglist [1376,1397]
+===
+match
+---
+name: raises [4474,4480]
+name: raises [3895,3901]
+===
+match
+---
+name: key [6185,6188]
+name: key [5540,5543]
+===
+match
+---
+name: fake_key [2895,2903]
+name: fake_key [2353,2361]
+===
+match
+---
+arglist [3469,3606]
+arglist [2915,3049]
+===
+match
+---
+name: message [4015,4022]
+name: message [3450,3457]
+===
+match
+---
+name: ARC4 [4634,4638]
+name: ARC4 [4046,4050]
+===
+match
+---
+trailer [2626,2665]
+trailer [2093,2132]
+===
+match
+---
+funcdef [3670,4088]
+funcdef [3108,3523]
+===
+match
+---
+name: division [586,594]
+name: division [39,47]
+===
+match
+---
+string: "key1" [3085,3091]
+string: 'key1' [2539,2545]
+===
+match
+---
+name: skip_message [4665,4677]
+name: skip_message [4069,4081]
+===
+match
+---
+expr_stmt [3753,3774]
+expr_stmt [3191,3212]
+===
+match
+---
+trailer [5451,5598]
+trailer [4838,4968]
+===
+match
+---
+lambdef [4905,4981]
+lambdef [4299,4371]
+===
+match
+---
+name: unhexlify [4005,4014]
+name: unhexlify [3440,3449]
+===
+match
+---
+operator: = [6416,6417]
+operator: = [5775,5776]
+===
+match
+---
+lambdef [2823,2905]
+lambdef [2285,2363]
+===
+match
+---
+funcdef [3016,3432]
+funcdef [2470,2883]
+===
+match
+---
+dotted_name [977,1003]
+dotted_name [439,465]
+===
+match
+---
+string: "key1" [3737,3743]
+string: 'key1' [3175,3181]
+===
+match
+---
+atom_expr [4541,4708]
+atom_expr [3966,4107]
+===
+match
+---
+name: pytest [5895,5901]
+name: pytest [5267,5273]
+===
+match
+---
+name: pretend [6451,6458]
+name: pretend [5810,5817]
+===
+match
+---
+name: CMAC [6176,6180]
+name: CMAC [5531,5535]
+===
+match
+---
+atom_expr [1696,1864]
+atom_expr [1195,1346]
+===
+match
+---
+operator: , [5638,5639]
+operator: , [5008,5009]
+===
+match
+---
+operator: = [6468,6469]
+operator: = [5827,5828]
+===
+match
+---
+name: stub [6459,6463]
+name: stub [5818,5822]
+===
+match
+---
+simple_stmt [3196,3224]
+simple_stmt [2648,2676]
+===
+match
+---
+name: cmac [3267,3271]
+name: cmac [2718,2722]
+===
+match
+---
+simple_stmt [1578,1602]
+simple_stmt [1078,1102]
+===
+match
+---
+name: ARC4 [4840,4844]
+name: ARC4 [4239,4243]
+===
+match
+---
+trailer [5517,5545]
+trailer [4904,4919]
+===
+match
+---
+operator: = [3581,3582]
+operator: = [3015,3016]
+===
+match
+---
+name: load_nist_vectors [1558,1575]
+name: load_nist_vectors [1058,1075]
+===
+match
+---
+arglist [5720,5737]
+arglist [5090,5107]
+===
+match
+---
+name: load_vectors_from_file [1147,1169]
+name: load_vectors_from_file [651,673]
+===
+match
+---
+name: pretend [636,643]
+name: pretend [86,93]
+===
+match
+---
+name: pytest [2784,2790]
+name: pytest [2255,2261]
+===
+match
+---
+expr_stmt [5094,5135]
+expr_stmt [4480,4521]
+===
+match
+---
+name: test_multibackend [986,1003]
+name: test_multibackend [448,465]
+===
+match
+---
+trailer [5766,5777]
+trailer [5135,5146]
+===
+match
+---
+expr_stmt [6265,6288]
+expr_stmt [5620,5643]
+===
+match
+---
+trailer [4638,4648]
+trailer [4050,4060]
+===
+match
+---
+name: CMAC [5715,5719]
+name: CMAC [5085,5089]
+===
+match
+---
+atom_expr [3274,3323]
+atom_expr [2725,2774]
+===
+match
+---
+name: finalize [3410,3418]
+name: finalize [2861,2869]
+===
+match
+---
+decorator [1604,1667]
+decorator [1103,1166]
+===
+match
+---
+arglist [4125,4256]
+arglist [3555,3683]
+===
+match
+---
+name: message [2164,2171]
+name: message [1645,1652]
+===
+match
+---
+trailer [5534,5544]
+trailer [4908,4918]
+===
+match
+---
+atom [6394,6399]
+atom [5753,5758]
+===
+match
+---
+expr_stmt [5144,5174]
+expr_stmt [4530,4560]
+===
+match
+---
+argument [4125,4209]
+argument [3555,3635]
+===
+match
+---
+atom_expr [2784,2958]
+atom_expr [2255,2412]
+===
+match
+---
+operator: , [4385,4386]
+operator: , [3807,3808]
+===
+match
+---
+name: self [2484,2488]
+name: self [1952,1956]
+===
+match
+---
+decorators [1695,1917]
+decorators [1194,1399]
+===
+match
+---
+simple_stmt [3267,3324]
+simple_stmt [2718,2775]
+===
+match
+---
+simple_stmt [6119,6161]
+simple_stmt [5474,5516]
+===
+match
+---
+string: "CMAC/nist-800-38b-aes256.txt" [1369,1399]
+string: 'CMAC/nist-800-38b-aes256.txt' [866,896]
+===
+match
+---
+string: "CMAC/nist-800-38b-aes128.txt" [1175,1205]
+string: 'CMAC/nist-800-38b-aes128.txt' [674,704]
+===
+match
+---
+name: key [5094,5097]
+name: key [4480,4483]
+===
+match
+---
+name: update [5796,5802]
+name: update [5165,5171]
+===
+match
+---
+comparison [6304,6343]
+comparison [5659,5698]
+===
+match
+---
+atom_expr [5950,6010]
+atom_expr [5313,5369]
+===
+match
+---
+operator: , [6576,6577]
+operator: , [5936,5937]
+===
+match
+---
+name: only_if [2815,2822]
+name: only_if [2277,2284]
+===
+match
+---
+name: backend [5166,5173]
+name: backend [4552,4559]
+===
+match
+---
+atom_expr [3539,3558]
+atom_expr [2981,3000]
+===
+match
+---
+atom_expr [5363,5394]
+atom_expr [4746,4777]
+===
+match
+---
+name: object [6773,6779]
+name: object [6131,6137]
+===
+match
+---
+trailer [3624,3629]
+trailer [3062,3067]
+===
+match
+---
+atom_expr [6546,6594]
+atom_expr [5906,5954]
+===
+match
+---
+operator: = [3204,3205]
+operator: = [2656,2657]
+===
+match
+---
+name: backend [6624,6631]
+name: backend [5983,5990]
+===
+match
+---
+trailer [2137,2144]
+trailer [1618,1625]
+===
+match
+---
+trailer [4156,4181]
+trailer [3586,3620]
+===
+match
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [6715,6750]
+string: b'2b7e151628aed2a6abf7158809cf4f3c' [6073,6108]
+===
+match
+---
+lambdef [4580,4655]
+lambdef [3996,4067]
+===
+match
+---
+operator: , [1205,1206]
+operator: , [704,705]
+===
+match
+---
+trailer [5916,6063]
+trailer [5288,5418]
+===
+match
+---
+simple_stmt [660,671]
+simple_stmt [108,119]
+===
+match
+---
+trailer [3525,3559]
+trailer [2980,3001]
+===
+match
+---
+simple_stmt [2580,2606]
+simple_stmt [2048,2074]
+===
+match
+---
+trailer [5982,6010]
+trailer [5354,5369]
+===
+match
+---
+name: AES [2627,2630]
+name: AES [2094,2097]
+===
+match
+---
+name: backend [3315,3322]
+name: backend [2766,2773]
+===
+match
+---
+trailer [1893,1916]
+trailer [1375,1398]
+===
+match
+---
+operator: , [3965,3966]
+operator: , [3400,3401]
+===
+match
+---
+string: "key2" [3115,3121]
+string: 'key2' [2569,2575]
+===
+match
+---
+atom_expr [3858,3875]
+atom_expr [3294,3311]
+===
+match
+---
+expr_stmt [1421,1483]
+expr_stmt [922,984]
+===
+match
+---
+simple_stmt [1485,1577]
+simple_stmt [986,1077]
+===
+match
+---
+suite [3062,3432]
+suite [2516,2883]
+===
+match
+---
+name: message [2705,2712]
+name: message [2172,2179]
+===
+match
+---
+trailer [2205,2222]
+trailer [1686,1703]
+===
+match
+---
+operator: = [2520,2521]
+operator: = [1988,1989]
+===
+match
+---
+decorated [2238,2778]
+decorated [1723,2245]
+===
+match
+---
+decorated [4540,4860]
+decorated [3965,4259]
+===
+match
+---
+name: verify [4517,4523]
+name: verify [3938,3944]
+===
+match
+---
+name: CMAC [3926,3930]
+name: CMAC [3361,3365]
+===
+match
+---
+trailer [2750,2760]
+trailer [2217,2227]
+===
+match
+---
+trailer [6184,6189]
+trailer [5539,5544]
+===
+match
+---
+decorated [5429,5889]
+decorated [4816,5257]
+===
+match
+---
+atom_expr [5866,5888]
+atom_expr [5234,5256]
+===
+match
+---
+with_stmt [5208,5278]
+with_stmt [4593,4663]
+===
+match
+---
+operator: = [4370,4371]
+operator: = [3792,3793]
+===
+match
+---
+atom_expr [4967,4980]
+atom_expr [4357,4370]
+===
+match
+---
+name: cmac [5408,5412]
+name: cmac [4791,4795]
+===
+match
+---
+operator: == [6320,6322]
+operator: == [5675,5677]
+===
+match
+---
+simple_stmt [5408,5424]
+simple_stmt [4791,4807]
+===
+match
+---
+name: cmac [6643,6647]
+name: cmac [6002,6006]
+===
+match
+---
+suite [5853,5889]
+suite [5221,5257]
+===
+match
+---
+name: self [4291,4295]
+name: self [3713,3717]
+===
+match
+---
+name: cmac_algorithm_supported [4157,4181]
+name: cmac_algorithm_supported [3596,3620]
+===
+match
+---
+name: key1 [3723,3727]
+name: key1 [3161,3165]
+===
+match
+---
+name: CMAC [2622,2626]
+name: CMAC [2089,2093]
+===
+match
+---
+name: fake_key [4199,4207]
+name: fake_key [3625,3633]
+===
+match
+---
+operator: = [3166,3167]
+operator: = [2619,2620]
+===
+match
+---
+simple_stmt [3162,3187]
+simple_stmt [2615,2640]
+===
+match
+---
+atom_expr [3996,4023]
+atom_expr [3431,3458]
+===
+match
+---
+name: AES [6551,6554]
+name: AES [5911,5914]
+===
+match
+---
+arglist [5461,5592]
+arglist [4839,4967]
+===
+match
+---
+trailer [2089,2114]
+trailer [1570,1595]
+===
+match
+---
+dotted_name [677,700]
+dotted_name [124,147]
+===
+match
+---
+name: cmac_algorithm_supported [4929,4953]
+name: cmac_algorithm_supported [4332,4356]
+===
+match
+---
+atom_expr [6208,6256]
+atom_expr [5563,5611]
+===
+match
+---
+operator: = [5003,5004]
+operator: = [4385,4386]
+===
+match
+---
+decorated [2783,3432]
+decorated [2254,2883]
+===
+match
+---
+name: copied_ctx [6405,6415]
+name: copied_ctx [5764,5774]
+===
+match
+---
+name: ctx [6578,6581]
+name: ctx [5938,5941]
+===
+match
+---
+argument [4572,4655]
+argument [3988,4067]
+===
+match
+---
+name: vectors_aes256 [1324,1338]
+name: vectors_aes256 [826,840]
+===
+match
+---
+trailer [2085,2124]
+trailer [1566,1605]
+===
+match
+---
+name: copy [5342,5346]
+name: copy [4726,4730]
+===
+match
+---
+name: output [2580,2586]
+name: output [2048,2054]
+===
+match
+---
+atom_expr [5715,5738]
+atom_expr [5085,5108]
+===
+match
+---
+operator: , [1956,1957]
+operator: , [1438,1439]
+===
+match
+---
+operator: = [2079,2080]
+operator: = [1560,1561]
+===
+match
+---
+name: stub [6426,6430]
+name: stub [5785,5789]
+===
+match
+---
+atom_expr [3893,3909]
+atom_expr [3329,3345]
+===
+match
+---
+name: vectors_aes [1904,1915]
+name: vectors_aes [1386,1397]
+===
+match
+---
+trailer [4480,4498]
+trailer [3901,3919]
+===
+match
+---
+simple_stmt [6866,6898]
+simple_stmt [6223,6255]
+===
+match
+---
+arglist [2815,2952]
+arglist [2277,2411]
+===
+match
+---
+expr_stmt [6539,6594]
+expr_stmt [5899,5954]
+===
+match
+---
+parameters [5633,5648]
+parameters [5003,5018]
+===
+match
+---
+name: pytest [4541,4547]
+name: pytest [3966,3972]
+===
+match
+---
+simple_stmt [4835,4860]
+simple_stmt [4234,4259]
+===
+match
+---
+operator: , [3313,3314]
+operator: , [2764,2765]
+===
+match
+---
+simple_stmt [3984,4025]
+simple_stmt [3419,3460]
+===
+match
+---
+trailer [4552,4562]
+trailer [3977,3987]
+===
+match
+---
+operator: , [3559,3560]
+operator: , [3001,3002]
+===
+match
+---
+classdef [1667,6344]
+classdef [1166,5699]
+===
+match
+---
+param [4746,4753]
+param [4145,4152]
+===
+match
+---
+trailer [5759,5766]
+trailer [5128,5135]
+===
+match
+---
+expr_stmt [3783,3804]
+expr_stmt [3221,3242]
+===
+match
+---
+name: params [2013,2019]
+name: params [1495,1501]
+===
+match
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [4321,4356]
+string: b'2b7e151628aed2a6abf7158809cf4f3c' [3743,3778]
+===
+match
+---
+atom_expr [4840,4849]
+atom_expr [4239,4248]
+===
+match
+---
+expr_stmt [3101,3122]
+expr_stmt [2555,2576]
+===
+match
+---
+trailer [3736,3744]
+trailer [3174,3182]
+===
+match
+---
+string: "Does not support CMAC." [2377,2401]
+string: 'Does not support CMAC.' [1850,1874]
+===
+match
+---
+funcdef [1921,2233]
+funcdef [1403,1714]
+===
+match
+---
+param [3484,3491]
+param [2930,2937]
+===
+match
+---
+operator: + [3825,3826]
+operator: + [3262,3263]
+===
+match
+---
+trailer [4877,4887]
+trailer [4280,4290]
+===
+match
+---
+operator: = [1734,1735]
+operator: = [1224,1225]
+===
+match
+---
+name: message [3848,3855]
+name: message [3284,3291]
+===
+match
+---
+expr_stmt [6493,6534]
+expr_stmt [5853,5894]
+===
+match
+---
+name: key [5160,5163]
+name: key [4546,4549]
+===
+match
+---
+trailer [4070,4078]
+trailer [3505,3513]
+===
+match
+---
+trailer [6874,6879]
+trailer [6231,6236]
+===
+match
+---
+import_name [629,643]
+import_name [79,93]
+===
+match
+---
+name: supported [2251,2260]
+name: supported [1736,1745]
+===
+match
+---
+param [1949,1957]
+param [1431,1439]
+===
+match
+---
+name: vectors_aes192 [1227,1241]
+name: vectors_aes192 [730,744]
+===
+match
+---
+name: copy [6464,6468]
+name: copy [5823,5827]
+===
+match
+---
+string: "key" [1988,1993]
+string: 'key' [1470,1475]
+===
+match
+---
+decorator [4540,4709]
+decorator [3965,4108]
+===
+match
+---
+suite [6362,6675]
+suite [5721,6034]
+===
+match
+---
+simple_stmt [3071,3093]
+simple_stmt [2525,2547]
+===
+match
+---
+name: cmac [5144,5148]
+name: cmac [4530,4534]
+===
+match
+---
+name: backend [1949,1956]
+name: backend [1431,1438]
+===
+match
+---
+lambdef [5934,6010]
+lambdef [5297,5369]
+===
+match
+---
+name: skip_message [1821,1833]
+name: skip_message [1299,1311]
+===
+match
+---
+expr_stmt [1975,1994]
+expr_stmt [1457,1476]
+===
+match
+---
+import_name [645,658]
+import_name [94,107]
+===
+match
+---
+name: self [3039,3043]
+name: self [2493,2497]
+===
+match
+---
+atom_expr [2554,2571]
+atom_expr [2022,2039]
+===
+match
+---
+trailer [1169,1225]
+trailer [673,728]
+===
+match
+---
+argument [1727,1811]
+argument [1217,1297]
+===
+match
+---
+name: pytest [3618,3624]
+name: pytest [3056,3062]
+===
+match
+---
+trailer [3766,3774]
+trailer [3204,3212]
+===
+match
+---
+name: skip_message [5555,5567]
+name: skip_message [4921,4933]
+===
+match
+---
+funcdef [6677,6898]
+funcdef [6035,6255]
+===
+match
+---
+name: only_if [3469,3476]
+name: only_if [2915,2922]
+===
+match
+---
+atom_expr [2294,2354]
+atom_expr [1770,1826]
+===
+match
+---
+simple_stmt [4512,4535]
+simple_stmt [3933,3956]
+===
+match
+---
+trailer [4376,4395]
+trailer [3798,3817]
+===
+match
+---
+trailer [2685,2714]
+trailer [2152,2181]
+===
+match
+---
+name: test_3des_verify [3674,3690]
+name: test_3des_verify [3112,3128]
+===
+match
+---
+trailer [6654,6663]
+trailer [6013,6022]
+===
+match
+---
+name: TypeError [5842,5851]
+name: TypeError [5210,5219]
+===
+match
+---
+name: supported [5907,5916]
+name: supported [5279,5288]
+===
+match
+---
+name: update [4409,4415]
+name: update [3831,3837]
+===
+match
+---
+name: key [2516,2519]
+name: key [1984,1987]
+===
+match
+---
+trailer [5421,5423]
+trailer [4804,4806]
+===
+match
+---
+name: cmac [4404,4408]
+name: cmac [3826,3830]
+===
+match
+---
+argument [6578,6593]
+argument [5938,5953]
+===
+match
+---
+name: cmac_algorithm_supported [3501,3525]
+name: cmac_algorithm_supported [2956,2980]
+===
+match
+---
+name: backends [786,794]
+name: backends [242,250]
+===
+match
+---
+trailer [5369,5376]
+trailer [4752,4759]
+===
+match
+---
+name: object [1682,1688]
+name: object [1181,1187]
+===
+match
+---
+name: binascii [2090,2098]
+name: binascii [1571,1579]
+===
+match
+---
+name: cmac [952,956]
+name: cmac [417,421]
+===
+match
+---
+lambdef [1735,1811]
+lambdef [1225,1297]
+===
+match
+---
+name: key [6555,6558]
+name: key [5915,5918]
+===
+match
+---
+name: supported [3450,3459]
+name: supported [2905,2914]
+===
+match
+---
+atom_expr [3206,3223]
+atom_expr [2658,2675]
+===
+match
+---
+name: TripleDES [2885,2894]
+name: TripleDES [2343,2352]
+===
+match
+---
+trailer [5834,5841]
+trailer [5202,5209]
+===
+match
+---
+name: backend [4596,4603]
+name: backend [4012,4019]
+===
+match
+---
+name: backend [1742,1749]
+name: backend [1232,1239]
+===
+match
+---
+atom_expr [3931,3965]
+atom_expr [3366,3400]
+===
+match
+---
+atom_expr [6277,6288]
+atom_expr [5632,5643]
+===
+match
+---
+param [4140,4147]
+param [3570,3577]
+===
+match
+---
+trailer [6180,6199]
+trailer [5535,5554]
+===
+match
+---
+expr_stmt [2039,2064]
+expr_stmt [1521,1546]
+===
+match
+---
+arglist [4897,5028]
+arglist [4291,4419]
+===
+match
+---
+dotted_name [830,879]
+dotted_name [286,335]
+===
+match
+---
+operator: , [3704,3705]
+operator: , [3142,3143]
+===
+match
+---
+string: "CMAC/nist-800-38b-3des.txt" [1528,1556]
+string: 'CMAC/nist-800-38b-3des.txt' [1024,1052]
+===
+match
+---
+operator: , [5074,5075]
+operator: , [4460,4461]
+===
+match
+---
+name: load_vectors_from_file [1244,1266]
+name: load_vectors_from_file [747,769]
+===
+match
+---
+parameters [6094,6109]
+parameters [5449,5464]
+===
+match
+---
+expr_stmt [3814,3838]
+expr_stmt [3251,3275]
+===
+match
+---
+arglist [4840,4858]
+arglist [4239,4257]
+===
+match
+---
+trailer [6647,6652]
+trailer [6006,6011]
+===
+match
+---
+name: cryptography [766,778]
+name: cryptography [222,234]
+===
+match
+---
+name: key2 [3753,3757]
+name: key2 [3191,3195]
+===
+match
+---
+atom_expr [3618,3665]
+atom_expr [3056,3103]
+===
+match
+---
+name: test_aes_generate [1925,1942]
+name: test_aes_generate [1407,1424]
+===
+match
+---
+name: CMAC [5151,5155]
+name: CMAC [4537,4541]
+===
+match
+---
+trailer [3212,3223]
+trailer [2664,2675]
+===
+match
+---
+name: mark [4101,4105]
+name: mark [3540,3544]
+===
+match
+---
+name: unhexlify [2154,2163]
+name: unhexlify [1635,1644]
+===
+match
+---
+name: params [3790,3796]
+name: params [3228,3234]
+===
+match
+---
+operator: = [6449,6450]
+operator: = [5808,5809]
+===
+match
+---
+trailer [5226,5244]
+trailer [4611,4629]
+===
+match
+---
+decorator [2963,3012]
+decorator [2417,2466]
+===
+match
+---
+operator: @ [5894,5895]
+operator: @ [5266,5267]
+===
+match
+---
+import_from [672,760]
+import_from [119,216]
+===
+match
+---
+simple_stmt [761,825]
+simple_stmt [217,281]
+===
+match
+---
+atom_expr [5151,5174]
+atom_expr [4537,4560]
+===
+match
+---
+trailer [2975,2987]
+trailer [2429,2441]
+===
+match
+---
+lambdef [4133,4209]
+lambdef [3563,3635]
+===
+match
+---
+simple_stmt [612,628]
+simple_stmt [63,79]
+===
+match
+---
+atom_expr [2189,2222]
+atom_expr [1670,1703]
+===
+match
+---
+expr_stmt [6709,6750]
+expr_stmt [6067,6108]
+===
+match
+---
+atom_expr [2627,2655]
+atom_expr [2094,2122]
+===
+match
+---
+decorator [3437,3613]
+decorator [2892,3051]
+===
+match
+---
+atom_expr [3790,3804]
+atom_expr [3228,3242]
+===
+match
+---
+funcdef [6068,6344]
+funcdef [5423,5699]
+===
+match
+---
+simple_stmt [2039,2065]
+simple_stmt [1521,1547]
+===
+match
+---
+trailer [2694,2704]
+trailer [2161,2171]
+===
+match
+---
+name: params [2048,2054]
+name: params [1530,1536]
+===
+match
+---
+atom_expr [6866,6897]
+atom_expr [6223,6254]
+===
+match
+---
+operator: = [3272,3273]
+operator: = [2723,2724]
+===
+match
+---
+trailer [4408,4415]
+trailer [3830,3837]
+===
+match
+---
+assert_stmt [2182,2232]
+assert_stmt [1663,1713]
+===
+match
+---
+name: finalize [6333,6341]
+name: finalize [5688,5696]
+===
+match
+---
+name: _Reasons [750,758]
+name: _Reasons [205,213]
+===
+match
+---
+trailer [5187,5196]
+trailer [4573,4582]
+===
+match
+---
+name: message [3363,3370]
+name: message [2814,2821]
+===
+match
+---
+trailer [2436,2459]
+trailer [1904,1927]
+===
+match
+---
+argument [6561,6576]
+argument [5921,5936]
+===
+match
+---
+trailer [3796,3804]
+trailer [3234,3242]
+===
+match
+---
+name: supported [4553,4562]
+name: supported [3978,3987]
+===
+match
+---
+trailer [1783,1811]
+trailer [1282,1297]
+===
+match
+---
+name: unhexlify [2099,2108]
+name: unhexlify [1580,1589]
+===
+match
+---
+name: unhexlify [3950,3959]
+name: unhexlify [3385,3394]
+===
+match
+---
+atom_expr [3108,3122]
+atom_expr [2562,2576]
+===
+match
+---
+trailer [4603,4620]
+trailer [4019,4036]
+===
+match
+---
+trailer [2197,2205]
+trailer [1678,1686]
+===
+match
+---
+name: mark [5902,5906]
+name: mark [5274,5278]
+===
+match
+---
+name: raises [5760,5766]
+name: raises [5129,5135]
+===
+match
+---
+parameters [3038,3061]
+parameters [2492,2515]
+===
+match
+---
+name: cryptography [830,842]
+name: cryptography [286,298]
+===
+match
+---
+trailer [2805,2958]
+trailer [2276,2412]
+===
+match
+---
+name: cmac [5183,5187]
+name: cmac [4569,4573]
+===
+match
+---
+name: AES [893,896]
+name: AES [349,352]
+===
+match
+---
+atom_expr [2145,2172]
+atom_expr [1626,1653]
+===
+match
+---
+operator: = [4319,4320]
+operator: = [3741,3742]
+===
+match
+---
+name: test_raises_after_finalize [5043,5069]
+name: test_raises_after_finalize [4429,4455]
+===
+match
+---
+param [4297,4304]
+param [3719,3726]
+===
+match
+---
+name: self [1943,1947]
+name: self [1425,1429]
+===
+match
+---
+decorator [4093,4263]
+decorator [3532,3685]
+===
+match
+---
+atom_expr [5292,5323]
+atom_expr [4676,4707]
+===
+match
+---
+suite [5085,5424]
+suite [4471,4807]
+===
+match
+---
+name: backend [4851,4858]
+name: backend [4250,4257]
+===
+match
+---
+trailer [1876,1881]
+trailer [1358,1363]
+===
+match
+---
+atom_expr [3438,3612]
+atom_expr [2893,3050]
+===
+match
+---
+string: "output" [3248,3256]
+string: 'output' [2700,2708]
+===
+match
+---
+name: cmac [2206,2210]
+name: cmac [1687,1691]
+===
+match
+---
+simple_stmt [3884,3910]
+simple_stmt [3320,3346]
+===
+match
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [5100,5135]
+string: b'2b7e151628aed2a6abf7158809cf4f3c' [4486,4521]
+===
+match
+---
+operator: , [2114,2115]
+operator: , [1595,1596]
+===
+match
+---
+argument [4665,4702]
+argument [4069,4106]
+===
+match
+---
+expr_stmt [6169,6199]
+expr_stmt [5524,5554]
+===
+match
+---
+atom_expr [2622,2665]
+atom_expr [2089,2132]
+===
+match
+---
+name: CMAC [6866,6870]
+name: CMAC [6223,6227]
+===
+match
+---
+trailer [5159,5164]
+trailer [4545,4550]
+===
+match
+---
+name: params [1958,1964]
+name: params [1440,1446]
+===
+match
+---
+name: pytest [1605,1611]
+name: pytest [1104,1110]
+===
+match
+---
+operator: = [6032,6033]
+operator: = [5383,5384]
+===
+match
+---
+name: cmac [6539,6543]
+name: cmac [5899,5903]
+===
+match
+---
+trailer [4803,4810]
+trailer [4202,4209]
+===
+match
+---
+atom_expr [6304,6319]
+atom_expr [5659,5674]
+===
+match
+---
+simple_stmt [2674,2715]
+simple_stmt [2141,2182]
+===
+match
+---
+trailer [5262,5269]
+trailer [4647,4654]
+===
+match
+---
+file_input [546,6898]
+file_input [0,6256]
+===
+match
+---
+funcdef [5603,5889]
+funcdef [4973,5257]
+===
+match
+---
+name: mark [3445,3449]
+name: mark [2900,2904]
+===
+match
+---
+string: "key2" [3767,3773]
+string: 'key2' [3205,3211]
+===
+match
+---
+trailer [3288,3313]
+trailer [2739,2764]
+===
+match
+---
+expr_stmt [6755,6781]
+expr_stmt [6113,6139]
+===
+match
+---
+name: cmac [6208,6212]
+name: cmac [5563,5567]
+===
+match
+---
+expr_stmt [2580,2605]
+expr_stmt [2048,2073]
+===
+match
+---
+decorators [2783,3012]
+decorators [2254,2466]
+===
+match
+---
+simple_stmt [5094,5136]
+simple_stmt [4480,4522]
+===
+match
+---
+simple_stmt [5144,5175]
+simple_stmt [4530,4561]
+===
+match
+---
+trailer [6430,6432]
+trailer [5789,5791]
+===
+match
+---
+trailer [5341,5346]
+trailer [4725,4730]
+===
+match
+---
+operator: , [2354,2355]
+operator: , [1826,1827]
+===
+match
+---
+atom_expr [2206,2221]
+atom_expr [1687,1702]
+===
+match
+---
+simple_stmt [6297,6344]
+simple_stmt [5652,5699]
+===
+match
+---
+comparison [6643,6674]
+comparison [6002,6033]
+===
+match
+---
+trailer [2054,2064]
+trailer [1536,1546]
+===
+match
+---
+expr_stmt [2074,2124]
+expr_stmt [1555,1605]
+===
+match
+---
+decorator [2238,2408]
+decorator [1723,1876]
+===
+match
+---
+operator: @ [5429,5430]
+operator: @ [4816,4817]
+===
+match
+---
+name: backend [3493,3500]
+name: backend [2939,2946]
+===
+match
+---
+name: unhexlify [2751,2760]
+name: unhexlify [2218,2227]
+===
+match
+---
+trailer [1522,1576]
+trailer [1023,1076]
+===
+match
+---
+name: params [2499,2505]
+name: params [1967,1973]
+===
+match
+---
+trailer [3084,3092]
+trailer [2538,2546]
+===
+match
+---
+simple_stmt [6709,6751]
+simple_stmt [6067,6109]
+===
+match
+---
+name: key [6709,6712]
+name: key [6067,6070]
+===
+match
+---
+name: binascii [4052,4060]
+name: binascii [3487,3495]
+===
+match
+---
+name: pytest [5753,5759]
+name: pytest [5122,5128]
+===
+match
+---
+trailer [5492,5517]
+trailer [4870,4904]
+===
+match
+---
+name: mark [2420,2424]
+name: mark [1888,1892]
+===
+match
+---
+operator: = [5933,5934]
+operator: = [5296,5297]
+===
+match
+---
+expr_stmt [3232,3257]
+expr_stmt [2684,2709]
+===
+match
+---
+operator: = [6275,6276]
+operator: = [5630,5631]
+===
+match
+---
+expr_stmt [2516,2535]
+expr_stmt [1984,2003]
+===
+match
+---
+atom_expr [3941,3964]
+atom_expr [3376,3399]
+===
+match
+---
+argument [2270,2354]
+argument [1746,1826]
+===
+match
+---
+name: binascii [3388,3396]
+name: binascii [2839,2847]
+===
+match
+---
+assert_stmt [6636,6674]
+assert_stmt [5995,6033]
+===
+match
+---
+atom_expr [4195,4208]
+atom_expr [3621,3634]
+===
+match
+---
+name: AES [4195,4198]
+name: AES [3621,3624]
+===
+match
+---
+trailer [3959,3964]
+trailer [3394,3399]
+===
+match
+---
+param [3706,3712]
+param [3144,3150]
+===
+match
+---
+simple_stmt [825,916]
+simple_stmt [281,381]
+===
+match
+---
+atom_expr [5895,6063]
+atom_expr [5267,5418]
+===
+match
+---
+name: self [5634,5638]
+name: self [5004,5008]
+===
+match
+---
+name: CMAC [4372,4376]
+name: CMAC [3794,3798]
+===
+match
+---
+atom_expr [4094,4262]
+atom_expr [3533,3684]
+===
+match
+---
+name: backend [5476,5483]
+name: backend [4854,4861]
+===
+match
+---
+name: pytest [1870,1876]
+name: pytest [1352,1358]
+===
+match
+---
+string: "Does not support CMAC." [6033,6057]
+string: 'Does not support CMAC.' [5393,5417]
+===
+match
+---
+name: vectors_aes [2447,2458]
+name: vectors_aes [1915,1926]
+===
+match
+---
+name: pretend_ctx [6437,6448]
+name: pretend_ctx [5796,5807]
+===
+match
+---
+simple_stmt [6437,6489]
+simple_stmt [5796,5849]
+===
+match
+---
+simple_stmt [3783,3805]
+simple_stmt [3221,3243]
+===
+match
+---
+name: cmac [5258,5262]
+name: cmac [4643,4647]
+===
+match
+---
+name: output [4071,4077]
+name: output [3506,3512]
+===
+match
+---
+name: params [1981,1987]
+name: params [1463,1469]
+===
+match
+---
+with_stmt [5748,5814]
+with_stmt [5117,5183]
+===
+match
+---
+expr_stmt [2544,2571]
+expr_stmt [2012,2039]
+===
+match
+---
+name: cipher_supported [4604,4620]
+name: cipher_supported [4020,4036]
+===
+match
+---
+trailer [3404,3421]
+trailer [2855,2872]
+===
+match
+---
+name: pytest [5213,5219]
+name: pytest [4598,4604]
+===
+match
+---
+trailer [4872,4877]
+trailer [4275,4280]
+===
+match
+---
+name: cmac_algorithm_supported [5493,5517]
+name: cmac_algorithm_supported [4880,4904]
+===
+match
+---
+trailer [6554,6559]
+trailer [5914,5919]
+===
+match
+---
+operator: , [6189,6190]
+operator: , [5544,5545]
+===
+match
+---
+trailer [2678,2685]
+trailer [2145,2152]
+===
+match
+---
+name: output [3425,3431]
+name: output [2876,2882]
+===
+match
+---
+trailer [2871,2905]
+trailer [2342,2363]
+===
+match
+---
+trailer [3899,3909]
+trailer [3335,3345]
+===
+match
+---
+name: params [3730,3736]
+name: params [3168,3174]
+===
+match
+---
+simple_stmt [6755,6782]
+simple_stmt [6113,6140]
+===
+match
+---
+operator: = [3728,3729]
+operator: = [3166,3167]
+===
+match
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [5664,5699]
+string: b'2b7e151628aed2a6abf7158809cf4f3c' [5034,5069]
+===
+match
+---
+assert_stmt [6600,6631]
+assert_stmt [5959,5990]
+===
+match
+---
+operator: , [1811,1812]
+operator: , [1297,1298]
+===
+match
+---
+trailer [5219,5226]
+trailer [4604,4611]
+===
+match
+---
+name: test_copy [6350,6359]
+name: test_copy [5709,5718]
+===
+match
+---
+operator: == [2223,2225]
+operator: == [1704,1706]
+===
+match
+---
+name: cmac [6169,6173]
+name: cmac [5524,5528]
+===
+match
+---
+operator: + [3832,3833]
+operator: + [3269,3270]
+===
+match
+---
+atom_expr [1797,1810]
+atom_expr [1283,1296]
+===
+match
+---
+name: fake_key [2344,2352]
+name: fake_key [1816,1824]
+===
+match
+---
+name: finalize [5413,5421]
+name: finalize [4796,4804]
+===
+match
+---
+trailer [2245,2250]
+trailer [1730,1735]
+===
+match
+---
+name: AES [5720,5723]
+name: AES [5090,5093]
+===
+match
+---
+name: AES [2340,2343]
+name: AES [1812,1815]
+===
+match
+---
+name: CMACBackend [1654,1665]
+name: CMACBackend [1153,1164]
+===
+match
+---
+string: "message" [3213,3222]
+string: 'message' [2665,2674]
+===
+match
+---
+atom_expr [4921,4981]
+atom_expr [4315,4371]
+===
+match
+---
+operator: , [2445,2446]
+operator: , [1913,1914]
+===
+match
+---
+decorated [4865,5424]
+decorated [4268,4807]
+===
+match
+---
+name: raises [5299,5305]
+name: raises [4683,4689]
+===
+match
+---
+trailer [3307,3312]
+trailer [2758,2763]
+===
+match
+---
+name: TestCMAC [1673,1681]
+name: TestCMAC [1172,1180]
+===
+match
+---
+name: params [3858,3864]
+name: params [3294,3300]
+===
+match
+---
+simple_stmt [4315,4357]
+simple_stmt [3737,3779]
+===
+match
+---
+atom_expr [1147,1225]
+atom_expr [651,728]
+===
+match
+---
+name: parametrize [2976,2987]
+name: parametrize [2430,2441]
+===
+match
+---
+operator: = [6544,6545]
+operator: = [5904,5905]
+===
+match
+---
+name: cmac [4365,4369]
+name: cmac [3787,3791]
+===
+match
+---
+name: test_verify_reject_unicode [5607,5633]
+name: test_verify_reject_unicode [4977,5003]
+===
+match
+---
+trailer [2343,2353]
+trailer [1815,1825]
+===
+match
+---
+name: raises [5370,5376]
+name: raises [4753,4759]
+===
+match
+---
+argument [2915,2952]
+argument [2365,2411]
+===
+match
+---
+parameters [2483,2506]
+parameters [1951,1974]
+===
+match
+---
+trailer [5196,5198]
+trailer [4582,4584]
+===
+match
+---
+trailer [4844,4849]
+trailer [4243,4248]
+===
+match
+---
+param [6101,6108]
+param [5456,5463]
+===
+match
+---
+name: cmac [5337,5341]
+name: cmac [4721,4725]
+===
+match
+---
+string: b"6bc1bee22e409f96e93d7e117393172a" [4416,4451]
+string: b'6bc1bee22e409f96e93d7e117393172a' [3838,3873]
+===
+match
+---
+name: binascii [2189,2197]
+name: binascii [1670,1678]
+===
+match
+---
+suite [4499,4535]
+suite [3920,3956]
+===
+match
+---
+operator: = [4768,4769]
+operator: = [4167,4168]
+===
+match
+---
+name: DummyCMACBackend [6377,6393]
+name: DummyCMACBackend [5736,5752]
+===
+match
+---
+simple_stmt [5791,5814]
+simple_stmt [5160,5183]
+===
+match
+---
+simple_stmt [2615,2666]
+simple_stmt [2082,2133]
+===
+match
+---
+name: parametrize [2425,2436]
+name: parametrize [1893,1904]
+===
+match
+---
+expr_stmt [1227,1322]
+expr_stmt [730,824]
+===
+match
+---
+operator: = [1653,1654]
+operator: = [1152,1153]
+===
+match
+---
+trailer [4547,4552]
+trailer [3972,3977]
+===
+match
+---
+name: mark [2246,2250]
+name: mark [1731,1735]
+===
+match
+---
+name: cmac [3332,3336]
+name: cmac [2783,2787]
+===
+match
+---
+param [5070,5075]
+param [4456,4461]
+===
+match
+---
+name: verify [2735,2741]
+name: verify [2202,2208]
+===
+match
+---
+trailer [3444,3449]
+trailer [2899,2904]
+===
+match
+---
+name: cmac [2674,2678]
+name: cmac [2141,2145]
+===
+match
+---
+trailer [4516,4523]
+trailer [3937,3944]
+===
+match
+---
+trailer [2163,2172]
+trailer [1644,1653]
+===
+match
+---
+name: test_aes_verify [2468,2483]
+name: test_aes_verify [1936,1951]
+===
+match
+---
+operator: , [1302,1303]
+operator: , [800,801]
+===
+match
+---
+operator: = [3788,3789]
+operator: = [3226,3227]
+===
+match
+---
+trailer [3940,3965]
+trailer [3375,3400]
+===
+match
+---
+trailer [2019,2030]
+trailer [1501,1512]
+===
+match
+---
+atom_expr [5408,5423]
+atom_expr [4791,4806]
+===
+match
+---
+string: '' [5884,5886]
+string: '' [5252,5254]
+===
+match
+---
+argument [2815,2905]
+argument [2277,2363]
+===
+match
+---
+arglist [4634,4654]
+arglist [4046,4066]
+===
+match
+---
+operator: , [896,897]
+operator: , [352,353]
+===
+match
+---
+string: "CMAC/nist-800-38b-aes192.txt" [1272,1302]
+string: 'CMAC/nist-800-38b-aes192.txt' [770,800]
+===
+match
+---
+name: pytest [2413,2419]
+name: pytest [1881,1887]
+===
+match
+---
+dotted_name [766,805]
+dotted_name [222,261]
+===
+match
+---
+atom_expr [3730,3744]
+atom_expr [3168,3182]
+===
+match
+---
+atom_expr [6323,6343]
+atom_expr [5678,5698]
+===
+match
+---
+name: backend [1751,1758]
+name: backend [1241,1248]
+===
+match
+---
+param [4587,4594]
+param [4003,4010]
+===
+match
+---
+suite [5649,5889]
+suite [5019,5257]
+===
+match
+---
+simple_stmt [6636,6675]
+simple_stmt [5995,6034]
+===
+match
+---
+atom_expr [3289,3312]
+atom_expr [2740,2763]
+===
+match
+---
+trailer [3409,3418]
+trailer [2860,2869]
+===
+match
+---
+simple_stmt [2723,2778]
+simple_stmt [2190,2245]
+===
+match
+---
+name: backend [2830,2837]
+name: backend [2292,2299]
+===
+match
+---
+trailer [4839,4859]
+trailer [4238,4258]
+===
+match
+---
+trailer [4970,4980]
+trailer [4360,4370]
+===
+match
+---
+name: backend [2294,2301]
+name: backend [1770,1777]
+===
+match
+---
+parameters [4290,4305]
+parameters [3712,3727]
+===
+match
+---
+name: key [3308,3311]
+name: key [2759,2762]
+===
+match
+---
+name: cmac [3405,3409]
+name: cmac [2856,2860]
+===
+match
+---
+name: key [5724,5727]
+name: key [5094,5097]
+===
+match
+---
+trailer [3449,3459]
+trailer [2904,2914]
+===
+match
+---
+simple_stmt [5183,5199]
+simple_stmt [4569,4585]
+===
+match
+---
+atom_expr [5258,5277]
+atom_expr [4643,4662]
+===
+match
+---
+name: BACKEND_MISSING_INTERFACE [6830,6855]
+name: BACKEND_MISSING_INTERFACE [6187,6212]
+===
+match
+---
+operator: = [2046,2047]
+operator: = [1528,1529]
+===
+match
+---
+name: binascii [3289,3297]
+name: binascii [2740,2748]
+===
+match
+---
+operator: = [2587,2588]
+operator: = [2055,2056]
+===
+match
+---
+string: "Does not support CMAC." [4232,4256]
+string: 'Does not support CMAC.' [3659,3683]
+===
+match
+---
+import_name [660,670]
+import_name [108,118]
+===
+match
+---
+atom_expr [1341,1419]
+atom_expr [843,920]
+===
+match
+---
+trailer [6550,6594]
+trailer [5910,5954]
+===
+match
+---
+param [3697,3705]
+param [3135,3143]
+===
+match
+---
+operator: == [3422,3424]
+operator: == [2873,2875]
+===
+match
+---
+atom_expr [2839,2905]
+atom_expr [2301,2363]
+===
+match
+---
+name: CMACBackend [813,824]
+name: CMACBackend [269,280]
+===
+match
+---
+operator: = [6174,6175]
+operator: = [5529,5530]
+===
+match
+---
+name: AES [6871,6874]
+name: AES [6228,6231]
+===
+match
+---
+operator: = [6568,6569]
+operator: = [5928,5929]
+===
+match
+---
+name: copy [6282,6286]
+name: copy [5637,5641]
+===
+match
+---
+operator: = [3818,3819]
+operator: = [3255,3256]
+===
+match
+---
+with_stmt [5823,5889]
+with_stmt [5191,5257]
+===
+match
+---
+operator: , [4295,4296]
+operator: , [3717,3718]
+===
+match
+---
+name: CMAC [4835,4839]
+name: CMAC [4234,4238]
+===
+match
+---
+arglist [3642,3664]
+arglist [3080,3102]
+===
+match
+---
+argument [5555,5592]
+argument [4921,4967]
+===
+match
+---
+name: pytest [4797,4803]
+name: pytest [4196,4202]
+===
+match
+---
+name: TripleDES [3539,3548]
+name: TripleDES [2981,2990]
+===
+match
+---
+operator: = [3239,3240]
+operator: = [2691,2692]
+===
+match
+---
+trailer [3949,3959]
+trailer [3384,3394]
+===
+match
+---
+decorator [2783,2959]
+decorator [2254,2413]
+===
+match
+---
+operator: @ [2963,2964]
+operator: @ [2417,2418]
+===
+match
+---
+trailer [2795,2805]
+trailer [2266,2276]
+===
+match
+---
+simple_stmt [2544,2572]
+simple_stmt [2012,2040]
+===
+match
+---
+param [5941,5948]
+param [5304,5311]
+===
+match
+---
+name: primitives [850,860]
+name: primitives [306,316]
+===
+match
+---
+trailer [5877,5888]
+trailer [5245,5256]
+===
+match
+---
+name: skip_message [6020,6032]
+name: skip_message [5371,5383]
+===
+match
+---
+term [1589,1601]
+term [1089,1101]
+===
+match
+---
+with_stmt [5358,5424]
+with_stmt [4741,4807]
+===
+match
+---
+atom_expr [4467,4498]
+atom_expr [3888,3919]
+===
+match
+---
+atom_expr [5803,5812]
+atom_expr [5172,5181]
+===
+match
+---
+arglist [4572,4702]
+arglist [3988,4106]
+===
+match
+---
+operator: = [1498,1499]
+operator: = [999,1000]
+===
+match
+---
+expr_stmt [1324,1419]
+expr_stmt [826,920]
+===
+match
+---
+name: pretend_ctx [6582,6593]
+name: pretend_ctx [5942,5953]
+===
+match
+---
+atom_expr [2589,2605]
+atom_expr [2057,2073]
+===
+match
+---
+atom_expr [4512,4534]
+atom_expr [3933,3955]
+===
+match
+---
+param [5476,5483]
+param [4854,4861]
+===
+match
+---
+simple_stmt [5258,5278]
+simple_stmt [4643,4663]
+===
+match
+---
+operator: @ [3617,3618]
+operator: @ [3055,3056]
+===
+match
+---
+simple_stmt [6367,6401]
+simple_stmt [5726,5760]
+===
+match
+---
+simple_stmt [5866,5889]
+simple_stmt [5234,5257]
+===
+match
+---
+operator: , [3043,3044]
+operator: , [2497,2498]
+===
+match
+---
+name: output [2039,2045]
+name: output [1521,1527]
+===
+match
+---
+name: interface [1644,1653]
+name: interface [1143,1152]
+===
+match
+---
+name: output [3884,3890]
+name: output [3320,3326]
+===
+match
+---
+atom_expr [6551,6559]
+atom_expr [5911,5919]
+===
+match
+---
+name: update [6213,6219]
+name: update [5568,5574]
+===
+match
+---
+atom_expr [3984,4024]
+atom_expr [3419,3459]
+===
+match
+---
+argument [2364,2401]
+argument [1828,1874]
+===
+match
+---
+comparison [6607,6631]
+comparison [5966,5990]
+===
+match
+---
+string: "Does not support CMAC." [2928,2952]
+string: 'Does not support CMAC.' [2387,2411]
+===
+match
+---
+name: key [5658,5661]
+name: key [5028,5031]
+===
+match
+---
+name: requires_backend_interface [1617,1643]
+name: requires_backend_interface [1116,1142]
+===
+match
+---
+name: pytest [5363,5369]
+name: pytest [4746,4752]
+===
+match
+---
+string: "message" [3865,3874]
+string: 'message' [3301,3310]
+===
+match
+---
+atom_expr [6792,6856]
+atom_expr [6149,6213]
+===
+match
+---
+string: "output" [2596,2604]
+string: 'output' [2064,2072]
+===
+match
+---
+name: pytest [3438,3444]
+name: pytest [2893,2899]
+===
+match
+---
+operator: @ [3437,3438]
+operator: @ [2892,2893]
+===
+match
+---
+expr_stmt [3162,3186]
+expr_stmt [2615,2639]
+===
+match
+---
+name: update [3989,3995]
+name: update [3424,3430]
+===
+match
+---
+comparison [3388,3431]
+comparison [2839,2882]
+===
+match
+---
+name: load_nist_vectors [1207,1224]
+name: load_nist_vectors [710,727]
+===
+match
+---
+name: binascii [3996,4004]
+name: binascii [3431,3439]
+===
+match
+---
+trailer [6870,6897]
+trailer [6227,6254]
+===
+match
+---
+trailer [6212,6219]
+trailer [5567,5574]
+===
+match
+---
+name: vectors_aes128 [1130,1144]
+name: vectors_aes128 [634,648]
+===
+match
+---
+name: backend [4149,4156]
+name: backend [3579,3586]
+===
+match
+---
+name: params [2522,2528]
+name: params [1990,1996]
+===
+match
+---
+name: pytest [5828,5834]
+name: pytest [5196,5202]
+===
+match
+---
+name: AES [6181,6184]
+name: AES [5536,5539]
+===
+match
+---
+name: key [2650,2653]
+name: key [2117,2120]
+===
+match
+---
+name: _backend [6655,6663]
+name: _backend [6014,6022]
+===
+match
+---
+trailer [4523,4534]
+trailer [3944,3955]
+===
+match
+---
+decorators [3437,3666]
+decorators [2892,3104]
+===
+match
+---
+trailer [4105,4115]
+trailer [3544,3554]
+===
+match
+---
+name: verify [4045,4051]
+name: verify [3480,3486]
+===
+match
+---
+simple_stmt [2516,2536]
+simple_stmt [1984,2004]
+===
+match
+---
+string: "Does not support CMAC." [3582,3606]
+string: 'Does not support CMAC.' [3025,3049]
+===
+match
+---
+trailer [6286,6288]
+trailer [5641,5643]
+===
+match
+---
+name: backend [5730,5737]
+name: backend [5100,5107]
+===
+match
+---
+name: vectors_3des [3652,3664]
+name: vectors_3des [3090,3102]
+===
+match
+---
+name: backend [5076,5083]
+name: backend [4462,4469]
+===
+match
+---
+simple_stmt [3232,3258]
+simple_stmt [2684,2710]
+===
+match
+---
+atom_expr [1751,1811]
+atom_expr [1241,1297]
+===
+match
+---
+param [3039,3044]
+param [2493,2498]
+===
+match
+---
+name: hexlify [3397,3404]
+name: hexlify [2848,2855]
+===
+match
+---
+name: six [5803,5806]
+name: six [5172,5175]
+===
+match
+---
+trailer [6332,6341]
+trailer [5687,5696]
+===
+match
+---
+operator: = [3076,3077]
+operator: = [2530,2531]
+===
+match
+---
+trailer [6463,6488]
+trailer [5822,5848]
+===
+match
+---
+trailer [2144,2173]
+trailer [1625,1654]
+===
+match
+---
+name: pytest [5430,5436]
+name: pytest [4817,4823]
+===
+match
+---
+trailer [2970,2975]
+trailer [2424,2429]
+===
+match
+---
+name: params [3108,3114]
+name: params [2562,2568]
+===
+match
+---
+arglist [2270,2401]
+arglist [1746,1874]
+===
+match
+---
+name: params [3138,3144]
+name: params [2592,2598]
+===
+match
+---
+atom_expr [6377,6400]
+atom_expr [5736,5759]
+===
+match
+---
+name: AES [4377,4380]
+name: AES [3799,3802]
+===
+match
+---
+atom_expr [5996,6009]
+atom_expr [5355,5368]
+===
+match
+---
+argument [1821,1858]
+argument [1299,1345]
+===
+match
+---
+name: test_invalid_algorithm [4717,4739]
+name: test_invalid_algorithm [4116,4138]
+===
+match
+---
+name: backend [6191,6198]
+name: backend [5546,5553]
+===
+match
+---
+atom_expr [2885,2904]
+atom_expr [2343,2362]
+===
+match
+---
+decorator [5429,5599]
+decorator [4816,4969]
+===
+match
+---
+trailer [5802,5813]
+trailer [5171,5182]
+===
+match
+---
+string: "Does not support CMAC." [1834,1858]
+string: 'Does not support CMAC.' [1321,1345]
+===
+match
+---
+parameters [6359,6361]
+parameters [5718,5720]
+===
+match
+---
+name: raises [4804,4810]
+name: raises [4203,4209]
+===
+match
+---
+operator: = [5662,5663]
+operator: = [5032,5033]
+===
+match
+---
+trailer [4810,4821]
+trailer [4209,4220]
+===
+match
+---
+atom_expr [6871,6879]
+atom_expr [6228,6236]
+===
+match
+---
+name: fake_key [1578,1586]
+name: fake_key [1078,1086]
+===
+match
+---
+trailer [4198,4208]
+trailer [3624,3634]
+===
+match
+---
+atom_expr [2674,2714]
+atom_expr [2141,2181]
+===
+match
+---
+string: "output" [2055,2063]
+string: 'output' [1537,1545]
+===
+match
+---
+name: binascii [2631,2639]
+name: binascii [2098,2106]
+===
+match
+---
+name: InvalidSignature [4481,4497]
+name: InvalidSignature [3902,3918]
+===
+match
+---
+suite [2507,2778]
+suite [1975,2245]
+===
+match
+---
+trailer [5155,5174]
+trailer [4541,4560]
+===
+match
+---
+param [1943,1948]
+param [1425,1430]
+===
+match
+---
+param [3045,3053]
+param [2499,2507]
+===
+match
+---
+trailer [2301,2326]
+trailer [1777,1811]
+===
+match
+---
+name: cmac_algorithm_supported [2302,2326]
+name: cmac_algorithm_supported [1787,1811]
+===
+match
+---
+trailer [3418,3420]
+trailer [2869,2871]
+===
+match
+---
+name: key [4381,4384]
+name: key [3803,3806]
+===
+match
+---
+string: "params" [3642,3650]
+string: 'params' [3080,3088]
+===
+match
+---
+simple_stmt [3101,3123]
+simple_stmt [2555,2577]
+===
+match
+---
+with_stmt [6787,6898]
+with_stmt [6144,6255]
+===
+match
+---
+name: cmac [4040,4044]
+name: cmac [3475,3479]
+===
+match
+---
+name: copy [6648,6652]
+name: copy [6007,6011]
+===
+match
+---
+name: InvalidSignature [732,748]
+name: InvalidSignature [183,199]
+===
+match
+---
+operator: , [6879,6880]
+operator: , [6236,6237]
+===
+match
+---
+name: backend [2116,2123]
+name: backend [1597,1604]
+===
+match
+---
+operator: = [3758,3759]
+operator: = [3196,3197]
+===
+match
+---
+argument [1644,1665]
+argument [1143,1164]
+===
+match
+---
+simple_stmt [2133,2174]
+simple_stmt [1614,1655]
+===
+match
+---
+name: key2 [3175,3179]
+name: key2 [2628,2632]
+===
+match
+---
+expr_stmt [2003,2030]
+expr_stmt [1485,1512]
+===
+match
+---
+arglist [2437,2458]
+arglist [1905,1926]
+===
+match
+---
+param [2499,2505]
+param [1967,1973]
+===
+match
+---
+atom_expr [1500,1576]
+atom_expr [1001,1076]
+===
+match
+---
+trailer [6308,6317]
+trailer [5663,5672]
+===
+match
+---
+name: mark [3625,3629]
+name: mark [3063,3067]
+===
+match
+---
+trailer [2528,2535]
+trailer [1996,2003]
+===
+match
+---
+simple_stmt [1975,1995]
+simple_stmt [1457,1477]
+===
+match
+---
+name: key [4764,4767]
+name: key [4163,4166]
+===
+match
+---
+operator: , [4981,4982]
+operator: , [4371,4372]
+===
+match
+---
+string: "Does not support CMAC." [5004,5028]
+string: 'Does not support CMAC.' [4395,4419]
+===
+match
+---
+operator: , [1556,1557]
+operator: , [1052,1053]
+===
+match
+---
+arglist [3931,3974]
+arglist [3366,3409]
+===
+match
+---
+name: pytest [4467,4473]
+name: pytest [3888,3894]
+===
+match
+---
+trailer [6341,6343]
+trailer [5696,5698]
+===
+match
+---
+param [2285,2292]
+param [1761,1768]
+===
+match
+---
+operator: , [6099,6100]
+operator: , [5454,5455]
+===
+match
+---
+operator: + [3180,3181]
+operator: + [2633,2634]
+===
+match
+---
+name: cmac_algorithm_supported [2847,2871]
+name: cmac_algorithm_supported [2318,2342]
+===
+match
+---
+trailer [2560,2571]
+trailer [2028,2039]
+===
+match
+---
+trailer [3278,3323]
+trailer [2729,2774]
+===
+match
+---
+trailer [2326,2354]
+trailer [1811,1826]
+===
+match
+---
+trailer [2424,2436]
+trailer [1892,1904]
+===
+match
+---
+argument [3469,3559]
+argument [2915,3001]
+===
+match
+---
+name: only_if [4125,4132]
+name: only_if [3555,3562]
+===
+match
+---
+name: unhexlify [3298,3307]
+name: unhexlify [2749,2758]
+===
+match
+---
+lambdef [6469,6487]
+lambdef [5828,5847]
+===
+match
+---
+trailer [3988,3995]
+trailer [3423,3430]
+===
+match
+---
+arglist [1727,1858]
+arglist [1217,1345]
+===
+match
+---
+name: absolute_import [569,584]
+name: absolute_import [23,38]
+===
+match
+---
+name: raises_unsupported_algorithm [6792,6820]
+name: raises_unsupported_algorithm [6149,6177]
+===
+match
+---
+param [5076,5083]
+param [4462,4469]
+===
+match
+---
+name: TripleDES [3279,3288]
+name: TripleDES [2730,2739]
+===
+match
+---
+simple_stmt [1421,1484]
+simple_stmt [922,985]
+===
+match
+---
+import_as_names [714,758]
+import_as_names [161,214]
+===
+match
+---
+string: "params" [2988,2996]
+string: 'params' [2442,2450]
+===
+match
+---
+name: key [3162,3165]
+name: key [2615,2618]
+===
+match
+---
+trailer [3500,3525]
+trailer [2946,2980]
+===
+match
+---
+funcdef [6346,6675]
+funcdef [5705,6034]
+===
+match
+---
+operator: = [5098,5099]
+operator: = [4484,4485]
+===
+match
+---
+string: "message" [2561,2570]
+string: 'message' [2029,2038]
+===
+match
+---
+name: __future__ [551,561]
+name: __future__ [5,15]
+===
+match
+---
+name: raises [5835,5841]
+name: raises [5203,5209]
+===
+match
+---
+name: update [2138,2144]
+name: update [1619,1625]
+===
+match
+---
+name: backend [3967,3974]
+name: backend [3402,3409]
+===
+match
+---
+operator: = [1242,1243]
+operator: = [745,746]
+===
+match
+---
+trailer [3144,3152]
+trailer [2598,2606]
+===
+match
+---
+name: fake_key [6000,6008]
+name: fake_key [5359,5367]
+===
+match
+---
+trailer [4004,4014]
+trailer [3439,3449]
+===
+match
+---
+operator: = [2822,2823]
+operator: = [2284,2285]
+===
+match
+---
+atom_expr [4797,4821]
+atom_expr [4196,4220]
+===
+match
+---
+trailer [6393,6400]
+trailer [5752,5759]
+===
+match
+---
+arglist [5156,5173]
+arglist [4542,4559]
+===
+match
+---
+argument [3569,3606]
+argument [3003,3049]
+===
+match
+---
+trailer [4473,4480]
+trailer [3894,3901]
+===
+match
+---
+name: skip_message [4991,5003]
+name: skip_message [4373,4385]
+===
+match
+---
+operator: + [1450,1451]
+operator: + [951,952]
+===
+match
+---
+name: cmac [2133,2137]
+name: cmac [1614,1618]
+===
+match
+---
+trailer [5957,5982]
+trailer [5320,5354]
+===
+match
+---
+operator: = [3856,3857]
+operator: = [3292,3293]
+===
+match
+---
+trailer [5999,6009]
+trailer [5358,5368]
+===
+match
+---
+decorator [4865,5035]
+decorator [4268,4421]
+===
+match
+---
+name: DummyCMACBackend [1011,1027]
+name: DummyCMACBackend [473,489]
+===
+match
+---
+expr_stmt [3884,3909]
+expr_stmt [3320,3345]
+===
+match
+---
+atom_expr [2239,2407]
+atom_expr [1724,1875]
+===
+match
+---
+simple_stmt [3848,3876]
+simple_stmt [3284,3312]
+===
+match
+---
+name: pretend_backend [6755,6770]
+name: pretend_backend [6113,6128]
+===
+match
+---
+name: hazmat [779,785]
+name: hazmat [235,241]
+===
+match
+---
+name: cmac [5866,5870]
+name: cmac [5234,5238]
+===
+match
+---
+name: cmac [2615,2619]
+name: cmac [2082,2086]
+===
+match
+---
+atom_expr [3493,3559]
+atom_expr [2939,3001]
+===
+match
+---
+import_from [970,1027]
+import_from [434,489]
+===
+match
+---
+atom_expr [1870,1916]
+atom_expr [1352,1398]
+===
+match
+---
+name: finalize [2211,2219]
+name: finalize [1692,1700]
+===
+match
+---
+string: b"foobar" [4524,4533]
+string: b'foobar' [3945,3954]
+===
+match
+---
+trailer [2894,2904]
+trailer [2352,2362]
+===
+match
+---
+operator: , [5164,5165]
+operator: , [4550,4551]
+===
+match
+---
+operator: , [5545,5546]
+operator: , [4919,4920]
+===
+match
+---
+name: hazmat [843,849]
+name: hazmat [299,305]
+===
+match
+---
+simple_stmt [3919,3976]
+simple_stmt [3354,3411]
+===
+match
+---
+name: algorithms [869,879]
+name: algorithms [325,335]
+===
+match
+---
+atom_expr [6821,6855]
+atom_expr [6178,6212]
+===
+match
+---
+arglist [2627,2664]
+arglist [2094,2131]
+===
+match
+---
+name: output [2761,2767]
+name: output [2228,2234]
+===
+match
+---
+atom_expr [2013,2030]
+atom_expr [1495,1512]
+===
+match
+---
+param [5640,5647]
+param [5010,5017]
+===
+match
+---
+assert_stmt [2723,2777]
+assert_stmt [2190,2244]
+===
+match
+---
+name: CMAC [2081,2085]
+name: CMAC [1562,1566]
+===
+match
+---
+name: _backend [6612,6620]
+name: _backend [5971,5979]
+===
+match
+---
+name: backend [6569,6576]
+name: backend [5929,5936]
+===
+match
+---
+arglist [1369,1418]
+arglist [866,919]
+===
+match
+---
+operator: = [5149,5150]
+operator: = [4535,4536]
+===
+match
+---
+name: finalize [5188,5196]
+name: finalize [4574,4582]
+===
+match
+---
+name: unhexlify [2695,2704]
+name: unhexlify [2162,2171]
+===
+match
+---
+name: backends [977,985]
+name: backends [439,447]
+===
+match
+---
+name: unhexlify [4061,4070]
+name: unhexlify [3496,3505]
+===
+match
+---
+arglist [2988,3010]
+arglist [2442,2464]
+===
+match
+---
+name: params [3206,3212]
+name: params [2658,2664]
+===
+match
+---
+simple_stmt [645,659]
+simple_stmt [94,108]
+===
+match
+---
+simple_stmt [1227,1323]
+simple_stmt [730,825]
+===
+match
+---
+trailer [2790,2795]
+trailer [2261,2266]
+===
+match
+---
+trailer [2210,2219]
+trailer [1691,1700]
+===
+match
+---
+atom_expr [6643,6663]
+atom_expr [6002,6022]
+===
+match
+---
+operator: , [2905,2906]
+operator: , [2363,2364]
+===
+match
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [6499,6534]
+string: b'2b7e151628aed2a6abf7158809cf4f3c' [5859,5894]
+===
+match
+---
+operator: = [5468,5469]
+operator: = [4846,4847]
+===
+match
+---
+comparison [4040,4087]
+comparison [3475,3522]
+===
+match
+---
+decorated [1695,2233]
+decorated [1194,1714]
+===
+match
+---
+name: AlreadyFinalized [5377,5393]
+name: AlreadyFinalized [4760,4776]
+===
+match
+---
+name: cmac [3984,3988]
+name: cmac [3419,3423]
+===
+match
+---
+param [2484,2489]
+param [1952,1957]
+===
+match
+---
+arglist [5926,6057]
+arglist [5289,5417]
+===
+match
+---
+decorators [2238,2460]
+decorators [1723,1928]
+===
+match
+---
+atom_expr [6607,6620]
+atom_expr [5966,5979]
+===
+match
+---
+operator: + [1467,1468]
+operator: + [968,969]
+===
+match
+---
+operator: = [5713,5714]
+operator: = [5083,5084]
+===
+match
+---
+atom_expr [2413,2459]
+atom_expr [1881,1927]
+===
+match
+---
+name: self [6095,6099]
+name: self [5450,5454]
+===
+match
+---
+trailer [4380,4385]
+trailer [3802,3807]
+===
+match
+---
+atom_expr [3332,3372]
+atom_expr [2783,2823]
+===
+match
+---
+name: mark [4548,4552]
+name: mark [3973,3977]
+===
+match
+---
+atom_expr [5213,5244]
+atom_expr [4598,4629]
+===
+match
+---
+atom_expr [3078,3092]
+atom_expr [2532,2546]
+===
+match
+---
+import_from [825,915]
+import_from [281,380]
+===
+match
+---
+param [4740,4745]
+param [4139,4144]
+===
+match
+---
+atom_expr [6181,6189]
+atom_expr [5536,5544]
+===
+match
+---
+trailer [2649,2654]
+trailer [2116,2121]
+===
+match
+---
+param [2830,2837]
+param [2292,2299]
+===
+match
+---
+name: key1 [3820,3824]
+name: key1 [3257,3261]
+===
+match
+---
+trailer [5881,5883]
+trailer [5249,5251]
+===
+match
+---
+name: output [2226,2232]
+name: output [1707,1713]
+===
+match
+---
+trailer [5808,5812]
+trailer [5177,5181]
+===
+match
+---
+atom_expr [5183,5198]
+atom_expr [4569,4584]
+===
+match
+---
+decorator [3617,3666]
+decorator [3055,3104]
+===
+match
+---
+trailer [4051,4079]
+trailer [3486,3514]
+===
+match
+---
+operator: , [4849,4850]
+operator: , [4248,4249]
+===
+match
+---
+expr_stmt [1130,1225]
+expr_stmt [634,728]
+===
+match
+---
+param [4291,4296]
+param [3713,3718]
+===
+match
+---
+parameters [5069,5084]
+parameters [4455,4470]
+===
+match
+---
+argument [6020,6057]
+argument [5371,5417]
+===
+match
+---
+name: key2 [3101,3105]
+name: key2 [2555,2559]
+===
+match
+---
+assert_stmt [3381,3431]
+assert_stmt [2832,2882]
+===
+match
+---
+suite [5245,5278]
+suite [4630,4663]
+===
+match
+---
+param [1742,1749]
+param [1232,1239]
+===
+match
+---
+import_from [916,968]
+import_from [381,433]
+===
+match
+---
+simple_stmt [970,1028]
+simple_stmt [434,490]
+===
+match
+---
+atom_expr [4372,4395]
+atom_expr [3794,3817]
+===
+match
+---
+argument [5926,6010]
+argument [5289,5369]
+===
+match
+---
+string: "params" [2437,2445]
+string: 'params' [1905,1913]
+===
+match
+---
+trailer [6281,6286]
+trailer [5636,5641]
+===
+match
+---
+name: backend [4912,4919]
+name: backend [4306,4313]
+===
+match
+---
+operator: @ [1695,1696]
+operator: @ [1194,1195]
+===
+match
+---
+argument [6464,6487]
+argument [5823,5847]
+===
+match
+---
+name: self [3691,3695]
+name: self [3129,3133]
+===
+match
+---
+trailer [6652,6654]
+trailer [6011,6013]
+===
+match
+---
+name: mark [1877,1881]
+name: mark [1359,1363]
+===
+match
+---
+simple_stmt [6493,6535]
+simple_stmt [5853,5895]
+===
+match
+---
+name: finalize [6309,6317]
+name: finalize [5664,5672]
+===
+match
+---
+operator: = [1433,1434]
+operator: = [934,935]
+===
+match
+---
+trailer [2846,2871]
+trailer [2308,2342]
+===
+match
+---
+trailer [4044,4051]
+trailer [3479,3486]
+===
+match
+---
+string: b"6bc1bee22e409f96e93d7e117393172a" [6220,6255]
+string: b'6bc1bee22e409f96e93d7e117393172a' [5575,5610]
+===
+match
+---
+operator: = [4677,4678]
+operator: = [4081,4082]
+===
+match
+---
+trailer [5906,5916]
+trailer [5278,5288]
+===
+match
+---
+name: binascii [3941,3949]
+name: binascii [3376,3384]
+===
+match
+---
+trailer [4100,4105]
+trailer [3539,3544]
+===
+match
+---
+trailer [3396,3404]
+trailer [2847,2855]
+===
+match
+---
+name: key [6875,6878]
+name: key [6232,6235]
+===
+match
+---
+name: backend [2285,2292]
+name: backend [1761,1768]
+===
+match
+---
+name: load_vectors_from_file [1341,1363]
+name: load_vectors_from_file [843,865]
+===
+match
+---
+trailer [1611,1616]
+trailer [1110,1115]
+===
+match
+---
+expr_stmt [3196,3223]
+expr_stmt [2648,2675]
+===
+match
+---
+operator: * [1597,1598]
+operator: * [1097,1098]
+===
+match
+---
+string: "Does not support CMAC." [5568,5592]
+string: 'Does not support CMAC.' [4943,4967]
+===
+match
+---
+trailer [2704,2713]
+trailer [2171,2180]
+===
+match
+---
+trailer [4014,4023]
+trailer [3449,3458]
+===
+match
+---
+trailer [5870,5877]
+trailer [5238,5245]
+===
+match
+---
+operator: @ [2412,2413]
+operator: @ [1880,1881]
+===
+match
+---
+simple_stmt [5658,5700]
+simple_stmt [5028,5070]
+===
+match
+---
+name: test_invalid_backend [6681,6701]
+name: test_invalid_backend [6039,6059]
+===
+match
+---
+arglist [1528,1575]
+arglist [1024,1075]
+===
+match
+---
+simple_stmt [6539,6595]
+simple_stmt [5899,5955]
+===
+match
+---
+name: backend [4387,4394]
+name: backend [3809,3816]
+===
+match
+---
+trailer [3548,3558]
+trailer [2990,3000]
+===
+match
+---
+name: update [3337,3343]
+name: update [2788,2794]
+===
+match
+---
+comparison [2189,2232]
+comparison [1670,1713]
+===
+match
+---
+lambdef [2278,2354]
+lambdef [1754,1826]
+===
+match
+---
+trailer [5883,5887]
+trailer [5251,5255]
+===
+match
+---
+expr_stmt [3848,3875]
+expr_stmt [3284,3311]
+===
+match
+---
+string: "Does not support CMAC." [4678,4702]
+string: 'Does not support CMAC.' [4082,4106]
+===
+match
+---
+simple_stmt [6265,6289]
+simple_stmt [5620,5644]
+===
+match
+---
+suite [6857,6898]
+suite [6214,6255]
+===
+match
+---
+trailer [2630,2655]
+trailer [2097,2122]
+===
+match
+---
+name: backend [5485,5492]
+name: backend [4863,4870]
+===
+match
+---
+string: "message" [2020,2029]
+string: 'message' [1502,1511]
+===
+match
+---
+operator: , [902,903]
+operator: , [362,363]
+===
+match
+---
+operator: = [3136,3137]
+operator: = [2590,2591]
+===
+match
+---
+operator: , [1399,1400]
+operator: , [896,897]
+===
+match
+---
+name: params [2589,2595]
+name: params [2057,2063]
+===
+match
+---
+atom_expr [2048,2064]
+atom_expr [1530,1546]
+===
+match
+---
+trailer [5436,5441]
+trailer [4823,4828]
+===
+match
+---
+name: key3 [3182,3186]
+name: key3 [2635,2639]
+===
+match
+---
+operator: , [584,585]
+operator: , [38,39]
+===
+match
+---
+arith_expr [3168,3186]
+arith_expr [2621,2639]
+===
+match
+---
+trailer [6820,6856]
+trailer [6177,6213]
+===
+match
+---
+name: backend [5640,5647]
+name: backend [5010,5017]
+===
+match
+---
+name: mark [2971,2975]
+name: mark [2425,2429]
+===
+match
+---
+name: backend [2839,2846]
+name: backend [2301,2308]
+===
+match
+---
+name: only_if [4897,4904]
+name: only_if [4291,4298]
+===
+match
+---
+operator: , [3695,3696]
+operator: , [3133,3134]
+===
+match
+---
+param [3054,3060]
+param [2508,2514]
+===
+match
+---
+trailer [6425,6430]
+trailer [5784,5789]
+===
+match
+---
+name: binascii [2742,2750]
+name: binascii [2209,2217]
+===
+match
+---
+operator: = [6581,6582]
+operator: = [5941,5942]
+===
+match
+---
+operator: @ [2783,2784]
+operator: @ [2254,2255]
+===
+match
+---
+decorated [4093,4535]
+decorated [3532,3956]
+===
+match
+---
+name: test_3des_generate [3020,3038]
+name: test_3des_generate [2474,2492]
+===
+match
+---
+arglist [6871,6896]
+arglist [6228,6253]
+===
+match
+---
+suite [4822,4860]
+suite [4221,4259]
+===
+match
+---
+atom_expr [2631,2654]
+atom_expr [2098,2121]
+===
+match
+---
+name: only_if [2270,2277]
+name: only_if [1746,1753]
+===
+match
+---
+name: verify [5871,5877]
+name: verify [5239,5245]
+===
+match
+---
+trailer [6317,6319]
+trailer [5672,5674]
+===
+match
+---
+atom_expr [1244,1322]
+atom_expr [747,824]
+===
+match
+---
+name: skip_message [4219,4231]
+name: skip_message [3637,3649]
+===
+match
+---
+trailer [6779,6781]
+trailer [6137,6139]
+===
+match
+---
+operator: + [3173,3174]
+operator: + [2626,2627]
+===
+match
+---
+name: cmac [5708,5712]
+name: cmac [5078,5082]
+===
+match
+---
+name: exceptions [690,700]
+name: exceptions [137,147]
+===
+match
+---
+atom_expr [5720,5728]
+atom_expr [5090,5098]
+===
+match
+---
+name: CMAC [3274,3278]
+name: CMAC [2725,2729]
+===
+match
+---
+name: supported [4106,4115]
+name: supported [3545,3554]
+===
+match
+---
+name: load_nist_vectors [1401,1418]
+name: load_nist_vectors [902,919]
+===
+match
+---
+name: params [3078,3084]
+name: params [2532,2538]
+===
+match
+---
+trailer [3297,3307]
+trailer [2748,2758]
+===
+match
+---
+name: backend [4140,4147]
+name: backend [3570,3577]
+===
+match
+---
+name: only_if [1727,1734]
+name: only_if [1217,1224]
+===
+match
+---
+decorator [2412,2460]
+decorator [1880,1928]
+===
+match
+---
+operator: , [6010,6011]
+operator: , [5369,5370]
+===
+match
+---
+trailer [1616,1643]
+trailer [1115,1142]
+===
+match
+---
+operator: = [2927,2928]
+operator: = [2377,2378]
+===
+match
+---
+name: parametrize [3630,3641]
+name: parametrize [3068,3079]
+===
+match
+---
+import_from [761,824]
+import_from [217,280]
+===
+match
+---
+arglist [6551,6593]
+arglist [5911,5953]
+===
+match
+---
+atom_expr [4149,4209]
+atom_expr [3579,3635]
+===
+match
+---
+number: 16 [1599,1601]
+number: 16 [1099,1101]
+===
+match
+---
+operator: , [1947,1948]
+operator: , [1429,1430]
+===
+match
+---
+operator: = [2552,2553]
+operator: = [2020,2021]
+===
+match
+---
+simple_stmt [629,644]
+simple_stmt [79,94]
+===
+match
+---
+name: CMAC [6546,6550]
+name: CMAC [5906,5910]
+===
+match
+---
+operator: , [2655,2656]
+operator: , [2122,2123]
+===
+match
+---
+parameters [1942,1965]
+parameters [1424,1447]
+===
+match
+---
+atom_expr [5430,5598]
+atom_expr [4817,4968]
+===
+match
+---
+name: cryptography [921,933]
+name: cryptography [386,398]
+===
+match
+---
+trailer [1702,1707]
+trailer [1201,1206]
+===
+match
+---
+simple_stmt [672,761]
+simple_stmt [119,217]
+===
+match
+---
+name: vectors_3des [2998,3010]
+name: vectors_3des [2452,2464]
+===
+match
+---
+param [6095,6100]
+param [5450,5455]
+===
+match
+---
+operator: , [2497,2498]
+operator: , [1965,1966]
+===
+match
+---
+arglist [4377,4394]
+arglist [3799,3816]
+===
+match
+---
+simple_stmt [5708,5739]
+simple_stmt [5078,5109]
+===
+match
+---
+name: cmac [3919,3923]
+name: cmac [3354,3358]
+===
+match
+---
+operator: = [2376,2377]
+operator: = [1840,1841]
+===
+match
+---
+operator: , [4648,4649]
+operator: , [4060,4061]
+===
+match
+---
+atom_expr [3405,3420]
+atom_expr [2856,2871]
+===
+match
+---
+name: hexlify [2198,2205]
+name: hexlify [1679,1686]
+===
+match
+---
+operator: , [4744,4745]
+operator: , [4143,4144]
+===
+match
+---
+name: supported [5442,5451]
+name: supported [4829,4838]
+===
+match
+---
+name: key3 [3783,3787]
+name: key3 [3221,3225]
+===
+match
+---
+name: mark [4873,4877]
+name: mark [4276,4280]
+===
+match
+---
+name: backend [5941,5948]
+name: backend [5304,5311]
+===
+match
+---
+name: binascii [3344,3352]
+name: binascii [2795,2803]
+===
+match
+---
+name: key2 [3827,3831]
+name: key2 [3264,3268]
+===
+match
+---
+name: load_nist_vectors [1304,1321]
+name: load_nist_vectors [806,823]
+===
+match
+---
+atom_expr [4835,4859]
+atom_expr [4234,4258]
+===
+match
+---
+name: params [3706,3712]
+name: params [3144,3150]
+===
+match
+---
+atom_expr [3138,3152]
+atom_expr [2592,2606]
+===
+match
+---
+name: mark [2791,2795]
+name: mark [2262,2266]
+===
+match
+---
+name: backend [5950,5957]
+name: backend [5313,5320]
+===
+match
+---
+name: update [2679,2685]
+name: update [2146,2152]
+===
+match
+---
+atom_expr [2730,2769]
+atom_expr [2197,2236]
+===
+match
+---
+trailer [2741,2769]
+trailer [2208,2236]
+===
+match
+---
+name: pytest [1696,1702]
+name: pytest [1195,1201]
+===
+match
+---
+trailer [6829,6855]
+trailer [6186,6212]
+===
+match
+---
+operator: = [1145,1146]
+operator: = [649,650]
+===
+match
+---
+operator: , [3650,3651]
+operator: , [3088,3089]
+===
+match
+---
+name: vectors_aes [1421,1432]
+name: vectors_aes [922,933]
+===
+match
+---
+trailer [2760,2768]
+trailer [2227,2235]
+===
+match
+---
+name: backend [6667,6674]
+name: backend [6026,6033]
+===
+match
+---
+name: message [2003,2010]
+name: message [1485,1492]
+===
+match
+---
+atom_expr [5878,5887]
+atom_expr [5246,5255]
+===
+match
+---
+string: "key3" [3797,3803]
+string: 'key3' [3235,3241]
+===
+match
+---
+simple_stmt [5337,5349]
+simple_stmt [4721,4733]
+===
+match
+---
+name: AlreadyFinalized [714,730]
+name: AlreadyFinalized [161,177]
+===
+match
+---
+trailer [5719,5738]
+trailer [5089,5108]
+===
+match
+---
+trailer [4415,4452]
+trailer [3837,3874]
+===
+match
+---
+trailer [6219,6256]
+trailer [5574,5611]
+===
+match
+---
+name: backend [4587,4594]
+name: backend [4003,4010]
+===
+match
+---
+trailer [2734,2741]
+trailer [2201,2208]
+===
+match
+---
+name: pytest [5292,5298]
+name: pytest [4676,4682]
+===
+match
+---
+operator: = [4904,4905]
+operator: = [4298,4299]
+===
+match
+---
+atom_expr [6176,6199]
+atom_expr [5531,5554]
+===
+match
+---
+argument [4897,4981]
+argument [4291,4371]
+===
+match
+---
+name: fake_key [4639,4647]
+name: fake_key [4051,4059]
+===
+match
+---
+name: params [3760,3766]
+name: params [3198,3204]
+===
+match
+---
+suite [3714,4088]
+suite [3152,3523]
+===
+match
+---
+operator: = [4231,4232]
+operator: = [3649,3650]
+===
+match
+---
+name: interfaces [795,805]
+name: interfaces [251,261]
+===
+match
+---
+operator: = [3476,3477]
+operator: = [2922,2923]
+===
+match
+---
+trailer [5269,5277]
+trailer [4654,4662]
+===
+match
+---
+argument [4991,5028]
+argument [4373,4419]
+===
+match
+---
+operator: , [4655,4656]
+operator: , [4067,4068]
+===
+match
+---
+atom_expr [5791,5813]
+atom_expr [5160,5182]
+===
+match
+---
+name: key3 [3131,3135]
+name: key3 [2585,2589]
+===
+match
+---
+name: supported [1708,1717]
+name: supported [1207,1216]
+===
+match
+---
+trailer [1800,1810]
+trailer [1286,1296]
+===
+match
+---
+expr_stmt [3071,3092]
+expr_stmt [2525,2546]
+===
+match
+---
+string: b"\x00" [1589,1596]
+string: b'\x00' [1089,1096]
+===
+match
+---
+atom_expr [4377,4385]
+atom_expr [3799,3807]
+===
+match
+---
+trailer [1363,1419]
+trailer [865,920]
+===
+match
+---
+expr_stmt [6367,6400]
+expr_stmt [5726,5759]
+===
+match
+---
+dotted_name [921,956]
+dotted_name [386,421]
+===
+match
+---
+operator: @ [2238,2239]
+operator: @ [1723,1724]
+===
+match
+---
+simple_stmt [4404,4453]
+simple_stmt [3826,3875]
+===
+match
+---
+name: AlreadyFinalized [5227,5243]
+name: AlreadyFinalized [4612,4628]
+===
+match
+---
+operator: = [6375,6376]
+operator: = [5734,5735]
+===
+match
+---
+atom_expr [6773,6781]
+atom_expr [6131,6139]
+===
+match
+---
+operator: , [5728,5729]
+operator: , [5098,5099]
+===
+match
+---
+operator: @ [4093,4094]
+operator: @ [3532,3533]
+===
+match
+---
+name: vectors_aes192 [1452,1466]
+name: vectors_aes192 [953,967]
+===
+match
+---
+simple_stmt [4033,4088]
+simple_stmt [3468,3523]
+===
+match
+---
+name: skip_message [2915,2927]
+name: skip_message [2365,2377]
+===
+match
+---
+operator: , [4209,4210]
+operator: , [3635,3636]
+===
+match
+---
+trailer [1707,1717]
+trailer [1206,1216]
+===
+match
+---
+trailer [5376,5394]
+trailer [4759,4777]
+===
+match
+---
+atom_expr [5337,5348]
+atom_expr [4721,4732]
+===
+match
+---
+name: key [3814,3817]
+name: key [3251,3254]
+===
+match
+---
+trailer [4928,4953]
+trailer [4322,4356]
+===
+match
+---
+trailer [3114,3122]
+trailer [2568,2576]
+===
+match
+---
+import_as_names [569,610]
+import_as_names [23,62]
+===
+match
+---
+name: copied_ctx [6477,6487]
+name: copied_ctx [5837,5847]
+===
+match
+---
+trailer [4953,4981]
+trailer [4356,4371]
+===
+match
+---
+trailer [3247,3257]
+trailer [2699,2709]
+===
+match
+---
+name: key [6493,6496]
+name: key [5853,5856]
+===
+match
+---
+trailer [3930,3975]
+trailer [3365,3410]
+===
+match
+---
+name: _Reasons [6821,6829]
+name: _Reasons [6178,6186]
+===
+match
+---
+simple_stmt [6405,6433]
+simple_stmt [5764,5792]
+===
+match
+---
+expr_stmt [4365,4395]
+expr_stmt [3787,3817]
+===
+match
+---
+lambdef [3477,3559]
+lambdef [2923,3001]
+===
+match
+---
+trailer [3352,3362]
+trailer [2803,2813]
+===
+match
+---
+expr_stmt [6405,6432]
+expr_stmt [5764,5791]
+===
+match
+---
+name: only_if [4572,4579]
+name: only_if [3988,3995]
+===
+match
+---
+atom_expr [2090,2113]
+atom_expr [1571,1594]
+===
+match
+---
+name: vectors_aes256 [1469,1483]
+name: vectors_aes256 [970,984]
+===
+match
+---
+name: AES [5156,5159]
+name: AES [4542,4545]
+===
+match
+---
+atom_expr [4866,5034]
+atom_expr [4269,4420]
+===
+match
+---
+name: message [2544,2551]
+name: message [2012,2019]
+===
+match
+---
+decorator [5894,6064]
+decorator [5266,5419]
+===
+match
+---
+name: vectors_aes128 [1435,1449]
+name: vectors_aes128 [936,950]
+===
+match
+---
+operator: = [6713,6714]
+operator: = [6071,6072]
+===
+match
+---
+name: key1 [3168,3172]
+name: key1 [2621,2625]
+===
+match
+---
+operator: , [730,731]
+operator: , [177,178]
+===
+match
+---
+expr_stmt [2615,2665]
+expr_stmt [2082,2132]
+===
+match
+---
+name: AES [2086,2089]
+name: AES [1567,1570]
+===
+match
+---
+name: pytest [4866,4872]
+name: pytest [4269,4275]
+===
+match
+---
+simple_stmt [1324,1420]
+simple_stmt [826,921]
+===
+match
+---
+name: key [1975,1978]
+name: key [1457,1460]
+===
+insert-tree
+---
+simple_stmt [490,603]
+    import_from [490,602]
+        dotted_name [495,506]
+            name: tests [495,500]
+            name: utils [501,506]
+        import_as_names [520,600]
+            name: load_nist_vectors [520,537]
+            operator: , [537,538]
+            name: load_vectors_from_file [543,565]
+            operator: , [565,566]
+            name: raises_unsupported_algorithm [571,599]
+            operator: , [599,600]
+to
+file_input [546,6898]
+at 10
+===
+insert-tree
+---
+simple_stmt [603,634]
+    import_from [603,633]
+        name: cryptography [608,620]
+        name: utils [628,633]
+to
+file_input [546,6898]
+at 11
+===
+insert-node
+---
+operator: , [213,214]
+to
+import_as_names [714,758]
+at 5
+===
+insert-node
+---
+operator: , [377,378]
+to
+import_as_names [893,913]
+at 5
+===
+update-node
+---
+string: b"\x00" [1589,1596]
+replace b"\x00" by b'\x00'
+===
+update-node
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [6499,6534]
+replace b"2b7e151628aed2a6abf7158809cf4f3c" by b'2b7e151628aed2a6abf7158809cf4f3c'
+===
+update-node
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [6715,6750]
+replace b"2b7e151628aed2a6abf7158809cf4f3c" by b'2b7e151628aed2a6abf7158809cf4f3c'
+===
+update-node
+---
+string: "CMAC/nist-800-38b-aes128.txt" [1175,1205]
+replace "CMAC/nist-800-38b-aes128.txt" by 'CMAC/nist-800-38b-aes128.txt'
+===
+update-node
+---
+string: "CMAC/nist-800-38b-aes192.txt" [1272,1302]
+replace "CMAC/nist-800-38b-aes192.txt" by 'CMAC/nist-800-38b-aes192.txt'
+===
+update-node
+---
+string: "CMAC/nist-800-38b-aes256.txt" [1369,1399]
+replace "CMAC/nist-800-38b-aes256.txt" by 'CMAC/nist-800-38b-aes256.txt'
+===
+update-node
+---
+string: "CMAC/nist-800-38b-3des.txt" [1528,1556]
+replace "CMAC/nist-800-38b-3des.txt" by 'CMAC/nist-800-38b-3des.txt'
+===
+update-node
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [4321,4356]
+replace b"2b7e151628aed2a6abf7158809cf4f3c" by b'2b7e151628aed2a6abf7158809cf4f3c'
+===
+update-node
+---
+string: b"0102030405" [4770,4783]
+replace b"0102030405" by b'0102030405'
+===
+update-node
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [5100,5135]
+replace b"2b7e151628aed2a6abf7158809cf4f3c" by b'2b7e151628aed2a6abf7158809cf4f3c'
+===
+update-node
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [5664,5699]
+replace b"2b7e151628aed2a6abf7158809cf4f3c" by b'2b7e151628aed2a6abf7158809cf4f3c'
+===
+update-node
+---
+string: b"2b7e151628aed2a6abf7158809cf4f3c" [6125,6160]
+replace b"2b7e151628aed2a6abf7158809cf4f3c" by b'2b7e151628aed2a6abf7158809cf4f3c'
+===
+update-node
+---
+string: "params" [1894,1902]
+replace "params" by 'params'
+===
+update-node
+---
+string: "params" [2437,2445]
+replace "params" by 'params'
+===
+update-node
+---
+string: "params" [2988,2996]
+replace "params" by 'params'
+===
+update-node
+---
+string: "params" [3642,3650]
+replace "params" by 'params'
+===
+update-node
+---
+string: "Does not support CMAC." [4232,4256]
+replace "Does not support CMAC." by 'Does not support CMAC.'
+===
+update-node
+---
+string: b"6bc1bee22e409f96e93d7e117393172a" [4416,4451]
+replace b"6bc1bee22e409f96e93d7e117393172a" by b'6bc1bee22e409f96e93d7e117393172a'
+===
+update-node
+---
+string: "Does not support CMAC." [4678,4702]
+replace "Does not support CMAC." by 'Does not support CMAC.'
+===
+update-node
+---
+string: "Does not support CMAC." [5004,5028]
+replace "Does not support CMAC." by 'Does not support CMAC.'
+===
+update-node
+---
+string: "Does not support CMAC." [5568,5592]
+replace "Does not support CMAC." by 'Does not support CMAC.'
+===
+update-node
+---
+string: "Does not support CMAC." [6033,6057]
+replace "Does not support CMAC." by 'Does not support CMAC.'
+===
+update-node
+---
+string: b"6bc1bee22e409f96e93d7e117393172a" [6220,6255]
+replace b"6bc1bee22e409f96e93d7e117393172a" by b'6bc1bee22e409f96e93d7e117393172a'
+===
+update-node
+---
+string: "Does not support CMAC." [1834,1858]
+replace "Does not support CMAC." by 'Does not support CMAC.'
+===
+update-node
+---
+string: "key" [1988,1993]
+replace "key" by 'key'
+===
+update-node
+---
+string: "message" [2020,2029]
+replace "message" by 'message'
+===
+update-node
+---
+string: "output" [2055,2063]
+replace "output" by 'output'
+===
+update-node
+---
+string: "Does not support CMAC." [2377,2401]
+replace "Does not support CMAC." by 'Does not support CMAC.'
+===
+update-node
+---
+string: "key" [2529,2534]
+replace "key" by 'key'
+===
+update-node
+---
+string: "message" [2561,2570]
+replace "message" by 'message'
+===
+update-node
+---
+string: "output" [2596,2604]
+replace "output" by 'output'
+===
+update-node
+---
+string: "Does not support CMAC." [2928,2952]
+replace "Does not support CMAC." by 'Does not support CMAC.'
+===
+update-node
+---
+string: "key1" [3085,3091]
+replace "key1" by 'key1'
+===
+update-node
+---
+string: "key2" [3115,3121]
+replace "key2" by 'key2'
+===
+update-node
+---
+string: "key3" [3145,3151]
+replace "key3" by 'key3'
+===
+update-node
+---
+string: "message" [3213,3222]
+replace "message" by 'message'
+===
+update-node
+---
+string: "output" [3248,3256]
+replace "output" by 'output'
+===
+update-node
+---
+string: "Does not support CMAC." [3582,3606]
+replace "Does not support CMAC." by 'Does not support CMAC.'
+===
+update-node
+---
+string: "key1" [3737,3743]
+replace "key1" by 'key1'
+===
+update-node
+---
+string: "key2" [3767,3773]
+replace "key2" by 'key2'
+===
+update-node
+---
+string: "key3" [3797,3803]
+replace "key3" by 'key3'
+===
+update-node
+---
+string: "message" [3865,3874]
+replace "message" by 'message'
+===
+update-node
+---
+string: "output" [3900,3908]
+replace "output" by 'output'
+===
+update-node
+---
+string: b"foobar" [4524,4533]
+replace b"foobar" by b'foobar'
+===
+update-node
+---
+string: b"foo" [5270,5276]
+replace b"foo" by b'foo'
+===
+delete-tree
+---
+simple_stmt [1028,1129]
+    import_from [1028,1128]
+        operator: ... [1033,1036]
+        name: utils [1036,1041]
+        import_as_names [1055,1126]
+            name: load_nist_vectors [1055,1072]
+            operator: , [1072,1073]
+            name: load_vectors_from_file [1074,1096]
+            operator: , [1096,1097]
+            name: raises_unsupported_algorithm [1098,1126]
