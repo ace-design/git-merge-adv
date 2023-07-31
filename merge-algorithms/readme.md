@@ -24,4 +24,9 @@
 * The amazing thing about this approach is that the structure could be commonly utilised by different languages such as python and java
 * Resolves import merge conflicts for both python as well as Java
 
+### (6) MethodUnion:
+* Import merge works the same way as CompressedTree, however body is merged using our heuristics as well.
+* Running git merge on methods/segments where our heuristic doesn't work. 
+* Import merge and body merge run the same heuristics. 
+
 

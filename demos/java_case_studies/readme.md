@@ -36,15 +36,6 @@ openshift-java-client/conflict12 | 190.06 | Deletions, Insertions, Moves, Diff_P
 openshift-java-client/conflict15 | 277.42 | All
 stateless4j/conflict3 | 45.21 | Insertions
 
-
-### Error Cases
-
-Case Study: | Error:
---- | --- |
-Duke/conflict3 | Interface Merging Error |
-openshift-java-client/conflict(5,8,11) | Interface Merging Error
-
-
 ## Next Steps:
 
 * Implement interface merge: All "broken" cases for Java are associated with interface.

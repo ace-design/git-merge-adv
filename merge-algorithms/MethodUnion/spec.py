@@ -319,64 +319,6 @@ class Java(Lang):
 
         all_comments=comments.captures(tree.root_node)+linecomments.captures(tree.root_node)
 
-        # for new_class in class_captures:
-        #     # Tuple of class details including modifiers and name.
-        #     class_details=new_class[0].parent.children
-
-        #     indentation=int(class_details[0].start_point[1])
-        #     starting_line=int(class_details[0].start_point[0])
-
-        #     new_class_name=class_details[2].text.decode()
-
-        #     new_full_name=""
-
-        #     for child in class_details:
-        #         if child.type!="class_body":
-        #             new_full_name+=child.text.decode()+" "
-        #     new_full_name=new_full_name.strip(" ")
-
-
-        #     #Stores full class declaration
-            
-        #     class_obj=Class(new_class_name,new_full_name,indentation,version,starting_line)
-
-        #     #If object with same full class declaration is in the list of classes, then class_obj references that object.
-        #     #Equality relation for class is re-defined in Node.py.
-        #     if (new_class_name in all_classes.keys()):
-        #         if (class_obj not in all_classes[new_class_name]):
-        #             all_classes[new_class_name].append(class_obj)
-        #             class_ref[new_full_name]=class_obj
-        #         else:
-        #             index=all_classes[new_class_name].index(class_obj)
-        #             class_obj=all_classes[new_class_name][index]
-        #             class_ref[new_full_name].add_version(version)
-
-        #     else:
-        #         all_classes[new_class_name]=[class_obj]
-        #         class_ref[new_full_name]=class_obj
-            
-
-        #     # Checks if class is nested in another class. 
-        #     # Adds it as subclass to main class if it is.
-        #     nested_class_details=new_class[0].parent.parent.parent
-        #     if (nested_class_details is None):
-        #         if (class_obj not in bottom_body):
-        #             bottom_body.append(class_obj)
-        #     else:
-        #         full_nested_name=""
-        #         for child in nested_class_details.children:
-        #             if ("body" not in child.type and "block" not in child.type):
-        #                 full_nested_name+=child.text.decode()+" "
-        #             else:
-        #                 full_nested_name=full_nested_name.strip(" ")
-        #                 break
-        #         # if (nested_class_details.children[3].text.decode()[0]!="{"):
-        #         #     nested_class=" "+nested_class_details.children[3].text.decode()
-        #         # else:
-        #         #     nested_class=""
-        #         # nested_class=nested_class.split('{')[0]
-        #         # full_nested_name=nested_class_details.children[0].text.decode()+" "+nested_class_details.children[1].text.decode()+" "+nested_class_details.children[2].text.decode()+nested_class
-        #         class_ref[full_nested_name].add_sub_classes(class_obj)
 
         for class_val in class_captures:
             class_name=""
@@ -531,12 +473,6 @@ class Java(Lang):
 
                 comment_obj=Comment(comment[0].text.decode(),main_class,index,starting_line)
                 class_ref[main_class.strip(" ")].add_comment(comment_obj)
-
-            # elif (comment[0].type=="block_comment" and comment[0].parent.type=="program"):
-            #     starting_line=int(comment[0].start_point[0])
-            #     index=comment[0].start_point[1]
-            #     comment_obj=Comment(comment[0].text.decode(),"",index,starting_line)
-            #     bottom_body.append(comment_obj)
 
         return bottom_body
     
