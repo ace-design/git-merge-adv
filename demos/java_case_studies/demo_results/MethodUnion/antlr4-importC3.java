@@ -54,6 +54,10 @@ public class SymbolChecks{
     Map<String, Rule> nameToRuleMap = new HashMap<String, Rule>();,
     Set<String> tokenIDs = new HashSet<String>();,
     Map<String, Set<String>> actionScopeToActionNames = new HashMap<String, Set<String>>();,
+
+    //	DoubleKeyMap<String, String, GrammarAST> namedActions =
+
+    //		new DoubleKeyMap<String, String, GrammarAST>();
     public ErrorManager errMgr;,
 
     public SymbolChecks(Grammar g, SymbolCollector collector) {
@@ -229,6 +233,8 @@ public class SymbolChecks{
 		checkLocalConflictingDeclarations(r, r.locals, r.args, ErrorType.LOCAL_CONFLICTS_WITH_ARG);
 		checkLocalConflictingDeclarations(r, r.locals, r.retvals, ErrorType.LOCAL_CONFLICTS_WITH_RETVAL);
 	}
+
+    // CAN ONLY CALL THE TWO NEXT METHODS AFTER GRAMMAR HAS RULE DEFS (see semanticpipeline)
 
     public void checkRuleArgs(Grammar g, List<GrammarAST> rulerefs) {
 		if ( rulerefs==null ) return;

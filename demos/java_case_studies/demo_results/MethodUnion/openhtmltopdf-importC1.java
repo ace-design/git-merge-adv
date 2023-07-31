@@ -1510,6 +1510,12 @@ public class BlockBox extends Box implements InlinePaintable{
         return (! isRoot()) && getStyle().isMayCollapseMarginsWithChildren();
     }
 
+    // This will require a rethink if we ever truly layout incrementally
+
+    // Should only ever collapse top margin and pick up collapsable
+
+    // bottom margins by looking back up the tree.
+
     protected void collapseMargins(LayoutContext c) {
         if (! isTopMarginCalculated() || ! isBottomMarginCalculated()) {
             recalcMargin(c);
@@ -1807,6 +1813,12 @@ public class BlockBox extends Box implements InlinePaintable{
     private int getCSSMaxHeight(CssContext c) {
         return getStyle().getMaxHeight(c, getContainingBlockCSSHeight(c));
     }
+
+    // Use only when the height of the containing block is required for
+
+    // resolving percentage values.  Does not represent the actual (resolved) height
+
+    // of the containing block.
 
     private int getContainingBlockCSSHeight(CssContext c) {
         if (! getContainingBlock().isStyled() ||
@@ -2147,6 +2159,8 @@ public class BlockBox extends Box implements InlinePaintable{
     public void styleText(LayoutContext c) {
         styleText(c, getStyle());
     }
+
+    // FIXME Should be expanded into generic restyle facility
 
     public void styleText(LayoutContext c, CalculatedStyle style) {
         if (getChildrenContentType() == ContentType.INLINE) {

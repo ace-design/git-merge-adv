@@ -336,6 +336,8 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 		return null;
 	}
 
+    // ABTRACT METHODS /////////////////////////////////////////////////////////
+
     public abstract void onOpen( ServerHandshake handshakedata );
 
     public abstract void onMessage( String message );

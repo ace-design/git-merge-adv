@@ -55,6 +55,8 @@ public class AlternatorItemTest extends AlternatorTest{
         deleteAllTables();
     }
 
+    //Test: put item with HashKey
+
     @Test
     public void putItemWithHashKey() {
         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
@@ -99,6 +101,8 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
+    //Test: put item with HashKey and RangeKey
 
     @Test
     public void putItemWithHashKeyAndRangeKey() {
@@ -148,6 +152,10 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
+    //---------------------------------------------------------------------------
+
+    // TODO: test out put item expected and return value
 
     @Test
     public void getItemTest() {
@@ -311,6 +319,8 @@ public class AlternatorItemTest extends AlternatorTest{
 		} catch (AmazonServiceException ase) {
 		}
     }
+
+    // TODO: test out delete item expected and return value
 
     /*@Test
     public void batchWriteItemInTableTest() {

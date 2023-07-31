@@ -52,6 +52,12 @@ public class LuceneDatabase implements Database{
     private IndexReader reader;,
     private IndexSearcher searcher;,
     private Analyzer analyzer;,
+
+    // Deichman case:
+
+    //  1 = 40 minutes
+
+    //  4 = 48 minutes
     private final static int SEARCH_EXPANSION_FACTOR = 1;,
     private int max_search_hits;,
     private float min_relevance;,
@@ -59,6 +65,8 @@ public class LuceneDatabase implements Database{
     private String path;,
     private boolean fuzzy_search;,
     public BoostMode boost_mode;,
+
+    // helper for geostuff
     private GeoProperty geoprop;,
 
     public LuceneDatabase() {
@@ -296,6 +304,8 @@ public class LuceneDatabase implements Database{
     }
   }
 
+    // ----- INTERNALS
+
     private void init() {
     try {
       openIndexes(overwrite);
@@ -498,6 +508,8 @@ public class LuceneDatabase implements Database{
      * searches which found nothing.
      */
         private int[] prevsizes;,
+
+        // position in prevsizes
         private int sizeix;,
 
         public EstimateResultTracker() {

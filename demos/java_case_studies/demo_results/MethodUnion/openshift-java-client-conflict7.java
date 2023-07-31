@@ -50,6 +50,8 @@ public class DomainResource extends AbstractOpenShiftResource implements IDomain
     private final APIResource connectionResource;,
 
     /** Applications for the domain. */
+
+    // TODO: replace by a map indexed by application names ?
     private List<IApplication> applications = null;,
 
     protected DomainResource(final String namespace, final String suffix, final Map<String, Link> links,

@@ -129,6 +129,12 @@ public class ImageServletResponseImplTestCase{
         verify(response).getOutputStream();
     }
 
+    // Test that wrapper works as a no-op, in case the image does not need to be decoded
+
+    // This is not a very common use case, as filters should avoid wrapping the response
+
+    // for performance reasons, but we still want that to work
+
     @Test
     public void testNoOpResponse() throws IOException {
         FastByteArrayOutputStream out = new FastByteArrayOutputStream(STREAM_DEFAULT_SIZE);
@@ -151,6 +157,8 @@ public class ImageServletResponseImplTestCase{
         verify(response).setContentType(CONTENT_TYPE_PNG);
         verify(response).getOutputStream();
     }
+
+    // Transcode original PNG to JPEG with no other changes
 
     @Test
     public void testTranscodeResponsePNGToJPEG() throws IOException {
@@ -207,6 +215,10 @@ public class ImageServletResponseImplTestCase{
         verify(response).getOutputStream();
     }
 
+    // WORKAROUND: Bug in GIFImageWriteParam, compression type is not set by default
+
+    // (even if there's only one possible compression mode/type combo; MODE_EXPLICIT/"LZW")
+
     @Test
     public void testTranscodeResponsePNGToGIFWithQuality() throws IOException {
        FastByteArrayOutputStream out = new FastByteArrayOutputStream(STREAM_DEFAULT_SIZE);
@@ -250,6 +262,10 @@ public class ImageServletResponseImplTestCase{
        verify(response).setContentType(CONTENT_TYPE_GIF);
        verify(response).getOutputStream();
    }
+
+    // WORKAROUND: Bug in GIFImageWriter may throw NPE if transparent pixels
+
+    // See: http://bugs.sun.com/view_bug.do?bug_id=6287936
 
     @Test
     public void testTranscodeResponsePNGToGIF() throws IOException {
@@ -483,6 +499,14 @@ public class ImageServletResponseImplTestCase{
         }
     }
 
+    // TODO: Test with AOI attributes (rename thes to source-region?)
+
+    // TODO: Test with scale attributes
+
+    // More?
+
+    // Make sure we don't change semantics here...
+
     @Test
     public void testNotFoundInput() throws IOException {
         // Need special setup
@@ -497,6 +521,8 @@ public class ImageServletResponseImplTestCase{
         
         verify(response).sendError(eq(HttpServletResponse.SC_NOT_FOUND), anyString());
     }
+
+    // NOTE: This means it's up to some Filter to decide wether we should filter the given request
 
     @Test
     public void testUnsupportedInput() throws IOException {
@@ -596,6 +622,10 @@ public class ImageServletResponseImplTestCase{
         }
     }
 
+    // TODO: Test that we handle image conversion to a suitable format, before writing response
+
+    // For example: Read a PNG with transparency and store as B/W WBMP
+
     private void assertRGBEquals(int x, int y, int expected, int actual, float pArtifactThreshold) {
         int expectedA = (expected >> 24) & 0xff;
         int expectedR = (expected >> 16) & 0xff;
@@ -614,6 +644,8 @@ public class ImageServletResponseImplTestCase{
             throw assertionError;
         }
     }
+
+    // TODO: Create ImageFilter test case, that tests normal use, as well as chaining
 
     @Test
     public void testReplaceResponse() throws IOException {
@@ -1212,6 +1244,10 @@ public class ImageServletResponseImplTestCase{
         verify(response).setContentType(CONTENT_TYPE_PNG);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    // Absolute AOI
+
     @Test
     public void testGetAOIAbsolute() {
         assertEquals(new Rectangle(10, 10, 100, 100), ImageServletResponseImpl.getAOI(200, 200, 10, 10, 100, 100, false, false));
@@ -1236,6 +1272,8 @@ public class ImageServletResponseImplTestCase{
     public void testGetAOIAbsoluteOverflowH() {
         assertEquals(new Rectangle(10, 0, 100, 100), ImageServletResponseImpl.getAOI(200, 100, 10, 0, 100, 110, false, false));
     }
+
+    // Uniform AOI centered
 
     @Test
     public void testGetAOIUniformCenteredS2SUp() {
@@ -1361,6 +1399,8 @@ public class ImageServletResponseImplTestCase{
     public void testGetAOIUniformCenteredN2NNormalized() {
         assertEquals(new Rectangle(0, 0, 100, 200), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 200, false, true));
     }
+
+    // Absolute AOI centered
 
     @Test
     public void testGetAOICenteredS2SUp() {
@@ -1516,6 +1556,10 @@ public class ImageServletResponseImplTestCase{
     public void testGetAOICenteredN2NMax() {
         assertEquals(new Rectangle(0, 0, 100, 200), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 200, false, false));
     }
+
+    // TODO: Test percent
+
+    // TODO: Test getSize()...
 
     private static class BlackLabel extends JLabel{
 

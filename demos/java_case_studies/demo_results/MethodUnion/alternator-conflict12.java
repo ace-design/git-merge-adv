@@ -55,6 +55,8 @@ public class AlternatorQueryTest extends AlternatorTest{
 		Assert.assertEquals(result.getItems().get(0).get("id"), hashKey);
 	}
 
+    //I do not think this is a good design since
+
     @Test
     public void queryWithHashKeyNotExist() {
         // Setup table with items

@@ -5,6 +5,7 @@ class End:
     def __init__(self,dir,leftstartline=None, leftendline=None):
         self.leftendline = leftendline
         self.leftstartline = leftstartline
+        # Forcing algorithm to reference aliased imports as their rename.
         if (" as " in dir):
             self.real_name=dir.split(" as ")[0]
             self.rename=dir.split(" as ")[1]
@@ -54,10 +55,10 @@ class Pack:
 
 class MainRoot:
     def __init__(self):
-        self.children=set()
         self.order=[]
     
     def add_child(self,child):
+        # Adding code segments in order of their starting line.
         if (child not in self.order):
             bisect.insort(self.order,child,key=lambda x: x.get_start())
     
@@ -66,8 +67,7 @@ class MainRoot:
 
 class Class:
     def __init__(self,name,full_name,indent,version,start_line,nod=None):
-        self.version=set()
-        self.version.add(version)
+        self.version=set([version])
         self.ranking=math.ceil(indent/4)
         self.start_line=start_line
         self.class_name=name
@@ -110,11 +110,6 @@ class Class:
     def add_comment(self,comment):
         if (comment not in self.comments):
             self.comments.append(comment)
-        # if method_signature in self.comments.keys():
-        #     if (comment not in self.comments[method_signature]):
-        #         self.comments[method_signature].append(comment)
-        # else:
-        #     self.comments[method_signature]=[comment]
     
     def set_selected(self):
         self.selected=True
@@ -129,10 +124,7 @@ class Class:
         for field in self.declarations:
             bisect.insort(self.order,field,key=lambda x: x.get_start())
 
-
         return self.order
-
-        
 
     def get_start(self):
         return self.start_line
@@ -174,8 +166,7 @@ class Field:
     def __init__(self,variable,declaration,version,class_val,start):
         self.identifier=variable
         self.full_declaration=declaration
-        self.version=set()
-        self.version.add(version)
+        self.version=set([version])
         self.objclass=class_val
         self.start_line=start
         self.selected=False
@@ -219,8 +210,7 @@ class Method:
         self.signature=signature
         self.super=super_class
         self.start_line=start
-        self.version=set()
-        self.version.add(version)
+        self.version=set([version])
         self.selected=False
         self.astnode = astnode
     

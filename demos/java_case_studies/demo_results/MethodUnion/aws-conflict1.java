@@ -70,6 +70,10 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
         return name;
     }
 
+    //
+
+    // Context.xml Configuration Members
+
     public void setRegionId(String regionId) {
         this.regionId = regionId;
     }
@@ -113,6 +117,8 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
     public void setProxyPort(Integer proxyPort) {
         this.proxyPort = proxyPort;
     }
+
+    // Private Interface
 
     @Override
     protected void initInternal() throws LifecycleException {
@@ -233,6 +239,8 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
 
         return clientConfiguration;
     }
+
+    // Logger Utility Functions
 
     public static void debug(String s) {
         logger.debug(s);

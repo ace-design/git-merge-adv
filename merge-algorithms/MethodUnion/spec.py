@@ -11,6 +11,7 @@ import astor
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
 
+
 # Obtains path to already cloned tree-sitter-java repo (from CompressedTree)
 for dirpath, dirnames, filenames in os.walk('../'):
     for name in dirnames:
@@ -106,7 +107,6 @@ class Java(Lang):
 
     def output_imports(self,node,string,target,suspicious):
         # Finds the specified target node in the tree
-
         if (suspicious and (target.get_full_dir() not in usages) and (target.get_full_dir()[-1]!="*")):
             pass
         else:
@@ -122,7 +122,6 @@ class Java(Lang):
     
     def get_top_body(self):
         return top_body
-
 
     def output_body(self,body,class_name):
         if (type(class_name)==Class and class_name.is_selected()):
@@ -266,7 +265,6 @@ class Java(Lang):
 
         class_captures=class_query.captures(tree.root_node)
 
-
         enum_query=Java_Lang.query("""
             ((enum_declaration) @name)
         """)
@@ -285,21 +283,17 @@ class Java(Lang):
             ((enum_constant) @name)
         """)
 
-
         interface_contant_query = Java_Lang.query("""
             ((constant_declaration) @name)
         """)
 
         field_captures=field_query.captures(tree.root_node)+enum_contant_query.captures(tree.root_node)+interface_contant_query.captures(tree.root_node)
 
-        method_query = Java_Lang.query("""
+        constructor_query = Java_Lang.query("""
             (constructor_declaration
                 name: (identifier) @name)
 
         """)
-
-
-        method_captures=method_query.captures(tree.root_node)
 
         method_query = Java_Lang.query("""
             (method_declaration
@@ -307,7 +301,7 @@ class Java(Lang):
 
         """)
 
-        method_captures+=method_query.captures(tree.root_node)
+        method_captures=method_query.captures(tree.root_node)+constructor_query.captures(tree.root_node)
 
         comments = Java_Lang.query("""
             ((block_comment) @name)
@@ -411,6 +405,7 @@ class Java(Lang):
             class_ref[nested_class].add_declaration(field_obj)
 
         before="None"
+
         #Adds all methods to associated classes
         for method in method_captures:
 
@@ -461,7 +456,7 @@ class Java(Lang):
 
 
         for comment in all_comments:
-            if (comment[0].type=="block_comment" and (comment[0].parent.type=="class_body" or comment[0].parent.type=="interface_body" or comment[0].parent.type=="enum_body") and comment[0].text.decode() not in top_body):
+            if ((comment[0].type=="block_comment" or comment[0].type=="line_comment") and (comment[0].parent.type=="class_body" or comment[0].parent.type=="interface_body" or comment[0].parent.type=="enum_body") and comment[0].text.decode() not in top_body):
                 main_class=""
                 starting_line=int(comment[0].start_point[0])
                 for child in comment[0].parent.parent.children:
@@ -469,10 +464,14 @@ class Java(Lang):
                         main_class+=child.text.decode()+" "
                     else:
                         break
+                print(main_class)
                 index=comment[0].start_point[1]
 
                 comment_obj=Comment(comment[0].text.decode(),main_class,index,starting_line)
                 class_ref[main_class.strip(" ")].add_comment(comment_obj)
+            # elif (comment[0].type=="line_comment"):
+            #     print(comment[0].parent.parent.children)
+    
 
         return bottom_body
     
@@ -608,8 +607,6 @@ class Python(Lang):
                                             new_imp+=el+'\n'
                                         new_imp += f'    {target.get_full_dir()},\n)'
                                         top_body[i] = new_imp
-
-                                            
                                 case "separateline":
                                     top_body.append(dup)
                             return
@@ -806,8 +803,6 @@ class Python(Lang):
     def get_field_ref(self):
         return {"None":[]}
     
-
-
     def get_lang(self):
         return "py"
     

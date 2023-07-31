@@ -37,6 +37,60 @@ public class AlternatorScanTest extends AlternatorTest{
         client.deleteTable(del);
     }
 
+    //    @Test
+
+    //    // Test that expected return 10 items
+
+    //    public void scanWithScanFilterEQTestThatHasReturn() {
+
+    //        ScanRequest request = getBasicReq();
+
+    //        Condition rangeKeyCondition = new Condition();
+
+    //        List<AttributeValue> attributeValueList = new ArrayList<AttributeValue>();
+
+    ////        attributeValueList.add(new AttributeValue().withN(rangeKey.getN()));
+
+    //        attributeValueList.add(new AttributeValue().withN("55"));
+
+    //        rangeKeyCondition.setAttributeValueList(attributeValueList);
+
+    //        rangeKeyCondition.setComparisonOperator(ComparisonOperator.EQ);
+
+    //        Map<String, Condition> conditionMap = new HashMap<String, Condition>();
+
+    //        conditionMap.put("range", rangeKeyCondition);
+
+    //        request.setScanFilter(conditionMap);
+
+    //        ScanResult result = client.scan(request);
+
+    //        Assert.assertNotNull(result);
+
+    //        Assert.assertNotNull(result.getItems());
+
+    //        for (Map<String, AttributeValue> item : result.getItems()) {
+
+    ////            Assert.assertEquals(item.get("range"), rangeKey);
+
+    //            Assert.assertEquals(item.get("range"), new AttributeValue().withN("55"));
+
+    //        }
+
+    //    }
+
+    //    // Test that expected return 0 items
+
+    //    public void scanWithScanFilterEQTestThatHasNoReturn() {
+
+    //        attributeValueList.add(new AttributeValue().withN("30"));
+
+    //        Assert.assertEquals(result.getItems().size(),0);
+
+    //
+
+    //    public void scanWithScanFilterGTTestWithReturn() {
+
     @Test
     public void test() {
         String str1 = "100";
@@ -53,6 +107,14 @@ public class AlternatorScanTest extends AlternatorTest{
 //        else
 //            integer=-1;
     }
+
+    ////
+
+    //        attributeValueList.add(new AttributeValue().withN("50"));
+
+    //        rangeKeyCondition.setComparisonOperator(ComparisonOperator.GT);
+
+    //            Assert.assertTrue(new Integer(item.get("range").getN()) > new Integer(new AttributeValue().withN("50").getN()));
 
     @Test
     public void scanWithScanFilterGTTest() {
@@ -76,6 +138,10 @@ public class AlternatorScanTest extends AlternatorTest{
         }
     }
 
+    //    public void scanWithScanFilterGTTestWithNoReturn() {
+
+    //        attributeValueList.add(new AttributeValue().withN("120"));
+
     @Test
     public void scanWithScanFilterGETest() { //Greater or Equal
         ScanRequest request = getBasicReq();
@@ -94,6 +160,62 @@ public class AlternatorScanTest extends AlternatorTest{
             Assert.assertTrue(new Integer(item.get("range").getN()) >= new Integer(new AttributeValue().withN("120").getN()));
         }
     }
+
+    //    public void scanWithScanFilterGETest() { //Greater or Equal
+
+    //        rangeKeyCondition.setComparisonOperator(ComparisonOperator.GE);
+
+    //            Assert.assertTrue(new Integer(item.get("range").getN()) >= new Integer(new AttributeValue().withN("120").getN()));
+
+    ////           Assert.assertTrue(new Integer(item.get("range").getN()) >= new Integer(rangeKey.getN()));
+
+    //            Assert.assertTrue(new Integer(item.get("range").getN()) >= new Integer("12"));
+
+    ////    // TODO: Exception!
+
+    //    public void scanWithScanFilterLETest() {
+
+    //        attributeValueList.add(new AttributeValue().withN("12"));
+
+    //        rangeKeyCondition.setComparisonOperator(ComparisonOperator.LE);
+
+    //            Assert.assertTrue(new Integer(item.get("range").getN()) <= new Integer("12"));
+
+    ////            Assert.assertTrue(new Integer(item.get("range").getN()) <= new Integer(rangeKey.getN()));
+
+    //            Assert.assertTrue(new Integer(item.get("range").getN()) <= new Integer(new AttributeValue().withN("120").getN()));
+
+    //    public void scanWithScanFilterLTTest() {
+
+    //        rangeKeyCondition.setComparisonOperator(ComparisonOperator.LT);
+
+    ////            Assert.assertTrue(new Integer(item.get("range").getN()) < new Integer(rangeKey.getN()));
+
+    //            Assert.assertTrue(new Integer(item.get("range").getN()) < new Integer(new AttributeValue().withN("120").getN()));
+
+    //            Assert.assertTrue(new Integer(item.get("range").getN()) < new Integer("12"));
+
+    //////    // TODO: Exception!
+
+    //    public void scanWithScanFilterINTest() {
+
+    //        attributeValueList.add(new AttributeValue().withN("100"));
+
+    //        attributeValueList.add(new AttributeValue().withN("101"));
+
+    //        attributeValueList.add(new AttributeValue().withN("102"));
+
+    //        rangeKeyCondition.setComparisonOperator(ComparisonOperator.IN);
+
+    //            Assert.assertTrue(new Integer(item.get("range").getN()) <= 101 && new Integer(item.get("date").getN()) >= 100);
+
+    //            Assert.assertTrue(new Integer(item.get("range").getN()) == 102 || new Integer(item.get("range").getN()) == 101 || new Integer(item.get("range").getN()) == 100);
+
+    //    public void scanWithScanFilterBETWEENTest() {
+
+    ////////////////////////OK LINE////////////////////////////
+
+    // TODO: Exception!
 
     @Test
     public void scanWithScanFilterBETWEENTest() {
@@ -115,6 +237,50 @@ public class AlternatorScanTest extends AlternatorTest{
 //            Assert.assertTrue(new Integer(item.get("range").getN()) <= 120 && new Integer(item.get("range").getN()) >= 131);
 //        }
     }
+
+    //        rangeKeyCondition.setComparisonOperator(ComparisonOperator.BETWEEN);
+
+    //        conditionMap.put("date", rangeKeyCondition);
+
+    //            Assert.assertTrue(new Integer(item.get("date").getN()) <= 101 && new Integer(item.get("date").getN()) >= 100);
+
+    //    // TODO: Exception!
+
+    //    public void scanPaginationTest() {
+
+    //        Key lastKeyEvaluated = null;
+
+    //        int count = 0;
+
+    //        do {
+
+    //            count++;
+
+    //            ScanRequest scanRequest = getBasicReq()
+
+    //                    .withLimit(10)
+
+    //                    .withExclusiveStartKey(lastKeyEvaluated);
+
+    //            ScanResult result = client.scan(scanRequest);
+
+    //            for (Map<String, AttributeValue> item : result.getItems()) {
+
+    //                Assert.assertNotNull(result.getLastEvaluatedKey());
+
+    //            }
+
+    //            lastKeyEvaluated = result.getLastEvaluatedKey();
+
+    //            Assert.assertTrue(count<10);
+
+    //        } while (lastKeyEvaluated != null || count<10);
+
+    //    public void scanWithoutTableNameTest() {
+
+    //        request.setTableName(null);
+
+    //        Assert.assertNull(result.getItems());
 
     /*
 

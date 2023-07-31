@@ -47,6 +47,8 @@ public class LexerATNSimulator extends ATNSimulator{
     public static boolean debug = false;,
     public static final RuleContext EMPTY_LEXER_RULE_CONTEXT = new RuleContext();,
     public static boolean dfa_debug = false;,
+
+    // forces unicode to stay in ATN
     public static final int MAX_DFA_EDGE = 127;,
     private boolean trace = false;,
     private OutputStream traceStream = null;,
@@ -170,6 +172,8 @@ public class LexerATNSimulator extends ATNSimulator{
 		charPositionInLine = 0;
 		mode = Lexer.DEFAULT_MODE;
 	}
+
+    // only called from test code from outside
 
     public int matchATN(@NotNull CharStream input) {
 		traceMatchATN();

@@ -1,4 +1,4 @@
-from Node import Pack, End, Class, Method, Comment
+from Node import Pack, End, Class, Comment
 import merger
 from spec import Python
 
@@ -171,22 +171,6 @@ class Tree:
         else:
             highest=ordered[0]
         return highest
-
-
-    def confilct_resolver(self,lang,conflicted_content):
-        print(conflicted_content)
-        with  open("conflict.py","w") as f:
-            f.write(conflicted_content)
-        with  open("methodres.py","w") as f:
-            f.write("")
-        print("\n=======================================================================================")
-        for i in self.method_ref.keys():
-            print(i)
-            for x in self.method_ref[i]:
-                if x.selected == True:
-                    with  open("methodres.py","a") as f:
-                        f.write(x.method_name)
-        return "Yup"
                     
     
     def set_fields(self,lang):

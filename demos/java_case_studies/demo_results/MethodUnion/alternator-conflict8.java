@@ -114,8 +114,12 @@ class AlternatorDBHandler{
     private Map<String, Table> tables = new HashMap<String, Table>();,
     private List<Table> tableList = new ArrayList<Table>();,
 
+    // TODO: create constructor that can handle a file
+
     public AlternatorDBHandler() {
 	}
+
+    // Maybe save automatically on destroy?
 
     public void save(String persistence) {
 		try {
@@ -142,6 +146,8 @@ class AlternatorDBHandler{
 			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 		}
 	}
+
+    // Not sure about this.  If correct and only need one, only create one instance
 
     public ObjectMapper createObjectMapper() {
 		ObjectMapper mapper = new ObjectMapper();

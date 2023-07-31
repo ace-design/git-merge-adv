@@ -34,6 +34,8 @@ public class AlternatorBatchItemTest extends AlternatorTest{
 		BatchGetItemResult result  = client.batchGetItem(new BatchGetItemRequest());
 	}
 
+    //	@Test
+
     /*
     @Test
     public void batchGetItemInTableTest() {
@@ -41,6 +43,12 @@ public class AlternatorBatchItemTest extends AlternatorTest{
         Assert.assertNotNull(result);
     }
     */
+
+    //	public void vanillaBatchGetItemTest() {
+
+    //		BatchGetItemResult result  = client.batchGetItem(new BatchGetItemRequest());
+
+    //	}
 
     @Test
     public void vanillaBatchWriteItemTest() {

@@ -254,6 +254,8 @@ public String getInfo() {
      * @return The context this manager is associated with
      */
 
+    // TODO Inline this method with getManager().getContext() when Tomcat7 is no longer supported
+
     private Context getAssociatedContext() {
         try {
             return (Context) getManager().getContainer();

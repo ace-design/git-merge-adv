@@ -41,6 +41,8 @@ public class Slf4jMavenTransferListener extends AbstractTransferListener{
         this.out = LoggerFactory.getLogger( Slf4jMavenTransferListener.class );
     }
 
+    // TODO should we deprecate?
+
     @Override
     public void transferInitiated( TransferEvent event )
     {

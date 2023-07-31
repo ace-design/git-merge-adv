@@ -68,6 +68,8 @@ public class BufferedTokenStream implements TokenStream{
     @Override
 	public int index() { return p; }
 
+    //	public int range() { return range; }
+
     @Override
     public int mark() {
 		return 0;

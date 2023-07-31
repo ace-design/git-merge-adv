@@ -13,6 +13,8 @@ public class StateRepresentation <TState, TTrigger>{
     private final List<Action2<Transition<TState, TTrigger>, Object[]>> entryActions = new ArrayList<>();,
     private final List<Action1<Transition<TState, TTrigger>>> exitActions = new ArrayList<>();,
     private final List<StateRepresentation<TState, TTrigger>> substates = new ArrayList<>();,
+
+    // null
     private StateRepresentation<TState, TTrigger> superstate;,
 
     public StateRepresentation(TState state) {

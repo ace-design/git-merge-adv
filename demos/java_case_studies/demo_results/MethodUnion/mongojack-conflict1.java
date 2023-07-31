@@ -82,6 +82,21 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
         com.mongodb.client.MongoCollection<TResult> mongoCollection,
         ObjectMapper objectMapper,
         Class<TResult> valueClass,
+        Class<?> view
+    ) {
+        this.objectMapper = objectMapper != null ? objectMapper : getDefaultObjectMapper();
+        this.view = view;
+        jacksonCodecRegistry = new JacksonCodecRegistry(this.objectMapper, this.view);
+        jacksonCodecRegistry.addCodecForClass(valueClass);
+        this.mongoCollection = mongoCollection.withDocumentClass(valueClass).withCodecRegistry(jacksonCodecRegistry);
+        this.valueClass = valueClass;
+        this.type = this.objectMapper.constructType(valueClass);
+    }
+
+    private JacksonMongoCollection(
+        com.mongodb.client.MongoCollection<TResult> mongoCollection,
+        ObjectMapper objectMapper,
+        Class<TResult> valueClass,
         Class<?> view,
         final UuidRepresentation uuidRepresentation
     ) {
@@ -91,21 +106,6 @@ public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<T
         jacksonCodecRegistry = new JacksonCodecRegistry(this.objectMapper, underlyingCollection.getCodecRegistry(), this.view, uuidRepresentation);
         jacksonCodecRegistry.addCodecForClass(valueClass);
         this.mongoCollection = underlyingCollection.withCodecRegistry(jacksonCodecRegistry);
-        this.valueClass = valueClass;
-        this.type = this.objectMapper.constructType(valueClass);
-    }
-
-    private JacksonMongoCollection(
-        com.mongodb.client.MongoCollection<TResult> mongoCollection,
-        ObjectMapper objectMapper,
-        Class<TResult> valueClass,
-        Class<?> view
-    ) {
-        this.objectMapper = objectMapper != null ? objectMapper : getDefaultObjectMapper();
-        this.view = view;
-        jacksonCodecRegistry = new JacksonCodecRegistry(this.objectMapper, this.view);
-        jacksonCodecRegistry.addCodecForClass(valueClass);
-        this.mongoCollection = mongoCollection.withDocumentClass(valueClass).withCodecRegistry(jacksonCodecRegistry);
         this.valueClass = valueClass;
         this.type = this.objectMapper.constructType(valueClass);
     }

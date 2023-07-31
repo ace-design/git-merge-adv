@@ -115,6 +115,8 @@ import static org.junit.Assert.*;
 
 public abstract class BaseTest{
 
+
+    // -J-Dorg.antlr.v4.test.BaseTest.level=FINE
     private static final Logger LOGGER = Logger.getLogger(BaseTest.class.getName());,
     public static final String newline = System.getProperty("line.separator");,
     public static final String pathSep = System.getProperty("path.separator");,
@@ -213,6 +215,14 @@ public abstract class BaseTest{
 //		return dfa;
 		return null;
 	}
+
+    //	public void minimizeDFA(DFA dfa) {
+
+    //		DFAMinimizer dmin = new DFAMinimizer(dfa);
+
+    //		dfa.minimized = dmin.minimize();
+
+    //	}
 
     IntegerList getTypesFromString(Grammar g, String expecting) {
 		IntegerList expectingTokenTypes = new IntegerList();
@@ -807,6 +817,44 @@ public abstract class BaseTest{
 		if ( fileName.length()==Tool.GRAMMAR_EXTENSION.length() ) fileName = "A" + Tool.GRAMMAR_EXTENSION;
 		return fileName;
 	}
+
+    //	void ambig(List<Message> msgs, int[] expectedAmbigAlts, String expectedAmbigInput)
+
+    //		throws Exception
+
+    //	{
+
+    //		ambig(msgs, 0, expectedAmbigAlts, expectedAmbigInput);
+
+    //	void ambig(List<Message> msgs, int i, int[] expectedAmbigAlts, String expectedAmbigInput)
+
+    //		List<Message> amsgs = getMessagesOfType(msgs, AmbiguityMessage.class);
+
+    //		AmbiguityMessage a = (AmbiguityMessage)amsgs.get(i);
+
+    //		if ( a==null ) assertNull(expectedAmbigAlts);
+
+    //		else {
+
+    //			assertEquals(a.conflictingAlts.toString(), Arrays.toString(expectedAmbigAlts));
+
+    //		}
+
+    //		assertEquals(expectedAmbigInput, a.input);
+
+    //	void unreachable(List<Message> msgs, int[] expectedUnreachableAlts)
+
+    //		unreachable(msgs, 0, expectedUnreachableAlts);
+
+    //	void unreachable(List<Message> msgs, int i, int[] expectedUnreachableAlts)
+
+    //		List<Message> amsgs = getMessagesOfType(msgs, UnreachableAltsMessage.class);
+
+    //		UnreachableAltsMessage u = (UnreachableAltsMessage)amsgs.get(i);
+
+    //		if ( u==null ) assertNull(expectedUnreachableAlts);
+
+    //			assertEquals(u.conflictingAlts.toString(), Arrays.toString(expectedUnreachableAlts));
 
     List<ANTLRMessage> getMessagesOfType(List<ANTLRMessage> msgs, Class<? extends ANTLRMessage> c) {
 		List<ANTLRMessage> filtered = new ArrayList<ANTLRMessage>();

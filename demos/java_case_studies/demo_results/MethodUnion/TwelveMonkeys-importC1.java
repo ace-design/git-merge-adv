@@ -51,6 +51,8 @@ public final class TIFFWriter extends MetadataWriter{
 
     private static final int WORD_LENGTH = 2;,
     private static final int LONGWORD_LENGTH = 4;,
+
+    // TODO: We probably want to gloss over client code writing IFDs in BigTIFF (or vice versa) somehow... Silently convert IFD -> IFD8
     private static final long ENTRY_LENGTH = 12;,
     private final boolean longOffsets;,
     private final int offsetSize;,

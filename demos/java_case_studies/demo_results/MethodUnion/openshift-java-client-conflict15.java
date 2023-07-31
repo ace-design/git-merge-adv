@@ -9,6 +9,7 @@
  * Red Hat, Inc. - initial API and implementation 
  ******************************************************************************/
 package com.openshift.internal.client;
+import static com.openshift.client.utils.RequestParametersMatcher.eq;
 import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -19,12 +20,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import static com.openshift.client.utils.RequestParametersMatcher.eq;
-import org.mockito.Matchers;
 import static org.fest.assertions.Assertions.assertThat;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
-import com.openshift.client.IHttpClient;
 import static org.mockito.Matchers.anyMapOf;
+import com.openshift.client.IHttpClient;
 import com.openshift.client.utils.Samples;
 import com.openshift.internal.client.httpclient.HttpClientException;
 import java.util.Map;

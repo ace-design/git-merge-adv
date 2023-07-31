@@ -10,16 +10,30 @@ import no.priv.garshol.duke.utils.ObjectUtils;
 
 public class ConfigurationImpl implements Configuration{
 
+
+    // there are two modes: deduplication and record linkage. in
+
+    // deduplication mode all sources are in 'datasources'. in record
+
+    // linkage mode they are in 'group1' and 'group2'. couldn't think
+
+    // of a better solution. sorry.
     private Collection<DataSource> datasources;,
     private Collection<DataSource> group1;,
     private Collection<DataSource> group2;,
     private double threshold;,
     private double thresholdMaybe;,
     private Map<String, Property> properties;,
+
+    // duplicate to preserve order
     private List<Property> proplist;,
+
+    // subset of properties
     private Collection<Property> lookups;,
     private List<Comparator> customComparators;,
     private Database database1;,
+
+    // used for record linkage, if necessary
     private Database database2;,
     private Database database;,
 
