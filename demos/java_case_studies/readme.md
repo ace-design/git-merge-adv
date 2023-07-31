@@ -8,11 +8,11 @@ Our focus on Java will provide us with specific syntax that we can use to develo
 
 ## Pre-requisites:
 
-*  `base.java`: Common ancestor between left and right parents.
-*  `left.java`: Left parent of merge
+* `base.java`: Common ancestor between left and right parents.
+* `left.java`: Left parent of merge
 * `right.java`: Right parent of merge
 * `desired.java`: Version of file after user manually handled.
-*  `git.java`: Version of file after git algorithm tried to handle.
+* `git.java`: Version of file after git algorithm tried to handle.
 * `spork_result.java`: Version of file after spork tried to handle.
 * `jdime.java`: Version of file after jdime tried to handle.
 
@@ -23,17 +23,17 @@ Our focus on Java will provide us with specific syntax that we can use to develo
 Case Study: | Overall: | Reason:
 --- | --- | --- |
 antlr4/importC4 | 54.78 | Deletions, Insertions
-antlr4/importC8 | 20.04 | Insertions
-aws/conflict1 | 36.40 | Deletions,Insertions
+antlr4/importC8 | 19.15 | Insertions
+aws/conflict1 | 31.78 | Deletions,Insertions
 aws/conflict3 | 21.05 | Insertions
 camus/conflict2 | 29.31 | Insertions, Moves
-duke/conflict2 | 25.04 | Insertions, Moves
-mongojack/conflict1 | 49.20 | Insertions, Moves
-openhtmltopdf/importC1 | 146.60 | Insertions, Deletions
+duke/conflict2 | 23.30 | Insertions, Moves
+mongojack/conflict1 | 56.12 | Insertions, Moves
+openhtmltopdf/importC1 | 142.31 | Insertions, Deletions
 openshift-java-client/conflict9 | 139.19 | Insertions, Deletions, Moves
 openshift-java-client/conflict10 | 73.46 | Deletions, Insertions, Moves, Diff_Path
 openshift-java-client/conflict12 | 190.06 | Deletions, Insertions, Moves, Diff_Path
-openshift-java-client/conflict15 | 277.42 | All
+openshift-java-client/conflict15 | 276.83 | All
 stateless4j/conflict3 | 45.21 | Insertions
 
 ## Next Steps:

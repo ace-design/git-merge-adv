@@ -64,8 +64,6 @@ def append_body_tree(lang, base, right, left):
         return "**to_be_handled_by_git**"
     tree.add_body(baseclass)
 
-
-
 # Compiles all unique elements in import statements between all three versions into tree. 
 def gen_import_tree(base_import, right_import, left_import):
     for imports in left_import:
