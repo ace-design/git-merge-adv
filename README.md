@@ -20,7 +20,6 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#algorithm-prerequisites">Algorithm Prerequisites</a></li>
-        <li><a href="#script-prerequisites">Script Prerequisites</a></li>
       </ul>
     <li>
       <a href="#contacts">Contacts</a>
@@ -56,33 +55,9 @@ As such, our purpose is to develop a new 3-way merge algorithm that takes both a
 ### Algorithm Prerequisites
 
 * Run Algorithms:
-  * IMPORTANT: If running CompressedTree, read additional requirements listed in ``merge-algorithms/CompressedTree/readme.md``
 
     `python3 <path to alg init.py> --left <left parent path> --right <right parent path> --base <base file path> --out <output file>`
 
-
-### Script Prerequisites:
-
-* Run Algorithm Running Script (``demos/run_algo.py``):
-  * Outputs the result of desired algorithm to associated demo folder, and associated comparison data.
-
-    `python3 run_algo.py --cs <path to case study folder> --algo <name of desired algorithm> --lang <language used in case study>`
-
-* Run Analysis Script (``demos/run_analysis.py``):
-  * Outputs the result of all cumulated case studies in the form of a graph png.
-
-    `python3 run_algo.py --cs <path to case study folder> --algo <name of desired algorithm> --lang <language used in case study>`
-
-
-* Run Merge Conflict Script (``scripts/conflict_resolving``)
-  * Output returns a list of commits associated with merge-conflicts.
-
-    `python3 init.pyt --url <Clone URL> --output <Output file name>`
-
-* Run Conflict Resolving Script (``scripts/merge_conflicts``)
-  * Output returns a folder 'results' which contains all associated files to that case study.
-
-    `python3 init.py --filename <merge-conflicts.csv> --line <line-number in CSV> --repo <name of Clone repo> --lang <Programming Language>`
 
 
 ## Set as Custom merge for git

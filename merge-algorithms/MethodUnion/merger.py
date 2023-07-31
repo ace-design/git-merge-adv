@@ -30,6 +30,7 @@ def git_merge(base,right,left,language):
     clean(language)
     return git_rest.stdout
 
+
 def import_merge(lang,base,right,left):
     gen_import_tree(base, right, left)
     result=tree.find_imports(lang)
