@@ -21,7 +21,7 @@ def main():
 
     for repo in all_repos:
         print(repo)
-        if not os.path.isdir("../../demos/java_case_studies/"+repo.split("/")[-1]):
+        if not os.path.isdir("../../demos/java_case_studies/reference_repos/"+repo.split("/")[-1]):
             get_new_csv(repo,all_hash)
         else:
             print("Skip")
@@ -72,17 +72,12 @@ def find_files(repo,line,count):
 
     subprocess.run(['python3','../conflict_resolving/init.py','--filename',repo_name+'.csv','--line',str(line),'--repo',repo_name,'--lang','java'])
 
-    if not os.path.isdir("../../demos/java_case_studies/"+repo_name):
-        subprocess.run(['mkdir','../../demos/java_case_studies/'+repo_name])
+    if not os.path.isdir("../../demos/java_case_studies/reference_repos/"+repo_name):
+        subprocess.run(['mkdir','../../demos/java_case_studies/reference_repos/'+repo_name])
 
-    subprocess.run(['cp','-r','results','../../demos/java_case_studies/'+repo_name+"/conflict"+str(count)])
+    subprocess.run(['cp','-r','results','../../demos/java_case_studies/demo_results/'+repo_name+"-conflict"+str(count)])
 
-    # subprocess.run(['rm','-r',repo_name])
-
-
-
-
-
+    subprocess.run(['rm','-r',repo_name])
 
 
 

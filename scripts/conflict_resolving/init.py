@@ -7,12 +7,11 @@ def getinfo(filename,line_num):
 # Open the CSV file
     with open(filename, newline='') as csvfile:
         reader = csv.reader(csvfile)
-    
-
         for i, row in enumerate(reader):
             if i+1 == line_num:
                 print(row)
                 return row
+
 
 def extactfiles(info,repo,lang= None):
         # parent = subprocess.check_output(f"git log --pretty=%p -n 1 {hash} --abbrev=8", shell=True).decode('utf-8').strip('\n').split(' ')
@@ -23,7 +22,7 @@ def extactfiles(info,repo,lang= None):
              suffix = "java"
         os.chdir(str(os.getcwd())+"/"+str(repo))
         main_b=subprocess.run(['git','rev-parse','--abbrev-ref','HEAD'],capture_output=True,text=True).stdout.strip('\n')
-
+        print(info[1])
         subprocess.run(['git','checkout', info[1],'--quiet'])
         subprocess.run(['cp', info[4],f'../results/left.{suffix}'])
         subprocess.run(['git','checkout', info[2],'--quiet'])

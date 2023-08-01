@@ -44,6 +44,7 @@ def main():
                         if ("importC" in d or "conflict" in d):
                             print("\nExecute "+os.path.join(subdir, d)+":")
                             added_output_path=output_path+subdir.split('/')[-1]+'-'+d
+                            print(subdir.split('/'))
                             exec_algo(algo,os.path.join(subdir, d),added_output_path,lang)
 
                             run_gumtree_algo(os.path.join(subdir,d),added_output_path,lang,algo)
