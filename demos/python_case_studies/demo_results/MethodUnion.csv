@@ -7,7 +7,7 @@ blaze-importC3,19,4,22,1,0,29.734423546138885
 blaze-importC1a,10,41,12,42,13,62.2684905608851
 cryptography-importC2,0,0,0,0,0,Error
 cryptography-importC3,1,4,1,0,0,4.600247565095642
-cryptography-importC1,0,3,2,55,0,55.214401615998106
+cryptography-importC1,0,4,2,55,0,55.280687867917344
 algorithms-importC2,52,46,14,14,0,72.23851551795228
 algorithms-importC1,76,52,54,18,0,108.45286442864892
 mypy-importC2,1,1,2,0,0,2.780656542539707

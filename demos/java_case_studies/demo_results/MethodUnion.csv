@@ -53,10 +53,10 @@ cucumber.jvm-importC2,0,0,1,1,0,1.7320508075688772
 cucumber.jvm-importC5,2,3,2,0,0,4.47213595499958
 cucumber.jvm-importC4,2,0,0,0,0,2.23606797749979
 cucumber.jvm-importC3,0,14,0,0,2,14.247806848775006
-cucumber.jvm-importC6,0,1,0,0,0,1.4142135623730951
+cucumber.jvm-importC6,0,1,0,4,0,4.385894205005382
 cucumber.jvm-importC1,0,5,0,0,0,5.291502622129181
 openshift-java-client-conflict13,2,0,1,0,0,2.23606797749979
-openshift-java-client-conflict15,133,178,164,8,25,277.422921233223
+openshift-java-client-conflict15,133,178,163,8,25,276.83243334628025
 openshift-java-client-conflict12,53,178,37,16,1,190.0558761732389
 openshift-java-client-conflict7,4,14,0,0,0,14.712992080300989
 openshift-java-client-conflict9,33,128,43,7,0,139.1910998507454
