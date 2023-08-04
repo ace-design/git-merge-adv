@@ -80,8 +80,9 @@ def exec_algo(algo,reference_case_study,output_path,lang):
 
 # Looks for all import deletions, moves and insertions found in gumtree textdiff output.
 def search_gumtree_imports(result):
+    syntax_error=False
     if (len(result)==1 and result[0]==''):
-        raise RuntimeError("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
+        syntax_error=True
 
     dict={
     'deletions':re.compile(r'\ndelete-(tree|node)'),
@@ -91,21 +92,22 @@ def search_gumtree_imports(result):
     }
 
     data={'deletions':0,'insertions':0,'moves':0,'diff_path':0}
-
-    for val in result:
-        for key,rx in dict.items():
-            match=rx.search(val)
-            if (match):
-                if (key=='diff_path'):
-                    try:
-                        range=re.findall(r'\[.*?\]',val)[0]
-                        end=range.split(',')[1].strip(']')
-                        if (int(end)<2000):
-                            data[key]+=1
-                    except:
-                        pass
-                elif (('import' in val) or ("Import" in val)) and ("operator: ," not in val):
-                    data[key]+=1
+    
+    if (not syntax_error):
+        for val in result:
+            for key,rx in dict.items():
+                match=rx.search(val)
+                if (match):
+                    if (key=='diff_path'):
+                        try:
+                            range=re.findall(r'\[.*?\]',val)[0]
+                            end=range.split(',')[1].strip(']')
+                            if (int(end)<2000):
+                                data[key]+=1
+                        except:
+                            pass
+                    elif (('import' in val) or ("Import" in val)) and ("operator: ," not in val):
+                        data[key]+=1
     total=0
     for value in data.values():
         total+=math.pow(value,2)
@@ -115,8 +117,11 @@ def search_gumtree_imports(result):
 
 
 def search_gumtree_full(result,new,num_conflicts,existing_data, existing_total,output):
+    syntax_error=False
+
     if (len(result)==1 and result[0]==''):
-        raise RuntimeError("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
+        print('hi')
+        syntax_error=True
 
     dict={
     'deletions':re.compile(r'\ndelete'),
@@ -133,18 +138,19 @@ def search_gumtree_full(result,new,num_conflicts,existing_data, existing_total,o
         data={'deletions':0,'insertions':0,'moves':0,'diff_path':0,'num_conflicts':num_conflicts}
         total=0
 
-    for val in result:
-        for key,rx in dict.items():
-            match=rx.search(val)
-            if (match):
-                try:
-                    range=re.findall(r'\[.*?\]',val)[0]
-                    start=int(range.split(',')[0].strip('['))
-                    end=int(range.split(',')[1].strip(']'))
-                    if (end-start>1 and 'import' not in val and "Import" not in val):
-                        data[key]+=1
-                except:
-                    pass
+    if (not syntax_error):
+        for val in result:
+            for key,rx in dict.items():
+                match=rx.search(val)
+                if (match):
+                    try:
+                        range=re.findall(r'\[.*?\]',val)[0]
+                        start=int(range.split(',')[0].strip('['))
+                        end=int(range.split(',')[1].strip(']'))
+                        if (end-start>1 and 'import' not in val and "Import" not in val):
+                            data[key]+=1
+                    except:
+                        pass
 
     for value in data.values():
         total+=math.pow(value,2)
@@ -156,7 +162,11 @@ def search_gumtree_full(result,new,num_conflicts,existing_data, existing_total,o
     if output in df['project'].values:
         for key in data.keys():
             df.loc[df['project']==output, key]=data[key]
-        df.loc[df['project']==output, 'overall']=total
+        if syntax_error:
+            print('hi')
+            df.loc[df['project']==output, 'overall']='Error'
+        else:
+            df.loc[df['project']==output, 'overall']=total
         df.to_csv(new,index=False)
     else:
         data={
@@ -168,9 +178,16 @@ def search_gumtree_full(result,new,num_conflicts,existing_data, existing_total,o
             'num_conflicts': [data['num_conflicts']],
             'overall': [total] 
         }
+        if syntax_error:
+            data['overall']=['Error']
         df=pd.DataFrame(data)
         df.to_csv(new, mode='a', index=False, header=False)
-    
+
+
+    if syntax_error:
+        print('hi')
+        raise RuntimeError("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
+
     
 # Compares jdime version to desired version
 def run_gumtree_existing(reference_path,tool):

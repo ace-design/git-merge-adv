@@ -1,6 +1,6 @@
 project,deletions,insertions,moves,diff_path,num_conflicts,overall
-lesscss-maven-plugin-conflict1,1,0,0,0,1,12.449899597988733
-camus-conflict2,1,0,11,0,2,52.478567053607705
+lesscss-maven-plugin-conflict1,1,0,0,0,1,1.7320508075688772
+camus-conflict2,1,0,11,0,2,11.70663747696952
 camus-conflict1,12,3,2,1,1,13.04187626480214
 camus-conflict3,1,0,11,0,1,11.577796034530374
 maven-importC4,1,10,11,0,2,15.402109341266277
@@ -51,7 +51,7 @@ openshift-java-client-conflict13,1,3,1,0,2,3.872983346207417
 openshift-java-client-conflict7,4,12,0,0,2,12.979681658461413
 TwelveMonkeys-importC2,0,0,7,0,1,7.54983443527075
 TwelveMonkeys-importC1,0,6,1,0,1,6.56498434983609
-cucumber.jvm-importC6,0,1,0,0,0,4.385894205005382
+cucumber.jvm-importC6,0,1,0,4,0,4.385894205005382
 cucumber.jvm-importC4,1,1,0,0,1,2.0
 cucumber.jvm-importC5,1,10,2,0,1,10.51582501256824
 cucumber.jvm-importC2,0,9,1,1,3,9.707526357291016
@@ -79,3 +79,8 @@ Jest-conflict11,0,5,0,0,0,5.477225575051661
 Jest-conflict3,2,3,1,2,1,4.518209110075927
 Jest-conflict4,0,1,0,0,1,1.4142135623730951
 Jest-conflict2,3,9,2,0,2,9.9498743710662
+adt4j-conflict1,0,0,0,0,0,0.0
+FastCSV-conflict1,0,4,1,0,1,4.242640687119285
+FastCSV-conflict3,2,2,0,0,2,3.4641016151377544
+FastCSV-conflict4,12,6,2,0,3,13.94324974897793
+FastCSV-conflict2,0,4,0,0,2,4.47213595499958

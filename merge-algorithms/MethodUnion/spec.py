@@ -464,7 +464,6 @@ class Java(Lang):
                         main_class+=child.text.decode()+" "
                     else:
                         break
-                print(main_class)
                 index=comment[0].start_point[1]
 
                 comment_obj=Comment(comment[0].text.decode(),main_class,index,starting_line)

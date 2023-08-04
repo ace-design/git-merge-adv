@@ -2,7 +2,7 @@ import datetime
 from types import MethodType
 from datashape import dshape
 from datashape.util.testing import assert_dshape_equal
-from odo import into,append
+from odo import append,into
 from odo.backends.csv import CSV
 from blaze import discover,transform
 from blaze.compatibility import pickle

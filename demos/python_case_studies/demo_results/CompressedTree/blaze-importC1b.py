@@ -2,13 +2,13 @@ import datetime
 from types import MethodType
 from datashape import dshape
 from datashape.util.testing import assert_dshape_equal
-from odo import append
+from odo import into,append
 from odo.backends.csv import CSV
 from blaze import discover,transform
 from blaze.compatibility import pickle
 from blaze.expr import symbol
+from blaze.interactive import data,compute,concrete_head,expr_repr,to_html,iscoretype,coerce_core,Data,iscorescalar,iscoresequence
 from blaze.utils import tmpfile,example
-from blaze.interactive import data,compute,concrete_head,expr_repr,to_html,iscoretype,coerce_core,Data,iscorescalar,iscoresequence,into
 
 
 

@@ -18,9 +18,9 @@ from cryptography.hazmat.primitives.cmac import CMAC
 from backends.test_multibackend import DummyCMACBackend
 from utils import (
     load_nist_vectors,
-    raises_unsupported_algorithm,
+    load_vectors_from_file,
 )
-from tests.utils import load_vectors_from_file
+from tests.utils import raises_unsupported_algorithm
 from cryptography import utils
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

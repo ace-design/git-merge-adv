@@ -30,7 +30,7 @@ Execute run_algo.py:
 
 Execute run_analysis.py:
 
-`python3 run_analysis.py --algo <DesiredAlgorithm> --dir <path to case study>`
+`python3 run_analysis.py --dir <path to case study>`
 
 ## Acknowledgements
 

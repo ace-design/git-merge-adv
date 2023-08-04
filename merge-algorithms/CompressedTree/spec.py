@@ -224,7 +224,7 @@ class Python(Lang):
         for item in node.get_children():
             formatter = copy.deepcopy(formatter)
 
-            if item.get_full_dir()[0:4] == "from":
+            if item.get_full_dir()[0:4] == "from" and type(item)==Pack:
                 if len(item.get_children())>1:
                     if item.get_children()[1].leftstartline == item.get_children()[0].leftstartline :
                         if item.get_children()[1].leftstartline == item.get_children()[1].leftendline:
