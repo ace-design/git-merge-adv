@@ -193,8 +193,6 @@ public class StateConfiguration <TState , TTrigger >{
         });
     }
 
-    
-
     /**
      * Specify an action that will execute when transitioning into the configured state
      *
@@ -292,8 +290,6 @@ public class StateConfiguration <TState , TTrigger >{
         return this;
     }
 
-    
-
     /**
      * Specify an action that will execute when transitioning into the configured state
      *
@@ -336,6 +332,14 @@ public class StateConfiguration <TState , TTrigger >{
         return this;
     }
 
+    @SuppressWarnings("unchecked")
+            public void doIt(Transition<TState, TTrigger> t, Object[] args) {
+                entryAction.doIt(
+                        (TArg0) args[0],
+                        (TArg1) args[1],
+                        (TArg2) args[2], t);
+            }
+
     /**
      * Specify an action that will execute when transitioning from the configured state
      *
@@ -351,6 +355,10 @@ public class StateConfiguration <TState , TTrigger >{
             }
         });
     }
+
+    public void doIt(Transition<TState, TTrigger> arg1) {
+                exitAction.doIt();
+            }
 
     public StateConfiguration<TState, TTrigger> onExit(Action1<Transition<TState, TTrigger>> exitAction) {
         assert exitAction != null : "exitAction is null";

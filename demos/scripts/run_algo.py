@@ -194,6 +194,8 @@ def run_gumtree_existing(reference_path,tool):
     gumtree_path=reference_path.split("java_case_studies")[0]+'dependencies/gumtree.jar'
 
     desired=reference_path+"/desired.java"
+    desired_text=subprocess.run(['cat',desired+'.java'],capture_output=True,text=True).stdout
+
     result=reference_path+"/"+tool+".java"
     new="java_case_studies/demo_results/"+tool+".csv"
 
@@ -202,11 +204,42 @@ def run_gumtree_existing(reference_path,tool):
 
     num_conflicts=0
     with open(new_result,'w') as writer:
+        start=False
+        divider=False
         for line in without_git.stdout.split('\n'):
-            if ("<<<<<<<" not in line and "=======" not in line and ">>>>>>>" not in line):
-                writer.write(line+'\n')
-            elif ("<<<<<<<" in line):
+            if "<<<<<<<" in line:
                 num_conflicts+=1
+                start=True
+                current_sim=0
+                incoming_sim=0
+                current_text=[]
+                incoming_text=[]
+                continue
+            elif (start and not divider):
+                if ("=======" in line):
+                    divider=True
+                else:
+                    if line in desired_text:
+                        current_sim+=1
+                    current_text.append(line)
+                continue
+            elif (start and divider):
+                if (">>>>>>>" in line):
+                    start=False
+                    divider=False
+                    if (current_sim>incoming_sim):
+                        for val in current_text:
+                            writer.write(val+'\n')
+                    else:
+                        for val in incoming_text:
+                            writer.write(val+'\n')
+                else:
+                    if line in desired_text:
+                        incoming_sim+=1
+                    incoming_text.append(line)
+                continue
+            elif (not start and not divider):
+                writer.write(line+'\n')
 
 
     if not os.path.isfile(new):
@@ -231,17 +264,51 @@ def run_gumtree_algo(reference_path,output_path,lang,algo):
         gumtree_path=reference_path.split("python_case_studies")[0]+'dependencies/gumtree.jar'
 
     desired=reference_path+"/desired."+lang
+    desired_text=subprocess.run(['cat',desired+'.'+lang],capture_output=True,text=True).stdout
     result=output_path
     without_git=subprocess.run(['cat',result+'.'+lang],capture_output=True, text=True)
     new_result='without_git.'+lang
 
     num_conflicts=0
     with open(new_result,'w') as writer:
+        start=False
+        divider=False
         for line in without_git.stdout.split('\n'):
-            if ("<<<<<<<" not in line and "=======" not in line and ">>>>>>>" not in line):
-                writer.write(line+'\n')
-            elif ("<<<<<<<" in line):
+            if "<<<<<<<" in line:
                 num_conflicts+=1
+                start=True
+                current_sim=0
+                incoming_sim=0
+                current_text=[]
+                incoming_text=[]
+                continue
+            elif (start and not divider):
+                if ("=======" in line):
+                    divider=True
+                else:
+                    if line in desired_text:
+                        current_sim+=1
+                    current_text.append(line)
+                continue
+            elif (start and divider):
+                if (">>>>>>>" in line):
+                    start=False
+                    divider=False
+                    if (current_sim>incoming_sim):
+                        for val in current_text:
+                            writer.write(val+'\n')
+                    else:
+                        for val in incoming_text:
+                            writer.write(val+'\n')
+                else:
+                    if line in desired_text:
+                        incoming_sim+=1
+                    incoming_text.append(line)
+                continue
+            elif (not start and not divider):
+                writer.write(line+'\n')
+    
+
 
     new=output_path[0:output_path.rfind('/')].replace('/'+algo,'')+'/'+algo+'.csv'
 

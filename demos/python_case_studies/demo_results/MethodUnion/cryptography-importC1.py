@@ -18,9 +18,9 @@ from cryptography.hazmat.primitives.cmac import CMAC
 from backends.test_multibackend import DummyCMACBackend
 from tests.utils import (
     load_nist_vectors,
-    raises_unsupported_algorithm,
+    load_vectors_from_file,
 )
-from utils import load_vectors_from_file
+from utils import raises_unsupported_algorithm
 from cryptography import utils
 vectors_aes128 = load_vectors_from_file('CMAC/nist-800-38b-aes128.txt',
     load_nist_vectors)

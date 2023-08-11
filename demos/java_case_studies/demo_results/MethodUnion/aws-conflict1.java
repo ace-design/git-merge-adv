@@ -32,7 +32,6 @@ import com.amazonaws.util.StringUtils;
 
 public class DynamoDBSessionManager extends PersistentManagerBase{
 
-    private static final String DEFAULT_TABLE_NAME = "Tomcat_SessionState";,
     private static final String name = "AmazonDynamoDBSessionManager";,
     private static final String info = name + "/2.0";,
     private String regionId = "us-east-1";,
@@ -43,6 +42,7 @@ public class DynamoDBSessionManager extends PersistentManagerBase{
     private long readCapacityUnits = 10;,
     private long writeCapacityUnits = 5;,
     private boolean createIfNotExist = true;,
+    private String tableName = DEFAULT_TABLE_NAME;,
     private String proxyHost;,
     private Integer proxyPort;,
     private final DynamoDBSessionStore dynamoSessionStore;,
