@@ -57,12 +57,21 @@ Logically the difference in Python makes sense since we have yet to add comments
 
 The overall accuracy is measured as the vector distance from the desired version using all measurements.
 
-> Overall=Deletions<sup>2</sup>+Insertions<sup>2</sup>+Moves<sup>2</sup>+Diff_Paths<sup>2</sup>
+> Overall = Deletions<sup>2</sup> + Insertions<sup>2</sup> + Moves<sup>2</sup> + Diff_Paths<sup>2</sup> + ...
 
 ### Assumptions:
 1. All input files are of correct syntax. Any case study with incorrect input files will be eliminated from results.
 2. Developers will choose the correct conflict resolution when having to manually resolve some merge conflicts.
-    * To account for this in our comparison, we cross reference each merge conflict in generated file to the desired version to see what the developer wants. As such, it will be <i>ignored<i> by gumtree.
+    * To account for this in our comparison, we cross reference each merge conflict in generated file to the desired version to see what the developer wants. As such, it will be <i>ignored</i> by gumtree.
+
+### Comparison Replication:
+1. Use the run_algo.py script to generate the resulting files for each merge case study. 
+2. Generate the conflict-free resulting file from tool by parsing the file and resolving all merge conflicts by checking resolution in desired file. 
+3. 
+* For Python: Run gumtree `textdiff` with `theta` matcher (-m flag) for import statements differencing and `gumtree-simple-id` matcher (-m flag) for body differencing. This will generate a csv file with all code comparison. 
+* For Java: Run gumtree with `gumtree-simple-id` matcher (-m flag) with `java-jdt` generator (-g flag) for both import and body differencing. 
+4. Parse the csv file to extract all deletions, insertions, moves and updates. Ignore all differences that are 1 character long (likely a parsing error).
+5. Tally all respective measurements and calculate the overall result.
 
 
 ## Prerequisites:

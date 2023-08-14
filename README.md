@@ -60,6 +60,8 @@
   python3 <path to alg init.py> --left <left parent path> --right <right parent path> --base <base file path> --out <output file>
   ```
 
+  * Assumption: Input files are of correct syntax. Tools will not work with incorrect syntax. 
+
 ## Usage:
 * The [extracting-scripts](extracting-scripts/) directory contains all the tools needed to extract case studies from various github repositories
 * The [merge-algorithms](merge-algorithms/) directory includes all the merge tools that were developed in this project. The two main tools being [CompressedTree](merge-algorithms/CompressedTree/) and [MethodUnion](merge-algorithms/MethodUnion).
@@ -99,5 +101,5 @@
 * All Case Studies for Python Obtained from Awesome Python List:[https://github.com/vinta/awesome-python]
 
 
-## Licence
+# Licence
 Distributed under the MIT License. See LICENSE.txt for more information.
