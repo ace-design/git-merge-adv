@@ -34,7 +34,13 @@ Java_Lang = Language(path+'/build/my-languages.so', 'java')
 
 def add_indent(string, indent):
     lines = string.split("\n")  # Split the string into individual lines
-    indented_lines = [indent + line for line in lines]  # Add the indent to each line
+    indented_lines=[]
+    for line in lines:
+        if ("<<<<<<" not in line and ">>>>>>" not in line and "======" not in line):
+            indented_lines.append(indent+line)
+        else:
+            indented_lines.append(line)
+    # indented_lines = [indent + line for line in lines if ("<<<<<<" not in line and ">>>>>>" not in line and "======" not in line)]  # Add the indent to each line
     indented_string = "\n".join(indented_lines)  # Join the lines back together with newline characters
     return indented_string
 
@@ -424,8 +430,7 @@ class Java(Lang):
                         method_signature+=child.text.decode()+" "
                     if (child.type=="identifier"):
                         method_name=child.text.decode()
-
-            
+                        
             base=method[0].parent
             
             while (base.type!="class_declaration" and base.type!="enum_declaration" and base.type!="interface_declaration"):
@@ -728,6 +733,8 @@ class Python(Lang):
 
 
 
+
+
             
             elif isinstance(nod, ast.ClassDef):
                 pass
@@ -768,15 +775,20 @@ class Python(Lang):
                 temp = (astor.to_source(classobj.node)).split("\n")
                 classcode = classcode+ (temp)[0]+'\n'+temp[1]+'\n'
 
+            pass_class=True
             for i in classobj.declarations:
                 classcode = classcode + indent+i
+                pass_class=False
             for metho in classobj.methods:
                 for mo in all_methods[classname+' '+metho]:
                     if mo.selected == True:
                         methodcode = mo.full_method
+                        pass_class=False
                 # print(methodcode)
                 # print(add_indent(methodcode,indent))
                 classcode = classcode + add_indent(methodcode,indent)+'\n'
+            if (pass_class):
+                classcode=classcode+indent+"pass\n"
             
 
             pointer = codeseq.index("class "+classname)

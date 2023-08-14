@@ -23,15 +23,15 @@ class App(object):
         self.preloaded = {'app': self, 'router': self.router}
         preload_state(self.preloaded, self.routes)
         if 'sql_alchemy' in self.preloaded:
-    <<<<<<< left_content.py
+<<<<<<< left_content.py
             self.commands += [cmd.create_tables]
-    =======
+=======
             self.commands += [cmd.create_sqlalchemy_tables]
         if 'django_backend' in self.preloaded:
             self.commands += [cmd.django_makemigrations, cmd.django_migrate,
                 cmd.django_showmigrations]
         self.router = routing.Router(self.routes, initial_types)
-    >>>>>>> right_content.py
+>>>>>>> right_content.py
         self.wsgi = get_wsgi_server(app=self)
         self.click = get_click_client(app=self)
     

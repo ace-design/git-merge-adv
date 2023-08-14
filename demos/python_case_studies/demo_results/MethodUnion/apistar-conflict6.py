@@ -1,5 +1,6 @@
 from typing import Union
 class ConfigurationError(Exception):
+    pass
 
 class SchemaError(Exception):
     def __init__(self, detail: Union[str, dict]) ->None:

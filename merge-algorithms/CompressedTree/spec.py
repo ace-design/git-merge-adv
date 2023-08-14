@@ -210,6 +210,8 @@ class Python(Lang):
                     else :
                         formatted_imports.append(["import",f'{alias.name} as {alias.asname}',nod.lineno,nod.end_lineno])
             if isinstance(nod, ast.ImportFrom):
+                if nod.module == None:
+                    nod.module = '.'
                 for alias in nod.names:
                     if alias.asname == None :
                         formatted_imports.append([f"from {nod.module} import",alias.name,nod.lineno,nod.end_lineno])

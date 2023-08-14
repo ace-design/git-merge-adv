@@ -312,11 +312,11 @@ class BotPlugin(BotPluginBase):
             """
         self._bot.warn_admins(warning)
     
-    <<<<<<< left_content.py
+<<<<<<< left_content.py
     def send(self, user_or_room: Union[Identifier, Room], text: str,
-    =======
+=======
     def send(self, user_or_room: Union[Identifier, MUCRoom], text: str,
-    >>>>>>> right_content.py
+>>>>>>> right_content.py
         in_reply_to: Message=None, message_type: str=None, groupchat_nick_reply:
         bool=False) ->None:
         """

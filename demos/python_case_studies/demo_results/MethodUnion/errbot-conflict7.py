@@ -156,7 +156,21 @@ class TestMUCRoom(MUCRoom):
         self._bot._rooms.remove(self)
         log.info('Destroyed room {!s}'.format(self))
     
+    @topic.setter
+    def topic(self, topic):
+        self._topic = topic
+        room = self.find_croom()
+        room._topic = self._topic
+        log.info("Topic for room {!s} set to '{}'".format(self, topic))
+        self._bot.callback_room_topic(self)
     
+    @topic.setter
+    def topic(self, topic):
+        self._topic = topic
+        room = self.find_croom()
+        room._topic = self._topic
+        log.info("Topic for room {!s} set to '{}'".format(self, topic))
+        self._bot.callback_room_topic(self)
     
     def __unicode__(self):
         return self._name
@@ -280,15 +294,16 @@ class TestBackend(ErrBot):
     
 
 class ShallowConfig(object):
+    pass
 
 class TestBot(object):
     bot_thread = None
-    <<<<<<< left_content.py
+<<<<<<< left_content.py
     def __init__(self, extra_plugin_dir=None, loglevel=logging.DEBUG,
         extra_config=None):
         self.setup(extra_plugin_dir=extra_plugin_dir, loglevel=loglevel,
             extra_config=extra_config)
-    =======
+=======
     def __init__(self, extra_plugin_dir=None, loglevel=logging.DEBUG):
         """
             :param extra_plugin_dir: Path to a directory from which additional
@@ -310,7 +325,7 @@ class TestBot(object):
         config.BOT_EXTRA_PLUGIN_DIR = extra_plugin_dir
         config.BOT_LOG_LEVEL = loglevel
         self.bot_config = config
-    >>>>>>> right_content.py
+>>>>>>> right_content.py
     
     
     def start(self):

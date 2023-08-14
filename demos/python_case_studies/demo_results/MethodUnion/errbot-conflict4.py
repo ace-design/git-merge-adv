@@ -127,22 +127,22 @@ class ErrBot(Backend, StoreMixin):
                 :param groupchat_nick_reply:
                     authorized the prefixing with the nick form the user
             """
-    <<<<<<< left_content.py
+<<<<<<< left_content.py
         if not isinstance(user_or_room, (Room, Identifier)):
-    =======
+=======
         if not isinstance(user_or_room, (MUCRoom, Identifier)):
-    >>>>>>> right_content.py
+>>>>>>> right_content.py
             raise ValueError(
                 'user_or_room should be either a MUCRoom or an Identifier')
         mess = self.build_message(text)
         mess.to = user_or_room
         mess.frm = in_reply_to.to if in_reply_to else self.bot_identifier
         nick_reply = self.bot_config.GROUPCHAT_NICK_PREFIXED
-    <<<<<<< left_content.py
+<<<<<<< left_content.py
         if isinstance(user_or_room, Room
-    =======
+=======
         if isinstance(user_or_room, MUCRoom
-    >>>>>>> right_content.py
+>>>>>>> right_content.py
             ) and in_reply_to and nick_reply and groupchat_nick_reply:
             self.prefix_groupchat_reply(mess, in_reply_to.frm)
         self.split_and_send_message(mess)

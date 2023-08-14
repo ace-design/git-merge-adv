@@ -7,14 +7,14 @@ import logging
 import sys
 import os
 import pip
-from None import PY2
+from . import PY2
 from botplugin import BotPlugin
 from utils import version2array,PY3
 from templating import remove_plugin_templates_path,add_plugin_templates_path
 from version import VERSION
 from yapsy.PluginManager import PluginManager
 from core_plugins.wsview import route
-from None import holder
+from . import holder
 
 log = logging.getLogger(__name__)
 

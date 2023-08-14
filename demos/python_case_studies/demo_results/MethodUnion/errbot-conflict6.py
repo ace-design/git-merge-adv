@@ -39,11 +39,11 @@ class VersionChecker(BotPlugin):
                     'A new version %s has been found, notify the admins !' %
                     current_version)
                 self.warn_admins(
-    <<<<<<< left_content.py
+<<<<<<< left_content.py
                     'Version {0} of err is available. https://pypi.python.org/pypi/errbot/{0}. You can disable this check by doing !plugin blacklist VersionChecker'
-    =======
+=======
                     'Version {0} of err is available. http://pypi.python.org/pypi/errbot/{0}. You can disable this check by doing !plugin blacklist VersionChecker'
-    >>>>>>> right_content.py
+>>>>>>> right_content.py
                     .format(current_version_txt))
         except (HTTPError, URLError):
             self.log.info(

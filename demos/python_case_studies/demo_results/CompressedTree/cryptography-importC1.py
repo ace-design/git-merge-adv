@@ -19,8 +19,8 @@ from backends.test_multibackend import DummyCMACBackend
 from utils import (
     load_nist_vectors,
     load_vectors_from_file,
+    raises_unsupported_algorithm,
 )
-from tests.utils import raises_unsupported_algorithm
 from cryptography import utils
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

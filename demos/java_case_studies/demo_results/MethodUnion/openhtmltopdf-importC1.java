@@ -101,7 +101,8 @@ public class BlockBox extends Box implements InlinePaintable{
          */
         EMPTY,
 
-    }    protected static final int NO_BASELINE = Integer.MIN_VALUE;,
+    }    
+    protected static final int NO_BASELINE = Integer.MIN_VALUE;,
     private MarkerData _markerData;,
     private int _listCounter;,
     private PersistentBFC _persistentBFC;,

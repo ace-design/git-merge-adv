@@ -32,11 +32,12 @@ def main():
         output_path+=case_study
         exec_algo(algo,reference_path,output_path,lang)
 
-        run_gumtree_algo(reference_path,output_path,lang,algo)
-
         if (lang=="java"):
             run_gumtree_existing(reference_path,'jdime')
             run_gumtree_existing(reference_path,'spork_result')
+
+        run_gumtree_algo(reference_path,output_path,lang,algo)
+
     else:
         for subdir, dirs, files in os.walk(reference_path):
                 for d in dirs:
@@ -47,11 +48,12 @@ def main():
                             print(subdir.split('/'))
                             exec_algo(algo,os.path.join(subdir, d),added_output_path,lang)
 
-                            run_gumtree_algo(os.path.join(subdir,d),added_output_path,lang,algo)
-
                             if (lang=="java"):
                                 run_gumtree_existing(os.path.join(subdir,d),'jdime')
                                 run_gumtree_existing(os.path.join(subdir,d),'spork_result')
+
+                            run_gumtree_algo(os.path.join(subdir,d),added_output_path,lang,algo)
+
                     except Exception as e:
                         print(f"error in executing the casestudy {d} in {subdir}")
                         print(e)
@@ -333,6 +335,3 @@ def run_gumtree_algo(reference_path,output_path,lang,algo):
 
 if __name__=="__main__":
     main()
-
-
-

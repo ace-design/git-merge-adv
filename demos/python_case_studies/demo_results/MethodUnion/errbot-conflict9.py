@@ -36,14 +36,14 @@ class Plugins(BotPlugin):
         """ uninstall a plugin repository by name.
             """
         if not args.strip():
-    <<<<<<< left_content.py
+<<<<<<< left_content.py
             yield 'You should have a repo name as argument'
             return
         repos = self._bot.get(self._bot.REPOS, {})
-    =======
+=======
             return 'You should have a repo name as argument'
         repos = self._bot.get_installed_plugin_repos()
-    >>>>>>> right_content.py
+>>>>>>> right_content.py
         if args not in repos:
             yield 'This repo is not installed check with ' + self._bot.prefix + 'repos the list of installed ones'
             return
@@ -54,13 +54,13 @@ class Plugins(BotPlugin):
                 self._bot.remove_plugin(plugin)
         shutil.rmtree(plugin_path)
         repos.pop(args)
-    <<<<<<< left_content.py
+<<<<<<< left_content.py
         self[self._bot.REPOS] = repos
         yield 'Repo %s removed.' % args
-    =======
+=======
         self._bot.set_plugin_repos(repos)
         return 'Plugins unloaded and repo %s removed' % args
-    >>>>>>> right_content.py
+>>>>>>> right_content.py
     
     
     @botcmd(template='repos')

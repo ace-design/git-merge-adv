@@ -9,22 +9,22 @@ class App(object):
     built_in_commands = (commands.new, commands.run, commands.test, commands.
     create_tables)
     built_in_commands = commands.new, commands.run, commands.test
-    <<<<<<< left_content.py
+<<<<<<< left_content.py
     def __init__(self, routes: List[routing.Route]=None, commands: List[
         Callable]=None, settings: Dict[str, Any]=None) ->None:
         from apistar.settings import Settings
-    =======
+=======
     def __init__(self, routes=None, commands=None, db_engine_config=None):
-    >>>>>>> right_content.py
+>>>>>>> right_content.py
         routes = [] if routes is None else routes
         commands = [] if commands is None else commands
         self.routes = routes
         self.commands = list(self.built_in_commands) + commands
-    <<<<<<< left_content.py
+<<<<<<< left_content.py
         self.settings = Settings(settings or {})
-    =======
+=======
         self.db_engine_config = db_engine_config
-    >>>>>>> right_content.py
+>>>>>>> right_content.py
         self.router = routing.Router(self.routes)
         self.wsgi = get_wsgi_server(app=self)
         self.click = get_click_client(app=self)

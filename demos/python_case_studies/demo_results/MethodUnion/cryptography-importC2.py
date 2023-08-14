@@ -17,6 +17,7 @@ class DummyPadding(object):
     name = 'UNSUPPORTED-PADDING'
 
 class DummyMGF(object):
+    pass
 
 def _modinv(e, m):
     """

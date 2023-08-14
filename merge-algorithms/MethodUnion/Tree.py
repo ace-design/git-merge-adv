@@ -1,4 +1,4 @@
-from Node import Pack, End, Class, Comment
+from Node import Pack, End, Class, Comment,Method
 import merger
 from spec import Python
 
@@ -63,6 +63,7 @@ class Tree:
         self.method_ref=lang.get_method_ref()
         for method_val in self.method_ref.keys():
             result,sus,versions=self.base_algorithm(self.method_ref,method_val)
+            
             if (type(result) is str):
                 # self.method_ref[method_val][0].set_selected()
                 extra.append(method_val)
@@ -108,7 +109,10 @@ class Tree:
                     else:
                         return paths[1],False,versions_2
                 else:
-                    return paths[0],False,versions
+                    if (versions[0]=="base"):
+                        return paths[1],False,versions_2
+                    else:
+                        return paths[0],False,versions
             else:
                 if (versions[0]=="base"):
                     return paths[1],True,versions_2
