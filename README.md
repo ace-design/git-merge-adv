@@ -1,4 +1,13 @@
-
+<head>
+    <style>
+        h3{
+          margin-left:20px;
+        }
+        h4{
+          margin-left:30px;
+        }
+    </style>
+</head>
 
 <div align="center">
   <a href="https://github.com/ace-design">
@@ -20,6 +29,8 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#algorithm-prerequisites">Algorithm Prerequisites</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#git-integration">Integrate with Git</a></li>
       </ul>
     <li>
       <a href="#contacts">Contacts</a>
@@ -31,66 +42,71 @@
   </ol>
 </details>
 
-## Project Description
-
-### Rationale
-
-Source code merging has always been an issue for developers. When colloborating on complex projects, developers must inevitably use multiple branches, which is the cause for numerous merge conflicts. These conflicts often waste a lot of their time. 
-
-Existing 3-way merge algorithms developed by Git rely on textual difference, which often leads it to incorrectly resolve the conflicts or cause merge conflicts. 
-
-Other 3-way merge algorithms such as JDime or Spork take a strucutred approach which use Abstract Syntax Trees, however are limited in the scope in which they can be used.
-
-As such, our purpose is to develop a new 3-way merge algorithm that takes both a textual and strucutured approach.
-* To do so, we will be focusing mainly on the syntax of Python and Java code for now.
-
-### Built with:
-
-* Python
-* Java
+# Project Description
+  ## Rationale
+  Source code merging has always been an issue for developers. When colloborating on complex projects, developers must inevitably use multiple branches, which is the cause for numerous merge conflicts. These conflicts often waste a lot of their time. 
+  
+  Existing 3-way merge algorithms developed by Git rely on textual difference, which often leads it to incorrectly resolve the conflicts or cause merge conflicts. 
+  
+  Other 3-way merge algorithms such as JDime or Spork take a strucutred approach which use Abstract Syntax Trees, however are limited in the scope in which they can be used.
+  
+  As such, our purpose is to develop a new 3-way merge algorithm that takes both a textual and strucutured approach.
+    * To do so, we will be focusing mainly on the syntax of Python and Java code for now.
 
 
-## Getting Started
-
-### Algorithm Prerequisites
-
-* Run Algorithms:
-
-    `python3 <path to alg init.py> --left <left parent path> --right <right parent path> --base <base file path> --out <output file>`
+  ## Built with:
+  <ul>
+    <li>Python</li>
+    <li>Java</li>
+  </ul>
 
 
+# Getting Started
 
-## Set as Custom merge for git
+## Algorithm Prerequisites
+  <h4>Run Algorithms:</h4>
 
-- Create a .gitattributes file in your repo
-- add following lines to it
+  ```
+  python3 <path to alg init.py> --left <left parent path> --right <right parent path> --base <base file path> --out <output file>
+  ```
+
+## Usage:
+* The [extracting-scripts](extracting-scripts/) directory contains all the tools needed to extract case studies from various github repositories
+* The [merge-algorithms](merge-algorithms/) directory includes all the merge tools that were developed in this project. The two main tools being [CompressedTree](merge-algorithms/CompressedTree/) and [MethodUnion](merge-algorithms/MethodUnion).
+* The [demos](demos/) directory includes all the case studies that were tested, and the overall results obtained from this project.
+
+
+## Git-Integration
+
+  1. Create a .gitattributes file in your repo 
+  2. add following lines to it
+
   ```
   *.java merge=gitadv
   *.py merge=gitadv 
   ```
-- Run command `git config --global --edit`
-- Add following lines to config file
+
+
+  3. Run command `git config --global --edit`
+  4. Add following lines to config file
 
   ```
   [merge "gitadv"]
   name = gitadv
   driver = python3 /path/to/repo/git-merge-adv/merge-algorithms/CompressedTree/init.py --left %A --right %B --base %O --output %A --file %P
   ```
-- Now the custom script would be used for merge instead of the git's default.
 
-## Contacts
+# Contacts
+  <ul>
+    <li>Sebastien Mosser - mossers@mcmaster.ca</li>
+    <li>Madhur Jain - 21112002mj@gmail.com</li>
+    <li>Nirmal Chaudhari - chaudn12@mcmaster.ca</li>
+  </ul>
 
-* Sebastien Mosser - mossers@mcmaster.ca
-* Madhur Jain - 21112002mj@gmail.com
-* Nirmal Chaudhari - chaudn12@mcmaster.ca
-
-
-## Acknowledgements
+# Acknowledgements
 * Parts of scripts obtained from [https://github.com/ace-design/git-corpus]
-* All projects chosen from Java Awesome List: [https://github.com/akullpp/awesome-java]
-* Cucumber Test Cases [https://github.com/cucumber/cucumber-jvm]
-* TwelveMonkeys Test Cases [https://github.com/haraldk/TwelveMonkeys]
-* OpenHTMLtoPDF Test cases [https://github.com/danfickle/openhtmltopdf]
+* All Case Studies for Java obtained from Awesome Java List: [https://github.com/akullpp/awesome-java]
+* All Case Studies for Python Obtained from Awesome Python List:[https://github.com/vinta/awesome-python]
 
 
 ## Licence

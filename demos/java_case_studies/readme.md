@@ -16,33 +16,13 @@ Our focus on Java will provide us with specific syntax that we can use to develo
 * `spork_result.java`: Version of file after spork tried to handle.
 * `jdime.java`: Version of file after jdime tried to handle.
 
-## Case Study Analysis:
-
-### Inaccurate Cases
-
-Case Study: | Overall: | Reason:
---- | --- | --- |
-antlr4/importC4 | 54.78 | Deletions, Insertions
-antlr4/importC8 | 19.15 | Insertions
-aws/conflict1 | 31.78 | Deletions,Insertions
-aws/conflict3 | 21.05 | Insertions
-camus/conflict2 | 29.31 | Insertions, Moves
-duke/conflict2 | 23.30 | Insertions, Moves
-mongojack/conflict1 | 56.12 | Insertions, Moves
-openhtmltopdf/importC1 | 142.31 | Insertions, Deletions
-openshift-java-client/conflict9 | 139.19 | Insertions, Deletions, Moves
-openshift-java-client/conflict10 | 73.46 | Deletions, Insertions, Moves, Diff_Path
-openshift-java-client/conflict12 | 190.06 | Deletions, Insertions, Moves, Diff_Path
-openshift-java-client/conflict15 | 276.83 | All
-stateless4j/conflict3 | 45.21 | Insertions
 
 ## Next Steps:
 
-* Implement interface merge: All "broken" cases for Java are associated with interface.
+* Use the class identifier as the reference for all methods, instead of full class declaration.
 * Selective union between methods with same name but signature (currently just unions all methods with slightly different signature).
 * Work on ordering of methods and comments. General ordering is accurate for the most part, but large number of moves.
 * Merging segments within methods (sequential sets). Currently out of our scope.
-
 
 ## Prerequisites:
 
