@@ -1,10 +1,21 @@
 # Java Demos
 
-## Rationale
+## Rationale:
 
 Analysis of case studies from credible, and well-developed projects help us obtain quality results that we can use to further support our project development.
 
 Our focus on Java will provide us with specific syntax that we can use to develop a lower level algorithm. 
+
+## Results:
+
+![Java Comparison](images/Comparison.png)
+
+Tool | Deletions | Insertions | Moves | Diff Paths | Num Conflicts | Num Errors | Overall |
+--- | --- | --- | --- |--- |--- |--- |--- |
+CompressedTree | 484 | 864 | 517 | 129 | 134 | 0 | 1132.54 |
+MethodUnion | 612 | 1312 | 659 | 103 | 67 | 0 | 1595.39 |
+Spork | 1027 | 2208 | 1546 | 179 | 96 | 0 | 2891.60 |
+jDime | 1133 | 1163 | 790 | 330 | 119 | 0 | 1839.41 |
 
 ## Pre-requisites:
 

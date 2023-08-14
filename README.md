@@ -1,13 +1,3 @@
-<head>
-    <style>
-        h3{
-          margin-left:20px;
-        }
-        h4{
-          margin-left:30px;
-        }
-    </style>
-</head>
 
 <div align="center">
   <a href="https://github.com/ace-design">
@@ -51,7 +41,7 @@
   Other 3-way merge algorithms such as JDime or Spork take a strucutred approach which use Abstract Syntax Trees, however are limited in the scope in which they can be used.
   
   As such, our purpose is to develop a new 3-way merge algorithm that takes both a textual and strucutured approach.
-    * To do so, we will be focusing mainly on the syntax of Python and Java code for now.
+  * To do so, we will be focusing mainly on the syntax of Python and Java code for now.
 
 
   ## Built with:
