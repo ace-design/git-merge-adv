@@ -40,9 +40,8 @@
   
   Other 3-way merge algorithms such as JDime or Spork take a strucutred approach which use Abstract Syntax Trees, however are limited in the scope in which they can be used.
   
-  As such, our purpose is to develop a new 3-way merge algorithm that takes both a textual and strucutured approach.
-  * To do so, we will be focusing mainly on the syntax of Python and Java code for now.
-
+  As such, our purpose is to develop a new 3-way merge tool for Python and Java Source Code. 
+  
   ## Developed Data Structure
   Mainly focused on Java & Python code to develop a general data structure that can represent statically & dynamically typed languages. 
 
@@ -50,9 +49,9 @@
 
   This is relevant to CompressedTree and MethodUnion tools.
 
-  <Center>
+<div align="center">
     <img src="images/legend.png"  width="250" height="150"> </img>
-  </Center>
+</div>
 
   ![ADT](images/DataStructure.png)
 
@@ -60,12 +59,12 @@
 
   Our tools use the following heuristics:
 
-  <Center>
-      <img src="images/SameVersions.png"  width="300" height="300"> </img>
-      <img src="images/TwoVersions.png"  width="400" height="300"> </img>
-      <img src="images/NoVersions.png"  width="400" height="100"> </img>
+<div align="center">
+  <img src="images/SameVersions.png"  width="300" height="300"> </img>
+  <img src="images/TwoVersions.png"  width="400" height="300"> </img>
+  <img src="images/NoVersions.png"  width="400" height="100"> </img>
+</div>
 
-  </Center>
 
 
   ## Built with:
@@ -76,8 +75,8 @@
 
 # Getting Started
 
-## Algorithm Prerequisites
-  <h4>Run Algorithms:</h4>
+## Tool Prerequisites
+  <h4>Run Tools:</h4>
 
   ```
   python3 <path to alg init.py> --left <left parent path> --right <right parent path> --base <base file path> --out <output file>
@@ -122,6 +121,7 @@
 * Parts of scripts obtained from [https://github.com/ace-design/git-corpus]
 * All Case Studies for Java obtained from Awesome Java List: [https://github.com/akullpp/awesome-java]
 * All Case Studies for Python Obtained from Awesome Python List:[https://github.com/vinta/awesome-python]
+* CST generated using Tree-Sitter [https://github.com/tree-sitter/tree-sitter]
 
 
 # Licence

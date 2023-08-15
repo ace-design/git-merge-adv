@@ -76,6 +76,14 @@ The overall accuracy is measured as the vector distance from the desired version
 
 ## Prerequisites:
 
+### &nbsp; Usage:
+* The [dependencies](dependencies/) folder contains the gumtree jar file, and pythonparser, which are needed for code differencing.
+* The [scripts](scripts/) folder contains all the scripts used to run the case studies for Java and Python.
+* The [java_case_studies](java_case_studies/) and [python_case_studies](python_case_studies/) folders contaiins all the case studies for Java & Python respectively. 
+    *  In that, [demo_results](java_case_studies/demo_results/) contains all the generarted file for each tool that is run. It also contains the csv files for each tool which show the result of gumtree on each case study.
+    * The [reference_repos](java_case_studies/reference_repos/) contains all the associated files for each case study organized by parent repository.
+    * The [images](java_case_studies/images/) contains the graphs for each tool comparison.
+
 ### &nbsp; Script Commands:
 
 > run_algo.py:
