@@ -1,13 +1,17 @@
 import logging
+import sys
+import unittest
 from os.path import sep,abspath
 from queue import Queue
 from tempfile import mkdtemp
 from threading import Thread
+import pytest
 from errbot.rendering import text
 from errbot.backends.base import Message,MUCRoom,Identifier,MUCIdentifier,ONLINE
 from errbot.core_plugins.wsview import reset_app
 from errbot.errBot import ErrBot
 from errbot.main import setup_bot
+import importlib
 log = logging.getLogger('errbot.backends.test')
 
 QUIT_MESSAGE = '$STOP$'
@@ -156,7 +160,21 @@ class TestMUCRoom(MUCRoom):
         self._bot._rooms.remove(self)
         log.info('Destroyed room {!s}'.format(self))
     
+    @topic.setter
+    def topic(self, topic):
+        self._topic = topic
+        room = self.find_croom()
+        room._topic = self._topic
+        log.info("Topic for room {!s} set to '{}'".format(self, topic))
+        self._bot.callback_room_topic(self)
     
+    @topic.setter
+    def topic(self, topic):
+        self._topic = topic
+        room = self.find_croom()
+        room._topic = self._topic
+        log.info("Topic for room {!s} set to '{}'".format(self, topic))
+        self._bot.callback_room_topic(self)
     
     def __unicode__(self):
         return self._name

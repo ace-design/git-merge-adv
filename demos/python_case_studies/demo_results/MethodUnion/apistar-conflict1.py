@@ -1,6 +1,7 @@
 import inspect
 from collections import OrderedDict
 from typing import Any,Callable,Dict,Iterator,List,Mapping,Set
+import click
 from apistar import commands as cmd
 from apistar import pipelines
 from apistar import routing

@@ -1,7 +1,9 @@
 import hashlib
+import hmac
 from compat import binary_type,constant_time_compare,is_string_type,string_types
 from exceptions import InvalidKeyError
 from utils import der_to_raw_signature,raw_to_der_signature,base64url_decode,base64url_encode,force_bytes,force_unicode,from_base64url_uint,to_base64url_uint
+import json
 
 
 

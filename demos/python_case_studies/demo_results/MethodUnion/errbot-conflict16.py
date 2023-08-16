@@ -1,8 +1,11 @@
 import logging
+import sys
+import unittest
 from os.path import sep,abspath
 from queue import Queue
 from tempfile import mkdtemp
 from threading import Thread
+import pytest
 from errbot.backends.base import (
     Message,
     build_message,

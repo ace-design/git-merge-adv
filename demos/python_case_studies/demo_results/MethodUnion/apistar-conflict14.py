@@ -1,5 +1,6 @@
 import inspect
 from collections import OrderedDict
+import click
 from apistar import commands,pipelines,routing,schema
 from apistar.db import DBBackend
 from typing import Any,Callable,Dict,List

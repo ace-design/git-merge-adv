@@ -1,7 +1,12 @@
 import datetime
+import sys
 from types import MethodType
 from datashape import dshape
 from datashape.util.testing import assert_dshape_equal
+import pandas as pd
+import pandas.util.testing as tm
+import pytest
+import numpy as np
 from odo import append,into
 from odo.backends.csv import CSV
 from blaze import discover,transform
@@ -9,6 +14,7 @@ from blaze.compatibility import pickle
 from blaze.expr import symbol
 from blaze.interactive import Data,compute,concrete_head,expr_repr,to_html,data,iscorescalar,iscoresequence,iscoretype,coerce_core
 from blaze.utils import tmpfile,example
+import dask.array as da
 tdata = ('Alice', 100), ('Bob', 200)
 
 data = ('Alice', 100), ('Bob', 200)

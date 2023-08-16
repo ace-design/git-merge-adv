@@ -1,4 +1,5 @@
 import os.path
+import typing
 from mypy.myunit import Suite,AssertionFailure,run_test
 from mypy.test.helpers import assert_string_arrays_equal
 from mypy.test.data import parse_test_cases

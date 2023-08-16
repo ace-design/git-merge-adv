@@ -2,6 +2,7 @@ import abc
 from core import Machine
 from core import Transition
 from nesting import NestedState
+import logging
 
 try:
     import pygraphviz as pgv

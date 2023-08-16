@@ -1,6 +1,8 @@
 import logging
+import sys
 from errbot.backends.base import Message,build_message,Identifier,Presence,ONLINE,OFFLINE,MUCRoom,MUCOccupant
 from errbot.errBot import ErrBot
+import config
 from errbot.utils import deprecated
 ENCODING_INPUT = sys.stdin.encoding
 

@@ -1,4 +1,8 @@
 import json
+import logging
+import re
+import time
+import sys
 from errbot import PY3,holder
 from errbot.backends.base import (
     Message,

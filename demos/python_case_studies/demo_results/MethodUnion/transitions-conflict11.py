@@ -1,4 +1,8 @@
 import inspect
+import itertools
+import logging
+import sys
+import warnings
 from collections import OrderedDict,defaultdict,deque
 from functools import partial
 from six import string_types

@@ -1,5 +1,10 @@
 import base64
 from hashlib import sha1
+import time
+import random
+import hmac
+import binascii
+import httplib2
 from _compat import PY3
 from _compat import b
 from _compat import parse_qs

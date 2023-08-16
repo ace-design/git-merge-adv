@@ -1,4 +1,6 @@
 import cgi
+import os.path
+import re
 from typing import Any,Dict,List,cast,Tuple
 from mypy.traverser import TraverserVisitor
 from mypy.types import (

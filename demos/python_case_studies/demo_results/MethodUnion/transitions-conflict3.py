@@ -1,6 +1,11 @@
 import itertools
+import logging
+import asyncio
+import contextvars
+import inspect
 from collections import defaultdict,deque
 from functools import partial,reduce
+import copy
 from core import State,Condition,Transition,EventData,listify,Event,MachineError,Machine
 from nesting import HierarchicalMachine,NestedState,NestedEvent,NestedTransition,_resolve_order
 """

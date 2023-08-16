@@ -248,7 +248,7 @@ def run_gumtree_existing(reference_path,tool):
     import_data,import_total=search_gumtree_imports(result)
     search_gumtree_full(result,new,num_conflicts,import_data,import_total,reference_path.split('/')[-2]+'-'+reference_path.split('/')[-1])
 
-    subprocess.run(['rm',new_result])
+    # subprocess.run(['rm',new_result])
 
 
 
@@ -315,13 +315,15 @@ def run_gumtree_algo(reference_path,output_path,lang,algo):
         case "py":
             all_result=subprocess.run(['java','-jar',gumtree_path,'textdiff','-m','theta',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
             import_data,import_total=search_gumtree_imports(all_result)
+            print(desired)
+            print(new_result)
             body_result=subprocess.run(['java','-jar',gumtree_path,'textdiff','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
             search_gumtree_full(body_result,new,num_conflicts,import_data,import_total,result.split('/')[-1])
         case "java":
             all_result=subprocess.run(['java','-jar',gumtree_path,'textdiff','-g','java-jdt','-m','gumtree-simple-id',desired,new_result],capture_output=True,text=True).stdout.strip("/n").split("===")
             import_data,import_total=search_gumtree_imports(all_result)
             search_gumtree_full(all_result,new,num_conflicts,import_data,import_total,result.split('/')[-1])
-    subprocess.run(['rm',new_result])
+    # subprocess.run(['rm',new_result])
 
 
 if __name__=="__main__":

@@ -1,6 +1,8 @@
 import os
 from collections import OrderedDict
+import click
 from apistar import commands,routing,pipelines,schema
+import inspect
 class App(object):
     built_in_commands = commands.new, commands.run, commands.test
     def __init__(self, routes=None, commands=None):

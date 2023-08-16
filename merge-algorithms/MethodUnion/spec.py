@@ -532,6 +532,7 @@ class Python(Lang):
                 import_nodes.append(nod)
             elif isinstance(nod, ast.ImportFrom):
                 import_nodes.append(nod)
+
         return import_nodes
     
 
@@ -565,7 +566,7 @@ class Python(Lang):
         return formatted_imports,restofCode
     
 
-    def output_imports(self,node,string,target,formatter = ""):
+    def output_imports(self,node,string,target,sus,formatter = ""):
         # Finds the specified target node in the tree
         for item in node.get_children():
             formatter = copy.deepcopy(formatter)
@@ -585,12 +586,16 @@ class Python(Lang):
             dup+=item.get_full_dir()
             if (type(item)==Pack):
                 dup+=" "
-                self.output_imports(item,dup,target,formatter)
+                self.output_imports(item,dup,target,sus,formatter)
                 formatter = ''
             elif (item==target):
                 if formatter == "":
 
                     top_body.append(dup)
+                    # if ("pandas" in target.get_full_dir()):
+                    #     print(target.get_full_dir())
+                    #     print(item.get_full_dir())
+                    #     print("WORKS")
                 else:
                     for i,imp in enumerate(top_body):
                         if theprefix in imp:

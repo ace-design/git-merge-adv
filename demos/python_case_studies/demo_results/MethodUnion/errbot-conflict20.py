@@ -1,7 +1,12 @@
 import logging
+import sys
 from errbot.utils import mess_2_embeddablehtml
+import os
+import errbot
 from errbot.backends.base import Message,build_text_html_message_pair,Identifier
 from errbot.errBot import ErrBot
+import re
+import config
 from config import BOT_DATA_DIR,BOT_PREFIX
 from errbot.backed.text import TextBackend
 

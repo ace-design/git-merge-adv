@@ -1,5 +1,4 @@
 import sys
-import tempfile
 from os.path import getsize
 from os import unlink
 from transitions.extensions.nesting import NestedState
@@ -627,22 +626,6 @@ class TestNestedTransitions(TestTransitions):
         machine = self.machine_cls(states=states, queued=True, initial='b')
         machine.to_b_c()
 
-<<<<<<< left_content.py
-    def test_machine_may_transitions_for_generated_triggers(self):
-        states = ['A', 'B', {'name': 'C', 'children': ['1', '2', '3']}, 'D']
-        m = self.stuff.machine_cls(states=states, initial='A')
-        assert m.may_to_A()
-        m.to_A()
-        assert m.may_to_B()
-        m.to_B()
-        assert m.may_to_C()
-        m.to_C()
-        assert m.may_to_C_1()
-        m.to_C_1()
-        # TODO: no transitions for to_D from C_1 -> D but m.to_D() works
-        assert m.may_to_D()
-        m.to_D()
-=======
     def test_get_nested_triggers(self):
         transitions = [
             ['goB', 'A', 'B'],
@@ -658,7 +641,6 @@ class TestNestedTransitions(TestTransitions):
         self.assertEqual(len(transitions) + 1, len(m.get_nested_triggers()))
         self.assertEqual(2, len(m.get_nested_triggers(['C', '1'])))
         self.assertEqual(2, len(m.get_nested_triggers(['C'])))
->>>>>>> right_content.py
 
 
 class TestSeparatorsBase(TestCase):
@@ -875,4 +857,5 @@ class TestSeparatorsDot(TestSeparatorsBase):
 @skipIf(sys.version_info[0] < 3, "Unicode separators are only supported for Python 3")
 class TestSeparatorUnicode(TestSeparatorsBase):
     separator = u'↦'
+
 

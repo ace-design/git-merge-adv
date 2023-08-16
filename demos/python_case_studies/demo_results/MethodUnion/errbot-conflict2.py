@@ -1,4 +1,10 @@
 import collections
+import json
+import logging
+import re
+import time
+import sys
+import pprint
 from errbot.backends.base import (
     Message,
     Presence,
