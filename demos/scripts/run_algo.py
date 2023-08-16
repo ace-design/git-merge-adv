@@ -122,7 +122,6 @@ def search_gumtree_full(result,new,num_conflicts,existing_data, existing_total,o
     syntax_error=False
 
     if (len(result)==1 and result[0]==''):
-        print('hi')
         syntax_error=True
 
     dict={
@@ -165,7 +164,6 @@ def search_gumtree_full(result,new,num_conflicts,existing_data, existing_total,o
         for key in data.keys():
             df.loc[df['project']==output, key]=data[key]
         if syntax_error:
-            print('hi')
             df.loc[df['project']==output, 'overall']='Error'
         else:
             df.loc[df['project']==output, 'overall']=total
@@ -187,7 +185,6 @@ def search_gumtree_full(result,new,num_conflicts,existing_data, existing_total,o
 
 
     if syntax_error:
-        print('hi')
         raise RuntimeError("Error in gumtree. Two possible reasons:\n 1. PythonParser not configured (see readme) \n 2. Syntax error in desired files preventing gumtree from running (solve errors manually, then try again)")
 
     
@@ -257,7 +254,6 @@ def run_gumtree_existing(reference_path,tool):
 
 # Compares inputted algorithm version to desired version. 
 def run_gumtree_algo(reference_path,output_path,lang,algo):
-    print("ALGOOO")
     if ('java_case_studies' in reference_path):
         gumtree_path=reference_path.split("java_case_studies")[0]+'dependencies/gumtree.jar'
     else:
@@ -292,8 +288,6 @@ def run_gumtree_algo(reference_path,output_path,lang,algo):
                 if (">>>>>>>" in line):
                     start=False
                     divider=False
-                    print(current_sim)
-                    print(incoming_sim)
                     if (current_sim>incoming_sim):
                         for val in current_text:
                             writer.write(val+'\n')
