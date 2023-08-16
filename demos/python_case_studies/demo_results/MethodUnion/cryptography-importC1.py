@@ -19,8 +19,8 @@ from backends.test_multibackend import DummyCMACBackend
 from utils import (
     load_nist_vectors,
     load_vectors_from_file,
+    raises_unsupported_algorithm,
 )
-from tests.utils import raises_unsupported_algorithm
 from cryptography import utils
 vectors_aes128 = load_vectors_from_file('CMAC/nist-800-38b-aes128.txt',
     load_nist_vectors)
