@@ -7,6 +7,7 @@ import os
 import copy
 import re
 import astor
+import subprocess
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
@@ -473,8 +474,7 @@ class Java(Lang):
 
                 comment_obj=Comment(comment[0].text.decode(),main_class,index,starting_line)
                 class_ref[main_class.strip(" ")].add_comment(comment_obj)
-            # elif (comment[0].type=="line_comment"):
-            #     print(comment[0].parent.parent.children)
+
     
 
         return bottom_body
@@ -592,10 +592,6 @@ class Python(Lang):
                 if formatter == "":
 
                     top_body.append(dup)
-                    # if ("pandas" in target.get_full_dir()):
-                    #     print(target.get_full_dir())
-                    #     print(item.get_full_dir())
-                    #     print("WORKS")
                 else:
                     for i,imp in enumerate(top_body):
                         if theprefix in imp:
@@ -778,7 +774,12 @@ class Python(Lang):
                 classcode = classcode+ (astor.to_source(classobj.node)).split("\n")[0]+'\n'
             else:
                 temp = (astor.to_source(classobj.node)).split("\n")
-                classcode = classcode+ (temp)[0]+'\n'+temp[1]+'\n'
+                index=0
+                while ('class' not in temp[index]):
+                    classcode+=temp[index]+'\n'
+                    index+=1
+                classcode+=temp[index]+'\n'
+                # classcode = classcode+ (temp)[0]+'\n'+temp[1]+'\n'+temp[2]+'\n'+temp[3]+'\n'
 
             pass_class=True
             for i in classobj.declarations:
@@ -789,8 +790,6 @@ class Python(Lang):
                     if mo.selected == True:
                         methodcode = mo.full_method
                         pass_class=False
-                # print(methodcode)
-                # print(add_indent(methodcode,indent))
                 classcode = classcode + add_indent(methodcode,indent)+'\n'
             if (pass_class):
                 classcode=classcode+indent+"pass\n"
