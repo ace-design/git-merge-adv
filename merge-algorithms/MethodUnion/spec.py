@@ -7,7 +7,6 @@ import os
 import copy
 import re
 import astor
-import subprocess
 
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
