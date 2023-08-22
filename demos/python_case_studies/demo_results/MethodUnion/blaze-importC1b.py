@@ -8,12 +8,12 @@ import pandas.util.testing as tm
 import pytest
 import numpy as np
 import dask.array as da
-from odo import append
+from odo import into,append
 from odo.backends.csv import CSV
 from blaze import discover,transform
 from blaze.compatibility import pickle
 from blaze.expr import symbol
-from blaze.interactive import data,compute,concrete_head,expr_repr,to_html,iscoretype,coerce_core,Data,iscorescalar,iscoresequence,into
+from blaze.interactive import data,compute,concrete_head,expr_repr,to_html,iscoretype,coerce_core,Data,iscorescalar,iscoresequence
 from blaze.utils import tmpfile,example
 data = ('Alice', 100), ('Bob', 200)
 

@@ -75,6 +75,17 @@
 
 # Getting Started
 
+## Required Modules
+
+* Before using any tool or any script in this repository, you will need to install all the necessary python modules given in [requirements.txt](requirements.txt).
+
+      pip3 install -r requirements.txt
+
+## Usage
+* The [extracting-scripts](extracting-scripts/) directory contains all the tools needed to extract case studies from various github repositories
+* The [merge-algorithms](merge-algorithms/) directory includes all the merge tools that were developed in this project. The two main tools being [CompressedTree](merge-algorithms/CompressedTree/) and [MethodUnion](merge-algorithms/MethodUnion).
+* The [demos](demos/) directory includes all the case studies that were tested, and the overall results obtained from this project.
+
 ## Tool Prerequisites
   <h4>Run Tools:</h4>
 
@@ -83,12 +94,6 @@
   ```
 
   * Assumption: Input files are of correct syntax. Tools will not work with incorrect syntax. 
-
-## Usage:
-* The [extracting-scripts](extracting-scripts/) directory contains all the tools needed to extract case studies from various github repositories
-* The [merge-algorithms](merge-algorithms/) directory includes all the merge tools that were developed in this project. The two main tools being [CompressedTree](merge-algorithms/CompressedTree/) and [MethodUnion](merge-algorithms/MethodUnion).
-* The [demos](demos/) directory includes all the case studies that were tested, and the overall results obtained from this project.
-
 
 ## Git-Integration
 

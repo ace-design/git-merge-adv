@@ -48,9 +48,9 @@ def main():
                             print(subdir.split('/'))
                             exec_algo(algo,os.path.join(subdir, d),added_output_path,lang)
 
-                            # if (lang=="java"):
-                            #     run_gumtree_existing(os.path.join(subdir,d),'jdime')
-                            #     run_gumtree_existing(os.path.join(subdir,d),'spork_result')
+                            if (lang=="java"):
+                                run_gumtree_existing(os.path.join(subdir,d),'jdime')
+                                run_gumtree_existing(os.path.join(subdir,d),'spork_result')
 
                             run_gumtree_algo(os.path.join(subdir,d),added_output_path,lang,algo)
 

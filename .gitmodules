@@ -1,0 +1,9 @@
+[submodule "merge-algorithms/MethodUnion/dependencies/tree-sitter-java"]
+	path = merge-algorithms/MethodUnion/dependencies/tree-sitter-java
+	url = git@github.com:tree-sitter/tree-sitter-java.git
+[submodule "merge-algorithms/CompressedTree/dependencies/tree-sitter-java"]
+	path = merge-algorithms/CompressedTree/dependencies/tree-sitter-java
+	url = git@github.com:tree-sitter/tree-sitter-java.git
+[submodule "demos/dependencies/pythonparser"]
+	path = demos/dependencies/pythonparser
+	url = git@github.com:GumTreeDiff/pythonparser.git

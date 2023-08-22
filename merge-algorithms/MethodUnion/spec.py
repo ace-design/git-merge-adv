@@ -11,12 +11,16 @@ import astor
 # spec.py is used as a space to extract import statements, and format the results specific to each language. 
 # It acts as the adapter to the import algorithm.
 
+path=''
 
 # Obtains path to already cloned tree-sitter-java repo (from CompressedTree)
 for dirpath, dirnames, filenames in os.walk('../'):
     for name in dirnames:
         if (name=='tree-sitter-java'):
             path=dirpath
+            break
+    if (path!=''):
+        break
 
 # Dependencies required by tree-sitter for Java code. 
 ## For extention to more languages, add languages in similar format, and clone language repo where you execute script from. 
