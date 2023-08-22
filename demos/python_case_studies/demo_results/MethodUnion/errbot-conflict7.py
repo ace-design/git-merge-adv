@@ -160,21 +160,7 @@ class TestMUCRoom(MUCRoom):
         self._bot._rooms.remove(self)
         log.info('Destroyed room {!s}'.format(self))
     
-    @topic.setter
-    def topic(self, topic):
-        self._topic = topic
-        room = self.find_croom()
-        room._topic = self._topic
-        log.info("Topic for room {!s} set to '{}'".format(self, topic))
-        self._bot.callback_room_topic(self)
     
-    @topic.setter
-    def topic(self, topic):
-        self._topic = topic
-        room = self.find_croom()
-        room._topic = self._topic
-        log.info("Topic for room {!s} set to '{}'".format(self, topic))
-        self._bot.callback_room_topic(self)
     
     def __unicode__(self):
         return self._name
