@@ -1,4 +1,4 @@
-from Node import Pack, End, Class, Comment,Method
+from Node import Pack, End, Class, Comment
 import merger
 from spec import Python
 

@@ -51,9 +51,9 @@
 
 <div align="center">
     <img src="images/legend.png"  width="250" height="150"> </img>
+    <img src="images/DataStructure.png"  width="600" height="250"> </img>
 </div>
 
-  ![ADT](images/DataStructure.png)
 
   ## Selective Set Union
 
