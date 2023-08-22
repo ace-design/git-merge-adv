@@ -14,8 +14,8 @@ Our secondary focus on Python will provide us with specific syntax that we can u
 
 Tool | Deletions | Insertions | Moves | Diff Paths | Num Conflicts | Num Errors | Overall |
 --- | --- | --- | --- |--- |--- |--- |--- |
-CompressedTree | 383 | 350 | 301 | 170 | 100 | 0 | 631.42 |
-MethodUnion | 714 | 602 | 452 | 504 | 93 | 1 | 1158.05 |
+CompressedTree | 301 | 298 | 270 | 134 | 99 | 0 | 529.21 |
+MethodUnion | 666 | 668 | 472 | 578 | 93 | 0 | 1206.3 |
 
 ### Interesting Cases
 

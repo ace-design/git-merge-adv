@@ -12,14 +12,18 @@
     <li>
       <a href="#project-description">Project Description</a>
         <ul>
-        <li><a href="#Rationale">Rationale</a></li>
-      </ul>
+          <li><a href="#rationale">Rationale</a></li>
+          <li><a href="#developed-data-structure">Developed Data Structure</a></li>
+          <li><a href="#selective-set-union">Selective Set Union</a></li>
+          <li><a href="#built-with">Built With</a></li>
+        </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#algorithm-prerequisites">Algorithm Prerequisites</a></li>
+        <li><a href="#required-modules">Required Modules</a></li>
         <li><a href="#usage">Usage</a></li>
+        <li><a href="#tool-prerequisites">Tool Prerequisites</a></li>
         <li><a href="#git-integration">Integrate with Git</a></li>
       </ul>
     <li>
