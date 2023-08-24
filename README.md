@@ -81,9 +81,13 @@
 
 ## Required Modules
 
-* Before using any tool or any script in this repository, you will need to install all the necessary python modules given in [requirements.txt](requirements.txt).
+* Before using any tool or any script, install all the dependencies using `pipenv`
 
-      pip3 install -r requirements.txt
+      pipenv install
+
+* Then, start a pipenv shell from which you can navigate the project, and run any scripts:
+
+      pipenv shell
 
 ## Usage
 * The [extracting-scripts](extracting-scripts/) directory contains all the tools needed to extract case studies from various github repositories

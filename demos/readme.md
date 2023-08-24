@@ -120,6 +120,20 @@ python3 run_analysis.py --dir <path to case study>
 &nbsp; &nbsp; &nbsp; Flags:
 * dir: Enter the path to the directory 
 
+> run_diff.py:
+
+&nbsp; &nbsp; &nbsp; Purpose:
+* To document the git difference between all relevant files for each case study. This includes base vs left, base vs right, left vs right, desired vs spork, desired vs jdime and desired vs our generated file.
+* The difference will measure the overall structural similarities between all files. 
+
+&nbsp; &nbsp; &nbsp; Execution:
+```
+python3 run_diff.py --lang <python or java>
+```
+
+&nbsp; &nbsp; &nbsp; Flags:
+* lang: Enter the language of associated case studies (python or java case studies)
+
 ### &nbsp; Gumtree Commands:
 
 > Python Execution:
