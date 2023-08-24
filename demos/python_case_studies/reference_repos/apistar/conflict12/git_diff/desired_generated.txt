@@ -1,0 +1,47 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict12/desired.py b/python_case_studies/demo_results/MethodUnion/apistar-conflict12.py
+index 34dac21..036d0d5 100644
+--- a/python_case_studies/reference_repos/apistar/conflict12/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/apistar-conflict12.py
+@@ -1,16 +1,16 @@
+ import inspect
+ import traceback
+ from collections import namedtuple
+-from typing import Any, Callable, Dict, List, Tuple  # noqa
+-
++from typing import Any,Callable,Dict,List,Tuple
+ import werkzeug
+ from uritemplate import URITemplate
+-from werkzeug.routing import Map, Rule
++from werkzeug.routing import Map,Rule
+ from werkzeug.serving import is_running_from_reloader
+-
+-from apistar import exceptions, http, pipelines, schema, wsgi
++from apistar import app,exceptions,http,pipelines,schema,wsgi
+ from apistar.db import DBBackend
+-from apistar.pipelines import ArgName, Pipeline
++from apistar.pipelines import ArgName,Pipeline
++
++
+ 
+ # TODO: Path
+ # TODO: Redirects
+@@ -52,9 +52,12 @@ RouterLookup = Tuple[Callable, Pipeline, URLPathArgs]
+ class Router(object):
+     def __init__(self, routes: List[Route], initial_types: List[type]=None) -> None:
+         required_type = wsgi.WSGIResponse
+-
++<<<<<<< left_content.py
++        initial_types = [DBBackend, app.App, wsgi.WSGIEnviron, URLPathArgs, Exception]
++=======
+         initial_types = initial_types or []
+-        initial_types += [DBBackend, wsgi.WSGIEnviron, URLPathArgs, Exception]
++        initial_types += [wsgi.WSGIEnviron, URLPathArgs, Exception]
++>>>>>>> right_content.py
+ 
+         rules = []
+         views = {}
+@@ -147,3 +150,4 @@ def exception_handler(environ: wsgi.WSGIEnviron, exc: Exception) -> http.Respons
+ 
+     message = traceback.format_exc()
+     return http.Response(message, 500, {'Content-Type': 'text/plain; charset=utf-8'})
++

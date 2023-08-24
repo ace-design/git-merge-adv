@@ -1,0 +1,14 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict1/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict1.py
+index 1b13704..b175800 100644
+--- a/python_case_studies/reference_repos/transitions/conflict1/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict1.py
+@@ -2,4 +2,9 @@
+     to determine transitions' version during runtime.
+ """
+ 
++<<<<<<< left_content.py
++__version__ = '0.8.11'
++=======
+ __version__ = '0.9.0'
++>>>>>>> right_content.py
++

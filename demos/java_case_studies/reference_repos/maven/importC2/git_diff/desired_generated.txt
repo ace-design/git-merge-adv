@@ -1,0 +1,139 @@
+diff --git a/java_case_studies/reference_repos/maven/importC2/desired.java b/java_case_studies/demo_results/MethodUnion/maven-importC2.java
+index 0835153..e48a4ab 100644
+--- a/java_case_studies/reference_repos/maven/importC2/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/maven-importC2.java
+@@ -1,5 +1,4 @@
+ package org.apache.maven;
+-
+ /*
+  * Licensed to the Apache Software Foundation (ASF) under one
+  * or more contributor license agreements.  See the NOTICE file
+@@ -18,7 +17,6 @@ package org.apache.maven;
+  * specific language governing permissions and limitations
+  * under the License.
+  */
+-
+ import java.io.File;
+ import java.io.IOException;
+ import java.io.InputStream;
+@@ -34,7 +32,6 @@ import java.util.LinkedHashSet;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Properties;
+-
+ import org.apache.maven.artifact.ArtifactUtils;
+ import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
+ import org.apache.maven.eventspy.internal.EventSpyDispatcher;
+@@ -88,11 +85,9 @@ import org.eclipse.aether.collection.DependencyManager;
+ import org.eclipse.aether.collection.DependencySelector;
+ import org.eclipse.aether.collection.DependencyTraverser;
+ import org.eclipse.aether.repository.LocalRepository;
+-import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
+ import org.eclipse.aether.repository.RepositoryPolicy;
+ import org.eclipse.aether.repository.WorkspaceReader;
+ import org.eclipse.aether.resolution.ResolutionErrorPolicy;
+-import org.eclipse.aether.spi.localrepo.LocalRepositoryManagerFactory;
+ import org.eclipse.aether.util.graph.manager.ClassicDependencyManager;
+ import org.eclipse.aether.util.graph.selector.AndDependencySelector;
+ import org.eclipse.aether.util.graph.selector.ExclusionDependencySelector;
+@@ -107,59 +102,44 @@ import org.eclipse.aether.util.graph.transformer.NearestVersionSelector;
+ import org.eclipse.aether.util.graph.transformer.SimpleOptionalitySelector;
+ import org.eclipse.aether.util.graph.traverser.FatArtifactTraverser;
+ import org.eclipse.aether.util.repository.AuthenticationBuilder;
++import org.sonatype.aether.repository.NoLocalRepositoryManagerException;
+ import org.eclipse.aether.util.repository.ChainedWorkspaceReader;
+ import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
++import org.sonatype.aether.spi.localrepo.LocalRepositoryManagerFactory;
+ import org.eclipse.aether.util.repository.DefaultMirrorSelector;
+ import org.eclipse.aether.util.repository.DefaultProxySelector;
+ import org.eclipse.aether.util.repository.SimpleArtifactDescriptorPolicy;
+ import org.eclipse.aether.util.repository.SimpleResolutionErrorPolicy;
+ 
+-/**
+- * @author Jason van Zyl
+- */
+ @Component( role = Maven.class )
+-public class DefaultMaven
+-    implements Maven
+-{
++public class DefaultMaven implements Maven{
+ 
+     @Requirement
+-    private Logger logger;
+-
++    private Logger logger;,
+     @Requirement
+-    protected ProjectBuilder projectBuilder;
+-
++    protected ProjectBuilder projectBuilder;,
+     @Requirement
+-    private LifecycleStarter lifecycleStarter;
+-
++    private LifecycleStarter lifecycleStarter;,
+     @Requirement
+-    protected PlexusContainer container;
+-
++    protected PlexusContainer container;,
+     @Requirement
+-    MavenExecutionRequestPopulator populator;
+-
++    MavenExecutionRequestPopulator populator;,
+     @Requirement
+-    private ExecutionEventCatapult eventCatapult;
+-
++    private ExecutionEventCatapult eventCatapult;,
+     @Requirement
+-    private ArtifactHandlerManager artifactHandlerManager;
+-
++    private ArtifactHandlerManager artifactHandlerManager;,
+     @Requirement( optional = true, hint = "ide" )
+-    private WorkspaceReader workspaceRepository;
+-
++    private WorkspaceReader workspaceRepository;,
+     @Requirement
+-    private RepositorySystem repoSystem;
+-
+-    @Requirement( optional = true, hint = "simple" )
+-    private LocalRepositoryManagerFactory simpleLocalRepositoryManagerFactory;
+-
++    private RepositorySystem repoSystem;,
+     @Requirement
+-    private SettingsDecrypter settingsDecrypter;
+-
++    private SettingsDecrypter settingsDecrypter;,
++    @Requirement( optional = true, hint = "simple" )
++    private LocalRepositoryManagerFactory simpleLocalRepositoryManagerFactory;,
+     @Requirement
+-    private LegacySupport legacySupport;
+-
++    private LegacySupport legacySupport;,
+     @Requirement
+-    private EventSpyDispatcher eventSpyDispatcher;
++    private EventSpyDispatcher eventSpyDispatcher;,
+ 
+     public MavenExecutionResult execute( MavenExecutionRequest request )
+     {
+@@ -501,6 +481,7 @@ public class DefaultMaven
+         return session;
+     }
+ 
++
+     private String getUserAgent()
+     {
+         return "Apache-Maven/" + getMavenVersion()
+@@ -601,7 +582,7 @@ public class DefaultMaven
+ 
+         return result;
+     }
+-    
++
+     private List<MavenProject> getProjectsForMavenReactor( MavenExecutionRequest request )
+         throws ProjectBuildingException
+     {
+@@ -921,4 +902,4 @@ public class DefaultMaven
+         return false;
+     }
+ 
+-}
++}
+\ No newline at end of file

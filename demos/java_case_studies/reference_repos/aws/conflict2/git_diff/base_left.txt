@@ -1,0 +1,161 @@
+diff --git a/java_case_studies/reference_repos/aws/conflict2/base.java b/java_case_studies/reference_repos/aws/conflict2/left.java
+index 091fbf9..c171e14 100644
+--- a/java_case_studies/reference_repos/aws/conflict2/base.java
++++ b/java_case_studies/reference_repos/aws/conflict2/left.java
+@@ -14,29 +14,34 @@
+  */
+ package com.amazonaws.services.dynamodb.sessionmanager;
+ 
++import static com.amazonaws.util.BinaryUtils.copyAllBytesFrom;
++
+ import java.io.ByteArrayInputStream;
+ import java.io.IOException;
++import java.io.ObjectInputStream;
+ import java.nio.ByteBuffer;
+ import java.util.Collections;
+ import java.util.HashSet;
+ import java.util.Map;
+ import java.util.Set;
+ 
+-import org.apache.catalina.Container;
++import org.apache.catalina.Context;
+ import org.apache.catalina.Session;
+ import org.apache.catalina.session.StandardSession;
+ import org.apache.catalina.session.StoreBase;
+ import org.apache.catalina.util.CustomObjectInputStream;
++import org.apache.juli.logging.Log;
++import org.apache.juli.logging.LogFactory;
+ 
+ import com.amazonaws.services.dynamodb.sessionmanager.util.DynamoUtils;
+ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+ import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
+ import com.amazonaws.services.dynamodbv2.model.TableDescription;
++import com.amazonaws.util.IOUtils;
+ 
+ /**
+- * Session store implementation that loads and stores HTTP sessions from Amazon
+- * DynamoDB.
++ * Session store implementation that loads and stores HTTP sessions from Amazon DynamoDB.
+  */
+ public class DynamoDBSessionStore extends StoreBase {
+ 
+@@ -46,10 +51,10 @@ public class DynamoDBSessionStore extends StoreBase {
+     private AmazonDynamoDBClient dynamo;
+     private String sessionTableName;
+ 
+-    private Set<String> keys = Collections.synchronizedSet(new HashSet<String>());
++    private final Set<String> keys = Collections.synchronizedSet(new HashSet<String>());
+ 
++    private static final Log logger = LogFactory.getLog(DynamoDBSessionStore.class);
+ 
+-    @Override
+     public String getInfo() {
+         return info;
+     }
+@@ -67,7 +72,6 @@ public class DynamoDBSessionStore extends StoreBase {
+         this.sessionTableName = tableName;
+     }
+ 
+-
+     @Override
+     public void clear() throws IOException {
+         final Set<String> keysCopy = new HashSet<String>();
+@@ -88,10 +92,11 @@ public class DynamoDBSessionStore extends StoreBase {
+     @Override
+     public int getSize() throws IOException {
+         // The item count from describeTable is updated every ~6 hours
+-        TableDescription table = dynamo.describeTable(new DescribeTableRequest().withTableName(sessionTableName)).getTable();
++        TableDescription table = dynamo.describeTable(new DescribeTableRequest().withTableName(sessionTableName))
++                .getTable();
+         long itemCount = table.getItemCount();
+ 
+-        return (int)itemCount;
++        return (int) itemCount;
+     }
+ 
+     @Override
+@@ -102,47 +107,65 @@ public class DynamoDBSessionStore extends StoreBase {
+     @Override
+     public Session load(String id) throws ClassNotFoundException, IOException {
+         Map<String, AttributeValue> item = DynamoUtils.loadItemBySessionId(dynamo, sessionTableName, id);
+-        if (item == null || !item.containsKey(SessionTableAttributes.SESSION_ID_KEY) || !item.containsKey(SessionTableAttributes.SESSION_DATA_ATTRIBUTE)) {
+-            DynamoDBSessionManager.warn("Unable to load session attributes for session " + id);
++        if (item == null || !item.containsKey(SessionTableAttributes.SESSION_ID_KEY)
++                || !item.containsKey(SessionTableAttributes.SESSION_DATA_ATTRIBUTE)) {
++            logger.warn("Unable to load session attributes for session " + id);
+             return null;
+         }
+ 
+-
+         Session session = getManager().createSession(id);
+         session.setCreationTime(Long.parseLong(item.get(SessionTableAttributes.CREATED_AT_ATTRIBUTE).getN()));
+ 
+-
+         ByteBuffer byteBuffer = item.get(SessionTableAttributes.SESSION_DATA_ATTRIBUTE).getB();
+-        ByteArrayInputStream inputStream = new ByteArrayInputStream(byteBuffer.array());
++        ByteArrayInputStream inputStream = new ByteArrayInputStream(copyAllBytesFrom(byteBuffer));
+ 
+         Object readObject;
+-        CustomObjectInputStream objectInputStream = null;
++        ObjectInputStream objectInputStream = null;
+         try {
+-            Container webapp = getManager().getContainer();
++            Context webapp = getAssociatedContext();
+             objectInputStream = new CustomObjectInputStream(inputStream, webapp.getLoader().getClassLoader());
+ 
+             readObject = objectInputStream.readObject();
+         } finally {
+-            try { objectInputStream.close(); } catch (Exception e) {}
++            IOUtils.closeQuietly(objectInputStream, null);
+         }
+ 
+         if (readObject instanceof Map<?, ?>) {
+-            Map<String, Object> sessionAttributeMap = (Map<String, Object>)readObject;
++            @SuppressWarnings("unchecked")
++            Map<String, Object> sessionAttributeMap = (Map<String, Object>) readObject;
+ 
+             for (String s : sessionAttributeMap.keySet()) {
+-                ((StandardSession)session).setAttribute(s, sessionAttributeMap.get(s));
++                ((StandardSession) session).setAttribute(s, sessionAttributeMap.get(s));
+             }
+         } else {
+             throw new RuntimeException("Error: Unable to unmarshall session attributes from DynamoDB store");
+         }
+ 
+-
+         keys.add(id);
+         manager.add(session);
+ 
+         return session;
+     }
+ 
++    /**
++     * To be compatible with Tomcat7 we have to call the getContainer method rather than getContext.
++     * The cast is safe as it only makes sense to use a session manager within the context of a
++     * webapp, the Tomcat 8 version of getContainer just delegates to getContext. When Tomcat7 is no
++     * longer supported this can be changed to getContext
++     * 
++     * @return The context this manager is associated with
++     */
++    // TODO Inline this method with getManager().getContext() when Tomcat7 is no longer supported
++    private Context getAssociatedContext() {
++        try {
++            return (Context) getManager().getContainer();
++        } catch (ClassCastException e) {
++            logger.fatal("Unable to cast " + getManager().getClass().getName() + " to a Context."
++                    + " DynamoDB SessionManager can only be used with a Context");
++            throw new IllegalStateException(e);
++        }
++    }
++
+     @Override
+     public void save(Session session) throws IOException {
+         DynamoUtils.storeSession(dynamo, sessionTableName, session);
+@@ -154,4 +177,4 @@ public class DynamoDBSessionStore extends StoreBase {
+         DynamoUtils.deleteSession(dynamo, sessionTableName, id);
+         keys.remove(id);
+     }
+-}
+\ No newline at end of file
++}

@@ -1,0 +1,31 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict23/desired.py b/python_case_studies/demo_results/MethodUnion/errbot-conflict23.py
+index 7812774..02c7069 100644
+--- a/python_case_studies/reference_repos/errbot/conflict23/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/errbot-conflict23.py
+@@ -1,10 +1,10 @@
+ import logging
+-from errbot import BotPlugin, PY3
++from errbot import BotPlugin,PY3,PY2
+ from errbot.version import VERSION
+ from errbot.holder import bot
++from config import CHATROOM_PRESENCE,CHATROOM_FN,CHATROOM_RELAY,REVERSE_CHATROOM_RELAY
+ 
+ __author__ = 'gbin'
+-from config import CHATROOM_PRESENCE, CHATROOM_FN, CHATROOM_RELAY, REVERSE_CHATROOM_RELAY
+ 
+ # 2to3 hack
+ # thanks to https://github.com/oxplot/fysom/issues/1
+@@ -25,7 +25,7 @@ class ChatRoom(BotPlugin):
+             self.connected = True
+             for room in CHATROOM_PRESENCE:
+                 logging.info('Join room ' + room)
+-                if isinstance(room, basestring):
++                if (PY2 and isinstance(room, basestring)) or isinstance(room, str):
+                     self.join_room(room, CHATROOM_FN)
+                 else:
+                     self.join_room(room[0], password=room[1])
+@@ -57,3 +57,4 @@ class ChatRoom(BotPlugin):
+                             self.send(user, body, message_type='chat')
+             except Exception as e:
+                 logging.exception('crashed in callback_message %s' % e)
++

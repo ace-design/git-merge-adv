@@ -1,0 +1,10 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict1/left.py b/python_case_studies/reference_repos/transitions/conflict1/right.py
+index fb3872e..1b13704 100644
+--- a/python_case_studies/reference_repos/transitions/conflict1/left.py
++++ b/python_case_studies/reference_repos/transitions/conflict1/right.py
+@@ -2,4 +2,4 @@
+     to determine transitions' version during runtime.
+ """
+ 
+-__version__ = '0.8.11'
++__version__ = '0.9.0'

@@ -1,0 +1,17 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict4/left.java b/java_case_studies/reference_repos/Jest/conflict4/right.java
+index 6783cc0..0b9593a 100644
+--- a/java_case_studies/reference_repos/Jest/conflict4/left.java
++++ b/java_case_studies/reference_repos/Jest/conflict4/right.java
+@@ -125,7 +125,11 @@ public class Cat extends AbstractAction<CatResult> {
+ 
+         @Override
+         public String getJoinedIndices() {
+-            return indexNames.size() > 0 ? StringUtils.join(indexNames, ",") : null;
++            if (indexNames.size() > 0) {
++                return StringUtils.join(indexNames, ",");
++            } else {
++                return null;
++            }
+         }
+     }
+ 

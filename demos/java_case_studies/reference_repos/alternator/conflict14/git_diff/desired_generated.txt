@@ -1,0 +1,132 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict14/desired.java b/java_case_studies/demo_results/MethodUnion/alternator-conflict14.java
+index 92370c3..1765d97 100644
+--- a/java_case_studies/reference_repos/alternator/conflict14/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/alternator-conflict14.java
+@@ -1,5 +1,4 @@
+ package com.michelboudreau.alternator;
+-
+ import com.amazonaws.services.dynamodb.model.*;
+ import com.amazonaws.services.dynamodb.model.transform.*;
+ import com.michelboudreau.alternator.enums.AttributeValueType;
+@@ -13,24 +12,24 @@ import org.codehaus.jackson.map.ObjectMapper;
+ import org.codehaus.jackson.map.SerializationConfig;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+-
+ import javax.servlet.http.HttpServletRequest;
+ import java.io.File;
+ import java.io.IOException;
+ import java.util.*;
+ 
+-class AlternatorDBHandler {
++class AlternatorDBHandler{
+ 
+-    private final Logger logger = LoggerFactory.getLogger(AlternatorDBHandler.class);
++    private final Logger logger = LoggerFactory.getLogger(AlternatorDBHandler.class);,
++    private Map<String, Table> tables = new HashMap<String, Table>();,
++    private List<Table> tableList = new ArrayList<Table>();,
+ 
+-    private Map<String, Table> tables = new HashMap<String, Table>();
+-    private List<Table> tableList = new ArrayList<Table>();
++    // TODO: create constructor that can handle a file
+ 
+-	// TODO: create constructor that can handle a file
+     public AlternatorDBHandler() {
+     }
+ 
+-	// Maybe save automatically on destroy?
++    // Maybe save automatically on destroy?
++
+     public void save(String persistence){
+         try {
+             createObjectMapper().writeValue(new File(persistence), tableList);
+@@ -57,7 +56,8 @@ class AlternatorDBHandler {
+         }
+     }
+ 
+-	// Not sure about this.  If correct and only need one, only create one instance
++    // Not sure about this.  If correct and only need one, only create one instance
++
+     public ObjectMapper createObjectMapper() {
+         ObjectMapper mapper = new ObjectMapper();
+         mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY)
+@@ -424,9 +424,13 @@ class AlternatorDBHandler {
+         return result;
+     }
+ 
+-	protected BatchGetItemResult batchGetItem(BatchGetItemRequest request) {
++    protected BatchGetItemResult batchGetItem(BatchGetItemRequest request) {
+ 		BatchGetItemResult batchGetItemResult = new BatchGetItemResult();
++<<<<<<< left_content.java
++=======
+ 
++
++>>>>>>> right_content.java
+ 		for (String tableName : request.getRequestItems().keySet()) {
+ 			if (!this.tables.containsKey(tableName)) {
+ 				throw new ResourceNotFoundException("The table you're currently trying to access (" + tableName + ") doesn't exists.");
+@@ -448,10 +452,37 @@ class AlternatorDBHandler {
+ 		return new BatchGetItemResult();
+ 	}
+ 
+-    protected BatchWriteItemResult batchWriteItem(BatchWriteItemRequest request) {
++
++    <<<<<<< left_content.java
++protected BatchWriteItemResult batchWriteItem(BatchWriteItemRequest request) {
++        BatchWriteItemResult batchWriteItemResult = new BatchWriteItemResult();
++        for (String tableName : request.getRequestItems().keySet()) {
++            BatchWriteResponse batchWriteResponse = new BatchWriteResponse();
++            List<WriteRequest> writeRequests = request.getRequestItems().get(tableName);
++            for (WriteRequest writeRequest : writeRequests) {
++                PutRequest putRequest = writeRequest.getPutRequest();
++                if (putRequest != null) {
++                    this.tables.get(tableName).putItem(putRequest.getItem());
++                }
++                DeleteRequest deleteRequest = writeRequest.getDeleteRequest();
++                if (deleteRequest != null) {
++                    Key key = deleteRequest.getKey();
++                    if (key != null) {
++                        this.tables.get(tableName).removeItem(getKeyValue(key.getHashKeyElement()));
++                    }
++                }
++            }
++            batchWriteResponse.setConsumedCapacityUnits(batchWriteResponse.getConsumedCapacityUnits());
++            batchWriteItemResult.getResponses().put(tableName, batchWriteResponse);
++        }
++        return batchWriteItemResult;
++=======
++protected Object batchWriteItem(BatchWriteItemRequest request) {
+         return new BatchWriteItemResult();
++>>>>>>> right_content.java
+     }
+ 
++
+     protected ScanResult scan(ScanRequest request) {
+         ScanResult result = new ScanResult();
+         List<Error> errors = new ScanRequestValidator().validate(request);
+@@ -832,8 +863,7 @@ class AlternatorDBHandler {
+         }
+     }
+ 
+-
+-	protected Map<String, AttributeValue> getItemWithAttributesToGet(Map<String, AttributeValue> item, List<String> attributesToGet) {
++    protected Map<String, AttributeValue> getItemWithAttributesToGet(Map<String, AttributeValue> item, List<String> attributesToGet) {
+ 		if (attributesToGet == null) {
+ 			return item;
+ 		}
+@@ -846,11 +876,12 @@ class AlternatorDBHandler {
+ 		return item;
+ 	}
+ 
+-	protected List<Map<String, AttributeValue>> getItemWithAttributesToGet(List<Map<String, AttributeValue>> items, List<String> attributesToGet) {
++    protected List<Map<String, AttributeValue>> getItemWithAttributesToGet(List<Map<String, AttributeValue>> items, List<String> attributesToGet) {
+ 		List<Map<String, AttributeValue>> copy = new ArrayList<Map<String, AttributeValue>>();
+ 		for (Map<String, AttributeValue> item : items) {
+ 			copy.add(getItemWithAttributesToGet(item, attributesToGet));
+ 		}
+ 		return copy;
+ 	}
+-}
++
++}
+\ No newline at end of file

@@ -1,0 +1,20 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict4/base.py b/python_case_studies/reference_repos/apistar/conflict4/left.py
+index 80676eb..d03ee54 100644
+--- a/python_case_studies/reference_repos/apistar/conflict4/base.py
++++ b/python_case_studies/reference_repos/apistar/conflict4/left.py
+@@ -12,6 +12,7 @@ def create_sqlalchemy_tables():
+     db_backend.create_tables()
+     click.echo("Tables created")
+ 
++
+ def django_makemigrations():
+     """
+     Makemigrations DjangoBackend.
+@@ -23,6 +24,7 @@ def django_makemigrations():
+     db_backend.makemigrations()
+     click.echo("makemigrations")
+ 
++
+ def django_migrate():
+     """
+     Migrate DjangoBackend.

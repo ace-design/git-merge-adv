@@ -1,0 +1,27 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict9/base.py b/python_case_studies/reference_repos/transitions/conflict9/left.py
+index fd2d35c..c658ac4 100644
+--- a/python_case_studies/reference_repos/transitions/conflict9/base.py
++++ b/python_case_studies/reference_repos/transitions/conflict9/left.py
+@@ -151,3 +151,22 @@ class TestNestedStateEnums(TestEnumsAsStates):
+         m1 = self.machine_cls(states=self.States, initial=self.States.GREEN)
+         self.assertEqual(self.States.GREEN, m1.state)
+         self.assertEqual(m1.state.name, self.States.GREEN.name)
++
++    def test_duplicate_states(self):
++        with self.assertRaises(ValueError):
++            self.machine_cls(states=['A', 'A'])
++
++    def test_duplicate_states_from_enum_members(self):
++        class Foo(enum.Enum):
++            A = 1
++
++        with self.assertRaises(ValueError):
++            self.machine_cls(states=[Foo.A, Foo.A])
++
++
++@skipIf(enum is None, "enum is not available")
++class TestEnumWithGraph(TestEnumsAsStates):
++
++    def setUp(self):
++        super(TestEnumWithGraph, self).setUp()
++        self.machine_cls = MachineFactory.get_predefined(graph=True)

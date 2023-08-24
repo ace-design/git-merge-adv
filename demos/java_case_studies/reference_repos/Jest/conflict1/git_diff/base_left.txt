@@ -1,0 +1,27 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict1/base.java b/java_case_studies/reference_repos/Jest/conflict1/left.java
+index cd8b74f..471bf86 100644
+--- a/java_case_studies/reference_repos/Jest/conflict1/base.java
++++ b/java_case_studies/reference_repos/Jest/conflict1/left.java
+@@ -10,6 +10,7 @@ import com.google.gson.JsonSyntaxException;
+ import io.searchbox.action.AbstractAction;
+ import io.searchbox.action.AbstractMultiIndexActionBuilder;
+ import io.searchbox.action.AbstractMultiTypeActionBuilder;
++import io.searchbox.client.config.ElasticsearchVersion;
+ 
+ /**
+  * @author Bartosz Polnik
+@@ -21,12 +22,11 @@ public class Cat extends AbstractAction<CatResult> {
+     protected <T extends AbstractAction.Builder<Cat, ? extends Builder> & CatBuilder> Cat(T builder) {
+         super(builder);
+         this.operationPath = builder.operationPath();
+-        setURI(buildURI());
+     }
+ 
+     @Override
+-    protected String buildURI() {
+-        String uriSuffix = super.buildURI();
++    protected String buildURI(ElasticsearchVersion elasticsearchVersion) {
++        String uriSuffix = super.buildURI(elasticsearchVersion);
+         return "_cat/" + this.operationPath + (uriSuffix.isEmpty() ? "" : "/") + uriSuffix;
+     }
+ 

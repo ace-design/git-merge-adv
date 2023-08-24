@@ -1,0 +1,17 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict13/desired.py b/python_case_studies/demo_results/MethodUnion/errbot-conflict13.py
+index 53c928f..0293392 100644
+--- a/python_case_studies/reference_repos/errbot/conflict13/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/errbot-conflict13.py
+@@ -1,7 +1,6 @@
+-# just the current version of err
+-# it is used for deployment on pypi AND for version checking at plugin load time
+-<<<<<<< HEAD
+-VERSION = '3.1.0'
+-=======
++VERSION = '3.0.1'
++
+ VERSION = '3.0.3'
+->>>>>>> 3.0
++
++VERSION = '3.1.0'
++

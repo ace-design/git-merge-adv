@@ -1,0 +1,21 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict12/base.py b/python_case_studies/reference_repos/apistar/conflict12/left.py
+index 920f8ef..2de143e 100644
+--- a/python_case_studies/reference_repos/apistar/conflict12/base.py
++++ b/python_case_studies/reference_repos/apistar/conflict12/left.py
+@@ -9,6 +9,7 @@ from werkzeug.routing import Map, Rule
+ from werkzeug.serving import is_running_from_reloader
+ 
+ from apistar import app, exceptions, http, pipelines, schema, wsgi
++from apistar.db import DBBackend
+ from apistar.pipelines import ArgName, Pipeline
+ 
+ # TODO: Path
+@@ -51,7 +52,7 @@ RouterLookup = Tuple[Callable, Pipeline, URLPathArgs]
+ class Router(object):
+     def __init__(self, routes: List[Route]) -> None:
+         required_type = wsgi.WSGIResponse
+-        initial_types = [app.App, wsgi.WSGIEnviron, URLPathArgs, Exception]
++        initial_types = [DBBackend, app.App, wsgi.WSGIEnviron, URLPathArgs, Exception]
+ 
+         rules = []
+         views = {}

@@ -1,0 +1,224 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict10/left.java b/java_case_studies/reference_repos/alternator/conflict10/right.java
+index 4d42a45..720bcb5 100644
+--- a/java_case_studies/reference_repos/alternator/conflict10/left.java
++++ b/java_case_studies/reference_repos/alternator/conflict10/right.java
+@@ -1,11 +1,11 @@
+ package com.michelboudreau.test;
+ 
+-import java.io.BufferedReader;
+-import java.io.FileReader;
+-import java.util.HashMap;
+-import java.util.Map;
+-import java.util.UUID;
+-
++import com.amazonaws.AmazonWebServiceRequest;
++import com.amazonaws.services.dynamodb.AmazonDynamoDB;
++import com.amazonaws.services.dynamodb.model.*;
++import com.amazonaws.transform.JsonUnmarshallerContext;
++import com.amazonaws.transform.Unmarshaller;
++import com.michelboudreau.alternator.enums.AttributeValueType;
+ import org.codehaus.jackson.JsonFactory;
+ import org.codehaus.jackson.JsonParser;
+ import org.codehaus.jackson.map.ObjectMapper;
+@@ -17,28 +17,11 @@ import org.junit.runner.RunWith;
+ import org.springframework.test.context.ContextConfiguration;
+ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+ 
+-import com.amazonaws.AmazonServiceException;
+-import com.amazonaws.AmazonWebServiceRequest;
+-import com.amazonaws.services.dynamodb.model.AttributeValue;
+-import com.amazonaws.services.dynamodb.model.AttributeValueUpdate;
+-import com.amazonaws.services.dynamodb.model.ConditionalCheckFailedException;
+-import com.amazonaws.services.dynamodb.model.DeleteItemRequest;
+-import com.amazonaws.services.dynamodb.model.DeleteItemResult;
+-import com.amazonaws.services.dynamodb.model.ExpectedAttributeValue;
+-import com.amazonaws.services.dynamodb.model.GetItemRequest;
+-import com.amazonaws.services.dynamodb.model.GetItemResult;
+-import com.amazonaws.services.dynamodb.model.Key;
+-import com.amazonaws.services.dynamodb.model.KeySchema;
+-import com.amazonaws.services.dynamodb.model.KeySchemaElement;
+-import com.amazonaws.services.dynamodb.model.PutItemRequest;
+-import com.amazonaws.services.dynamodb.model.PutItemResult;
+-import com.amazonaws.services.dynamodb.model.ReturnValue;
+-import com.amazonaws.services.dynamodb.model.ScalarAttributeType;
+-import com.amazonaws.services.dynamodb.model.UpdateItemRequest;
+-import com.amazonaws.services.dynamodb.model.UpdateItemResult;
+-import com.amazonaws.transform.JsonUnmarshallerContext;
+-import com.amazonaws.transform.Unmarshaller;
+-import com.michelboudreau.alternator.enums.AttributeValueType;
++import java.io.BufferedReader;
++import java.io.FileReader;
++import java.util.HashMap;
++import java.util.Map;
++import java.util.UUID;
+ 
+ @RunWith(SpringJUnit4ClassRunner.class)
+ @ContextConfiguration(locations = {"classpath:/applicationContext.xml"})
+@@ -84,11 +67,8 @@ public class AlternatorItemTest extends AlternatorTest {
+         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
+         createTable(tableName, schema);
+         PutItemRequest request = new PutItemRequest().withTableName(tableName);
+-		try {
+-			getClient().putItem(request);
+-			Assert.assertTrue(false);// Should have thrown an exception
+-		} catch (AmazonServiceException ase) {
+-		}
++        PutItemResult res = getClient().putItem(request);
++        Assert.assertNull(res.getConsumedCapacityUnits());
+     }
+ 
+     @Test
+@@ -96,11 +76,8 @@ public class AlternatorItemTest extends AlternatorTest {
+         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
+         createTable(tableName, schema);
+         PutItemRequest request = new PutItemRequest().withItem(createGenericItem());
+-		try {
+-			getClient().putItem(request);
+-			Assert.assertTrue(false);// Should have thrown an exception
+-		} catch (AmazonServiceException ase) {
+-		}
++        PutItemResult res = getClient().putItem(request);
++        Assert.assertNull(res.getConsumedCapacityUnits());
+     }
+ 
+     //Test: put item with HashKey and RangeKey
+@@ -133,11 +110,8 @@ public class AlternatorItemTest extends AlternatorTest {
+         schema.setRangeKeyElement(new KeySchemaElement().withAttributeName("range").withAttributeType(ScalarAttributeType.S));
+         createTable(tableName, schema);
+         PutItemRequest request = new PutItemRequest().withTableName(tableName);
+-		try {
+-			getClient().putItem(request);
+-			Assert.assertTrue(false);// Should have thrown an exception
+-		} catch (AmazonServiceException ase) {
+-		}
++        PutItemResult res = getClient().putItem(request);
++        Assert.assertNull(res.getConsumedCapacityUnits());
+     }
+ 
+     @Test
+@@ -146,11 +120,8 @@ public class AlternatorItemTest extends AlternatorTest {
+         schema.setRangeKeyElement(new KeySchemaElement().withAttributeName("range").withAttributeType(ScalarAttributeType.S));
+         createTable(tableName, schema);
+         PutItemRequest request = new PutItemRequest().withItem(createGenericItem());
+-		try {
+-			getClient().putItem(request);
+-			Assert.assertTrue(false);// Should have thrown an exception
+-		} catch (AmazonServiceException ase) {
+-		}
++        PutItemResult res = getClient().putItem(request);
++        Assert.assertNull(res.getConsumedCapacityUnits());
+     }
+ 
+     //---------------------------------------------------------------------------
+@@ -170,22 +141,16 @@ public class AlternatorItemTest extends AlternatorTest {
+     public void getItemWithoutTableNameTest() {
+         GetItemRequest request = new GetItemRequest();
+         request.setKey(new Key().withHashKeyElement(new AttributeValue().withNS("123")));
+-		try {
+-			getClient().getItem(request);
+-			Assert.assertTrue(false);// Should have thrown an exception
+-		} catch (AmazonServiceException ase) {
+-		}
++        GetItemResult res = getClient().getItem(request);
++        Assert.assertNull(res.getItem());
+     }
+ 
+     @Test
+     public void getItemWithoutKeyTest() {
+         GetItemRequest request = new GetItemRequest();
+         request.setTableName(tableName);
+-		try {
+-			getClient().getItem(request);
+-			Assert.assertTrue(false);// Should have thrown an exception
+-		} catch (AmazonServiceException ase) {
+-		}
++        GetItemResult res = getClient().getItem(request);
++        Assert.assertNull(res.getItem());
+     }
+ 
+     @Test
+@@ -215,11 +180,8 @@ public class AlternatorItemTest extends AlternatorTest {
+         UpdateItemRequest request = new UpdateItemRequest();
+         request.setKey(key);
+         request.setAttributeUpdates(attrToUp);
+-		try {
+-			getClient().updateItem(request);
+-			Assert.assertTrue(false);// Should have thrown an exception
+-		} catch (AmazonServiceException ase) {
+-		}
++        UpdateItemResult res = getClient().updateItem(request);
++        Assert.assertNull(res.getConsumedCapacityUnits());
+     }
+ 
+     @Test
+@@ -234,11 +196,8 @@ public class AlternatorItemTest extends AlternatorTest {
+         UpdateItemRequest request = new UpdateItemRequest();
+         request.setTableName(tableName);
+         request.setAttributeUpdates(attrToUp);
+-		try {
+-			getClient().updateItem(request);
+-			Assert.assertTrue(false);// Should have thrown an exception
+-		} catch (AmazonServiceException ase) {
+-		}
++        UpdateItemResult res = getClient().updateItem(request);
++        Assert.assertNull(res.getConsumedCapacityUnits());
+     }
+ 
+      @Test
+@@ -279,11 +238,8 @@ public class AlternatorItemTest extends AlternatorTest {
+         AttributeValue hash = createStringAttribute();
+         getClient().putItem(new PutItemRequest().withTableName(tableName).withItem(createGenericItem(hash)));
+         DeleteItemRequest request = new DeleteItemRequest().withKey(new Key(hash));
+-		try {
+-			getClient().deleteItem(request);
+-			Assert.assertTrue(false);// Should have thrown an exception
+-		} catch (AmazonServiceException ase) {
+-		}
++        DeleteItemResult result = getClient().deleteItem(request);
++        Assert.assertNull(result.getConsumedCapacityUnits());
+     }
+ 
+     @Test
+@@ -291,11 +247,7 @@ public class AlternatorItemTest extends AlternatorTest {
+         KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
+         createTable(tableName, schema);
+         DeleteItemRequest request = new DeleteItemRequest().withTableName(tableName).withKey(new Key(createStringAttribute()));
+-		try {
+-			getClient().deleteItem(request);
+-			Assert.assertTrue(false);// Should have thrown an exception
+-		} catch (AmazonServiceException ase) {
+-		}
++        Assert.assertNull(getClient().deleteItem(request).getConsumedCapacityUnits());
+     }
+ 
+ 	@Test
+@@ -303,21 +255,22 @@ public class AlternatorItemTest extends AlternatorTest {
+ 		KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
+ 		createTable(tableName, schema);
+ 
++		AttributeValue value = new AttributeValue("test1");
+ 		Map<String, ExpectedAttributeValue> expectedMap = new HashMap<String, ExpectedAttributeValue>();
+-		expectedMap.put("id", new ExpectedAttributeValue(false));
++		expectedMap.put("id", new ExpectedAttributeValue(value));
++
++		Map<String, AttributeValue> item = createGenericItem(value, null);
+ 
+-		getClient().putItem(new PutItemRequest(tableName, createGenericItem(new AttributeValue("test1"), null)).withExpected(expectedMap));
++		AmazonDynamoDB client = getClient();
++		client.putItem(new PutItemRequest(tableName, item).withExpected(expectedMap));
+ 
+ 		try {
+-			getClient().putItem(new PutItemRequest(tableName, createGenericItem(new AttributeValue("test1"), null)).withExpected(expectedMap));
+-			Assert.assertTrue(false);// Should have thrown a ConditionalCheckFailedException
++			client.putItem(new PutItemRequest(tableName, item).withExpected(expectedMap));
++			//Assert.assertTrue(false);// Should have thrown a ConditionalCheckFailedException
+ 		} catch (ConditionalCheckFailedException ccfe) {
+ 		}
+-
+ 	}
+ 
+-
+-
+     // TODO: test out delete item expected and return value
+ 
+     /*@Test

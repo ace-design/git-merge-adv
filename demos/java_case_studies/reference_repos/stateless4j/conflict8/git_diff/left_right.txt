@@ -1,0 +1,32 @@
+diff --git a/java_case_studies/reference_repos/stateless4j/conflict8/left.java b/java_case_studies/reference_repos/stateless4j/conflict8/right.java
+index ada6497..4d7e475 100644
+--- a/java_case_studies/reference_repos/stateless4j/conflict8/left.java
++++ b/java_case_studies/reference_repos/stateless4j/conflict8/right.java
+@@ -1,19 +1,22 @@
+ package com.github.oxo42.stateless4j.triggers;
+ 
++import com.github.oxo42.stateless4j.OutVar;
++import com.github.oxo42.stateless4j.delegates.Func;
+ import com.github.oxo42.stateless4j.delegates.Func2;
+-import com.github.oxo42.stateless4j.delegates.FuncBoolean;
+ import com.github.oxo42.stateless4j.validation.Enforce;
+ 
+ public class DynamicTriggerBehaviour<TState, TTrigger> extends TriggerBehaviour<TState, TTrigger> {
+-    private Func2<Object[], TState> destination;
+ 
+-    public DynamicTriggerBehaviour(TTrigger trigger, Func2<Object[], TState> destination, FuncBoolean guard) {
++    private final Func2<Object[], TState> destination;
++
++    public DynamicTriggerBehaviour(TTrigger trigger, Func2<Object[], TState> destination, Func<Boolean> guard) {
+         super(trigger, guard);
+         this.destination = Enforce.argumentNotNull(destination, "destination");
+     }
+ 
+     @Override
+-    public TState resultsInTransitionFrom(TState source, Object... args) {
+-        return destination.call(args);
++    public boolean resultsInTransitionFrom(TState source, Object[] args, OutVar<TState> dest) {
++        dest.set(destination.call(args));
++        return true;
+     }
+ }

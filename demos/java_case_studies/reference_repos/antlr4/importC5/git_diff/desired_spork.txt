@@ -1,0 +1,82 @@
+diff --git a/java_case_studies/reference_repos/antlr4/importC5/desired.java b/java_case_studies/reference_repos/antlr4/importC5/spork_result.java
+index 1b89168..8c017bd 100644
+--- a/java_case_studies/reference_repos/antlr4/importC5/desired.java
++++ b/java_case_studies/reference_repos/antlr4/importC5/spork_result.java
+@@ -26,9 +26,9 @@
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-
+ package org.antlr.v4.semantics;
+ 
++import java.util.List;
+ import org.antlr.v4.analysis.LeftRecursiveRuleTransformer;
+ import org.antlr.v4.parse.ANTLRParser;
+ import org.antlr.v4.runtime.Token;
+@@ -39,7 +39,6 @@ import org.antlr.v4.tool.Grammar;
+ import org.antlr.v4.tool.Rule;
+ import org.antlr.v4.tool.ast.GrammarAST;
+ 
+-import java.util.List;
+ 
+ /** Do as much semantic checking as we can and fill in grammar
+  *  with rules, actions, and token definitions.
+@@ -147,37 +146,34 @@ public class SemanticPipeline {
+ 	}
+ 
+ 	void assignLexerTokenTypes(Grammar g, List<GrammarAST> tokensDefs) {
+-		Grammar G = g.getOutermostGrammar(); // put in root, even if imported
++		Grammar G = g.getOutermostGrammar();// put in root, even if imported
++
+ 		for (GrammarAST def : tokensDefs) {
+-			if ( def.getType()== ANTLRParser.ID ) G.defineTokenName(def.getText());
++			if (def.getType() == ANTLRParser.ID) {
++				G.defineTokenName(def.getText());
++			}
+ 		}
+-
+ 		/* Define token types for nonfragment rules which do not include a 'type(...)'
+-		 * or 'more' lexer command.
++		or 'more' lexer command.
+ 		 */
+ 		for (Rule r : g.rules.values()) {
+-			if ( !r.isFragment() && !hasTypeOrMoreCommand(r) ) {
++			if ((!r.isFragment()) && (!hasTypeOrMoreCommand(r))) {
+ 				G.defineTokenName(r.name);
+ 			}
+ 		}
+-
+ 		// FOR ALL X : 'xxx'; RULES, DEFINE 'xxx' AS TYPE X
+-		List<Pair<GrammarAST,GrammarAST>> litAliases = Grammar.getStringLiteralAliasesFromLexerRules(g.ast);
+-		if ( litAliases!=null ) {
+-			for (Pair<GrammarAST,GrammarAST> pair : litAliases) {
++		List<Pair<GrammarAST, GrammarAST>> litAliases = Grammar.getStringLiteralAliasesFromLexerRules(g.ast);
++		if (litAliases != null) {
++			for (Pair<GrammarAST, GrammarAST> pair : litAliases) {
+ 				GrammarAST nameAST = pair.a;
+ 				GrammarAST litAST = pair.b;
+-				if ( !G.stringLiteralToTypeMap.containsKey(litAST.getText()) ) {
++				if (!G.stringLiteralToTypeMap.containsKey(litAST.getText())) {
+ 					G.defineTokenAlias(nameAST.getText(), litAST.getText());
+-				}
+-				else {
+-					g.tool.errMgr.grammarError(ErrorType.ALIAS_REASSIGNMENT,
+-											   g.fileName, nameAST.token,
+-											   litAST.getText(), nameAST.getText());
++				} else {
++					g.tool.errMgr.grammarError(ErrorType.ALIAS_REASSIGNMENT, g.fileName, nameAST.token, litAST.getText(), nameAST.getText());
+ 				}
+ 			}
+ 		}
+-
+ 	}
+ 
+ 	boolean hasTypeOrMoreCommand(@NotNull Rule r) {
+@@ -246,6 +242,6 @@ public class SemanticPipeline {
+ 		}
+ 
+ 		g.tool.log("semantics", "tokens="+g.tokenNameToTypeMap);
+-        g.tool.log("semantics", "strings="+g.stringLiteralToTypeMap);
++	       g.tool.log("semantics", "strings="+g.stringLiteralToTypeMap);
+ 	}
+ }

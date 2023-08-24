@@ -1,0 +1,632 @@
+diff --git a/java_case_studies/reference_repos/antlr4/importC7/desired.java b/java_case_studies/demo_results/MethodUnion/antlr4-importC7.java
+index fe1c2d3..49f2a4f 100644
+--- a/java_case_studies/reference_repos/antlr4/importC7/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/antlr4-importC7.java
+@@ -26,9 +26,7 @@
+   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-
+ package org.antlr.v4.runtime.atn;
+-
+ import org.antlr.v4.runtime.CharStream;
+ import org.antlr.v4.runtime.IntStream;
+ import org.antlr.v4.runtime.Lexer;
+@@ -36,24 +34,27 @@ import org.antlr.v4.runtime.LexerNoViableAltException;
+ import org.antlr.v4.runtime.Token;
+ import org.antlr.v4.runtime.dfa.DFA;
+ import org.antlr.v4.runtime.dfa.DFAState;
+-import org.antlr.v4.runtime.misc.Interval;
+ import org.antlr.v4.runtime.misc.NotNull;
+ import org.antlr.v4.runtime.misc.Nullable;
+-
+ import java.io.IOException;
+ import java.io.OutputStream;
++import org.antlr.v4.runtime.RuleContext;
++import org.antlr.v4.runtime.misc.Interval;
++import org.antlr.v4.runtime.*;
+ 
+-/** "dup" of ParserInterpreter */
+-public class LexerATNSimulator extends ATNSimulator {
+-	public static boolean debug = false;
+-	public static boolean dfa_debug = false;
+-	public static final int MAX_DFA_EDGE = 127; // forces unicode to stay in ATN
++public class LexerATNSimulator extends ATNSimulator{
+ 
+-	private boolean trace = false;
+-	private OutputStream traceStream = null;
+-	private boolean traceFailed = false;
++    public static boolean debug = false;,
++    public static final RuleContext EMPTY_LEXER_RULE_CONTEXT = new RuleContext();,
++    public static boolean dfa_debug = false;,
+ 
+-	/** When we hit an accept state in either the DFA or the ATN, we
++    // forces unicode to stay in ATN
++    public static final int MAX_DFA_EDGE = 127;,
++    private boolean trace = false;,
++    private OutputStream traceStream = null;,
++    private boolean traceFailed = false;,
++
++    /** When we hit an accept state in either the DFA or the ATN, we
+ 	 *  have to notify the character stream to start buffering characters
+ 	 *  via mark() and record the current state. The current state includes
+ 	 *  the current index into the input, the current line, and current
+@@ -68,54 +69,53 @@ public class LexerATNSimulator extends ATNSimulator {
+ 	 *  then the ATN does the accept and the DFA simulator that invoked it
+ 	 *  can simply return the predicted token type.
+ 	 */
+-	protected static class ExecState {
+-		protected int index = -1;
+-		protected int line = 0;
+-		protected int charPos = -1;
+-		protected DFAState state;
+-		protected ATNConfig config;
+-
+-		protected void reset() {
++
++    protected static class ExecState{
++
++        protected int index = -1;,
++        protected int line = 0;,
++        protected int charPos = -1;,
++        protected DFAState state;,
++        protected ATNConfig config;,
++
++        protected void reset() {
+ 			index = -1;
+ 			line = 0;
+ 			charPos = -1;
+ 			state = null;
+ 			config = null;
+ 		}
+-	}
+ 
+-	@Nullable
+-	protected final Lexer recog;
++    }    @Nullable
++	protected final Lexer recog;,
+ 
+-	/** The current token's starting index into the character stream.
++    /** The current token's starting index into the character stream.
+ 	 *  Shared across DFA to ATN simulation in case the ATN fails and the
+ 	 *  DFA did not have a previous accept state. In this case, we use the
+ 	 *  ATN-generated exception object.
+ 	 */
+-	protected int startIndex = -1;
++    protected int startIndex = -1;,
+ 
+-	/** line number 1..n within the input */
+-	protected int line = 1;
++    /** line number 1..n within the input */
++    protected int line = 1;,
+ 
+-	/** The index of the character relative to the beginning of the line 0..n-1 */
+-	protected int charPositionInLine = 0;
++    /** The index of the character relative to the beginning of the line 0..n-1 */
++    protected int charPositionInLine = 0;,
++    @NotNull
++	public final DFA[] dfa;,
++    protected int mode = Lexer.DEFAULT_MODE;,
+ 
+-	@NotNull
+-	public final DFA[] dfa;
+-	protected int mode = Lexer.DEFAULT_MODE;
++    /** Used during DFA/ATN exec to record the most recent accept configuration info */
++    @NotNull
++	protected final ExecState prevAccept = new ExecState();,
++    public static int ATN_failover = 0;,
++    public static int match_calls = 0;,
+ 
+-	/** Used during DFA/ATN exec to record the most recent accept configuration info */
+-	@NotNull
+-	protected final ExecState prevAccept = new ExecState();
+-
+-	public static int ATN_failover = 0;
+-	public static int match_calls = 0;
+-
+-	public LexerATNSimulator(@NotNull ATN atn) {
++    public LexerATNSimulator(@NotNull ATN atn) {
+ 		this(null, atn);
+ 	}
+ 
+-	public LexerATNSimulator(@Nullable Lexer recog, @NotNull ATN atn) {
++    public LexerATNSimulator(@Nullable Lexer recog, @NotNull ATN atn) {
+ 		super(atn);
+ 		dfa = new DFA[atn.modeToStartState.size()];
+ 		for (int i=0; i<atn.modeToStartState.size(); i++) {
+@@ -124,7 +124,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		this.recog = recog;
+ 	}
+ 
+-	public void copyState(@NotNull LexerATNSimulator simulator) {
++    public void copyState(@NotNull LexerATNSimulator simulator) {
+ 		this.charPositionInLine = simulator.charPositionInLine;
+ 		this.line = simulator.line;
+ 		this.mode = simulator.mode;
+@@ -135,17 +135,17 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		this.traceFailed = simulator.traceFailed;
+ 	}
+ 
+-	public OutputStream getTraceStream() {
++    public OutputStream getTraceStream() {
+ 		return this.traceStream;
+ 	}
+ 
+-	public void setTraceStream(OutputStream traceStream) {
++    public void setTraceStream(OutputStream traceStream) {
+ 		this.traceStream = traceStream;
+ 		this.trace = traceStream != null;
+ 		this.traceFailed = false;
+ 	}
+ 
+-	public int match(@NotNull CharStream input, int mode) {
++    public int match(@NotNull CharStream input, int mode) {
+ 		match_calls++;
+ 		this.mode = mode;
+ 		int mark = input.mark();
+@@ -164,7 +164,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	@Override
++    @Override
+ 	public void reset() {
+ 		prevAccept.reset();
+ 		startIndex = -1;
+@@ -173,8 +173,9 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		mode = Lexer.DEFAULT_MODE;
+ 	}
+ 
+-	// only called from test code from outside
+-	public int matchATN(@NotNull CharStream input) {
++    // only called from test code from outside
++
++    public int matchATN(@NotNull CharStream input) {
+ 		traceMatchATN();
+ 		startIndex = input.index();
+ 		this.prevAccept.reset();
+@@ -197,7 +198,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		return predict;
+ 	}
+ 
+-	protected int execDFA(@NotNull CharStream input, @NotNull DFAState s0) {
++    protected int execDFA(@NotNull CharStream input, @NotNull DFAState s0) {
+ 		traceMatchDFA();
+ 
+ 		if ( dfa_debug ) {
+@@ -248,7 +249,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		return failOrAccept(prevAccept, input, reach, t);
+ 	}
+ 
+-	protected int execATN(@NotNull CharStream input, @NotNull ATNConfigSet s0, @Nullable DFAState ds0) {
++    protected int execATN(@NotNull CharStream input, @NotNull ATNConfigSet s0, @Nullable DFAState ds0) {
+ 		//System.out.println("enter exec index "+input.index()+" from "+s0);
+ 		@NotNull
+ 		ATNConfigSet closure = s0;
+@@ -339,7 +340,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		return failOrAccept(prevAccept, input, closure, t);
+ 	}
+ 
+-	protected int failOrAccept(ExecState prevAccept, CharStream input,
++    protected int failOrAccept(ExecState prevAccept, CharStream input,
+ 							   ATNConfigSet reach, int t)
+ 	{
+ 		if (prevAccept.state != null) {
+@@ -366,10 +367,11 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	/** Given a starting configuration set, figure out all ATN configurations
++    /** Given a starting configuration set, figure out all ATN configurations
+ 	 *  we can reach upon input t. Parameter reach is a return parameter.
+ 	 */
+-	protected void getReachableConfigSet(ATNConfigSet closure, ATNConfigSet reach, int t) {
++
++    protected void getReachableConfigSet(ATNConfigSet closure, ATNConfigSet reach, int t) {
+ 		for (ATNConfig c : closure) {
+ 			if ( debug ) {
+ 				System.out.format("testing %s at %s\n", getTokenName(t), c.toString(recog, true));
+@@ -386,7 +388,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	protected void processAcceptStates(@NotNull CharStream input, @NotNull ATNConfigSet reach) {
++    protected void processAcceptStates(@NotNull CharStream input, @NotNull ATNConfigSet reach) {
+ 		for (int ci=0; ci<reach.size(); ci++) {
+ 			ATNConfig c = reach.get(ci);
+ 			if ( c.state instanceof RuleStopState) {
+@@ -416,7 +418,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	protected void accept(@NotNull CharStream input, int ruleIndex, int actionIndex,
++    protected void accept(@NotNull CharStream input, int ruleIndex, int actionIndex,
+ 						  int index, int line, int charPos)
+ 	{
+ 		if ( debug ) {
+@@ -433,7 +435,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		consume(input);
+ 	}
+ 
+-	@Nullable
++    @Nullable
+ 	public ATNState getReachableTarget(Transition trans, int t) {
+ 		if ( trans instanceof AtomTransition ) {
+ 			AtomTransition at = (AtomTransition)trans;
+@@ -474,7 +476,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		return null;
+ 	}
+ 
+-	public void deleteWildcardConfigsForAlt(@NotNull ATNConfigSet closure, int ci, int alt) {
++    public void deleteWildcardConfigsForAlt(@NotNull ATNConfigSet closure, int ci, int alt) {
+ 		int j=ci+1;
+ 		while ( j<closure.size() ) {
+ 			ATNConfig c = closure.get(j);
+@@ -491,7 +493,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	@NotNull
++    @NotNull
+ 	protected ATNConfigSet computeStartState(@NotNull IntStream input,
+ 											 @NotNull ATNState p)
+ 	{
+@@ -505,7 +507,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		return configs;
+ 	}
+ 
+-	protected void closure(@NotNull ATNConfig config, @NotNull ATNConfigSet configs) {
++    protected void closure(@NotNull ATNConfig config, @NotNull ATNConfigSet configs) {
+ 		if ( debug ) {
+ 			System.out.println("closure("+config.toString(recog, true)+")");
+ 		}
+@@ -554,7 +556,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	@Nullable
++    @Nullable
+ 	public ATNConfig getEpsilonTarget(@NotNull ATNConfig config, @NotNull Transition t) {
+ 		ATNState p = config.state;
+ 		ATNConfig c = null;
+@@ -584,7 +586,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		return c;
+ 	}
+ 
+-	protected int failOverToATN(@NotNull CharStream input, @NotNull DFAState s) {
++    protected int failOverToATN(@NotNull CharStream input, @NotNull DFAState s) {
+ 		traceFailOverToATN();
+ 
+ 		if ( dfa_debug ) {
+@@ -606,7 +608,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		return ttype;
+ 	}
+ 
+-	protected void markAcceptState(@NotNull ExecState state, @NotNull CharStream input, @NotNull DFAState dfaState) {
++    protected void markAcceptState(@NotNull ExecState state, @NotNull CharStream input, @NotNull DFAState dfaState) {
+ 		state.index = input.index();
+ 		state.line = line;
+ 		state.charPos = charPositionInLine;
+@@ -614,7 +616,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		state.state = dfaState;
+ 	}
+ 
+-	protected void markAcceptState(@NotNull ExecState state, @NotNull CharStream input, @NotNull ATNConfig config) {
++    protected void markAcceptState(@NotNull ExecState state, @NotNull CharStream input, @NotNull ATNConfig config) {
+ 		state.index = input.index();
+ 		state.line = line;
+ 		state.charPos = charPositionInLine;
+@@ -622,7 +624,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		state.state = null;
+ 	}
+ 
+-	protected DFAState addDFAEdge(@NotNull DFAState from,
++    protected DFAState addDFAEdge(@NotNull DFAState from,
+ 								  int t,
+ 								  @NotNull ATNConfigSet q)
+ 	{
+@@ -642,7 +644,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		return to;
+ 	}
+ 
+-	protected void addDFAEdge(@NotNull DFAState p, int t, @NotNull DFAState q) {
++    protected void addDFAEdge(@NotNull DFAState p, int t, @NotNull DFAState q) {
+ 		if (t < 0 || t > MAX_DFA_EDGE) return; // Only track edges within the DFA bounds
+ 		if ( p.edges==null ) {
+ 			//  make room for tokens 1..n and -1 masquerading as index 0
+@@ -655,7 +657,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		p.edges[t] = q; // connect
+ 	}
+ 
+-	/** Add a new DFA state if there isn't one with this set of
++    /** Add a new DFA state if there isn't one with this set of
+ 		configurations already. This method also detects the first
+ 		configuration containing an ATN rule stop state. Later, when
+ 		traversing the DFA, we will know which rule to accept. Also, we
+@@ -677,7 +679,8 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		states reached by traversing predicates. Since this is when we
+ 		test them, we cannot cash the DFA state target of ID.
+ 	 */
+-	@Nullable
++
++    @Nullable
+ 	protected DFAState addDFAState(@NotNull ATNConfigSet configs) {
+ 		DFAState proposed = new DFAState(configs);
+ 		DFAState existing = dfa[mode].states.get(proposed);
+@@ -714,26 +717,27 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		return newState;
+ 	}
+ 
+-	@Nullable
++    @Nullable
+ 	public DFA getDFA(int mode) {
+ 		return dfa[mode];
+ 	}
+ 
+-	/** Get the text of the current token */
+-	@NotNull
++    @NotNull
+ 	public String getText(@NotNull CharStream input) {
+ 		return input.getText(Interval.of(startIndex, input.index()));
+ 	}
+ 
+-	public int getLine() {
++    /** Get the text of the current token */
++
++    public int getLine() {
+ 		return line;
+ 	}
+ 
+-	public int getCharPositionInLine() {
++    public int getCharPositionInLine() {
+ 		return charPositionInLine;
+ 	}
+ 
+-	public void consume(@NotNull CharStream input) {
++    public void consume(@NotNull CharStream input) {
+ 		int curChar = input.LA(1);
+ 		if ( curChar=='\n' ) {
+ 			line++;
+@@ -745,96 +749,96 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		traceConsume(input, curChar);
+ 	}
+ 
+-	@NotNull
++    @NotNull
+ 	public String getTokenName(int t) {
+ 		if ( t==-1 ) return "EOF";
+ 		//if ( atn.g!=null ) return atn.g.getTokenDisplayName(t);
+ 		return "'"+(char)t+"'";
+ 	}
+ 
+-	/*
++    /*
+ 	 * Trace helpers (API and file format are work in progress)
+ 	 */
+ 
+-	public void traceEndMatch() {
++    public void traceEndMatch() {
+ 		if (trace) {
+ 			traceSlow(LexerOpCode.EndMatch);
+ 		}
+ 	}
+ 
+-	public void traceMatchATN() {
++    public void traceMatchATN() {
+ 		if (trace) {
+ 			traceSlow(LexerOpCode.MatchATN);
+ 		}
+ 	}
+ 
+-	public void traceMatchDFA() {
++    public void traceMatchDFA() {
+ 		if (trace) {
+ 			traceSlow(LexerOpCode.MatchDFA);
+ 		}
+ 	}
+ 
+-	public void traceLookahead1() {
++    public void traceLookahead1() {
+ 		if (trace) {
+ 			traceSlow(LexerOpCode.Lookahead1);
+ 		}
+ 	}
+ 
+-	public void traceFailOverToATN() {
++    public void traceFailOverToATN() {
+ 		if (trace) {
+ 			traceSlow(LexerOpCode.FailOverToATN);
+ 		}
+ 	}
+ 
+-	public void tracePredict(int prediction) {
++    public void tracePredict(int prediction) {
+ 		if (trace) {
+ 			traceIntSlow(LexerOpCode.Predict, prediction);
+ 		}
+ 	}
+ 
+-	public void traceAcceptState(int prediction) {
++    public void traceAcceptState(int prediction) {
+ 		if (trace) {
+ 			traceIntSlow(LexerOpCode.AcceptState, prediction);
+ 		}
+ 	}
+ 
+-	public void traceSeek(int index) {
++    public void traceSeek(int index) {
+ 		if (trace) {
+ 			traceIntSlow(LexerOpCode.Seek, index);
+ 		}
+ 	}
+ 
+-	public final void traceBeginMatch(CharStream input, int mode) {
++    public final void traceBeginMatch(CharStream input, int mode) {
+ 		if (trace) {
+ 			traceBeginMatchSlow(input, mode);
+ 		}
+ 	}
+ 
+-	public final void traceConsume(CharStream input, int c) {
++    public final void traceConsume(CharStream input, int c) {
+ 		if (trace) {
+ 			traceConsumeSlow(input, c);
+ 		}
+ 	}
+ 
+-	public final void tracePushMode(int mode) {
++    public final void tracePushMode(int mode) {
+ 		if (trace) {
+ 			traceByteSlow(LexerOpCode.PushMode, (byte)mode);
+ 		}
+ 	}
+ 
+-	public final void tracePopMode() {
++    public final void tracePopMode() {
+ 		if (trace) {
+ 			traceSlow(LexerOpCode.PopMode);
+ 		}
+ 	}
+ 
+-	public final void traceEmit(Token token) {
++    public final void traceEmit(Token token) {
+ 		if (trace) {
+ 			traceEmitSlow(token);
+ 		}
+ 	}
+ 
+-	private void traceSlow(LexerOpCode opcode) {
++    private void traceSlow(LexerOpCode opcode) {
+ 		assert traceStream != null;
+ 		assert opcode.getArgumentSize() == 0;
+ 
+@@ -848,7 +852,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	private void traceByteSlow(LexerOpCode opcode, byte arg) {
++    private void traceByteSlow(LexerOpCode opcode, byte arg) {
+ 		assert traceStream != null;
+ 		assert opcode.getArgumentSize() == 1;
+ 
+@@ -863,7 +867,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	private void traceByteIntSlow(LexerOpCode opcode, byte arg1, int arg2) {
++    private void traceByteIntSlow(LexerOpCode opcode, byte arg1, int arg2) {
+ 		assert traceStream != null;
+ 		assert opcode.getArgumentSize() == 5;
+ 
+@@ -879,7 +883,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	private void traceIntSlow(LexerOpCode opcode, int arg) {
++    private void traceIntSlow(LexerOpCode opcode, int arg) {
+ 		assert traceStream != null;
+ 		assert opcode.getArgumentSize() == 4;
+ 
+@@ -894,7 +898,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	private void traceIntIntSlow(LexerOpCode opcode, int arg1, int arg2) {
++    private void traceIntIntSlow(LexerOpCode opcode, int arg1, int arg2) {
+ 		assert traceStream != null;
+ 		assert opcode.getArgumentSize() == 8;
+ 
+@@ -910,7 +914,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	private void traceIntIntIntIntSlow(LexerOpCode opcode, int arg1, int arg2, int arg3, int arg4) {
++    private void traceIntIntIntIntSlow(LexerOpCode opcode, int arg1, int arg2, int arg3, int arg4) {
+ 		assert traceStream != null;
+ 		assert opcode.getArgumentSize() == 16;
+ 
+@@ -928,7 +932,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	private void traceIntSlow(int arg) {
++    private void traceIntSlow(int arg) {
+ 		assert traceStream != null;
+ 
+ 		if (!traceFailed) {
+@@ -944,11 +948,11 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	private void traceBeginMatchSlow(CharStream input, int mode) {
++    private void traceBeginMatchSlow(CharStream input, int mode) {
+ 		traceByteIntSlow(LexerOpCode.BeginMatch, (byte)mode, input.index());
+ 	}
+ 
+-	private void traceConsumeSlow(CharStream input, int c) {
++    private void traceConsumeSlow(CharStream input, int c) {
+ 		assert traceStream != null;
+ 
+ 		if (!traceFailed) {
+@@ -956,7 +960,7 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	private void traceEmitSlow(Token token) {
++    private void traceEmitSlow(Token token) {
+ 		assert traceStream != null;
+ 
+ 		if (token != null && !traceFailed) {
+@@ -964,31 +968,30 @@ public class LexerATNSimulator extends ATNSimulator {
+ 		}
+ 	}
+ 
+-	public enum LexerOpCode {
+-		BeginMatch(5),
+-		EndMatch(0),
+-		MatchATN(0),
+-		MatchDFA(0),
+-		FailOverToATN(0),
+-		AcceptState(4),
+-		Predict(4),
+-
+-		Seek(4),
+-		Consume(8),
+-		Lookahead1(0),
+-
+-		PushMode(1),
+-		PopMode(0),
+-		Emit(16);
++    public enum LexerOpCode{
+ 
+-		private final int argumentSize;
++        BeginMatch(5),
++        EndMatch(0),
++        MatchATN(0),
++        MatchDFA(0),
++        FailOverToATN(0),
++        AcceptState(4),
++        Predict(4),
++        Seek(4),
++        Consume(8),
++        Lookahead1(0),
++        PushMode(1),
++        PopMode(0),
++        Emit(16),
++        private final int argumentSize;,
+ 
+-		private LexerOpCode(int argumentSize) {
++        private LexerOpCode(int argumentSize) {
+ 			this.argumentSize = argumentSize;
+ 		}
+ 
+-		public int getArgumentSize() {
++        public int getArgumentSize() {
+ 			return argumentSize;
+ 		}
+-	}
+-}
++
++    }
++}
+\ No newline at end of file

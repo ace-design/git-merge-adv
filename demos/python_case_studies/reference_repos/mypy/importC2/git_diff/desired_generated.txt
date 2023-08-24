@@ -1,0 +1,36 @@
+diff --git a/python_case_studies/reference_repos/mypy/importC2/desired.py b/python_case_studies/demo_results/MethodUnion/mypy-importC2.py
+index 56b7523..0703921 100644
+--- a/python_case_studies/reference_repos/mypy/importC2/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/mypy-importC2.py
+@@ -1,18 +1,18 @@
+-"""Tests for the mypy parser
+-
+-Test case descriptions are in files test/data/parse[-errors].test."""
+-
+ import os.path
+-
+ import typing
+-
+-from mypy import defaults
+-from mypy.myunit import Suite, AssertionFailure
++from mypy.myunit import Suite,AssertionFailure,run_test
+ from mypy.test.helpers import assert_string_arrays_equal
+ from mypy.test.data import parse_test_cases
+ from mypy.test import config
+ from mypy.parse import parse
+ from mypy.errors import CompileError
++from mypy import defaults
++"""Tests for the mypy parser
++
++Test case descriptions are in files test/data/parse[-errors].test."""
++
++
++
+ 
+ 
+ class ParserSuite(Suite):
+@@ -74,3 +74,4 @@ def test_parse_error(testcase):
+             testcase.output, e.messages,
+             'Invalid compiler output ({}, line {})'.format(testcase.file,
+                                                            testcase.line))
++

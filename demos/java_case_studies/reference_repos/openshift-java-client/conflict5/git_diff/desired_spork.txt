@@ -1,0 +1,100 @@
+diff --git a/java_case_studies/reference_repos/openshift-java-client/conflict5/desired.java b/java_case_studies/reference_repos/openshift-java-client/conflict5/spork_result.java
+old mode 100755
+new mode 100644
+index e7b65da..4213b90
+--- a/java_case_studies/reference_repos/openshift-java-client/conflict5/desired.java
++++ b/java_case_studies/reference_repos/openshift-java-client/conflict5/spork_result.java
+@@ -10,13 +10,14 @@
+  ******************************************************************************/
+ package com.openshift.client;
+ 
+-import java.net.SocketTimeoutException;
+-import java.net.URL;
+-
+ import com.openshift.internal.client.RequestParameter;
+ import com.openshift.internal.client.httpclient.EncodingException;
+ import com.openshift.internal.client.httpclient.HttpClientException;
+ import com.openshift.internal.client.httpclient.IMediaType;
++import java.io.UnsupportedEncodingException;
++import java.net.SocketTimeoutException;
++import java.net.URL;
++
+ 
+ /**
+  * @author André Dietisheim
+@@ -57,18 +58,68 @@ public interface IHttpClient {
+     public static final int DEFAULT_READ_TIMEOUT = 2 * 60 * 1000;
+ 	public static final int NO_TIMEOUT = -1;
+ 
+-	public String get(URL url, int timeout) throws HttpClientException, SocketTimeoutException;
++	public void setUserAgent(String userAgent);
++	
++	public String getUserAgent();
++	
++	public void setAcceptVersion(String serviceVersion);
++
++	public String getAcceptVersion();
++	
++	public String get(URL url) throws HttpClientException, SocketTimeoutException;
+ 
+-	public String post(URL url, IMediaType mediaType, int timeout, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException, EncodingException;
++    public String get(URL url, int timeout) throws HttpClientException, SocketTimeoutException;
+ 
+-    public String put(URL url, IMediaType mediaType, int timeout, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException, EncodingException;
++<<<<<<< LEFT
++	public String post(URL url, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
++=======
++	public String post(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, EncodingException;
++>>>>>>> RIGHT
+ 
+-    public String delete(URL url, IMediaType mediaType, int timeout, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException, EncodingException;
++<<<<<<< LEFT
++    public String post(URL url, int timeout, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
++=======
++    public String post(Map<String, Object> parameters, URL url, int timeout) throws HttpClientException, SocketTimeoutException, EncodingException;
++>>>>>>> RIGHT
+ 
+-    public String delete(URL url, int timeout) throws HttpClientException, SocketTimeoutException, EncodingException;
++<<<<<<< LEFT
++	public String put(URL url, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
++=======
++    public String post(Map<String, Object> parameters, URL url, int timeout, IMediaType mediaType) throws HttpClientException, SocketTimeoutException, EncodingException;
++>>>>>>> RIGHT
++
++<<<<<<< LEFT
++    public String put(URL url, int timeout, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
++=======
++	public String put(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, EncodingException;
++>>>>>>> RIGHT
++
++<<<<<<< LEFT
++    public String delete(URL url) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
++=======
++    public String put(Map<String, Object> parameters, URL url, int timeout) throws HttpClientException, SocketTimeoutException, EncodingException;
++>>>>>>> RIGHT
++
++<<<<<<< LEFT
++    public String delete(URL url, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
++=======
++    public String put(Map<String, Object> parameters, URL url, int timeout, IMediaType mediaType) throws HttpClientException, SocketTimeoutException, EncodingException;
++
++	public String delete(Map<String, Object> parameters, URL url) throws HttpClientException, SocketTimeoutException, EncodingException;
++
++    public String delete(Map<String, Object> parameters, URL url, int timeout) throws HttpClientException, SocketTimeoutException, EncodingException;
++
++    public String delete(Map<String, Object> parameters, URL url, int timeout, IMediaType mediaType) throws HttpClientException, SocketTimeoutException, EncodingException;
++>>>>>>> RIGHT
++
++    public String delete(URL url, int timeout, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException;
++
++	public void setAcceptedMediaType(String acceptedMediaType);
++	
++	public String getAcceptedMediaType();
+ 
+-	void setUserAgent(String userAgent);
++    public void setRequestMediaType(IMediaType requestMediaType);
+ 
+-	void setAcceptVersion(String version);
++    public IMediaType getRequestMediaType();
+ 
+ }

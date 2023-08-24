@@ -1,0 +1,841 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict11/desired.java b/java_case_studies/reference_repos/alternator/conflict11/spork_result.java
+index ae7edb6..522373b 100644
+--- a/java_case_studies/reference_repos/alternator/conflict11/desired.java
++++ b/java_case_studies/reference_repos/alternator/conflict11/spork_result.java
+@@ -1,23 +1,5 @@
+ package com.michelboudreau.alternator;
+ 
+-import java.io.File;
+-import java.io.IOException;
+-import java.util.ArrayList;
+-import java.util.HashMap;
+-import java.util.HashSet;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Set;
+-
+-import javax.servlet.http.HttpServletRequest;
+-
+-import org.codehaus.jackson.annotate.JsonAutoDetect;
+-import org.codehaus.jackson.annotate.JsonMethod;
+-import org.codehaus.jackson.map.ObjectMapper;
+-import org.codehaus.jackson.map.SerializationConfig;
+-import org.slf4j.Logger;
+-import org.slf4j.LoggerFactory;
+-
+ import com.amazonaws.AmazonServiceException;
+ import com.amazonaws.services.dynamodb.model.AttributeValue;
+ import com.amazonaws.services.dynamodb.model.AttributeValueUpdate;
+@@ -107,12 +89,28 @@ import com.michelboudreau.alternator.validators.QueryRequestValidator;
+ import com.michelboudreau.alternator.validators.ScanRequestValidator;
+ import com.michelboudreau.alternator.validators.UpdateItemRequestValidator;
+ import com.michelboudreau.alternator.validators.UpdateTableRequestValidator;
++import java.io.File;
++import java.io.IOException;
++import java.util.ArrayList;
++import java.util.HashMap;
++import java.util.HashSet;
++import java.util.List;
++import java.util.Map;
++import java.util.Set;
++import javax.servlet.http.HttpServletRequest;
++import org.codehaus.jackson.annotate.JsonAutoDetect;
++import org.codehaus.jackson.annotate.JsonMethod;
++import org.codehaus.jackson.map.ObjectMapper;
++import org.codehaus.jackson.map.SerializationConfig;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
+ 
+-class AlternatorDBHandler {
+ 
++class AlternatorDBHandler {
+ 	private final Logger logger = LoggerFactory.getLogger(AlternatorDBHandler.class);
+ 
+ 	private Map<String, Table> tables = new HashMap<String, Table>();
++
+ 	private List<Table> tableList = new ArrayList<Table>();
+ 
+ 	// TODO: create constructor that can handle a file
+@@ -162,42 +160,38 @@ class AlternatorDBHandler {
+ 
+ 	public String handle(HttpServletRequest request) throws LimitExceededException, InternalServerErrorException, ResourceInUseException, ResourceNotFoundException, ConditionalCheckFailedException {
+ 		AmazonWebServiceRequestParser parser = new AmazonWebServiceRequestParser(request);
+-
+ 		switch (parser.getType()) {
+ 			// Tables
+-			case CREATE_TABLE:
++			case CREATE_TABLE :
+ 				return new CreateTableResultMarshaller().marshall(createTable(parser.getData(CreateTableRequest.class, CreateTableRequestJsonUnmarshaller.getInstance())));
+-			case DESCRIBE_TABLE:
++			case DESCRIBE_TABLE :
+ 				return new DescribeTableResultMarshaller().marshall(describeTable(parser.getData(DescribeTableRequest.class, DescribeTableRequestJsonUnmarshaller.getInstance())));
+-			case LIST_TABLES:
++			case LIST_TABLES :
+ 				return new ListTablesResultMarshaller().marshall(listTables(parser.getData(ListTablesRequest.class, ListTablesRequestJsonUnmarshaller.getInstance())));
+-			case UPDATE_TABLE:
++			case UPDATE_TABLE :
+ 				return new UpdateTableResultMarshaller().marshall(updateTable(parser.getData(UpdateTableRequest.class, UpdateTableRequestJsonUnmarshaller.getInstance())));
+-			case DELETE_TABLE:
++			case DELETE_TABLE :
+ 				return new DeleteTableResultMarshaller().marshall(deleteTable(parser.getData(DeleteTableRequest.class, DeleteTableRequestJsonUnmarshaller.getInstance())));
+-
+ 			// Items
+-			case PUT:
++			case PUT :
+ 				return new PutItemResultMarshaller().marshall(putItem(parser.getData(PutItemRequest.class, PutItemRequestJsonUnmarshaller.getInstance())));
+-			case GET:
++			case GET :
+ 				return new GetItemResultMarshaller().marshall(getItem(parser.getData(GetItemRequest.class, GetItemRequestJsonUnmarshaller.getInstance())));
+-
+-			case UPDATE:
++			case UPDATE :
+ 				return new UpdateItemResultMarshaller().marshall(updateItem(parser.getData(UpdateItemRequest.class, UpdateItemRequestJsonUnmarshaller.getInstance())));
+-			case DELETE:
++			case DELETE :
+ 				return new DeleteItemResultMarshaller().marshall(deleteItem(parser.getData(DeleteItemRequest.class, DeleteItemRequestJsonUnmarshaller.getInstance())));
+-			case BATCH_GET_ITEM:
+-				return new BatchGetItemResultMarshaller().marshall((batchGetItem(parser.getData(BatchGetItemRequest.class, BatchGetItemRequestJsonUnmarshaller.getInstance()))));
+-			case BATCH_WRITE_ITEM:
+-				return new BatchWriteItemResultMarshaller().marshall((batchWriteItem(parser.getData(BatchWriteItemRequest.class, BatchWriteItemRequestJsonUnmarshaller.getInstance()))));
+-
++			case BATCH_GET_ITEM :
++				return new BatchGetItemResultMarshaller().marshall(batchGetItem(parser.getData(BatchGetItemRequest.class, BatchGetItemRequestJsonUnmarshaller.getInstance())));
++			case BATCH_WRITE_ITEM :
++				return new BatchWriteItemResultMarshaller().marshall(batchWriteItem(parser.getData(BatchWriteItemRequest.class, BatchWriteItemRequestJsonUnmarshaller.getInstance())));
+ 			// Operations
+-			case QUERY:
++			case QUERY :
+ 				return new QueryResultMarshaller().marshall(query(parser.getData(QueryRequest.class, QueryRequestJsonUnmarshaller.getInstance())));
+-			case SCAN:
++			case SCAN :
+ 				return new ScanResultMarshaller().marshall(scan(parser.getData(ScanRequest.class, ScanRequestJsonUnmarshaller.getInstance())));
+-			default:
+-				logger.warn("The Request Type '" + parser.getType() + "' does not exist.");
++			default :
++				logger.warn(("The Request Type '" + parser.getType()) + "' does not exist.");
+ 				break;
+ 		}
+ 		return null;
+@@ -208,7 +202,6 @@ class AlternatorDBHandler {
+ 		if (this.tables.size() >= Limits.TABLE_MAX) {
+ 			throw new LimitExceededException("Cannot exceed 256 tables per account.");
+ 		}
+-
+ 		// Validate data coming in
+ 		// TODO: Look into how we're doing validation, maybe implement better solution
+ 		CreateTableRequestValidator validator = new CreateTableRequestValidator();
+@@ -216,20 +209,16 @@ class AlternatorDBHandler {
+ 		if (errors.size() != 0) {
+ 			throw new AmazonServiceException(errors.toString());
+ 		}
+-
+ 		// get information
+ 		String tableName = request.getTableName();
+-
+ 		// Check to make sure table with same name doesn't exist
+ 		if (this.tables.containsKey(tableName)) {
+-			throw new ResourceInUseException("The table you're currently trying to create (" + tableName + ") is already available.");
++			throw new ResourceInUseException(("The table you're currently trying to create (" + tableName) + ") is already available.");
+ 		}
+-
+ 		// Add table to map, array
+ 		Table table = new Table(tableName, request.getKeySchema(), request.getProvisionedThroughput());
+ 		this.tables.put(tableName, table);
+ 		this.tableList.add(table);
+-
+ 		return new CreateTableResult().withTableDescription(table.getTableDescription());
+ 	}
+ 
+@@ -240,17 +229,15 @@ class AlternatorDBHandler {
+ 		if (errors.size() != 0) {
+ 			throw new AmazonServiceException(errors.toString());
+ 		}
+-
+ 		// get information
+ 		String tableName = request.getTableName();
+ 		DescribeTableResult result = null;
+-
+ 		// Check to make sure table with same name doesn't exist
+ 		if (this.tables.containsKey(tableName)) {
+ 			Table table = this.tables.get(tableName);
+ 			result = new DescribeTableResult().withTable(table.getTableDescription());
+ 		} else {
+-			throw new ResourceNotFoundException("The table '" + tableName + "' does not exist.");
++			throw new ResourceNotFoundException(("The table '" + tableName) + "' does not exist.");
+ 		}
+ 		return result;
+ 	}
+@@ -262,14 +249,12 @@ class AlternatorDBHandler {
+ 		if (errors.size() != 0) {
+ 			throw createInternalServerException(errors);
+ 		}
+-
+ 		// Create defaults
+ 		String startTableName = request.getExclusiveStartTableName();
+ 		Integer limit = request.getLimit();
+ 		if (limit == null) {
+ 			limit = 100;
+ 		}
+-
+ 		// Check if startTableName exists
+ 		int startIndex = 0;
+ 		if (startTableName != null) {
+@@ -281,10 +266,9 @@ class AlternatorDBHandler {
+ 					}
+ 				}
+ 			} else {
+-				throw new ResourceNotFoundException("The ExclusiveStartTableName '" + startTableName + "' doesn't exist.");
++				throw new ResourceNotFoundException(("The ExclusiveStartTableName '" + startTableName) + "' doesn't exist.");
+ 			}
+ 		}
+-
+ 		// Calculate size max. depending on array size and limit
+ 		int size = this.tableList.size();
+ 		Boolean setTableName = false;
+@@ -292,19 +276,16 @@ class AlternatorDBHandler {
+ 			size = startIndex + limit;
+ 			setTableName = true;
+ 		}
+-
+ 		// Get list
+ 		List<String> tables = new ArrayList<String>();
+ 		for (int i = startIndex; i < size; i++) {
+ 			tables.add(this.tableList.get(i).getName());
+ 		}
+-
+ 		// Create result object
+ 		ListTablesResult result = new ListTablesResult().withTableNames(tables);
+ 		if (setTableName) {
+ 			result.setLastEvaluatedTableName(this.tableList.get(size).getName());
+ 		}
+-
+ 		return result;
+ 	}
+ 
+@@ -315,16 +296,13 @@ class AlternatorDBHandler {
+ 		if (errors.size() != 0) {
+ 			throw new AmazonServiceException(errors.toString());
+ 		}
+-
+ 		// Check existence
+ 		if (!this.tables.containsKey(request.getTableName())) {
+-			throw new ResourceNotFoundException("The table you want to delete '" + request.getTableName() + "' doesn't exist.");
++			throw new ResourceNotFoundException(("The table you want to delete '" + request.getTableName()) + "' doesn't exist.");
+ 		}
+-
+ 		// Delete Table
+ 		Table table = tables.remove(request.getTableName());
+ 		tableList.remove(table);
+-
+ 		return new DeleteTableResult().withTableDescription(table.getTableDescription().withTableStatus(TableStatus.DELETING));
+ 	}
+ 
+@@ -335,16 +313,13 @@ class AlternatorDBHandler {
+ 		if (errors.size() != 0) {
+ 			throw new AmazonServiceException(errors.toString());
+ 		}
+-
+ 		// Check existence
+ 		if (!this.tables.containsKey(request.getTableName())) {
+-			throw new ResourceNotFoundException("The table '" + request.getTableName() + "' doesn't exist.");
++			throw new ResourceNotFoundException(("The table '" + request.getTableName()) + "' doesn't exist.");
+ 		}
+-
+ 		// Update Table
+ 		Table table = this.tables.get(request.getTableName());
+ 		table.setProvisionedThroughput(request.getProvisionedThroughput());
+-
+ 		return new UpdateTableResult().withTableDescription(table.getTableDescription());
+ 	}
+ 
+@@ -354,66 +329,56 @@ class AlternatorDBHandler {
+ 		List<Error> errors = validator.validate(request);
+ 		if (errors.size() != 0) {
+ 			throw new AmazonServiceException(errors.toString());
+-
+ 		}
+-
+ 		// Check existence of table
+ 		Table table = this.tables.get(request.getTableName());
+ 		if (table == null) {
+-			throw new ResourceNotFoundException("The table '" + request.getTableName() + "' doesn't exist.");
++			throw new ResourceNotFoundException(("The table '" + request.getTableName()) + "' doesn't exist.");
+ 		}
+-
+ 		// Make sure that item specifies hash key and range key (if in schema)
+ 		KeySchemaElement hashKey = table.getKeySchema().getHashKeyElement();
+ 		KeySchemaElement rangeKey = table.getKeySchema().getRangeKeyElement();
+ 		AttributeValue hashItem = request.getItem().get(hashKey.getAttributeName());
+ 		AttributeValueType hashItemType = getAttributeValueType(hashItem);
+-		if (hashItem == null || hashItemType != AttributeValueType.fromString(hashKey.getAttributeType())) {
+-			throw new InternalServerErrorException("Missing hash key (" + hashKey.getAttributeName() + ") from item: " + request.getItem());
++		if ((hashItem == null) || (hashItemType != AttributeValueType.fromString(hashKey.getAttributeType()))) {
++			throw new InternalServerErrorException((("Missing hash key (" + hashKey.getAttributeName()) + ") from item: ") + request.getItem());
+ 		}
+ 		if (rangeKey != null) {
+ 			AttributeValue rangeItem = request.getItem().get(rangeKey.getAttributeName());
+ 			AttributeValueType rangeItemType = getAttributeValueType(rangeItem);
+-			if (rangeItem == null || rangeItemType != AttributeValueType.fromString(rangeKey.getAttributeType())) {
+-				throw new InternalServerErrorException("Missing range key (" + rangeKey.getAttributeName() + ") from item: " + request.getItem());
++			if ((rangeItem == null) || (rangeItemType != AttributeValueType.fromString(rangeKey.getAttributeType()))) {
++				throw new InternalServerErrorException((("Missing range key (" + rangeKey.getAttributeName()) + ") from item: ") + request.getItem());
+ 			}
+ 		}
+-
+ 		// Get current item if it exists
+ //		Map<String, AttributeValue> item = table.getItem(getKeyValue(request.getItem().get(table.getHashKeyName())));
+-        Map<String, AttributeValue> requestItem = request.getItem();
+-        String hashKeyValue = getKeyValue(requestItem.get(table.getHashKeyName()));
+-        String rangeKeyValue = getKeyValue(requestItem.get(table.getRangeKeyName()));
++		Map<String, AttributeValue> requestItem = request.getItem();
++		String hashKeyValue = getKeyValue(requestItem.get(table.getHashKeyName()));
++		String rangeKeyValue = getKeyValue(requestItem.get(table.getRangeKeyName()));
+ 		Map<String, AttributeValue> item = table.getItem(hashKeyValue, rangeKeyValue);
+-
+ 		// Check conditional put
+ 		if (request.getExpected() != null) {
+ 			for (Map.Entry<String, ExpectedAttributeValue> entry : request.getExpected().entrySet()) {
+ 				String key = entry.getKey();
+ 				ExpectedAttributeValue value = entry.getValue();
+ 				value.setExists(value.getValue() != null);
+-				if ((value.getExists() && item == null) || (!value.getExists() && item != null)) {
++				if ((value.getExists() && (item == null)) || ((!value.getExists()) && (item != null))) {
+ 					throw new ConditionalCheckFailedException("The exist conditional could not be met.");
+ 				}
+ 				if (value.getValue() != null) {
+ 					// check to see if value conditional is equal
+-					if (
+-							(value.getValue().getN() != null && !item.get(key).equals(value.getValue().getN())) || (value.getValue().getS() != null && !item.get(key).equals(value.getValue().getS())) || (value.getValue().getNS() != null && !item.get(key).equals(value.getValue().getNS())) || (value.getValue().getSS() != null && !item.get(key).equals(value.getValue().getSS()))
+-							) {
++					if (((((value.getValue().getN() != null) && (!item.get(key).equals(value.getValue().getN()))) || ((value.getValue().getS() != null) && (!item.get(key).equals(value.getValue().getS())))) || ((value.getValue().getNS() != null) && (!item.get(key).equals(value.getValue().getNS())))) || ((value.getValue().getSS() != null) && (!item.get(key).equals(value.getValue().getSS())))) {
+ 						throw new ConditionalCheckFailedException("The value conditional could is not equal");
+ 					}
+ 				}
+ 			}
+ 		}
+-
+-		PutItemResult result = new PutItemResult().withConsumedCapacityUnits(1D);
+-		if (item != null && request.getReturnValues() != null && ReturnValue.fromValue(request.getReturnValues()) == ReturnValue.ALL_OLD) {
++		PutItemResult result = new PutItemResult().withConsumedCapacityUnits(1.0);
++		if (((item != null) && (request.getReturnValues() != null)) && (ReturnValue.fromValue(request.getReturnValues()) == ReturnValue.ALL_OLD)) {
+ 			result.setAttributes(item);
+ 		}
+-
+ 		// put the item in the table
+ 		table.putItem(request.getItem());
+-
+ 		return result;
+ 	}
+ 
+@@ -424,36 +389,32 @@ class AlternatorDBHandler {
+ 		if (errors.size() != 0) {
+ 			throw new AmazonServiceException(errors.toString());
+ 		}
+-
+ 		// get information
+ 		String tableName = request.getTableName();
+ 		Key key = request.getKey();
+ 		List<String> attributesToGet = request.getAttributesToGet();
+ 		GetItemResult result = new GetItemResult();
+-
+ 		// Check to make sure table exists
+ 		if (!this.tables.containsKey(tableName)) {
+-			throw new ResourceNotFoundException("The table you're currently trying to access (" + tableName + ") doesn't exists.");
++			throw new ResourceNotFoundException(("The table you're currently trying to access (" + tableName) + ") doesn't exists.");
+ 		}
+ 		// Check to make sure Key is valid
+ 		String hashKeyValue = getKeyValue(key.getHashKeyElement());
+-        ItemRangeGroup rangeGroup = this.tables.get(tableName).getItemRangeGroup(hashKeyValue);
+-
++		ItemRangeGroup rangeGroup = this.tables.get(tableName).getItemRangeGroup(hashKeyValue);
+ 		if (rangeGroup == null) {
+ 			return new GetItemResult();
+ 			// throw new ResourceNotFoundException("No item with Hash Key (" + hashKeyValue + ") exists.");
+ 		} else {
+-            String rangeKeyValue = getKeyValue(key.getRangeKeyElement());
+-            Map<String, AttributeValue> item = this.tables.get(tableName).getItem(hashKeyValue, rangeKeyValue);
+-            if (item == null) {
++			String rangeKeyValue = getKeyValue(key.getRangeKeyElement());
++			Map<String, AttributeValue> item = this.tables.get(tableName).getItem(hashKeyValue, rangeKeyValue);
++			if (item == null) {
+ 				return new GetItemResult();
+ 				// throw new ResourceNotFoundException("No item with Hash Key (" + hashKeyValue + ") and Range Key )" + rangeKeyValue + ") exists.");
+-            }
+-
++			}
+ 			if (attributesToGet == null) {
+ 				result.setItem(item);
+ 			} else {
+-                Map<String, AttributeValue> response = new HashMap<String, AttributeValue>();
++				Map<String, AttributeValue> response = new HashMap<String, AttributeValue>();
+ 				for (String att : attributesToGet) {
+ 					AttributeValue res = item.get(att);
+ 					if (res != null) {
+@@ -473,53 +434,44 @@ class AlternatorDBHandler {
+ 		if (errors.size() != 0) {
+ 			throw new AmazonServiceException(errors.toString());
+ 		}
+-
+ 		// Check existence of table
+ 		Table table = this.tables.get(request.getTableName());
+ 		if (table == null) {
+-			throw new ResourceNotFoundException("The table '" + request.getTableName() + "' doesn't exist.");
++			throw new ResourceNotFoundException(("The table '" + request.getTableName()) + "' doesn't exist.");
+ 		}
+-
+ 		// Get hash and range key
+ 		String hashKey = getKeyValue(request.getKey().getHashKeyElement());
+ 		String rangeKey = getKeyValue(request.getKey().getRangeKeyElement());
+-
+ 		// Get current item if exist
+ 		Map<String, AttributeValue> item = table.getItem(hashKey, rangeKey);
+-
+ 		if (item == null) {
+-            if (rangeKey == null) {
+-                throw new ResourceNotFoundException("The item with hash key '" + hashKey + "' doesn't exist in table '" + table.getName() + "'");
+-            } else {
+-                throw new ResourceNotFoundException("The item with hash key '" + hashKey + "' and range key '" + rangeKey + "' doesn't exist in table '" + table.getName() + "'");
+-            }
++			if (rangeKey == null) {
++				throw new ResourceNotFoundException(((("The item with hash key '" + hashKey) + "' doesn't exist in table '") + table.getName()) + "'");
++			} else {
++				throw new ResourceNotFoundException(((((("The item with hash key '" + hashKey) + "' and range key '") + rangeKey) + "' doesn't exist in table '") + table.getName()) + "'");
++			}
+ 		}
+-
+ 		// Check conditional put
+ 		if (request.getExpected() != null) {
+ 			for (Map.Entry<String, ExpectedAttributeValue> entry : request.getExpected().entrySet()) {
+ 				String key = entry.getKey();
+ 				ExpectedAttributeValue value = entry.getValue();
+ 				value.setExists(value.getValue() != null);
+-				if ((value.getExists() && item == null) || (!value.getExists() && item != null)) {
++				if ((value.getExists() && (item == null)) || ((!value.getExists()) && (item != null))) {
+ 					throw new ConditionalCheckFailedException("The exist conditional could not be met.");
+ 				}
+ 				if (value.getValue() != null) {
+ 					// check to see if value conditional is equal
+-					if (
+-							(value.getValue().getN() != null && !item.get(key).equals(value.getValue().getN())) || (value.getValue().getS() != null && !item.get(key).equals(value.getValue().getS())) || (value.getValue().getNS() != null && !item.get(key).equals(value.getValue().getNS())) || (value.getValue().getSS() != null && !item.get(key).equals(value.getValue().getSS()))
+-							) {
++					if (((((value.getValue().getN() != null) && (!item.get(key).equals(value.getValue().getN()))) || ((value.getValue().getS() != null) && (!item.get(key).equals(value.getValue().getS())))) || ((value.getValue().getNS() != null) && (!item.get(key).equals(value.getValue().getNS())))) || ((value.getValue().getSS() != null) && (!item.get(key).equals(value.getValue().getSS())))) {
+ 						throw new ConditionalCheckFailedException("The value conditional could is not equal");
+ 					}
+ 				}
+ 			}
+ 		}
+-
+-		DeleteItemResult result = new DeleteItemResult().withConsumedCapacityUnits(1D);
+-		if (item != null && request.getReturnValues() != null && ReturnValue.fromValue(request.getReturnValues()) == ReturnValue.ALL_OLD) {
++		DeleteItemResult result = new DeleteItemResult().withConsumedCapacityUnits(1.0);
++		if (((item != null) && (request.getReturnValues() != null)) && (ReturnValue.fromValue(request.getReturnValues()) == ReturnValue.ALL_OLD)) {
+ 			result.setAttributes(item);
+ 		}
+-
+ 		// remove the item from the table
+ 		table.removeItem(hashKey, rangeKey);
+ 		return result;
+@@ -537,17 +489,18 @@ class AlternatorDBHandler {
+ 			try {
+ 				for (Key itemKey : itemKeys) {
+ 					try {
+-                        String hashKeyValue = getKeyValue(itemKey.getHashKeyElement());
+-                        String rangeKeyValue = getKeyValue(itemKey.getRangeKeyElement());
++						String hashKeyValue = getKeyValue(itemKey.getHashKeyElement());
++						String rangeKeyValue = getKeyValue(itemKey.getRangeKeyElement());
+ 						Map<String, AttributeValue> item = this.tables.get(tableName).getItem(hashKeyValue, rangeKeyValue);
+ 						item = getItemWithAttributesToGet(item, attributeToGet);
+-						if (item != null)
++						if (item != null) {
+ 							items.add(item);
+-					} catch (NullPointerException e) {
++						}
++					} catch (java.lang.NullPointerException e) {
+ 						System.err.println("Caught NullPointerException: " + e.getMessage());
+ 					}
+ 				}
+-			} catch (NullPointerException e) {
++			} catch (java.lang.NullPointerException e) {
+ 				System.err.println("Caught NullPointerException: " + e.getMessage());
+ 			}
+ 			batchResponse.setConsumedCapacityUnits(1.0);
+@@ -584,7 +537,7 @@ class AlternatorDBHandler {
+ 			responses.put(tableName, batchWriteResponse);
+ 			batchWriteItemResult.setResponses(responses);
+ 			batchWriteItemResult.getResponses().put(tableName, batchWriteResponse);
+-            batchWriteItemResult.setUnprocessedItems(new HashMap<String, List<WriteRequest>>());
++			batchWriteItemResult.setUnprocessedItems(new HashMap<String, List<WriteRequest>>());
+ 		}
+ 		return batchWriteItemResult;
+ 	}
+@@ -598,138 +551,122 @@ class AlternatorDBHandler {
+ 		result.setConsumedCapacityUnits(0.5);
+ 		List<Map<String, AttributeValue>> items = new ArrayList<Map<String, AttributeValue>>();
+ 		for (String key : this.tables.get(request.getTableName()).getItemRangeGroups().keySet()) {
+-          ItemRangeGroup rangeGroup = this.tables.get(request.getTableName()).getItemRangeGroup(key);
+-          for (String rangeKey : rangeGroup.getKeySet()) {
+-			Map<String, AttributeValue> item = rangeGroup.getItem(rangeKey);
+-			if (request.getScanFilter() != null) {
+-				for (String k : request.getScanFilter().keySet()) {
+-					if (item.get(k) != null) {
+-						Condition cond = request.getScanFilter().get(k);
+-						if (cond.getComparisonOperator() == null) {
+-							throw new ResourceNotFoundException("There must be a comparisonOperator");
+-						}
+-						if (cond.getComparisonOperator().equals("EQ")) {
+-							if (cond.getAttributeValueList().size() == 1) {
+-								if (item.get(k).equals(cond.getAttributeValueList().get(0))) {
+-									items.add(item);
+-								}
+-							} else {
+-								if (item.get(k).equals(cond.getAttributeValueList())) {
+-									items.add(item);
+-								}
++			ItemRangeGroup rangeGroup = this.tables.get(request.getTableName()).getItemRangeGroup(key);
++			for (String rangeKey : rangeGroup.getKeySet()) {
++				Map<String, AttributeValue> item = rangeGroup.getItem(rangeKey);
++				if (request.getScanFilter() != null) {
++					for (String k : request.getScanFilter().keySet()) {
++						if (item.get(k) != null) {
++							Condition cond = request.getScanFilter().get(k);
++							if (cond.getComparisonOperator() == null) {
++								throw new ResourceNotFoundException("There must be a comparisonOperator");
+ 							}
+-						}
+-						if (cond.getComparisonOperator().equals("LE")) {
+-							if (cond.getAttributeValueList().size() == 1) {
+-								if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
+-									String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-									String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
+-									if (value.compareTo(comp) >= 0) {
++							if (cond.getComparisonOperator().equals("EQ")) {
++								if (cond.getAttributeValueList().size() == 1) {
++									if (item.get(k).equals(cond.getAttributeValueList().get(0))) {
+ 										items.add(item);
+ 									}
+-								} else {
+-									//TODO to do
+-									//List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+-								}
+-
+-							} else {
+-								//TODO to do
+-								if (item.get(k).equals(cond.getAttributeValueList())) {
++								} else if (item.get(k).equals(cond.getAttributeValueList())) {
+ 									items.add(item);
+ 								}
+ 							}
+-						}
+-						if (cond.getComparisonOperator().equals("LT")) {
+-							if (cond.getAttributeValueList().size() == 1) {
+-								if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
+-									String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-									String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
+-									if (value.compareTo(comp) < 0) {
+-										items.add(item);
++							if (cond.getComparisonOperator().equals("LE")) {
++								if (cond.getAttributeValueList().size() == 1) {
++									if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
++										String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
++										String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
++										if (value.compareTo(comp) >= 0) {
++											items.add(item);
++										}
++									} else {
++										// TODO to do
++										// List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+ 									}
+-								} else {
+-									//TODO to do
+-									//List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+-								}
+-
+-							} else {
+-								//TODO to do
++								} else //TODO to do
+ 								if (item.get(k).equals(cond.getAttributeValueList())) {
+ 									items.add(item);
+ 								}
+ 							}
+-						}
+-						if (cond.getComparisonOperator().equals("GE")) {
+-							if (cond.getAttributeValueList().size() == 1) {
+-								if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
+-									String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-									String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
+-									if (value.compareTo(comp) <= 0) {
+-										items.add(item);
++							if (cond.getComparisonOperator().equals("LT")) {
++								if (cond.getAttributeValueList().size() == 1) {
++									if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
++										String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
++										String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
++										if (value.compareTo(comp) < 0) {
++											items.add(item);
++										}
++									} else {
++										// TODO to do
++										// List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+ 									}
+-								} else {
+-									//TODO to do
+-									//List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+-								}
+-
+-							} else {
+-								//TODO to do
++								} else //TODO to do
+ 								if (item.get(k).equals(cond.getAttributeValueList())) {
+ 									items.add(item);
+ 								}
+ 							}
+-						}
+-						if (cond.getComparisonOperator().equals("GT")) {
+-							if (cond.getAttributeValueList().size() == 1) {
+-								if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
+-									if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
++							if (cond.getComparisonOperator().equals("GE")) {
++								if (cond.getAttributeValueList().size() == 1) {
++									if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
+ 										String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+ 										String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
+-										if (value.compareTo(comp) > 0) {
++										if (value.compareTo(comp) <= 0) {
+ 											items.add(item);
+ 										}
+ 									} else {
+-										String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-										String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
+-										if (Integer.parseInt(value) > Integer.parseInt(comp)) {
+-											items.add(item);
+-										}
++										// TODO to do
++										// List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+ 									}
+-								} else {
+-									//TODO to do
+-									//List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+-								}
+-
+-							} else {
+-								//TODO to do
++								} else //TODO to do
+ 								if (item.get(k).equals(cond.getAttributeValueList())) {
+ 									items.add(item);
+ 								}
+ 							}
+-						}
+-						if (cond.getComparisonOperator().equals("IN")) {
+-							for(AttributeValue value : cond.getAttributeValueList()){
+-								if(item.get(k).equals(value)){
++							if (cond.getComparisonOperator().equals("GT")) {
++								if (cond.getAttributeValueList().size() == 1) {
++									if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
++										if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
++											String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
++											String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
++											if (value.compareTo(comp) > 0) {
++												items.add(item);
++											}
++										} else {
++											String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
++											String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
++											if (Integer.parseInt(value) > Integer.parseInt(comp)) {
++												items.add(item);
++											}
++										}
++									} else {
++										// TODO to do
++										// List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
++									}
++								} else //TODO to do
++								if (item.get(k).equals(cond.getAttributeValueList())) {
+ 									items.add(item);
+ 								}
+ 							}
++							if (cond.getComparisonOperator().equals("IN")) {
++								for (AttributeValue value : cond.getAttributeValueList()) {
++									if (item.get(k).equals(value)) {
++										items.add(item);
++									}
++								}
++							}
+ 						}
+ 					}
++				} else {
++					items.add(item);
+ 				}
+-			} else {
+-				items.add(item);
+ 			}
+-          }
+ 		}
+ 		if ((request.getLimit() != null) && (items.size() > request.getLimit())) {
+ 			items = items.subList(0, request.getLimit() - 1);
+ 		}
+-
+ 		if (request.getAttributesToGet() != null) {
+ 			List<Map<String, AttributeValue>> copy = getItemWithAttributesToGet(items, request.getAttributesToGet());
+ 			items = copy;
+ 		}
+-		
+ 		result.setItems(items);
+ 		result.setCount(items.size());
+ 		result.setScannedCount(items.size());
+@@ -743,43 +680,42 @@ class AlternatorDBHandler {
+ 		if (errors.size() != 0) {
+ 			throw createInternalServerException(errors);
+ 		}
+-
+ 		// Check existence of table
+ 		Table table = this.tables.get(request.getTableName());
+ 		if (table == null) {
+-			throw new ResourceNotFoundException("The table '" + request.getTableName() + "' doesn't exist.");
++			throw new ResourceNotFoundException(("The table '" + request.getTableName()) + "' doesn't exist.");
+ 		}
+-
+-        String hashKeyValue = getKeyValue(request.getHashKeyValue());
+-        List<String> attributesToGet = request.getAttributesToGet();
+-
++		String hashKeyValue = getKeyValue(request.getHashKeyValue());
++		List<String> attributesToGet = request.getAttributesToGet();
+ 		QueryResult queryResult = new QueryResult();
+ 		List<Map<String, AttributeValue>> list = new ArrayList<Map<String, AttributeValue>>();
+-
++<<<<<<< LEFT
++        KeySchema keySchema = table.getKeySchema();
++        KeySchemaElement rangeKeyElement = keySchema.getRangeKeyElement();
++=======
+         KeySchema keySchema = table.getKeySchema();
+         KeySchemaElement rangeKeyElement = keySchema.getRangeKeyElement();
+-        ItemRangeGroup rangeGroup = table.getItemRangeGroup(hashKeyValue);
+-        if (rangeGroup != null) {
+-            for (Map<String, AttributeValue> item : rangeGroup.getItems(rangeKeyElement, request.getRangeKeyCondition())) {
+-				if (request.getLimit() == null || request.getLimit() <= 0 || list.size() < request.getLimit()) {
+-					if (request.getScanIndexForward() == null || request.getScanIndexForward() == false) {
++>>>>>>> RIGHT
++
++		ItemRangeGroup rangeGroup = table.getItemRangeGroup(hashKeyValue);
++		if (rangeGroup != null) {
++			for (Map<String, AttributeValue> item : rangeGroup.getItems(rangeKeyElement, request.getRangeKeyCondition())) {
++				if (((request.getLimit() == null) || (request.getLimit() <= 0)) || (list.size() < request.getLimit())) {
++					if ((request.getScanIndexForward() == null) || (request.getScanIndexForward() == false)) {
+ 						list.add(0, getItemWithAttributesToGet(item, attributesToGet));
+ 					} else {
+ 						list.add(getItemWithAttributesToGet(item, attributesToGet));
+ 					}
+ 				}
+-            }
+-        }
+-
+-
++			}
++		}
+ 		queryResult.setItems(list);
+ 		queryResult.setCount(list.size());
+ 		queryResult.setConsumedCapacityUnits(0.5);
+-
+-        // DynamoDBMapper implements paged query continuations if we return a LastEvaluatedKey value.
+-        // Leave this value null to indicate we are returning the full result set.
+-		queryResult.setLastEvaluatedKey(null);  // new Key(request.getHashKeyValue()));
+-
++								// DynamoDBMapper implements paged query continuations if we return a LastEvaluatedKey value.
++								// Leave this value null to indicate we are returning the full result set.
++		// new Key(request.getHashKeyValue()));
++		queryResult.setLastEvaluatedKey(null);
+ 		return queryResult;
+ 	}
+ 
+@@ -825,26 +761,22 @@ class AlternatorDBHandler {
+ 		if (errors.size() != 0) {
+ 			throw new AmazonServiceException(errors.toString());
+ 		}
+-
+ 		// get information
+ 		String tableName = request.getTableName();
+ 		Key key = request.getKey();
+ 		Map<String, ExpectedAttributeValue> expected = request.getExpected();
+ 		Map<String, AttributeValueUpdate> attributesToUpdate = request.getAttributeUpdates();
+ 		String returnValues = request.getReturnValues();
+-
+-
+ 		UpdateItemResult result = new UpdateItemResult();
+ 		result.setConsumedCapacityUnits(0.5);
+-
+ 		// Check to make sure table exists
+ 		if (!this.tables.containsKey(tableName)) {
+-			throw new ResourceNotFoundException("The table you're currently trying to access (" + tableName + ") doesn't exists.");
++			throw new ResourceNotFoundException(("The table you're currently trying to access (" + tableName) + ") doesn't exists.");
+ 		}
+ 		// Check to make sure Key is valid
+-        String hashKeyValue = getKeyValue(key.getHashKeyElement());
+-        String rangeKeyValue = getKeyValue(key.getRangeKeyElement());
+-        Map<String, AttributeValue> item = this.tables.get(tableName).getItem(hashKeyValue, rangeKeyValue);
++		String hashKeyValue = getKeyValue(key.getHashKeyElement());
++		String rangeKeyValue = getKeyValue(key.getRangeKeyElement());
++		Map<String, AttributeValue> item = this.tables.get(tableName).getItem(hashKeyValue, rangeKeyValue);
+ 		if (item == null) {
+ 			item = new HashMap<String, AttributeValue>();
+ 			item.put(this.tables.get(tableName).getHashKeyName(), key.getHashKeyElement());
+@@ -870,7 +802,7 @@ class AlternatorDBHandler {
+ 						if (attributesToUpdate.get(sKey).getValue() != null) {
+ 							if (item.get(sKey).getSS() != null) {
+ 								if (attributesToUpdate.get(sKey).getValue().getSS() == null) {
+-									throw new ConditionalCheckFailedException("It's not possible to delete something else than a List<String> for the attribute (" + sKey + ") of the item with hash key (" + item.get(sKey) + ")");
++									throw new ConditionalCheckFailedException(((("It's not possible to delete something else than a List<String> for the attribute (" + sKey) + ") of the item with hash key (") + item.get(sKey)) + ")");
+ 								} else {
+ 									for (String toDel : attributesToUpdate.get(sKey).getValue().getSS()) {
+ 										if (item.get(sKey).getSS().contains(toDel)) {
+@@ -881,7 +813,7 @@ class AlternatorDBHandler {
+ 								}
+ 							} else if (item.get(sKey).getNS() != null) {
+ 								if (attributesToUpdate.get(sKey).getValue().getNS() == null) {
+-									throw new ConditionalCheckFailedException("It's not possible to delete something else than a List<Number> for the attribute (" + sKey + ") of the item with hash key (" + item.get(sKey) + ")");
++									throw new ConditionalCheckFailedException(((("It's not possible to delete something else than a List<Number> for the attribute (" + sKey) + ") of the item with hash key (") + item.get(sKey)) + ")");
+ 								} else {
+ 									for (String toDel : attributesToUpdate.get(sKey).getValue().getNS()) {
+ 										if (item.get(sKey).getNS().contains(toDel)) {
+@@ -905,7 +837,7 @@ class AlternatorDBHandler {
+ 						if (attributesToUpdate.get(sKey).getValue() != null) {
+ 							if (item.get(sKey).getSS() != null) {
+ 								if (attributesToUpdate.get(sKey).getValue().getSS() == null) {
+-									throw new ConditionalCheckFailedException("It's not possible to delete something else than a List<String> for the attribute (" + sKey + ")");
++									throw new ConditionalCheckFailedException(("It's not possible to delete something else than a List<String> for the attribute (" + sKey) + ")");
+ 								} else {
+ 									for (String toUp : attributesToUpdate.get(sKey).getValue().getSS()) {
+ 										item.get(sKey).getSS().add(toUp);
+@@ -913,25 +845,24 @@ class AlternatorDBHandler {
+ 								}
+ 							} else if (item.get(sKey).getNS() != null) {
+ 								if (attributesToUpdate.get(sKey).getValue().getNS() == null) {
+-									throw new ConditionalCheckFailedException("It's not possible to delete something else than a List<Number> for the attribute (" + sKey + ")");
++									throw new ConditionalCheckFailedException(("It's not possible to delete something else than a List<Number> for the attribute (" + sKey) + ")");
+ 								} else {
+ 									for (String toUp : attributesToUpdate.get(sKey).getValue().getNS()) {
+ 										item.get(sKey).getNS().add(toUp);
+ 									}
+ 								}
+ 							} else if (item.get(sKey).getS() != null) {
+-								throw new ConditionalCheckFailedException("It's not possible to ADD on an attribute with a String type for the attribute (" + sKey + ")");
++								throw new ConditionalCheckFailedException(("It's not possible to ADD on an attribute with a String type for the attribute (" + sKey) + ")");
+ 							} else if (item.get(sKey).getN() != null) {
+ 								Double i = new Double(item.get(sKey).getN());
+ 								i = i + new Double(attributesToUpdate.get(sKey).getValue().getN());
+ 								item.get(sKey).setN(i + "");
+ 							}
+ 						} else {
+-							throw new ResourceNotFoundException("the provided update item with attribute (" + sKey + ") doesn't have an AttributeValue to perform the ADD");
++							throw new ResourceNotFoundException(("the provided update item with attribute (" + sKey) + ") doesn't have an AttributeValue to perform the ADD");
+ 						}
+ 					}
+ 				}
+-
+ 			}
+ 			for (String sKey : attributesToUpdate.keySet()) {
+ 				if (attributesToUpdate.get(sKey).getAction().equals("DELETE") == false) {
+@@ -966,5 +897,4 @@ class AlternatorDBHandler {
+ 		}
+ 		return copy;
+ 	}
+-
+ }

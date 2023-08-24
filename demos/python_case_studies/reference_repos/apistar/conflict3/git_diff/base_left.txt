@@ -1,0 +1,13 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict3/base.py b/python_case_studies/reference_repos/apistar/conflict3/left.py
+index afa3dc5..5ff932b 100644
+--- a/python_case_studies/reference_repos/apistar/conflict3/base.py
++++ b/python_case_studies/reference_repos/apistar/conflict3/left.py
+@@ -5,7 +5,7 @@ def create_tables():
+     """
+     Create SQLAlchemy tables.
+     """
+-    from apistar.main import get_current_app
++    from apistar.cli import get_current_app
+     from apistar.backends import SQLAlchemy
+     app = get_current_app()
+     db_backend = SQLAlchemy.build(settings=app.settings)

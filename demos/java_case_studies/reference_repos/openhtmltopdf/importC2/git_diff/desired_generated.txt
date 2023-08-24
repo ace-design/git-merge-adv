@@ -1,0 +1,38 @@
+diff --git a/java_case_studies/reference_repos/openhtmltopdf/importC2/desired.java b/java_case_studies/demo_results/MethodUnion/openhtmltopdf-importC2.java
+index d68d0f1..f19b3b8 100644
+--- a/java_case_studies/reference_repos/openhtmltopdf/importC2/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/openhtmltopdf-importC2.java
+@@ -1,10 +1,8 @@
+ package com.openhtmltopdf.objects.pdf;
+-
+ import java.awt.*;
+ import java.io.IOException;
+ import java.io.OutputStream;
+ import java.util.Map;
+-
+ import org.apache.pdfbox.cos.COSArray;
+ import org.apache.pdfbox.cos.COSName;
+ import org.apache.pdfbox.cos.COSStream;
+@@ -13,13 +11,12 @@ import org.apache.pdfbox.pdmodel.PDPage;
+ import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
+ import org.apache.pdfbox.util.Charsets;
+ import org.w3c.dom.Element;
+-
+ import com.openhtmltopdf.extend.OutputDevice;
+ import com.openhtmltopdf.pdfboxout.PdfBoxOutputDevice;
+ import com.openhtmltopdf.render.RenderingContext;
+ 
+-public class MergeBackgroundPdfDrawer extends PdfDrawerBase
+-{
++public class MergeBackgroundPdfDrawer extends PdfDrawerBase{
++
+ 
+     @Override
+     public Map<Shape, String> drawObject(Element e, double x, double y, double width, double height,
+@@ -69,4 +66,4 @@ public class MergeBackgroundPdfDrawer extends PdfDrawerBase
+         return null;
+     }
+ 
+-}
++}
+\ No newline at end of file

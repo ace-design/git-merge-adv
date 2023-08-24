@@ -1,0 +1,78 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict15/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict15.py
+index a930376..241848a 100644
+--- a/python_case_studies/reference_repos/transitions/conflict15/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict15.py
+@@ -1,15 +1,20 @@
++from utils import InheritedStuff
++from utils import Stuff
++from transitions import Machine
++from transitions import MachineError
++from transitions import State
++from transitions.core import listify
++from unittest import TestCase
++import warnings
++import sys
++from transitions import EventData
++from transitions.core import prep_ordered_arg
++from unittest import skipIf
+ try:
+     from builtins import object
+ except ImportError:
+     pass
+ 
+-from .utils import InheritedStuff
+-from .utils import Stuff
+-import sys
+-from transitions import Machine, MachineError, State, EventData
+-from transitions.core import listify, prep_ordered_arg
+-from unittest import TestCase, skipIf
+-import warnings
+ warnings.filterwarnings('error', category=PendingDeprecationWarning, message=r".*0\.5\.0.*")
+ 
+ try:
+@@ -696,6 +701,24 @@ class TestTransitions(TestCase):
+         with self.assertRaises(PendingDeprecationWarning):
+             m = Machine(None, add_self=False)
+ 
++<<<<<<< left_content.py
++    def test_remove_transition(self):
++        self.stuff.machine.add_transition('go', ['A', 'B', 'C'], 'D')
++        self.stuff.machine.add_transition('walk', 'A', 'B')
++        self.stuff.go()
++        self.assertEqual(self.stuff.state, 'D')
++        self.stuff.to_A()
++        self.stuff.machine.remove_transition('go', source='A')
++        with self.assertRaises(MachineError):
++            self.stuff.go()
++        self.stuff.walk()
++        self.stuff.go()
++        self.assertEqual(self.stuff.state, 'D')
++        self.stuff.to_C()
++        self.stuff.machine.remove_transition('go', dest='D')
++        self.assertFalse(hasattr(self.stuff, 'go'))
++
++=======
+     def test_machine_prepare(self):
+ 
+         global_mock = MagicMock()
+@@ -811,19 +834,4 @@ class TestTransitions(TestCase):
+         self.assertFalse(model.next_state())
+         model.blocker = True
+         self.assertTrue(model.next_state())
+-
+-    def test_remove_transition(self):
+-        self.stuff.machine.add_transition('go', ['A', 'B', 'C'], 'D')
+-        self.stuff.machine.add_transition('walk', 'A', 'B')
+-        self.stuff.go()
+-        self.assertEqual(self.stuff.state, 'D')
+-        self.stuff.to_A()
+-        self.stuff.machine.remove_transition('go', source='A')
+-        with self.assertRaises(MachineError):
+-            self.stuff.go()
+-        self.stuff.walk()
+-        self.stuff.go()
+-        self.assertEqual(self.stuff.state, 'D')
+-        self.stuff.to_C()
+-        self.stuff.machine.remove_transition('go', dest='D')
+-        self.assertFalse(hasattr(self.stuff, 'go'))
++>>>>>>> right_content.py

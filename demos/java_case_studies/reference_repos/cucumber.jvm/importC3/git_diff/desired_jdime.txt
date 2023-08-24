@@ -1,0 +1,481 @@
+diff --git a/java_case_studies/reference_repos/cucumber.jvm/importC3/desired.java b/java_case_studies/reference_repos/cucumber.jvm/importC3/jdime.java
+index de74ff3..3e3cc8b 100644
+--- a/java_case_studies/reference_repos/cucumber.jvm/importC3/desired.java
++++ b/java_case_studies/reference_repos/cucumber.jvm/importC3/jdime.java
+@@ -1,258 +1,273 @@
+ package io.cucumber.core.options;
+-
+ import io.cucumber.core.backend.ObjectFactory;
+ import io.cucumber.core.exception.CucumberException;
+ import io.cucumber.core.feature.FeatureWithLines;
+ import io.cucumber.core.order.PickleOrder;
+ import io.cucumber.core.plugin.Options;
+ import io.cucumber.core.snippets.SnippetType;
+-
+ import java.net.URI;
+ import java.util.ArrayList;
+ import java.util.Collection;
+ import java.util.List;
+-import java.util.Set;
+ import java.util.regex.Pattern;
+ 
+ public final class RuntimeOptionsBuilder {
+-    private final List<String> parsedTagFilters = new ArrayList<>();
+-    private final List<Pattern> parsedNameFilters = new ArrayList<>();
+-    private final List<FeatureWithLines> parsedFeaturePaths = new ArrayList<>();
+-    private final List<URI> parsedGlue = new ArrayList<>();
+-    private final ParsedPluginData parsedPluginData = new ParsedPluginData();
+-    private List<FeatureWithLines> parsedRerunPaths = null;
+-    private Integer parsedThreads = null;
+-    private Boolean parsedDryRun = null;
+-    private Boolean parsedStrict = null;
+-    private Boolean parsedMonochrome = null;
+-    private SnippetType parsedSnippetType = null;
+-    private Boolean parsedWip = null;
+-    private PickleOrder parsedPickleOrder = null;
+-    private Integer parsedCount = null;
+-    private Class<? extends ObjectFactory> parsedObjectFactoryClass = null;
+-
+-    public RuntimeOptionsBuilder addRerun(Collection<FeatureWithLines> featureWithLines) {
+-        if (parsedRerunPaths == null) {
+-            parsedRerunPaths = new ArrayList<>();
+-        }
+-        parsedRerunPaths.addAll(featureWithLines);
+-        return this;
+-    }
+-
+-    public RuntimeOptionsBuilder addFeature(FeatureWithLines featureWithLines) {
+-        parsedFeaturePaths.add(featureWithLines);
+-        return this;
+-    }
+-
+-    public RuntimeOptionsBuilder addGlue(URI glue) {
+-        parsedGlue.add(glue);
+-        return this;
+-    }
+-
+-    public RuntimeOptionsBuilder addNameFilter(Pattern pattern) {
+-        this.parsedNameFilters.add(pattern);
+-        return this;
+-    }
+-
+-    public RuntimeOptionsBuilder addPluginName(String name, boolean isAddPlugin) {
+-        this.parsedPluginData.addPluginName(name, isAddPlugin);
+-        return this;
+-    }
++  private final List<String> parsedTagFilters = new ArrayList<>();
+ 
+-    public RuntimeOptionsBuilder addTagFilter(String tagExpression) {
+-        this.parsedTagFilters.add(tagExpression);
+-        return this;
+-    }
++  private final List<Pattern> parsedNameFilters = new ArrayList<>();
+ 
+-    public RuntimeOptions build() {
+-        return build(RuntimeOptions.defaultOptions());
+-    }
++  private final List<FeatureWithLines> parsedFeaturePaths = new ArrayList<>();
+ 
+-    public RuntimeOptions build(RuntimeOptions runtimeOptions) {
+-        if (this.parsedThreads != null) {
+-            runtimeOptions.setThreads(this.parsedThreads);
+-        }
++  private final List<URI> parsedGlue = new ArrayList<>();
+ 
+-        if (this.parsedDryRun != null) {
+-            runtimeOptions.setDryRun(this.parsedDryRun);
+-        }
++  private final ParsedPluginData parsedPluginData = new ParsedPluginData();
+ 
+-        if (this.parsedStrict != null) {
+-            runtimeOptions.setStrict(this.parsedStrict);
+-        }
++  private List<FeatureWithLines> parsedRerunPaths = null;
+ 
+-        if (this.parsedMonochrome != null) {
+-            runtimeOptions.setMonochrome(this.parsedMonochrome);
+-        }
++  private Integer parsedThreads = null;
+ 
+-        if (this.parsedSnippetType != null) {
+-            runtimeOptions.setSnippetType(this.parsedSnippetType);
+-        }
++  private Class<? extends ObjectFactory> parsedObjectFactoryClass = null;
+ 
+-        if (this.parsedWip != null) {
+-            runtimeOptions.setWip(this.parsedWip);
+-        }
++  private Boolean parsedDryRun = null;
+ 
+-        if (this.parsedPickleOrder != null) {
+-            runtimeOptions.setPickleOrder(this.parsedPickleOrder);
+-        }
++  private Boolean parsedStrict = null;
+ 
+-        if (this.parsedCount != null) {
+-            runtimeOptions.setCount(this.parsedCount);
+-        }
++  private Boolean parsedMonochrome = null;
+ 
+-        if (!this.parsedTagFilters.isEmpty() || !this.parsedNameFilters.isEmpty() || hasFeaturesWithLineFilters()) {
+-            runtimeOptions.setTagExpressions(this.parsedTagFilters);
+-            runtimeOptions.setNameFilters(this.parsedNameFilters);
+-        }
+-        if (!this.parsedFeaturePaths.isEmpty() || this.parsedRerunPaths != null) {
+-            List<FeatureWithLines> features = new ArrayList<>(this.parsedFeaturePaths);
+-            if (parsedRerunPaths != null) {
+-                features.addAll(this.parsedRerunPaths);
+-            }
+-            runtimeOptions.setFeaturePaths(features);
+-        }
++  private SnippetType parsedSnippetType = null;
+ 
+-        if (!this.parsedGlue.isEmpty()) {
+-            runtimeOptions.setGlue(this.parsedGlue);
+-        }
++  private Boolean parsedWip = null;
+ 
+-        this.parsedPluginData.updateFormatters(runtimeOptions.getFormatters());
+-        this.parsedPluginData.updateSummaryPrinters(runtimeOptions.getSummaryPrinter());
++  private PickleOrder parsedPickleOrder = null;
+ 
+-        if (parsedObjectFactoryClass != null) {
+-            runtimeOptions.setObjectFactoryClass(parsedObjectFactoryClass);
+-        }
++  private Integer parsedCount = null;
+ 
+-        return runtimeOptions;
++  public RuntimeOptionsBuilder addRerun(Collection<FeatureWithLines> featureWithLines) {
++    if (parsedRerunPaths == null) {
++      parsedRerunPaths = new ArrayList<>();
+     }
+-
+-    private boolean hasFeaturesWithLineFilters() {
+-        return parsedRerunPaths != null || !parsedFeaturePaths.stream()
+-            .map(FeatureWithLines::lines)
+-            .allMatch(Set::isEmpty);
++    parsedRerunPaths.addAll(featureWithLines);
++    return this;
++  }
++
++  public RuntimeOptionsBuilder addFeature(FeatureWithLines featureWithLines) {
++    parsedFeaturePaths.add(featureWithLines);
++    return this;
++  }
++
++  public RuntimeOptionsBuilder addGlue(URI glue) {
++    parsedGlue.add(glue);
++    return this;
++  }
++
++  public RuntimeOptionsBuilder addNameFilter(Pattern pattern) {
++    this.parsedNameFilters.add(pattern);
++    return this;
++  }
++
++  public RuntimeOptionsBuilder addPluginName(String name, boolean isAddPlugin) {
++    this.parsedPluginData.addPluginName(name, isAddPlugin);
++    return this;
++  }
++
++  public RuntimeOptionsBuilder addTagFilter(String tagExpression) {
++    this.parsedTagFilters.add(tagExpression);
++    return this;
++  }
++
++  public RuntimeOptions build() {
++    return build(RuntimeOptions.defaultOptions());
++  }
++
++  public RuntimeOptions build(RuntimeOptions runtimeOptions) {
++    if (this.parsedThreads != null) {
++      runtimeOptions.setThreads(this.parsedThreads);
+     }
+-
+-    public RuntimeOptionsBuilder setCount(int count) {
+-        this.parsedCount = count;
+-        return this;
++    if (this.parsedDryRun != null) {
++      runtimeOptions.setDryRun(this.parsedDryRun);
+     }
+-
+-    public RuntimeOptionsBuilder setDryRun(boolean dryRun) {
+-        this.parsedDryRun = dryRun;
+-        return this;
++    if (this.parsedStrict != null) {
++      runtimeOptions.setStrict(this.parsedStrict);
+     }
+-
+-    public RuntimeOptionsBuilder setDryRun() {
+-        return setDryRun(true);
++    if (this.parsedMonochrome != null) {
++      runtimeOptions.setMonochrome(this.parsedMonochrome);
+     }
+-
+-    public RuntimeOptionsBuilder setMonochrome(boolean monochrome) {
+-        this.parsedMonochrome = monochrome;
+-        return this;
++    if (this.parsedSnippetType != null) {
++      runtimeOptions.setSnippetType(this.parsedSnippetType);
+     }
+-
+-    public RuntimeOptionsBuilder setMonochrome() {
+-        return setMonochrome(true);
++    if (this.parsedWip != null) {
++      runtimeOptions.setWip(this.parsedWip);
+     }
+-
+-    public RuntimeOptionsBuilder setPickleOrder(PickleOrder pickleOrder) {
+-        this.parsedPickleOrder = pickleOrder;
+-        return this;
++    if (this.parsedPickleOrder != null) {
++      runtimeOptions.setPickleOrder(this.parsedPickleOrder);
+     }
+-
+-    public RuntimeOptionsBuilder setSnippetType(SnippetType snippetType) {
+-        this.parsedSnippetType = snippetType;
+-        return this;
++    if (this.parsedCount != null) {
++      runtimeOptions.setCount(this.parsedCount);
+     }
+-
+-    public RuntimeOptionsBuilder setStrict() {
+-        return setStrict(true);
++    if (!this.parsedTagFilters.isEmpty() || !this.parsedNameFilters.isEmpty() || hasFeaturesWithLineFilters()) {
++      runtimeOptions.setTagExpressions(this.parsedTagFilters);
++      runtimeOptions.setNameFilters(this.parsedNameFilters);
+     }
+-
+-    public RuntimeOptionsBuilder setStrict(boolean strict) {
+-        this.parsedStrict = strict;
+-        return this;
++    if (!this.parsedFeaturePaths.isEmpty() || this.parsedRerunPaths != null) {
++      List<FeatureWithLines> features = new ArrayList<>(this.parsedFeaturePaths);
++      if (parsedRerunPaths != null) {
++        features.addAll(this.parsedRerunPaths);
++      }
++      runtimeOptions.setFeaturePaths(features);
+     }
+-
+-    public RuntimeOptionsBuilder setThreads(int threads) {
+-        this.parsedThreads = threads;
+-        return this;
++    if (!this.parsedGlue.isEmpty()) {
++      runtimeOptions.setGlue(this.parsedGlue);
+     }
+-
+-    public RuntimeOptionsBuilder setWip(boolean wip) {
+-        this.parsedWip = wip;
+-        return this;
++    this.parsedPluginData.updateFormatters(runtimeOptions.getFormatters());
++    this.parsedPluginData.updateSummaryPrinters(runtimeOptions.getSummaryPrinter());
++    if (parsedObjectFactoryClass != null) {
++      runtimeOptions.setObjectFactoryClass(parsedObjectFactoryClass);
+     }
++    return runtimeOptions;
++  }
+ 
+-    public RuntimeOptionsBuilder addDefaultSummaryPrinterIfNotPresent() {
+-        parsedPluginData.addDefaultSummaryPrinterIfNotPresent();
+-        return this;
++  private boolean hasFeaturesWithLineFilters() {
++    if (parsedRerunPaths != null) {
++      return true;
++    }
++    for (FeatureWithLines parsedFeaturePath : parsedFeaturePaths) {
++      if (!parsedFeaturePath.lines().isEmpty()) {
++        return true;
++      }
++    }
++    return 
++<<<<<<< left.java
++    parsedRerunPaths != null || !parsedFeaturePaths.stream().map(FeatureWithLines::lines).allMatch(Set::isEmpty)
++=======
++    false
++>>>>>>> right.java
++    ;
++  }
++
++  public RuntimeOptionsBuilder setCount(int count) {
++    this.parsedCount = count;
++    return this;
++  }
++
++  public RuntimeOptionsBuilder setDryRun(boolean dryRun) {
++    this.parsedDryRun = dryRun;
++    return this;
++  }
++
++  public RuntimeOptionsBuilder setDryRun() {
++    return setDryRun(true);
++  }
++
++  public RuntimeOptionsBuilder setMonochrome(boolean monochrome) {
++    this.parsedMonochrome = monochrome;
++    return this;
++  }
++
++  public RuntimeOptionsBuilder setMonochrome() {
++    return setMonochrome(true);
++  }
++
++  public RuntimeOptionsBuilder setPickleOrder(PickleOrder pickleOrder) {
++    this.parsedPickleOrder = pickleOrder;
++    return this;
++  }
++
++  public RuntimeOptionsBuilder setSnippetType(SnippetType snippetType) {
++    this.parsedSnippetType = snippetType;
++    return this;
++  }
++
++  public RuntimeOptionsBuilder setStrict() {
++    return setStrict(true);
++  }
++
++  public RuntimeOptionsBuilder setStrict(boolean strict) {
++    this.parsedStrict = strict;
++    return this;
++  }
++
++  public RuntimeOptionsBuilder setThreads(int threads) {
++    this.parsedThreads = threads;
++    return this;
++  }
++
++  public RuntimeOptionsBuilder setWip(boolean wip) {
++    this.parsedWip = wip;
++    return this;
++  }
++
++  public RuntimeOptionsBuilder addDefaultSummaryPrinterIfNotPresent() {
++    parsedPluginData.addDefaultSummaryPrinterIfNotPresent();
++    return this;
++  }
++
++  public RuntimeOptionsBuilder addDefaultFormatterIfNotPresent() {
++    parsedPluginData.addDefaultFormatterIfNotPresent();
++    return this;
++  }
++
++  public void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
++    this.parsedObjectFactoryClass = objectFactoryClass;
++  }
++
++  static final class ParsedPluginData {
++    private ParsedPlugins formatters = new ParsedPlugins();
++
++    private ParsedPlugins summaryPrinters = new ParsedPlugins();
++
++    void addPluginName(String name, boolean isAddPlugin) {
++      PluginOption pluginOption = PluginOption.parse(name);
++      if (pluginOption.isSummaryPrinter()) {
++        summaryPrinters.addName(pluginOption, isAddPlugin);
++      } else {
++        if (pluginOption.isFormatter()) {
++          formatters.addName(pluginOption, isAddPlugin);
++        } else {
++          throw new CucumberException("Unrecognized plugin: " + name);
++        }
++      }
+     }
+ 
+-    public RuntimeOptionsBuilder addDefaultFormatterIfNotPresent() {
+-        parsedPluginData.addDefaultFormatterIfNotPresent();
+-        return this;
++    void addDefaultSummaryPrinterIfNotPresent() {
++      if (summaryPrinters.names.isEmpty()) {
++        addPluginName("summary", false);
++      }
+     }
+ 
+-    public void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
+-        this.parsedObjectFactoryClass = objectFactoryClass;
++    void addDefaultFormatterIfNotPresent() {
++      if (formatters.names.isEmpty()) {
++        addPluginName("progress", false);
++      }
+     }
+ 
+-    static final class ParsedPluginData {
+-        private ParsedPlugins formatters = new ParsedPlugins();
+-        private ParsedPlugins summaryPrinters = new ParsedPlugins();
+-
+-        void addPluginName(String name, boolean isAddPlugin) {
+-            PluginOption pluginOption = PluginOption.parse(name);
+-            if (pluginOption.isSummaryPrinter()) {
+-                summaryPrinters.addName(pluginOption, isAddPlugin);
+-            } else if (pluginOption.isFormatter()) {
+-                formatters.addName(pluginOption, isAddPlugin);
+-            } else {
+-                throw new CucumberException("Unrecognized plugin: " + name);
+-            }
+-        }
++    void updateFormatters(List<Options.Plugin> formatter) {
++      this.formatters.updateNameList(formatter);
++    }
+ 
+-        void addDefaultSummaryPrinterIfNotPresent() {
+-            if (summaryPrinters.names.isEmpty()) {
+-                addPluginName("summary", false);
+-            }
+-        }
++    void updateSummaryPrinters(List<Options.Plugin> pluginSummaryPrinterNames) {
++      summaryPrinters.updateNameList(pluginSummaryPrinterNames);
++    }
+ 
+-        void addDefaultFormatterIfNotPresent() {
+-            if (formatters.names.isEmpty()) {
+-                addPluginName("progress", false);
+-            }
+-        }
++    private static class ParsedPlugins {
++      private List<Options.Plugin> names = new ArrayList<>();
+ 
+-        void updateFormatters(List<Options.Plugin> formatter) {
+-            this.formatters.updateNameList(formatter);
+-        }
++      private boolean clobber = false;
+ 
+-        void updateSummaryPrinters(List<Options.Plugin> pluginSummaryPrinterNames) {
+-            summaryPrinters.updateNameList(pluginSummaryPrinterNames);
++      void addName(Options.Plugin name, boolean isAddOption) {
++        names.add(name);
++        if (!isAddOption) {
++          clobber = true;
+         }
+-
+-        private static class ParsedPlugins {
+-            private List<Options.Plugin> names = new ArrayList<>();
+-            private boolean clobber = false;
+-
+-            void addName(Options.Plugin name, boolean isAddOption) {
+-                names.add(name);
+-                if (!isAddOption) {
+-                    clobber = true;
+-                }
+-            }
+-
+-            void updateNameList(List<Options.Plugin> nameList) {
+-                if (!names.isEmpty()) {
+-                    if (clobber) {
+-                        nameList.clear();
+-                    }
+-                    nameList.addAll(names);
+-                }
+-            }
++      }
++
++      void updateNameList(List<Options.Plugin> nameList) {
++        if (!names.isEmpty()) {
++          if (clobber) {
++            nameList.clear();
++          }
++          nameList.addAll(names);
+         }
++      }
+     }
+-}
++  }
++}
+\ No newline at end of file

@@ -1,0 +1,80 @@
+diff --git a/java_case_studies/reference_repos/stateless4j/conflict6/desired.java b/java_case_studies/demo_results/MethodUnion/stateless4j-conflict6.java
+index 904847d..8b0dded 100644
+--- a/java_case_studies/reference_repos/stateless4j/conflict6/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/stateless4j-conflict6.java
+@@ -1,21 +1,21 @@
+ package com.github.oxo42.stateless4j;
+-
+ import com.github.oxo42.stateless4j.delegates.Action1;
+ import com.github.oxo42.stateless4j.delegates.Action2;
+ import com.github.oxo42.stateless4j.transitions.Transition;
+ import com.github.oxo42.stateless4j.triggers.TriggerBehaviour;
+ import com.github.oxo42.stateless4j.validation.Enforce;
+-
+ import java.util.*;
+ 
+-public class StateRepresentation<TState, TTrigger> {
+-    private final TState state;
++public class StateRepresentation <TState, TTrigger>{
++
++    private final TState state;,
++    private final Map<TTrigger, List<TriggerBehaviour<TState, TTrigger>>> triggerBehaviours = new HashMap<>();,
++    private final List<Action2<Transition<TState, TTrigger>, Object[]>> entryActions = new ArrayList<>();,
++    private final List<Action1<Transition<TState, TTrigger>>> exitActions = new ArrayList<>();,
++    private final List<StateRepresentation<TState, TTrigger>> substates = new ArrayList<>();,
+ 
+-    private final Map<TTrigger, List<TriggerBehaviour<TState, TTrigger>>> triggerBehaviours = new HashMap<>();
+-    private final List<Action2<Transition<TState, TTrigger>, Object[]>> entryActions = new ArrayList<>();
+-    private final List<Action1<Transition<TState, TTrigger>>> exitActions = new ArrayList<>();
+-    private final List<StateRepresentation<TState, TTrigger>> substates = new ArrayList<>();
+-    private StateRepresentation<TState, TTrigger> superstate; // null
++    // null
++    private StateRepresentation<TState, TTrigger> superstate;,
+ 
+     public StateRepresentation(TState state) {
+         this.state = state;
+@@ -25,10 +25,21 @@ public class StateRepresentation<TState, TTrigger> {
+         return triggerBehaviours;
+     }
+ 
+-    public Boolean canHandle(TTrigger trigger) {
++    <<<<<<< left_content.java
++public Boolean canHandle(TTrigger trigger) {
+         return tryFindHandler(trigger) != null;
++=======
++public boolean canHandle(TTrigger trigger) {
++        try {
++            tryFindHandler(trigger);
++            return true;
++        } catch (Exception e) {
++            return false;
++        }
++>>>>>>> right_content.java
+     }
+ 
++
+     public TriggerBehaviour<TState, TTrigger> tryFindHandler(TTrigger trigger) {
+         TriggerBehaviour result = tryFindLocalHandler(trigger);
+         if (result == null && superstate != null) {
+@@ -71,6 +82,13 @@ public class StateRepresentation<TState, TTrigger> {
+         });
+     }
+ 
++    @Override
++            public void doIt(Transition<TState, TTrigger> t, Object[] args) {
++                if (t.getTrigger().equals(trigger)) {
++                    action.doIt(t, args);
++                }
++            }
++
+     public void addEntryAction(Action2<Transition<TState, TTrigger>, Object[]> action) {
+         entryActions.add(Enforce.argumentNotNull(action, "action"));
+     }
+@@ -184,4 +202,5 @@ public class StateRepresentation<TState, TTrigger> {
+ 
+         return new ArrayList<>(result);
+     }
+-}
++
++}
+\ No newline at end of file

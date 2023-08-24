@@ -1,0 +1,87 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict11/left.java b/java_case_studies/reference_repos/Jest/conflict11/right.java
+index 9f64d13..eb7145c 100755
+--- a/java_case_studies/reference_repos/Jest/conflict11/left.java
++++ b/java_case_studies/reference_repos/Jest/conflict11/right.java
+@@ -5,7 +5,7 @@ import com.google.gson.Gson;
+ import com.google.gson.JsonElement;
+ import com.google.gson.JsonParser;
+ import com.google.gson.JsonSyntaxException;
+-import io.searchbox.Action;
++import io.searchbox.action.Action;
+ import io.searchbox.client.AbstractJestClient;
+ import io.searchbox.client.JestClient;
+ import io.searchbox.client.JestResult;
+@@ -20,6 +20,7 @@ import org.apache.http.concurrent.FutureCallback;
+ import org.apache.http.entity.StringEntity;
+ import org.apache.http.impl.client.CloseableHttpClient;
+ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
++import org.apache.http.nio.client.HttpAsyncClient;
+ import org.apache.http.util.EntityUtils;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+@@ -42,7 +43,8 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+     private CloseableHttpAsyncClient asyncClient;
+     private Charset entityEncoding = Charset.forName("utf-8");
+ 
+-    public JestResult execute(Action clientRequest) throws IOException {
++    @Override
++    public <T extends JestResult> T execute(Action<T> clientRequest) throws IOException {
+ 
+         String elasticSearchRestUrl = getRequestURL(getElasticSearchServer(), clientRequest.getURI());
+ 
+@@ -70,8 +72,9 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+         return deserializeResponse(response, clientRequest);
+     }
+ 
+-    public void executeAsync(final Action clientRequest, final JestResultHandler<JestResult> resultHandler)
+-            throws ExecutionException, InterruptedException, IOException {
++    @Override
++    public <T extends JestResult> void executeAsync(final Action<T> clientRequest, final JestResultHandler<T> resultHandler)
++    throws ExecutionException, InterruptedException, IOException {
+ 
+         synchronized (this) {
+             if (!asyncClient.isRunning()) {
+@@ -94,7 +97,7 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+             @Override
+             public void completed(final HttpResponse response) {
+                 try {
+-                    JestResult jestResult = deserializeResponse(response, clientRequest);
++                    T jestResult = deserializeResponse(response, clientRequest);
+                     resultHandler.completed(jestResult);
+                 } catch (IOException e) {
+                     log.error("Exception occurred while serializing the response. Exception: " + e.getMessage());
+@@ -113,6 +116,7 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+ 
+     }
+ 
++    @Override
+     public void shutdownClient() {
+         super.shutdownClient();
+         try {
+@@ -173,13 +177,14 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+         }
+     }
+ 
+-    private JestResult deserializeResponse(HttpResponse response, Action clientRequest) throws IOException {
++    private <T extends JestResult> T deserializeResponse(HttpResponse response, Action<T> clientRequest) throws IOException {
+         StatusLine statusLine = response.getStatusLine();
+-        return createNewElasticSearchResult(
++        return clientRequest.createNewElasticSearchResult(
+                 response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : null,
+                 statusLine.getStatusCode(),
+                 statusLine.getReasonPhrase(),
+-                clientRequest);
++                gson
++        );
+     }
+ 
+     public CloseableHttpClient getHttpClient() {
+@@ -190,7 +195,7 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+         this.httpClient = httpClient;
+     }
+ 
+-    public CloseableHttpAsyncClient getAsyncClient() {
++    public HttpAsyncClient getAsyncClient() {
+         return asyncClient;
+     }
+ 

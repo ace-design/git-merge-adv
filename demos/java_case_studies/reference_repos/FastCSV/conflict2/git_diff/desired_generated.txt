@@ -1,0 +1,340 @@
+diff --git a/java_case_studies/reference_repos/FastCSV/conflict2/desired.java b/java_case_studies/demo_results/MethodUnion/FastCSV-conflict2.java
+index b0e8dea..1fbb1fc 100644
+--- a/java_case_studies/reference_repos/FastCSV/conflict2/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/FastCSV-conflict2.java
+@@ -1,5 +1,4 @@
+ package de.siegmar.fastcsv.writer;
+-
+ import java.io.Closeable;
+ import java.io.IOException;
+ import java.io.OutputStreamWriter;
+@@ -13,29 +12,19 @@ import java.nio.file.Path;
+ import java.util.Objects;
+ import java.util.StringJoiner;
+ 
+-/**
+- * This is the main class for writing CSV data.
+- * <p>
+- * Example use:
+- * <pre>{@code
+- * try (CsvWriter csv = CsvWriter.builder().build(path)) {
+- *     csv.writeRow("Hello", "world");
+- * }
+- * }</pre>
+- */
+ @SuppressWarnings({"checkstyle:NPathComplexity", "checkstyle:CyclomaticComplexity"})
+-public final class CsvWriter implements Closeable {
+-
+-    private static final char CR = '\r';
+-    private static final char LF = '\n';
+-
+-    private final CachingWriter writer;
+-    private final char fieldSeparator;
+-    private final char quoteCharacter;
+-    private final char commentCharacter;
+-    private final QuoteStrategy quoteStrategy;
+-    private final String lineDelimiter;
+-    private final boolean syncWriter;
++public final class CsvWriter implements Closeable{
++
++    private static final char CR = '\r';,
++    private static final char LF = '\n';,
++    private final CachingWriter writer;,
++    private final char fieldSeparator;,
++    private final char quoteCharacter;,
++    private final char commentCharacter;,
++    private final QuoteStrategy quoteStrategy;,
++    private final String lineDelimiter;,
++    private final boolean syncWriter;,
++    private boolean isNewline = true;,
+ 
+     CsvWriter(final Writer writer, final char fieldSeparator, final char quoteCharacter,
+               final char commentCharacter, final QuoteStrategy quoteStrategy, final LineDelimiter lineDelimiter,
+@@ -64,6 +53,36 @@ public final class CsvWriter implements Closeable {
+         this.syncWriter = syncWriter;
+     }
+ 
++    CsvWriter(final Writer writer, final char fieldSeparator, final char quoteCharacter,
++              final QuoteStrategy quoteStrategy, final LineDelimiter lineDelimiter,
++              final boolean syncWriter) {
++
++        if (fieldSeparator == CR || fieldSeparator == LF) {
++            throw new IllegalArgumentException("fieldSeparator must not be a newline char");
++        }
++        if (quoteCharacter == CR || quoteCharacter == LF) {
++            throw new IllegalArgumentException("quoteCharacter must not be a newline char");
++        }
++        if (fieldSeparator == quoteCharacter) {
++            throw new IllegalArgumentException(String.format("Control characters must differ"
++                    + " (fieldSeparator=%s, quoteCharacter=%s)",
++                fieldSeparator, quoteCharacter));
++        }
++
++        this.writer = new CachingWriter(writer);
++        this.fieldSeparator = fieldSeparator;
++        this.quoteCharacter = quoteCharacter;
++        this.quoteStrategy = Objects.requireNonNull(quoteStrategy);
++        this.lineDelimiter = Objects.requireNonNull(lineDelimiter).toString();
++        this.syncWriter = syncWriter;
++    }
++
++    /**
++     * Creates a {@link CsvWriterBuilder} instance used to configure and create instances of
++     * this class.
++     * @return CsvWriterBuilder instance with default settings.
++     */
++
+     private boolean allDiffers(final char... chars) {
+         for (int i = 0; i < chars.length - 1; i++) {
+             if (chars[i] == chars[i + 1]) {
+@@ -73,12 +92,68 @@ public final class CsvWriter implements Closeable {
+         return true;
+     }
+ 
++    private void writeInternal(final String value) throws IOException {
++        if (!isNewline) {
++            writer.write(fieldSeparator);
++        } else {
++            isNewline = false;
++        }
++
++        if (value == null) {
++            if (quoteStrategy == QuoteStrategy.ALWAYS) {
++                writer.write(quoteCharacter);
++                writer.write(quoteCharacter);
++            }
++            return;
++        }
++
++        if (value.isEmpty()) {
++            if (quoteStrategy == QuoteStrategy.ALWAYS
++                || quoteStrategy == QuoteStrategy.EMPTY) {
++                writer.write(quoteCharacter);
++                writer.write(quoteCharacter);
++            }
++            return;
++        }
++
++        final int length = value.length();
++        boolean needsQuotes = quoteStrategy == QuoteStrategy.ALWAYS;
++        int nextDelimPos = -1;
++
++        for (int i = 0; i < length; i++) {
++            final char c = value.charAt(i);
++            if (c == quoteCharacter) {
++                needsQuotes = true;
++                nextDelimPos = i;
++                break;
++            }
++            if (!needsQuotes && (c == fieldSeparator || c == LF || c == CR)) {
++                needsQuotes = true;
++            }
++        }
++
++        if (needsQuotes) {
++            writer.write(quoteCharacter);
++        }
++
++        if (nextDelimPos > -1) {
++            writeEscaped(value, length, nextDelimPos);
++        } else {
++            writer.write(value, 0, length);
++        }
++
++        if (needsQuotes) {
++            writer.write(quoteCharacter);
++        }
++    }
++
+     /**
+      * Creates a {@link CsvWriterBuilder} instance used to configure and create instances of
+      * this class.
+      *
+      * @return CsvWriterBuilder instance with default settings.
+      */
++
+     public static CsvWriterBuilder builder() {
+         return new CsvWriterBuilder();
+     }
+@@ -92,6 +167,7 @@ public final class CsvWriter implements Closeable {
+      * @throws UncheckedIOException if a write error occurs
+      * @see #writeRow(String...)
+      */
++
+     public CsvWriter writeRow(final Iterable<String> values) {
+         try {
+             boolean firstField = true;
+@@ -118,6 +194,7 @@ public final class CsvWriter implements Closeable {
+      * @throws UncheckedIOException if a write error occurs
+      * @see #writeRow(Iterable)
+      */
++
+     public CsvWriter writeRow(final String... values) {
+         try {
+             for (int i = 0; i < values.length; i++) {
+@@ -184,6 +261,15 @@ public final class CsvWriter implements Closeable {
+         }
+     }
+ 
++    /**
++     * Appends a complete line - one or more fields and new line character(s) at the end.
++     *
++     * @param values the fields to append ({@code null} values are handled as empty strings, if
++     *               not configured otherwise ({@link QuoteStrategy#EMPTY}))
++     * @return This CsvWriter.
++     * @throws UncheckedIOException if a write error occurs
++     */
++
+     @SuppressWarnings({
+         "checkstyle:FinalParameters",
+         "checkstyle:ParameterAssignment",
+@@ -226,6 +312,7 @@ public final class CsvWriter implements Closeable {
+      * @return This CsvWriter.
+      * @throws UncheckedIOException if a write error occurs
+      */
++
+     public CsvWriter writeComment(final String comment) {
+         try {
+             writer.write(commentCharacter);
+@@ -301,14 +388,38 @@ public final class CsvWriter implements Closeable {
+      * This builder is used to create configured instances of {@link CsvWriter}. The default
+      * configuration of this class complies with RFC 4180.
+      */
++
+     @SuppressWarnings({"checkstyle:HiddenField", "PMD.AvoidFieldNameMatchingMethodName"})
+-    public static final class CsvWriterBuilder {
++    public static final class CsvWriterBuilder{
+ 
+-        private char fieldSeparator = ',';
+-        private char quoteCharacter = '"';
+-        private char commentCharacter = '#';
+-        private QuoteStrategy quoteStrategy = QuoteStrategy.REQUIRED;
+-        private LineDelimiter lineDelimiter = LineDelimiter.CRLF;
++
++        /**
++         * Sets the strategy that defines when quoting has to be performed
++         * (default: {@link QuoteStrategy#REQUIRED}).
++         *
++         * @param quoteStrategy the strategy when fields should be enclosed using the.
++         * @return This updated object, so that additional method calls can be chained together.
++         */
++
++        /**
++         * Constructs a {@link CsvWriter} for the specified Writer.
++         * <p>
++         * This library uses built-in buffering but writes its internal buffer to the given
++         * {@code writer} on every {@link CsvWriter#writeRow(String...)} or
++         * {@link CsvWriter#writeRow(Iterable)} call. Therefore you probably want to pass in a
++         * {@link java.io.BufferedWriter} to retain good performance.
++         * Use {@link #build(Path, Charset, OpenOption...)} for optimal performance when writing
++         * files.
++         *
++         * @param writer the Writer to use for writing CSV data.
++         * @return a new CsvWriter instance - never {@code null}.
++         * @throws NullPointerException if writer is {@code null}
++         */
++        private char fieldSeparator = ',';,
++        private char quoteCharacter = '"';,
++        private char commentCharacter = '#';,
++        private QuoteStrategy quoteStrategy = QuoteStrategy.REQUIRED;,
++        private LineDelimiter lineDelimiter = LineDelimiter.CRLF;,
+ 
+         CsvWriterBuilder() {
+         }
+@@ -319,6 +430,7 @@ public final class CsvWriter implements Closeable {
+          * @param fieldSeparator the field separator character.
+          * @return This updated object, so that additional method calls can be chained together.
+          */
++
+         public CsvWriterBuilder fieldSeparator(final char fieldSeparator) {
+             this.fieldSeparator = fieldSeparator;
+             return this;
+@@ -330,6 +442,7 @@ public final class CsvWriter implements Closeable {
+          * @param quoteCharacter the character for enclosing fields.
+          * @return This updated object, so that additional method calls can be chained together.
+          */
++
+         public CsvWriterBuilder quoteCharacter(final char quoteCharacter) {
+             this.quoteCharacter = quoteCharacter;
+             return this;
+@@ -341,6 +454,7 @@ public final class CsvWriter implements Closeable {
+          * @param commentCharacter the character for prepending commented lines.
+          * @return This updated object, so that additional method calls can be chained together.
+          */
++
+         public CsvWriterBuilder commentCharacter(final char commentCharacter) {
+             this.commentCharacter = commentCharacter;
+             return this;
+@@ -353,6 +467,7 @@ public final class CsvWriter implements Closeable {
+          * @param quoteStrategy the strategy when fields should be enclosed using the {@code quoteCharacter}.
+          * @return This updated object, so that additional method calls can be chained together.
+          */
++
+         public CsvWriterBuilder quoteStrategy(final QuoteStrategy quoteStrategy) {
+             this.quoteStrategy = quoteStrategy;
+             return this;
+@@ -364,6 +479,7 @@ public final class CsvWriter implements Closeable {
+          * @param lineDelimiter the line delimiter to be used.
+          * @return This updated object, so that additional method calls can be chained together.
+          */
++
+         public CsvWriterBuilder lineDelimiter(final LineDelimiter lineDelimiter) {
+             this.lineDelimiter = lineDelimiter;
+             return this;
+@@ -383,6 +499,7 @@ public final class CsvWriter implements Closeable {
+          * @return a new CsvWriter instance - never {@code null}.
+          * @throws NullPointerException if writer is {@code null}
+          */
++
+         public CsvWriter build(final Writer writer) {
+             Objects.requireNonNull(writer, "writer must not be null");
+ 
+@@ -399,6 +516,7 @@ public final class CsvWriter implements Closeable {
+          * @throws IOException          if a write error occurs
+          * @throws NullPointerException if path or charset is {@code null}
+          */
++
+         public CsvWriter build(final Path path, final OpenOption... openOptions)
+             throws IOException {
+             return build(path, StandardCharsets.UTF_8, openOptions);
+@@ -415,6 +533,7 @@ public final class CsvWriter implements Closeable {
+          * @throws IOException          if a write error occurs
+          * @throws NullPointerException if path or charset is {@code null}
+          */
++
+         public CsvWriter build(final Path path, final Charset charset,
+                                final OpenOption... openOptions)
+             throws IOException {
+@@ -443,19 +562,18 @@ public final class CsvWriter implements Closeable {
+         }
+ 
+     }
+-
+     /**
+      * Unsynchronized and thus high performance replacement for BufferedWriter.
+      * <p>
+      * This class is intended for internal use only.
+      */
+-    static final class CachingWriter {
+ 
+-        private static final int BUFFER_SIZE = 8192;
++    static final class CachingWriter{
+ 
+-        private final Writer writer;
+-        private final char[] buf = new char[BUFFER_SIZE];
+-        private int pos;
++        private static final int BUFFER_SIZE = 8192;,
++        private final Writer writer;,
++        private final char[] buf = new char[BUFFER_SIZE];,
++        private int pos;,
+ 
+         CachingWriter(final Writer writer) {
+             this.writer = writer;
+@@ -490,5 +608,4 @@ public final class CsvWriter implements Closeable {
+         }
+ 
+     }
+-
+-}
++}
+\ No newline at end of file

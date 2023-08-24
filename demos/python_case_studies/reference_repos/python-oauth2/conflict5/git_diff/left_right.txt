@@ -1,0 +1,20 @@
+diff --git a/python_case_studies/reference_repos/python-oauth2/conflict5/left.py b/python_case_studies/reference_repos/python-oauth2/conflict5/right.py
+index b7c25f6..d66907f 100644
+--- a/python_case_studies/reference_repos/python-oauth2/conflict5/left.py
++++ b/python_case_studies/reference_repos/python-oauth2/conflict5/right.py
+@@ -1,14 +1,6 @@
+ # This is the version of this source code.
+ 
+-manual_verstr = "1.4"
+-
+-
+-
+-auto_build_num = "134"
+-
+-
+-
+-verstr = manual_verstr + "." + auto_build_num
++verstr = "1.4.134"
+ try:
+     from pyutil.version_class import Version as pyutil_Version
+     __version__ = pyutil_Version(verstr)

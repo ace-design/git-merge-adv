@@ -1,0 +1,59 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict2/desired.py b/python_case_studies/demo_results/MethodUnion/errbot-conflict2.py
+index a9a49d4..4a15cd1 100644
+--- a/python_case_studies/reference_repos/errbot/conflict2/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/errbot-conflict2.py
+@@ -5,14 +5,25 @@ import re
+ import time
+ import sys
+ import pprint
+-
+-from errbot.backends.base import Message, Presence, ONLINE, AWAY, Room, RoomError, RoomDoesNotExistError, \
+-    UserDoesNotExistError, RoomOccupant, Person, Card
++from errbot.backends.base import (
++    Message,
++    Presence,
++    ONLINE,
++    AWAY,
++    Room,
++    RoomError,
++    RoomDoesNotExistError,
++    UserDoesNotExistError,
++    RoomOccupant,
++    Person,
++    Card,
++)
+ from errbot.errBot import ErrBot
+-from errbot.utils import PY3, split_string_after
++from errbot.utils import PY3,split_string_after
+ from errbot.rendering.slack import slack_markdown_converter
+ 
+ 
++
+ # Can't use __name__ because of Yapsy
+ log = logging.getLogger('errbot.backends.slack')
+ 
+@@ -477,6 +488,7 @@ class SlackBackend(ErrBot):
+         super().send_message(mess)
+         to_humanreadable = "<unknown>"
+         try:
++<<<<<<< left_content.py
+             if mess.is_group:
+                 to_channel_id = mess.to.id
+                 to_humanreadable = mess.to.name if mess.to.name else self.channelid_to_channelname(to_channel_id)
+@@ -490,6 +502,11 @@ class SlackBackend(ErrBot):
+ 
+             msgtype = "direct" if mess.is_direct else "channel"
+             log.debug('Sending %s message to %s (%s)' % (msgtype, to_humanreadable, to_channel_id))
++=======
++            to_humanreadable, to_channel_id = self._prepare_message(mess)
++            log.debug('Sending message to %s (%s)' % (to_humanreadable, to_channel_id))
++
++>>>>>>> right_content.py
+             body = self.md.convert(mess.body)
+             log.debug('Message size: %d' % len(body))
+ 
+@@ -909,3 +926,4 @@ class SlackRoom(Room):
+ 
+     def __eq__(self, other):
+         return self.id == other.id
++

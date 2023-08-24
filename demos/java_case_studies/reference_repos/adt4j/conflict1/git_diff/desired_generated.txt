@@ -1,0 +1,110 @@
+diff --git a/java_case_studies/reference_repos/adt4j/conflict1/desired.java b/java_case_studies/demo_results/MethodUnion/adt4j-conflict1.java
+index 924ce00..cbc2b6f 100644
+--- a/java_case_studies/reference_repos/adt4j/conflict1/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/adt4j-conflict1.java
+@@ -28,7 +28,6 @@
+  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ package com.github.sviperll.adt4j;
+-
+ import com.github.sviperll.Throwables;
+ import com.github.sviperll.adt4j.model.Stage0ValueClassModel;
+ import com.github.sviperll.adt4j.model.Stage1ValueClassModel;
+@@ -59,15 +58,20 @@ import javax.lang.model.SourceVersion;
+ import javax.lang.model.element.Element;
+ import javax.lang.model.element.TypeElement;
+ import javax.tools.Diagnostic;
++import com.github.sviperll.adt4j.model.ValueClassModelFactory;
++import com.github.sviperll.meta.ElementMessage;
++import com.github.sviperll.meta.ElementMessager;
++import com.github.sviperll.adt4j.model.util.SourceCodeValidationException;
+ 
+ @SupportedAnnotationTypes("com.github.sviperll.adt4j.GenerateValueClassForVisitor")
+ @SupportedSourceVersion(SourceVersion.RELEASE_7)
+-public class GenerateValueClassForVisitorProcessor extends AbstractProcessor {
+-    private static final Logger logger = Logger.getLogger(GenerateValueClassForVisitorProcessor.class.getName());
+-    private static final DefaultVisitorImplementation DEFAULT_VISITOR_IMPLEMENTATION = new DefaultVisitorImplementation();
++public class GenerateValueClassForVisitorProcessor extends AbstractProcessor{
+ 
+-    private final Set<String> remainingElements = new HashSet<>();
+-    private final Map<String, List<String>> errorMap = new TreeMap<>();
++    private static final Logger logger = Logger.getLogger(GenerateValueClassForVisitorProcessor.class.getName());,
++    private static final DefaultVisitorImplementation DEFAULT_VISITOR_IMPLEMENTATION = new DefaultVisitorImplementation();,
++    private final List<ElementMessage> errors = new ArrayList<ElementMessage>();,
++    private final Set<String> remainingElements = new HashSet<>();,
++    private final Map<String, List<String>> errorMap = new TreeMap<>();,
+ 
+     @Override
+     public boolean process(Set<? extends TypeElement> annotations,
+@@ -115,9 +119,48 @@ public class GenerateValueClassForVisitorProcessor extends AbstractProcessor {
+         return true;
+     }
+ 
+-    private class ElementProcessor {
+-        private final Set<? extends TypeElement> elements;
+-        private final JCodeModel jCodeModel;
++    private void processElements(Set<? extends TypeElement> elements) {
++        for (TypeElement element: elements) {
++            try {
++                JCodeModel jCodeModel = new JCodeModel();
++                Visitor visitorAnnotation = element.getAnnotation(Visitor.class);
++                if (visitorAnnotation == null)
++                    throw new SourceCodeValidationException("No " + Visitor.class.getName() + " annotation for " + element.getQualifiedName() + " class annotated with " + GenerateValueClassForVisitor.class.getName() + " annotation");
++                JCodeModelJavaxLangModelAdapter adapter = new JCodeModelJavaxLangModelAdapter(jCodeModel, processingEnv.getElementUtils());
++                JDefinedClass visitorModel = adapter.getClassWithErrorTypes(element);
++                JDefinedClass valueClass = ValueClassModelFactory.createValueClass(visitorModel, visitorAnnotation);
++                if (jCodeModel.buildsErrorTypeRefs()) {
++                    remainingElements.add(element.getQualifiedName().toString());
++                } else {
++                    processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Generated value class " + valueClass.fullName() + " for " + element + " visitor interface", element);
++                    FilerCodeWriter writer = new FilerCodeWriter(processingEnv.getFiler(), new ElementMessager(processingEnv.getMessager(), element));
++                    try {
++                        jCodeModel.build(writer);
++                    } finally {
++                        try {
++                            writer.close();
++                        } catch (Exception ex) {
++                            processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, Throwables.render(ex));
++                        }
++                    }
++                }
++            } catch (SourceCodeValidationException ex) {
++                errors.add(ElementMessage.of(element, ex.toString()));
++            } catch (CodeModelBuildingException ex) {
++                errors.add(ElementMessage.of(element, ex.toString()));
++            } catch (IOException ex) {
++                errors.add(ElementMessage.of(element, Throwables.render(ex)));
++            } catch (RuntimeException ex) {
++                errors.add(ElementMessage.of(element, Throwables.render(ex)));
++            }
++        }
++    }
++
++    private class ElementProcessor{
++
++        private final Set<? extends TypeElement> elements;,
++        private final JCodeModel jCodeModel;,
++
+         ElementProcessor(Set<? extends TypeElement> elements, JCodeModel jCodeModel) {
+             this.elements = elements;
+             this.jCodeModel = jCodeModel;
+@@ -252,8 +295,9 @@ public class GenerateValueClassForVisitorProcessor extends AbstractProcessor {
+         }
+ 
+     }
++    private static class DefaultVisitorImplementation implements Visitor{
++
+ 
+-    private static class DefaultVisitorImplementation implements Visitor {
+         @Override
+         public String resultVariableName() {
+             return "R";
+@@ -273,5 +317,6 @@ public class GenerateValueClassForVisitorProcessor extends AbstractProcessor {
+         public Class<? extends Annotation> annotationType() {
+             return Visitor.class;
+         }
++
+     }
+-}
++}
+\ No newline at end of file

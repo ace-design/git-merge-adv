@@ -1,0 +1,98 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict20/left.py b/python_case_studies/reference_repos/errbot/conflict20/right.py
+index 9fcf00b..ca28248 100644
+--- a/python_case_studies/reference_repos/errbot/conflict20/left.py
++++ b/python_case_studies/reference_repos/errbot/conflict20/right.py
+@@ -22,9 +22,11 @@ except ImportError:
+     sys.exit(-1)
+ 
+ import os
++import config
++from config import BOT_DATA_DIR, BOT_PREFIX
+ import errbot
+ from errbot.backends.base import Message, build_text_html_message_pair, Identifier
+-from errbot.errBot import ErrBot
++from errbot.backed.text import TextBackend   # we use that as we emulate MUC there already
+ 
+ 
+ class CommandBox(QtGui.QPlainTextEdit, object):
+@@ -33,15 +35,14 @@ class CommandBox(QtGui.QPlainTextEdit, object):
+     def reset_history(self):
+         self.history_index = len(self.history)
+ 
+-    def __init__(self, history, commands, prefix):
+-        self.prefix = prefix
++    def __init__(self, history, commands):
+         self.history_index = 0
+         self.history = history
+         self.reset_history()
+         super(CommandBox, self).__init__()
+ 
+         # Autocompleter
+-        self.completer = QCompleter([prefix + name for name in commands], self)
++        self.completer = QCompleter([BOT_PREFIX + name for name in commands], self)
+         self.completer.setCaseSensitivity(Qt.CaseInsensitive)
+         self.completer.setWidget(self)
+         self.completer.activated.connect(self.onAutoComplete)
+@@ -160,7 +161,6 @@ background-size: contain; margin:0;">"""
+ class ChatApplication(QtGui.QApplication):
+     def __init__(self, *args, **kwargs):
+         backend = kwargs.pop('backend')
+-        config = kwargs.pop('config')
+         super().__init__(*args, **kwargs)
+         self.mainW = QtGui.QWidget()
+         self.mainW.setWindowTitle('Err...')
+@@ -170,11 +170,11 @@ class ChatApplication(QtGui.QApplication):
+         self.mainW.setWindowIcon(QtGui.QIcon(icon_path))
+         vbox = QtGui.QVBoxLayout()
+         help_label = QtGui.QLabel("CTRL+Space to autocomplete -- CTRL+Enter to send your message")
+-        self.input = CommandBox(backend.cmd_history, backend.commands, config.BOT_PREFIX)
++        self.input = CommandBox(backend.cmd_history, backend.commands)
+         self.output = QtWebKit.QWebView()
+ 
+         # init webpage
+-        self.buffer = INIT_PAGE % (config.BOT_DATA_DIR, bg_path)
++        self.buffer = INIT_PAGE % (BOT_DATA_DIR, bg_path)
+         self.output.setHtml(self.buffer)
+ 
+         # layout
+@@ -202,17 +202,17 @@ class ChatApplication(QtGui.QApplication):
+         self.output.page().mainFrame().scroll(0, self.output.page().mainFrame().scrollBarMaximum(QtCore.Qt.Vertical))
+ 
+ 
+-class GraphicBackend(ErrBot):
+-    def __init__(self, config):
++class GraphicBackend(TextBackend):
++    def __init__(self, *args, **kwargs):
+         self.conn = None
+-        super().__init__(config)
++        super().__init__(*args, **kwargs)
+         self.jid = Identifier('Err')
+         self.app = None
+ 
+     def send_command(self, text):
+         self.app.new_message(text, False)
+         msg = Message(text)
+-        msg.frm = self.bot_config.BOT_ADMINS[0]  # assume this is the admin talking
++        msg.frm = config.BOT_ADMINS[0]  # assume this is the admin talking
+         msg.to = self.jid  # To me only
+         self.callback_message(msg)
+         self.app.input.clear()
+@@ -228,7 +228,7 @@ class GraphicBackend(ErrBot):
+         self.connect_callback()  # notify that the connection occured
+ 
+         # create window and components
+-        self.app = ChatApplication(sys.argv, backend=self, config=self.bot_config)
++        self.app = ChatApplication(sys.argv, backend=self)
+         try:
+             self.app.exec_()
+         finally:
+@@ -241,9 +241,6 @@ class GraphicBackend(ErrBot):
+             self.conn = ConnectionMock()
+         return self.conn
+ 
+-    def join_room(self, room, username=None, password=None):
+-        pass  # just ignore that
+-
+     @property
+     def mode(self):
+         return 'graphic'

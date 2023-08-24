@@ -1,0 +1,51 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict6/desired.java b/java_case_studies/demo_results/MethodUnion/alternator-conflict6.java
+index a2f8963..aedaa51 100644
+--- a/java_case_studies/reference_repos/alternator/conflict6/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/alternator-conflict6.java
+@@ -1,20 +1,19 @@
+ package com.amazonaws.services.dynamodb.model.transform;
+-
+-
+ import com.amazonaws.AmazonClientException;
++import com.amazonaws.services.dynamodb.model.*;
++import com.amazonaws.transform.Marshaller;
+ import com.amazonaws.services.dynamodb.model.AttributeValue;
+ import com.amazonaws.services.dynamodb.model.BatchGetItemResult;
+ import com.amazonaws.services.dynamodb.model.BatchResponse;
+-import com.amazonaws.transform.Marshaller;
+ import com.amazonaws.util.json.JSONWriter;
+-
+ import java.io.StringWriter;
+-import java.util.List;
+ import java.util.Map;
++import java.util.List;
++
++public class BatchGetItemResultMarshaller implements Marshaller<String, BatchGetItemResult>{
+ 
+-public class BatchGetItemResultMarshaller implements Marshaller<String, BatchGetItemResult> {
+ 
+-	public String marshall(BatchGetItemResult batchGetItemResult) {
++    public String marshall(BatchGetItemResult batchGetItemResult) {
+ 		if (batchGetItemResult == null) {
+ 			throw new AmazonClientException("Invalid argument passed to marshall(...)");
+ 		}
+@@ -75,7 +74,10 @@ public class BatchGetItemResultMarshaller implements Marshaller<String, BatchGet
+ 				}
+ 
+ 			}
++<<<<<<< left_content.java
+             //End response object
++=======
++>>>>>>> right_content.java
+ 			jsonWriter.endObject();
+             //End whole object containing both response and unprocessed keys!
+ 			jsonWriter.endObject();
+@@ -85,4 +87,6 @@ public class BatchGetItemResultMarshaller implements Marshaller<String, BatchGet
+ 			throw new AmazonClientException("Unable to marshall request to JSON: " + t.getMessage(), t);
+ 		}
+ 	}
+-}
++
++
++}
+\ No newline at end of file

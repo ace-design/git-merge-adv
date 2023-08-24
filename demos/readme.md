@@ -13,10 +13,10 @@ In order to better understand to strengths and limitations of our algorithms, it
 
 Tool | Deletions | Insertions | Moves | Diff Paths | Num Conflicts | Num Errors | Overall |
 --- | --- | --- | --- |--- |--- |--- |--- |
-CompressedTree | 484 | 864 | 517 | 129 | 134 | 0 | 1132.54 |
-MethodUnion | 612 | 1312 | 659 | 103 | 67 | 0 | 1595.39 |
-Spork | 1027 | 2208 | 1546 | 179 | 96 | 0 | 2891.60 |
-jDime | 1133 | 1163 | 790 | 330 | 119 | 0 | 1839.41 |
+CompressedTree | 343 | 713 | 471 | 84 | 134 | 0 | 934.28 |
+MethodUnion | 535 | 1238 | 622 | 76 | 67 | 0 | 1488.63 |
+Spork | 992 | 2150 | 1534 | 156 | 96 | 0 | 2827.24 |
+jDime | 1073 | 1143 | 761 | 322 | 119 | 2 | 1776.27 |
 
 Overall empirical results suggest that CompressedTree & MethodUnion are more semantically equivalent to the desired version than other tools. 
 Results show that: 
@@ -31,8 +31,8 @@ Results show that:
 
 Tool | Deletions | Insertions | Moves | Diff Paths | Num Conflicts | Num Errors | Overall |
 --- | --- | --- | --- |--- |--- |--- |--- |
-CompressedTree | 383 | 350 | 301 | 170 | 100 | 0 | 631.42 |
-MethodUnion | 714 | 602 | 452 | 504 | 93 | 1 | 1158.05 |
+CompressedTree | 301 | 298 | 270 | 134 | 99 | 0 | 529.21 |
+MethodUnion | 666 | 668 | 472 | 578 | 93 | 0 | 1206.3 |
 
 CompressedTree and MethodUnion also demonstrate strong accuracy for Python
 * Results for Java were from a total of 86 case studies,

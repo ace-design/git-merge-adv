@@ -1,0 +1,88 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict8/desired.java b/java_case_studies/reference_repos/Jest/conflict8/spork_result.java
+old mode 100755
+new mode 100644
+index 1f3c32b..155fde5
+--- a/java_case_studies/reference_repos/Jest/conflict8/desired.java
++++ b/java_case_studies/reference_repos/Jest/conflict8/spork_result.java
+@@ -6,7 +6,7 @@ import io.searchbox.client.config.discovery.NodeChecker;
+ import io.searchbox.client.config.idle.HttpReapableConnectionManager;
+ import io.searchbox.client.config.idle.IdleConnectionReaper;
+ import io.searchbox.client.http.JestHttpClient;
+-
++import java.util.Map;
+ import org.apache.commons.lang3.StringUtils;
+ import org.apache.http.HttpHost;
+ import org.apache.http.client.AuthCache;
+@@ -37,31 +37,27 @@ import org.apache.http.nio.reactor.IOReactorException;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+-import java.util.Map;
+ 
+ /**
+  * @author Dogukan Sonmez
+  */
+ public class JestClientFactory {
+-
+     final static Logger log = LoggerFactory.getLogger(JestClientFactory.class);
++
+     private HttpClientConfig httpClientConfig;
+ 
+     public JestClient getObject() {
+         JestHttpClient client = new JestHttpClient();
+-
+         if (httpClientConfig == null) {
+             log.debug("There is no configuration to create http client. Going to create simple client with default values");
+             httpClientConfig = new HttpClientConfig.Builder("http://localhost:9200").build();
+         }
+-
+         client.setRequestCompressionEnabled(httpClientConfig.isRequestCompressionEnabled());
+         client.setServers(httpClientConfig.getServerList());
+         final HttpClientConnectionManager connectionManager = getConnectionManager();
+         final NHttpClientConnectionManager asyncConnectionManager = getAsyncConnectionManager();
+         client.setHttpClient(createHttpClient(connectionManager));
+         client.setAsyncClient(createAsyncHttpClient(asyncConnectionManager));
+-
+         // set custom gson instance
+         Gson gson = httpClientConfig.getGson();
+         if (gson == null) {
+@@ -70,7 +66,6 @@ public class JestClientFactory {
+             log.info("Using custom GSON instance");
+             client.setGson(gson);
+         }
+-
+         // set discovery (should be set after setting the httpClient on jestClient)
+         if (httpClientConfig.isDiscoveryEnabled()) {
+             log.info("Node Discovery enabled...");
+@@ -84,11 +79,9 @@ public class JestClientFactory {
+         } else {
+             log.info("Node Discovery disabled...");
+         }
+-
+         // schedule idle connection reaping if configured
+         if (httpClientConfig.getMaxConnectionIdleTime() > 0) {
+             log.info("Idle connection reaping enabled...");
+-
+             IdleConnectionReaper reaper = new IdleConnectionReaper(httpClientConfig, new HttpReapableConnectionManager(connectionManager, asyncConnectionManager));
+             client.setIdleConnectionReaper(reaper);
+             reaper.startAsync();
+@@ -96,13 +89,11 @@ public class JestClientFactory {
+         } else {
+             log.info("Idle connection reaping disabled...");
+         }
+-
+         HttpHost preemptiveAuthTargetHost = httpClientConfig.getPreemptiveAuthTargetHost();
+         if (preemptiveAuthTargetHost != null) {
+             log.info("Authentication cache set for preemptive authentication");
+             client.setHttpClientContextTemplate(createPreemptiveAuthContext(preemptiveAuthTargetHost));
+         }
+-
+         return client;
+     }
+ 
+@@ -264,5 +255,4 @@ public class JestClientFactory {
+ 
+         return authCache;
+     }
+-
+ }

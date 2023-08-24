@@ -1,0 +1,11 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict19/left.py b/python_case_studies/reference_repos/errbot/conflict19/right.py
+index 3095222..47ef297 100644
+--- a/python_case_studies/reference_repos/errbot/conflict19/left.py
++++ b/python_case_studies/reference_repos/errbot/conflict19/right.py
+@@ -252,5 +252,5 @@ REVERSE_CHATROOM_RELAY = {}
+ #IRC_PRIVATE_RATE = 1  # Private messages
+ 
+ # Allow messages sent in a chatroom to be directed at requester.
+-#GROUPCHAT_NICK_PREFIXED = False
++#IRC_NICK_PREFIX_REPLY = False
+ 

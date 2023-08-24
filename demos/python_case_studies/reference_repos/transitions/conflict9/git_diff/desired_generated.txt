@@ -1,0 +1,61 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict9/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict9.py
+index 6bf5091..fd4a1c2 100644
+--- a/python_case_studies/reference_repos/transitions/conflict9/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict9.py
+@@ -1,11 +1,11 @@
+-from unittest import TestCase, skipIf
++from unittest import TestCase,skipIf
++from transitions.extensions import MachineFactory
+ 
+ try:
+     import enum
+ except ImportError:
+     enum = None
+ 
+-from transitions.extensions import MachineFactory
+ 
+ 
+ @skipIf(enum is None, "enum is not available")
+@@ -152,6 +152,7 @@ class TestNestedStateEnums(TestEnumsAsStates):
+         self.assertEqual(self.States.GREEN, m1.state)
+         self.assertEqual(m1.state.name, self.States.GREEN.name)
+ 
++<<<<<<< left_content.py
+     def test_duplicate_states(self):
+         with self.assertRaises(ValueError):
+             self.machine_cls(states=['A', 'A'])
+@@ -163,6 +164,15 @@ class TestNestedStateEnums(TestEnumsAsStates):
+         with self.assertRaises(ValueError):
+             self.machine_cls(states=[Foo.A, Foo.A])
+ 
++
++@skipIf(enum is None, "enum is not available")
++class TestEnumWithGraph(TestEnumsAsStates):
++
++    def setUp(self):
++        super(TestEnumWithGraph, self).setUp()
++        self.machine_cls = MachineFactory.get_predefined(graph=True)
++
++=======
+     def test_add_nested_enums_as_nested_state(self):
+         from transitions.extensions.nesting_legacy import HierarchicalMachine
+         if self.machine_cls is HierarchicalMachine:
+@@ -186,10 +196,10 @@ class TestNestedStateEnums(TestEnumsAsStates):
+ 
+ 
+ @skipIf(enum is None, "enum is not available")
+-class TestEnumWithGraph(TestEnumsAsStates):
++class TestEnumsAsStatesWithGraph(TestEnumsAsStates):
+ 
+     def setUp(self):
+-        super(TestEnumWithGraph, self).setUp()
++        super(TestEnumsAsStatesWithGraph, self).setUp()
+         self.machine_cls = MachineFactory.get_predefined(graph=True)
+ 
+ 
+@@ -199,3 +209,5 @@ class TestNestedStateGraphEnums(TestNestedStateEnums):
+     def setUp(self):
+         super(TestNestedStateGraphEnums, self).setUp()
+         self.machine_cls = MachineFactory.get_predefined(nested=True, graph=True)
++
++>>>>>>> right_content.py

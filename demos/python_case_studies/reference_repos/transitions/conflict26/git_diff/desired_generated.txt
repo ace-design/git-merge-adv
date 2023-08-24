@@ -1,0 +1,44 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict26/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict26.py
+index 2e8c6e9..2de03f6 100644
+--- a/python_case_studies/reference_repos/transitions/conflict26/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict26.py
+@@ -1,6 +1,5 @@
+-from .core import State, Machine, Transition, listify
+-from .diagrams import AGraph
+-
++from core import State,Machine,Transition,listify
++from diagrams import AGraph
+ from threading import RLock
+ from six import string_types
+ from os.path import commonprefix
+@@ -8,6 +7,7 @@ import inspect
+ import logging
+ import copy
+ 
++
+ logger = logging.getLogger(__name__)
+ logger.addHandler(logging.NullHandler())
+ 
+@@ -319,7 +319,17 @@ class LockedMachine(Machine):
+         f = super(LockedMachine, self).__getattribute__
+         tmp = f(item)
+         if inspect.ismethod(tmp) and item not in "__getattribute__":
++<<<<<<< left_content.py
+             return LockedMethod(f('lock'), tmp)
++=======
++            lock = f('lock')
++
++            def locked_method(*args, **kwargs):
++                with lock:
++                    res = f(item)(*args, **kwargs)
++                    return res
++            return locked_method
++>>>>>>> right_content.py
+         return tmp
+ 
+     def __getattr__(self, item):
+@@ -349,3 +359,4 @@ def _unify(seq):
+             continue
+         seen.add(x)
+         yield x
++

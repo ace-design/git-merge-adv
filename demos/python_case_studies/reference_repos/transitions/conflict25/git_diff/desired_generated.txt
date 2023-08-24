@@ -1,0 +1,43 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict25/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict25.py
+index 2f8e1d2..fbc9631 100644
+--- a/python_case_studies/reference_repos/transitions/conflict25/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict25.py
+@@ -1,6 +1,5 @@
+-from .core import State, Machine, Transition, listify
+-from .diagrams import AGraph
+-
++from core import State,Machine,Transition,listify
++from diagrams import AGraph
+ from threading import RLock
+ from six import string_types
+ from os.path import commonprefix
+@@ -8,6 +7,7 @@ import inspect
+ import logging
+ import copy
+ 
++
+ logger = logging.getLogger(__name__)
+ logger.addHandler(logging.NullHandler())
+ 
+@@ -339,3 +339,21 @@ class LockedHierarchicalMachine(LockedMachine, HierarchicalMachine):
+     @staticmethod
+     def _create_transition(*args, **kwargs):
+         return LockedNestedTransition(*args, **kwargs)
++
++<<<<<<< left_content.py
++=======
++
++# helper functions to filter duplicates in transition functions
++def unify(seq):
++    return list(_unify(seq))
++
++
++def _unify(seq):
++    seen = set()
++    for x in seq:
++        if x in seen:
++            continue
++        seen.add(x)
++        yield x
++
++>>>>>>> right_content.py

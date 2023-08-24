@@ -1,0 +1,54 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict20/desired.py b/python_case_studies/demo_results/MethodUnion/apistar-conflict20.py
+index f487c3c..a4bab98 100644
+--- a/python_case_studies/reference_repos/apistar/conflict20/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/apistar-conflict20.py
+@@ -1,13 +1,15 @@
+-import inspect
++from apistar import pipelines,http,schema,wsgi,app
++from apistar.pipelines import ArgName
+ from collections import namedtuple
+-from typing import Callable, Dict, List, Tuple  # noqa
+-
+-import werkzeug
++from typing import Any,List,TypeVar,Callable,Dict,Tuple
+ from uritemplate import URITemplate
+-from werkzeug.routing import Map, Rule
++from werkzeug.routing import Map,Rule,parse_rule
++import inspect
++import json
++import werkzeug
++from apistar.pipelines import Pipeline
++
+ 
+-from apistar import app, http, pipelines, schema, wsgi
+-from apistar.pipelines import ArgName, Pipeline
+ 
+ # TODO: Path
+ # TODO: 404
+@@ -54,13 +56,19 @@ class Router(object):
+         # path, any, uuid
+     }
+ 
+-    def __init__(self, routes: List[Route]) -> None:
++<<<<<<< left_content.py
++    def __init__(self, routes: List[Route]):
+         from apistar.app import DBBackend
++        required_type = wsgi.WSGIResponse
++        initial_types = [DBBackend, wsgi.WSGIEnviron, URLPathArgs]
++=======
++    def __init__(self, routes: List[Route]) -> None:
+         self.not_found = None  # type: RouterLookup
+         self.method_not_allowed = None  # type: RouterLookup
+ 
+         required_type = wsgi.WSGIResponse
+-        initial_types = [DBBackend, app.App, wsgi.WSGIEnviron, URLPathArgs]
++        initial_types = [app.App, wsgi.WSGIEnviron, URLPathArgs]
++>>>>>>> right_content.py
+ 
+         rules = []
+         views = {}
+@@ -151,3 +159,4 @@ def view_404() -> http.Response:
+ 
+ def view_405() -> http.Response:
+     return http.Response({'message': 'Method not allowed'}, 405)
++

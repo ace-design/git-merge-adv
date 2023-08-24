@@ -1,0 +1,95 @@
+diff --git a/java_case_studies/reference_repos/cucumber.jvm/importC5/desired.java b/java_case_studies/demo_results/MethodUnion/cucumber.jvm-importC5.java
+index efce10c..0292309 100644
+--- a/java_case_studies/reference_repos/cucumber.jvm/importC5/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/cucumber.jvm-importC5.java
+@@ -1,20 +1,20 @@
+ package io.cucumber.testng;
+-
+ import io.cucumber.core.backend.ObjectFactoryServiceLoader;
+ import io.cucumber.core.event.TestRunFinished;
+ import io.cucumber.core.event.TestRunStarted;
+-import io.cucumber.core.event.TestSourceRead;
++import cucumber.runner.*;
++import cucumber.runtime.*;
+ import io.cucumber.core.eventbus.EventBus;
+ import io.cucumber.core.exception.CucumberException;
++import io.cucumber.core.event.TestSourceRead;
+ import io.cucumber.core.feature.CucumberFeature;
+ import io.cucumber.core.feature.CucumberPickle;
+ import io.cucumber.core.feature.FeatureLoader;
+-import io.cucumber.core.filter.Filters;
+ import io.cucumber.core.io.ClassFinder;
++import io.cucumber.core.filter.Filters;
+ import io.cucumber.core.io.MultiLoader;
+ import io.cucumber.core.io.ResourceLoader;
+ import io.cucumber.core.io.ResourceLoaderClassFinder;
+-import io.cucumber.core.options.Constants;
+ import io.cucumber.core.options.CucumberOptionsAnnotationParser;
+ import io.cucumber.core.options.CucumberProperties;
+ import io.cucumber.core.options.CucumberPropertiesParser;
+@@ -32,34 +32,21 @@ import io.cucumber.core.runtime.TimeServiceEventBus;
+ import io.cucumber.core.runtime.TypeRegistryConfigurerSupplier;
+ import org.apiguardian.api.API;
+ import org.testng.SkipException;
+-
+ import java.time.Clock;
+ import java.util.List;
+ import java.util.function.Predicate;
+-
+ import static java.lang.String.format;
+ import static java.util.stream.Collectors.toList;
+ 
+-/**
+- * Glue code for running Cucumber via TestNG.
+- * <p>
+- * Options can be provided in order of precedence by:
+- * <ol>
+- * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@link System#getProperties()} ()}</li>
+- * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@link System#getenv()}</li>
+- * <li>Annotating the runner class with {@link CucumberOptions}</li>
+- * <li>Setting {@value Constants#CUCUMBER_OPTIONS_PROPERTY_NAME} property in {@value Constants#CUCUMBER_PROPERTIES_FILE_NAME}</li>
+- * </ol>
+- */
+ @API(status = API.Status.STABLE)
+-public final class TestNGCucumberRunner {
++public final class TestNGCucumberRunner extends Blah{
+ 
+-    private final EventBus bus;
+-    private final Predicate<CucumberPickle> filters;
+-    private final ThreadLocalRunnerSupplier runnerSupplier;
+-    private final RuntimeOptions runtimeOptions;
+-    private final Plugins plugins;
+-    private final FeaturePathFeatureSupplier featureSupplier;
++    private final EventBus bus;,
++    private final Predicate<CucumberPickle> filters;,
++    private final ThreadLocalRunnerSupplier runnerSupplier;,
++    private final RuntimeOptions runtimeOptions;,
++    private final Plugins plugins;,
++    private final FeaturePathFeatureSupplier featureSupplier;,
+ 
+     /**
+      * Bootstrap the cucumber runtime
+@@ -67,6 +54,7 @@ public final class TestNGCucumberRunner {
+      * @param clazz Which has the {@link CucumberOptions}
+      *              and {@link org.testng.annotations.Test} annotations
+      */
++
+     public TestNGCucumberRunner(Class clazz) {
+ 
+         ClassLoader classLoader = clazz.getClassLoader();
+@@ -142,6 +130,7 @@ public final class TestNGCucumberRunner {
+      * @return returns the cucumber scenarios as a two dimensional array of {@link PickleWrapper}
+      * scenarios combined with their {@link FeatureWrapper} feature.
+      */
++
+     public Object[][] provideScenarios() {
+         try {
+             return getFeatures().stream()
+@@ -167,4 +156,5 @@ public final class TestNGCucumberRunner {
+         }
+         return features;
+     }
+-}
++
++}
+\ No newline at end of file

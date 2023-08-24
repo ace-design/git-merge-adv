@@ -1,0 +1,41 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict16/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict16.py
+index bcab07a..fefbf8c 100644
+--- a/python_case_studies/reference_repos/transitions/conflict16/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict16.py
+@@ -1,11 +1,11 @@
+-from transitions.core import Machine, Event, listify
+-
++from transitions.core import Machine,Event,listify,Transition
+ from collections import defaultdict
+ from functools import partial
+ from threading import RLock
+ import inspect
+-
+ import logging
++
++
+ logger = logging.getLogger(__name__)
+ logger.addHandler(logging.NullHandler())
+ 
+@@ -32,6 +32,8 @@ except ImportError:
+             yield contexts
+ 
+ 
++<<<<<<< left_content.py
++=======
+ class PickleableLock(object):
+ 
+     def __init__(self):
+@@ -64,6 +66,7 @@ class LockedMethod:
+             return self.func(*args, **kwargs)
+ 
+ 
++>>>>>>> right_content.py
+ class LockedEvent(Event):
+ 
+     def trigger(self, model, *args, **kwargs):
+@@ -143,3 +146,4 @@ class LockedMachine(Machine):
+     @staticmethod
+     def _create_event(*args, **kwargs):
+         return LockedEvent(*args, **kwargs)
++

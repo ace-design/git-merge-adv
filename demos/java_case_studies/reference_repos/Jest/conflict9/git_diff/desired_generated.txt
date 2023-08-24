@@ -1,0 +1,200 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict9/desired.java b/java_case_studies/demo_results/MethodUnion/Jest-conflict9.java
+index 403b718..d369fdb 100644
+--- a/java_case_studies/reference_repos/Jest/conflict9/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/Jest-conflict9.java
+@@ -1,5 +1,4 @@
+ package io.searchbox.client;
+-
+ import com.google.gson.*;
+ import io.searchbox.annotations.JestId;
+ import io.searchbox.cloning.CloneUtils;
+@@ -7,7 +6,6 @@ import io.searchbox.annotations.JestVersion;
+ import org.apache.commons.lang3.StringUtils;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+-
+ import java.lang.reflect.Field;
+ import java.math.BigDecimal;
+ import java.math.BigInteger;
+@@ -15,22 +13,18 @@ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.Map;
+ 
+-/**
+- * @author Dogukan Sonmez
+- */
+-public class JestResult {
+-
+-    public static final String ES_METADATA_ID = "es_metadata_id";
+-    public static final String ES_METADATA_VERSION = "es_metadata_version";
+-    private static final Logger log = LoggerFactory.getLogger(JestResult.class);
++public class JestResult{
+ 
+-    protected JsonObject jsonObject;
+-    protected String jsonString;
+-    protected String pathToResult;
+-    protected int responseCode;
+-    protected boolean isSucceeded;
+-    protected String errorMessage;
+-    protected Gson gson;
++    public static final String ES_METADATA_ID = "es_metadata_id";,
++    private static final Logger log = LoggerFactory.getLogger(JestResult.class);,
++    public static final String ES_METADATA_VERSION = "es_metadata_version";,
++    protected JsonObject jsonObject;,
++    protected String jsonString;,
++    protected String pathToResult;,
++    protected int responseCode;,
++    protected boolean isSucceeded;,
++    protected String errorMessage;,
++    protected Gson gson;,
+ 
+     private JestResult() {
+     }
+@@ -92,6 +86,7 @@ public class JestResult {
+     /**
+      * manually set an error message, eg. for the cases where non-200 response code is received
+      */
++
+     public void setErrorMessage(String errorMessage) {
+         this.errorMessage = errorMessage;
+     }
+@@ -124,6 +119,7 @@ public class JestResult {
+      * String representing the source JSON element(s) otherwise.
+      * Elements are joined with a comma if there are multiple sources (e.g.: search with multiple hits).
+      */
++
+     public String getSourceAsString() {
+         List<String> sources = getSourceAsStringList();
+         return sources == null ? null : StringUtils.join(sources, ",");
+@@ -134,6 +130,7 @@ public class JestResult {
+      * the response does not contain the key to source.
+      * List of strings representing the source JSON element(s) otherwise.
+      */
++
+     public List<String> getSourceAsStringList() {
+         String[] keys = getKeys();
+         if (!isSucceeded || jsonObject == null || keys == null || keys.length == 0 || !jsonObject.has(keys[0])) {
+@@ -177,7 +174,7 @@ public class JestResult {
+         return extractSource(true);
+     }
+ 
+-    protected List<JsonElement> extractSource(boolean addEsMetadataFields) {
++    protected List<JsonElement> extractSource(boolean addEsMetadataIdField) {
+         List<JsonElement> sourceList = new ArrayList<JsonElement>();
+ 
+         if (jsonObject != null) {
+@@ -204,6 +201,55 @@ public class JestResult {
+                                 JsonObject source = currentObj.getAsJsonObject(sourceKey);
+                                 if (source != null) {
+                                     JsonObject copy = (JsonObject)CloneUtils.deepClone(source);
++                                    if (addEsMetadataIdField) {
++                                        copy.add(ES_METADATA_ID, currentObj.get("_id"));
++                                    }
++                                    sourceList.add(copy);
++                                }
++                            }
++                        }
++                    }
++                } else if (obj != null) {
++                    JsonElement copy = (JsonElement)CloneUtils.deepClone(obj);
++                    JsonElement objId = jsonObject.get("_id");
++                    if ((objId != null) && copy.isJsonObject() && addEsMetadataIdField) {
++                        copy.getAsJsonObject().add(ES_METADATA_ID, objId);
++                    }
++                    sourceList.add(copy);
++                }
++            }
++        }
++
++        return sourceList;
++    }
++
++    protected List<JsonElement> extractSource(boolean addEsMetadataFields) {
++        List<JsonElement> sourceList = new ArrayList<JsonElement>();
++
++        if (jsonObject != null) {
++            String[] keys = getKeys();
++            if (keys == null) {
++                sourceList.add(jsonObject);
++            } else {
++                String sourceKey = keys[keys.length - 1];
++                JsonElement obj = jsonObject.get(keys[0]);
++                if (keys.length > 1) {
++                    for (int i = 1; i < keys.length - 1; i++) {
++                        obj = ((JsonObject) obj).get(keys[i]);
++                    }
++
++                    if (obj.isJsonObject()) {
++                        JsonElement source = obj.getAsJsonObject().get(sourceKey);
++                        if (source != null) {
++                            sourceList.add(source);
++                        }
++                    } else if (obj.isJsonArray()) {
++                        for (JsonElement element : obj.getAsJsonArray()) {
++                            if (element instanceof JsonObject) {
++                                JsonObject currentObj = element.getAsJsonObject();
++                                JsonObject source = currentObj.getAsJsonObject(sourceKey);
++                                if (source != null) {
++                                    JsonObject copy = GsonUtils.deepCopy(source);
+                                     if (addEsMetadataFields) {
+                                         copy.add(ES_METADATA_ID, currentObj.get("_id"));
+                                         copy.add(ES_METADATA_VERSION, currentObj.get("_version"));
+@@ -214,7 +260,7 @@ public class JestResult {
+                         }
+                     }
+                 } else if (obj != null) {
+-                    JsonElement copy = (JsonElement)CloneUtils.deepClone(obj);
++                    JsonElement copy = GsonUtils.deepCopy(obj);
+                     if (addEsMetadataFields && copy.isJsonObject()) {
+                         JsonElement objId = jsonObject.get("_id");
+                         if (objId != null) {
+@@ -264,22 +310,6 @@ public class JestResult {
+         return obj;
+     }
+ 
+-    private <T> boolean setAnnotatedField(T obj, JsonElement source, Field field, String fieldname) {
+-        try {
+-            field.setAccessible(true);
+-            Object value = field.get(obj);
+-            if (value == null) {
+-                Class<?> fieldType = field.getType();
+-                JsonElement element = ((JsonObject) source).get(fieldname);
+-                field.set(obj, getAs(element, fieldType));
+-                return true;
+-            }
+-        } catch (IllegalAccessException e) {
+-            log.error("Unhandled exception occurred while setting annotated field from source");
+-        }
+-        return false;
+-    }
+-
+     @SuppressWarnings("unchecked")
+     private <T> T getAs(JsonElement id, Class<T> fieldType) throws IllegalAccessException {
+         if (id.isJsonNull()) {
+@@ -330,8 +360,24 @@ public class JestResult {
+         throw new RuntimeException("cannot assign " + id + " to " + fieldType);
+     }
+ 
++    private <T> boolean setAnnotatedField(T obj, JsonElement source, Field field, String fieldname) {
++        try {
++            field.setAccessible(true);
++            Object value = field.get(obj);
++            if (value == null) {
++                Class<?> fieldType = field.getType();
++                JsonElement element = ((JsonObject) source).get(fieldname);
++                field.set(obj, getAs(element, fieldType));
++                return true;
++            }
++        } catch (IllegalAccessException e) {
++            log.error("Unhandled exception occurred while setting annotated field from source");
++        }
++        return false;
++    }
++
+     protected String[] getKeys() {
+         return pathToResult == null ? null : pathToResult.split("/");
+     }
+ 
+-}
++}
+\ No newline at end of file

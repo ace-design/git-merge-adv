@@ -1,0 +1,352 @@
+diff --git a/java_case_studies/reference_repos/openshift-java-client/conflict3/desired.java b/java_case_studies/demo_results/MethodUnion/openshift-java-client-conflict3.java
+index 65f03cd..9d5ee11 100644
+--- a/java_case_studies/reference_repos/openshift-java-client/conflict3/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/openshift-java-client-conflict3.java
+@@ -9,23 +9,19 @@
+  * Red Hat, Inc. - initial API and implementation 
+  ******************************************************************************/
+ package com.openshift.client.utils;
+-
+ import static org.fest.assertions.Assertions.assertThat;
+ import static org.junit.Assert.assertEquals;
+ import static org.junit.Assert.assertFalse;
+ import static org.junit.Assert.assertNotNull;
+ import static org.junit.Assert.assertNull;
+ import static org.junit.Assert.assertTrue;
+-
+ import java.io.IOException;
+ import java.net.URL;
+ import java.util.Collection;
+ import java.util.List;
+ import java.util.regex.Matcher;
+ import java.util.regex.Pattern;
+-
+ import org.fest.assertions.AssertExtension;
+-
+ import com.openshift.client.IApplication;
+ import com.openshift.client.IDomain;
+ import com.openshift.client.IField;
+@@ -37,62 +33,59 @@ import com.openshift.client.OpenShiftException;
+ import com.openshift.client.cartridge.IEmbeddableCartridge;
+ import com.openshift.client.cartridge.IEmbeddedCartridge;
+ import com.openshift.client.cartridge.IStandaloneCartridge;
++import javax.xml.datatype.DatatypeConfigurationException;
+ import com.openshift.client.cartridge.selector.LatestEmbeddableCartridge;
+ import com.openshift.internal.client.utils.StreamUtils;
++import com.openshift.client.ApplicationScale;
+ 
+-/**
+- * @author André Dietisheim
+- */
+-public class ApplicationAssert implements AssertExtension {
++public class ApplicationAssert implements AssertExtension{
+ 
+-	public static final Pattern APPLICATION_URL_PATTERN = Pattern.compile("https*://(.+)-([^\\.]+)\\.(.+)/(.*)");
+-	public static final Pattern GIT_URL_PATTERN = Pattern.compile("ssh://(.+)@(.+)-([^\\.]+)\\.(.+)/~/git/(.+).git/");
+-	
+-	private static final long APPLICATION_WAIT_TIMEOUT = 2 * 60 * 1000;
+-	
+-	private IApplication application;
++    public static final Pattern APPLICATION_URL_PATTERN = Pattern.compile("https*://(.+)-([^\\.]+)\\.(.+)/(.*)");,
++    public static final Pattern GIT_URL_PATTERN = Pattern.compile("ssh://(.+)@(.+)-([^\\.]+)\\.(.+)/~/git/(.+).git/");,
++    private static final long APPLICATION_WAIT_TIMEOUT = 2 * 60 * 1000;,
++    private IApplication application;,
+ 
+-	public ApplicationAssert(IApplication application) {
++    public ApplicationAssert(IApplication application) {
+ 		assertThat(application).isNotNull();
+ 		this.application = application;
+ 	}
+ 
+-	public ApplicationAssert hasName(String name) {
++    public ApplicationAssert hasName(String name) {
+ 		assertEquals(name, application.getName());
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasUUID(String uuid) {
++    public ApplicationAssert hasUUID(String uuid) {
+ 		assertEquals(uuid, application.getUUID());
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasUUID() {
++    public ApplicationAssert hasUUID() {
+ 		assertNotNull(application.getUUID());
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasCartridge(IStandaloneCartridge cartridge) {
++    public ApplicationAssert hasCartridge(IStandaloneCartridge cartridge) {
+ 		assertEquals(cartridge, application.getCartridge());
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasCreationTime(String creationTime) {
+-		assertEquals(creationTime, application.getCreationTime());
++    public ApplicationAssert hasCreationTime(String creationTime) throws DatatypeConfigurationException {
++		assertEquals(RFC822DateUtils.getDate(creationTime), application.getCreationTime());
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasCreationTime() {
++    public ApplicationAssert hasCreationTime() {
+ 		assertNotNull(application.getCreationTime());
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasGitUrl(String gitUrl) {
++    public ApplicationAssert hasGitUrl(String gitUrl) {
+ 		assertEquals(gitUrl, application.getGitUrl());
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasValidGitUrl() {
++    public ApplicationAssert hasValidGitUrl() {
+ 		Matcher matcher = GIT_URL_PATTERN.matcher(application.getGitUrl());
+ 		assertTrue(matcher.matches());
+ 		assertEquals(5, matcher.groupCount());
+@@ -105,32 +98,32 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasInitialGitUrl() {
++    public ApplicationAssert hasInitialGitUrl() {
+ 		assertThat(application.getInitialGitUrl()).isNotEmpty();
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasNoInitialGitUrl() {
++    public ApplicationAssert hasNoInitialGitUrl() {
+ 		assertThat(application.getInitialGitUrl()).isNull();
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasInitialGitUrl(String initialGitUrl) {
++    public ApplicationAssert hasInitialGitUrl(String initialGitUrl) {
+ 		assertThat(application.getInitialGitUrl()).isEqualTo(initialGitUrl);
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasApplicationUrl(String applicationUrl) {
++    public ApplicationAssert hasApplicationUrl(String applicationUrl) {
+ 		assertEquals(applicationUrl, application.getApplicationUrl());
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasValidApplicationUrl() {
++    public ApplicationAssert hasValidApplicationUrl() {
+ 		assertApplicationUrl();
+ 		return this;
+ 	}
+ 
+-	private void assertApplicationUrl() {
++    private void assertApplicationUrl() {
+ 		Matcher matcher = APPLICATION_URL_PATTERN.matcher(application.getApplicationUrl());
+ 		assertTrue(matcher.matches());
+ 		assertTrue(matcher.groupCount() >= 3);
+@@ -140,13 +133,13 @@ public class ApplicationAssert implements AssertExtension {
+ 		assertEquals(domain.getId(), matcher.group(2));
+ 		assertEquals(domain.getSuffix(), matcher.group(3));
+ 	}
+-	
+-	public ApplicationAssert hasGearProfile(IGearProfile gearProfile) {
++
++    public ApplicationAssert hasGearProfile(IGearProfile gearProfile) {
+ 		assertThat(application.getGearProfile()).isEqualTo(gearProfile);
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasEmbeddedCartridges(LatestEmbeddableCartridge... selectors)
++    public ApplicationAssert hasEmbeddedCartridges(LatestEmbeddableCartridge... selectors)
+ 			throws OpenShiftException {
+ 		for (LatestEmbeddableCartridge selector : selectors) {
+ 			hasEmbeddedCartridge(selector);
+@@ -154,13 +147,18 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasEmbeddedCartridge(LatestEmbeddableCartridge selector)
++    public ApplicationAssert hasApplicationScale(ApplicationScale applicationScale) {
++		assertThat(application.getApplicationScale()).isEqualTo(applicationScale);
++		return this;
++	}
++
++    public ApplicationAssert hasEmbeddedCartridge(LatestEmbeddableCartridge selector)
+ 			throws OpenShiftException {
+ 		hasEmbeddedCartridge(selector.get(application));
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasEmbeddedCartridge(IEmbeddableCartridge... cartridges)
++    public ApplicationAssert hasEmbeddedCartridge(IEmbeddableCartridge... cartridges)
+ 			throws OpenShiftException {
+ 		for (IEmbeddableCartridge cartridge : cartridges) {
+ 			hasEmbeddedCartridge(cartridge);
+@@ -169,14 +167,26 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasEmbeddedCartridge(IEmbeddableCartridge cartridge)
++    public ApplicationAssert hasEmbeddableCartridges(String... embeddableCartridgeNames) throws OpenShiftException {
++		if (embeddableCartridgeNames.length == 0) {
++			assertEquals(0, application.getEmbeddedCartridges().size());
++		}
++
++		for (String cartridgeName : embeddableCartridgeNames) {
++			assertTrue(application.hasEmbeddedCartridge(cartridgeName));
++		}
++
++		return this;
++	}
++
++    public ApplicationAssert hasEmbeddedCartridge(IEmbeddableCartridge cartridge)
+ 			throws OpenShiftException {
+ 		assertTrue(application.hasEmbeddedCartridge(cartridge));
+ 
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasEmbeddedCartridgeNames(String... embeddableCartridgeNames) throws OpenShiftException {
++    public ApplicationAssert hasEmbeddedCartridgeNames(String... embeddableCartridgeNames) throws OpenShiftException {
+ 		if (embeddableCartridgeNames.length == 0) {
+ 			assertEquals(0, application.getEmbeddedCartridges().size());
+ 		}
+@@ -188,13 +198,21 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasEmbeddableCartridges(int numberOf) {
++    public ApplicationAssert hasNotEmbeddableCartridges(String... embeddableCartridgeNames) throws OpenShiftException {		
++		for (String cartridgeName : embeddableCartridgeNames) {
++			assertFalse(application.hasEmbeddedCartridge(cartridgeName));
++		}
++
++		return this;
++	}
++
++    public ApplicationAssert hasEmbeddableCartridges(int numberOf) {
+ 		assertNotNull(application.getEmbeddedCartridges());
+ 		assertEquals(numberOf, application.getEmbeddedCartridges().size());
+ 		return this;
+ 	}
+-	
+-	public ApplicationAssert hasNotEmbeddableCartridgeNames(String... embeddableCartridgeNames) throws OpenShiftException {		
++
++    public ApplicationAssert hasNotEmbeddableCartridgeNames(String... embeddableCartridgeNames) throws OpenShiftException {		
+ 		for (String cartridgeName : embeddableCartridgeNames) {
+ 			assertFalse(application.hasEmbeddedCartridge(cartridgeName));
+ 		}
+@@ -202,7 +220,7 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasNotEmbeddableCartridges(LatestEmbeddableCartridge... selectors) throws OpenShiftException {
++    public ApplicationAssert hasNotEmbeddableCartridges(LatestEmbeddableCartridge... selectors) throws OpenShiftException {
+ 		for (LatestEmbeddableCartridge selector : selectors) {
+ 			assertThat(application.hasEmbeddedCartridge(selector.get(application))).isFalse();
+ 		}
+@@ -210,7 +228,7 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasAlias(String... aliasNames) {
++    public ApplicationAssert hasAlias(String... aliasNames) {
+ 		if (aliasNames.length == 0) {
+ 			assertEquals(0, application.getAliases().size());
+ 		}
+@@ -222,25 +240,28 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public void hasNotEmbeddableCartridge(LatestEmbeddableCartridge constraint) {
++    public ApplicationAssert hasNotEmbeddableCartridge(LatestEmbeddableCartridge constraint) {
+ 		hasNotEmbeddableCartridge(constraint.get(application));
++		return this;
+ 	}
+ 
+-	public void hasNotEmbeddableCartridge(IEmbeddableCartridge cartridge) {
++    public ApplicationAssert hasNotEmbeddableCartridge(IEmbeddableCartridge cartridge) {
+ 		hasNotEmbeddableCartridge(cartridge.getName());
++		return this;
+ 	}
+ 
+-	public void hasNotEmbeddableCartridge(String name) {
+-		assertNull(getEmbeddableCartridge(name));
+-	}
+-
+-	public void assertThatDoesntContainCartridges(Collection<IEmbeddableCartridge> shouldNotBeContained, List<IEmbeddedCartridge> cartridges) {
++    public ApplicationAssert assertThatDoesntContainCartridges(Collection<IEmbeddableCartridge> shouldNotBeContained, List<IEmbeddedCartridge> cartridges) {
+ 		for(IEmbeddableCartridge shouldNot : shouldNotBeContained) {
+ 			assertFalse(cartridges.contains(shouldNot));
+ 		}
++		return this;
+ 	}
+ 
+-	private IEmbeddedCartridge getEmbeddableCartridge(String name) {
++    public void hasNotEmbeddableCartridge(String name) {
++		assertNull(getEmbeddableCartridge(name));
++	}
++
++    private IEmbeddedCartridge getEmbeddableCartridge(String name) {
+ 		IEmbeddedCartridge matchingCartridge = null;
+ 		for (IEmbeddedCartridge cartridge : application.getEmbeddedCartridges()) {
+ 			if (name.equals(cartridge.getName())) {
+@@ -251,13 +272,14 @@ public class ApplicationAssert implements AssertExtension {
+ 		return matchingCartridge;
+ 	}
+ 
+-	public void assertThatContainsCartridges(Collection<IEmbeddableCartridge> shouldBeContained, List<IEmbeddedCartridge> cartridgesToCheck) {
++    public ApplicationAssert assertThatContainsCartridges(Collection<IEmbeddableCartridge> shouldBeContained, List<IEmbeddedCartridge> cartridgesToCheck) {
+ 		for (IEmbeddableCartridge cartridge : shouldBeContained) {
+ 			assertTrue(cartridgesToCheck.contains(cartridge));
+ 		}
++		return this;
+ 	}
+-	
+-	public ApplicationAssert hasContent(String page, String contains) throws IOException {
++
++    public ApplicationAssert hasContent(String page, String contains) throws IOException {
+ 		URL appUrl = new URL(application.getApplicationUrl() + page);
+ 		assertThat(application.waitForAccessible(APPLICATION_WAIT_TIMEOUT)).isTrue();
+ 		String content = StreamUtils.readToString(appUrl.openConnection().getInputStream());
+@@ -265,7 +287,7 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasMessage(IField field, ISeverity severity) throws IOException {
++    public ApplicationAssert hasMessage(IField field, ISeverity severity) throws IOException {
+ 		Messages messages = application.getMessages();
+ 		assertThat(messages).isNotNull();
+ 		List<Message> matchingMessages = messages.getBy(field, severity);
+@@ -273,7 +295,7 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasMessage(IField field) throws IOException {
++    public ApplicationAssert hasMessage(IField field) throws IOException {
+ 		Messages messages = application.getMessages();
+ 		assertThat(messages).isNotNull();
+ 		List<Message> matchingMessages = messages.getBy(field);
+@@ -281,7 +303,7 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasResultFieldOrResultSeverityMessage() throws IOException {
++    public ApplicationAssert hasResultFieldOrResultSeverityMessage() throws IOException {
+ 		Messages messages = application.getMessages();
+ 		assertThat(messages).isNotNull();
+ 		List<Message> matchingMessages = messages.getBy(IField.RESULT);
+@@ -293,9 +315,9 @@ public class ApplicationAssert implements AssertExtension {
+ 		return this;
+ 	}
+ 
+-	public ApplicationAssert hasDomain(IDomain domain) {
++    public ApplicationAssert hasDomain(IDomain domain) {
+ 		assertThat(application.getDomain()).isEqualTo(domain);
+ 		return this;
+ 	}
+ 
+-}
++}
+\ No newline at end of file

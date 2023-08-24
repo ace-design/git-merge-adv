@@ -1,0 +1,38 @@
+diff --git a/java_case_studies/reference_repos/duke/conflict4/base.java b/java_case_studies/reference_repos/duke/conflict4/right.java
+index a0646f5..e6a0c43 100644
+--- a/java_case_studies/reference_repos/duke/conflict4/base.java
++++ b/java_case_studies/reference_repos/duke/conflict4/right.java
+@@ -30,6 +30,7 @@ public class ConfigurationImpl implements Configuration {
+   private Map<String, Property> properties;
+   private List<Property> proplist; // duplicate to preserve order
+   private Collection<Property> lookups; // subset of properties
++  private List<Comparator> customComparators;
+   
+   private Database database;
+   
+@@ -37,6 +38,7 @@ public class ConfigurationImpl implements Configuration {
+     this.datasources = new ArrayList();
+     this.group1 = new ArrayList();
+     this.group2 = new ArrayList();
++    this.customComparators = new ArrayList<Comparator>();
+   }
+ 
+   /**
+@@ -291,4 +293,15 @@ public class ConfigurationImpl implements Configuration {
+ 
+     return copy;
+   }
+-}
++
++  
++  @Override
++  public List<Comparator> getCustomComparators() {	
++	return this.customComparators;
++  }
++
++  @Override
++  public void addCustomComparator(Comparator comparator) { 
++	this.customComparators.add(comparator);
++  }
++}
+\ No newline at end of file

@@ -1,0 +1,65 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict2/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict2.py
+index af3004d..7c5a0db 100644
+--- a/python_case_studies/reference_repos/transitions/conflict2/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict2.py
+@@ -1,3 +1,12 @@
++import sys
++import tempfile
++from os.path import getsize
++from os import unlink
++from transitions.extensions.nesting import NestedState
++from transitions.extensions import MachineFactory
++from unittest import skipIf
++from test_core import TestTransitions,TestCase
++from utils import Stuff,DummyModel
+ # -*- coding: utf-8 -*-
+ 
+ try:
+@@ -5,17 +14,8 @@ try:
+ except ImportError:
+     pass
+ 
+-import sys
+-import tempfile
+-from os.path import getsize
+-from os import unlink
+ 
+-from transitions.extensions.nesting import NestedState
+-from transitions.extensions import MachineFactory
+ 
+-from unittest import skipIf
+-from .test_core import TestTransitions, TestCase
+-from .utils import Stuff, DummyModel
+ 
+ try:
+     from unittest.mock import MagicMock
+@@ -627,6 +627,7 @@ class TestNestedTransitions(TestTransitions):
+         machine = self.machine_cls(states=states, queued=True, initial='b')
+         machine.to_b_c()
+ 
++<<<<<<< left_content.py
+     def test_machine_may_transitions_for_generated_triggers(self):
+         states = ['A', 'B', {'name': 'C', 'children': ['1', '2', '3']}, 'D']
+         m = self.stuff.machine_cls(states=states, initial='A')
+@@ -641,7 +642,7 @@ class TestNestedTransitions(TestTransitions):
+         # TODO: no transitions for to_D from C_1 -> D but m.to_D() works
+         assert m.may_to_D()
+         m.to_D()
+-
++=======
+     def test_get_nested_triggers(self):
+         transitions = [
+             ['goB', 'A', 'B'],
+@@ -657,6 +658,7 @@ class TestNestedTransitions(TestTransitions):
+         self.assertEqual(len(transitions) + 1, len(m.get_nested_triggers()))
+         self.assertEqual(2, len(m.get_nested_triggers(['C', '1'])))
+         self.assertEqual(2, len(m.get_nested_triggers(['C'])))
++>>>>>>> right_content.py
+ 
+ 
+ class TestSeparatorsBase(TestCase):
+@@ -873,3 +875,4 @@ class TestSeparatorsDot(TestSeparatorsBase):
+ @skipIf(sys.version_info[0] < 3, "Unicode separators are only supported for Python 3")
+ class TestSeparatorUnicode(TestSeparatorsBase):
+     separator = u'↦'
++

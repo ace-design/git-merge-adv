@@ -1,0 +1,24 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict17/base.py b/python_case_studies/reference_repos/transitions/conflict17/right.py
+index c4082cd..05c75be 100644
+--- a/python_case_studies/reference_repos/transitions/conflict17/base.py
++++ b/python_case_studies/reference_repos/transitions/conflict17/right.py
+@@ -86,7 +86,9 @@ class TestTransitions(TestCase):
+ 
+         counter = Machine(states=states, transitions=transitions, initial='1')
+ 
+-        new_states = ['A', 'B', {'name': 'C', 'children': counter, 'remap': {'finished': 'A'}}]
++        new_states = ['A', 'B', {'name': 'C', 'children':
++                      [counter, {'name': 'X', 'children': ['will', 'be', 'filtered', 'out']}],
++                       'remap': {'finished': 'A', 'X': 'A'}}]
+         new_transitions = [
+             {'trigger': 'forward', 'source': 'A', 'dest': 'B'},
+             {'trigger': 'forward', 'source': 'B', 'dest': 'C%s1' % State.separator},
+@@ -135,7 +137,7 @@ class TestTransitions(TestCase):
+ 
+         m = Machine(None, states=correct)
+         if State.separator in '_':
+-             m.to_B_C_3_a()
++            m.to_B_C_3_a()
+         else:
+             m.to_B.C.s3.a()
+ 

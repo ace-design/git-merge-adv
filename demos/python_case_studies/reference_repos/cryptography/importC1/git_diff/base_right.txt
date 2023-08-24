@@ -1,0 +1,13 @@
+diff --git a/python_case_studies/reference_repos/cryptography/importC1/base.py b/python_case_studies/reference_repos/cryptography/importC1/right.py
+index 49e2043..c007527 100644
+--- a/python_case_studies/reference_repos/cryptography/importC1/base.py
++++ b/python_case_studies/reference_repos/cryptography/importC1/right.py
+@@ -31,7 +31,7 @@ from cryptography.hazmat.primitives.ciphers.algorithms import (
+ )
+ from cryptography.hazmat.primitives.cmac import CMAC
+ 
+-from tests.utils import (
++from ...utils import (
+     load_nist_vectors, load_vectors_from_file, raises_unsupported_algorithm
+ )
+ 

@@ -1,0 +1,92 @@
+diff --git a/python_case_studies/reference_repos/blaze/importC3/desired.py b/python_case_studies/demo_results/MethodUnion/blaze-importC3.py
+index 1f2bc6d..41de069 100644
+--- a/python_case_studies/reference_repos/blaze/importC3/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/blaze-importC3.py
+@@ -1,45 +1,50 @@
+-from __future__ import absolute_import, division, print_function
+-
++from __future__ import absolute_import,division,print_function
+ import pytest
+-
+-sa = pytest.importorskip('sqlalchemy')
+-
+ import itertools
+ import sqlite3
+ from distutils.version import LooseVersion
+-
+-
+ import datashape
+-from odo import into, resource, discover
++from odo import into,resource,discover,odo,drop
+ import numpy as np
+ import pandas as pd
+ import pandas.util.testing as tm
+ from pandas import DataFrame
+ from toolz import unique
+-
+-from odo import odo, drop
+ from blaze.compatibility import xfail
+-from blaze.compute.sql import compute, select, lower_column, compute_up
++from blaze.compute.sql import (
++    compute,
++    select,
++    lower_column,
++    compute_up,
++    get_all_froms,
++)
+ from blaze.expr import (
++    symbol,
++    transform,
++    summary,
+     by,
++    sin,
++    join,
++    floor,
+     cos,
++    merge,
++    nunique,
++    mean,
++    sum,
+     count,
+-    datetime as bz_datetime,
+     exp,
+-    floor,
++    datetime as bz_datetime,
+     greatest,
+-    join,
+     least,
+-    mean,
+-    merge,
+-    nunique,
+-    sin,
+-    sum,
+-    summary,
+-    symbol,
+-    transform,
+ )
+-from blaze.utils import tmpfile, example, normalize
++from blaze.utils import tmpfile,example,normalize
++
++
++sa = pytest.importorskip('sqlalchemy')
++
++
++
++
+ 
+ 
+ def computefull(t, s):
+@@ -535,6 +540,8 @@ def test_head():
+ def test_sample():
+     order_by = select(s).order_by(sa.func.random())
+     assert str(compute(t.sample(n=5), s)) == str(order_by.limit(5))
++    limit_frac = sa.select([sa.func.count() * 0.5], from_obj=get_all_froms(s)).as_scalar()
++    assert str(compute(t.sample(frac=0.5), s)) == str(order_by.limit(limit_frac))
+ 
+ 
+ def test_label():
+@@ -2061,3 +2068,4 @@ def test_greatest(op):
+     assert normalize(compute(op(s.a, s.b), db)) == normalize(
+         'select {op}(s.a, s.b) as {op}_1 from s'.format(op=op.__name__),
+     )
++

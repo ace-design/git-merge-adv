@@ -1,0 +1,12 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict17/left.py b/python_case_studies/reference_repos/apistar/conflict17/right.py
+index 4dd94a9..d4f1288 100644
+--- a/python_case_studies/reference_repos/apistar/conflict17/left.py
++++ b/python_case_studies/reference_repos/apistar/conflict17/right.py
+@@ -1,3 +1,5 @@
+-from apistar.commands.base import create_tables, new, run, test
++from apistar.commands.new import new
++from apistar.commands.run import run
++from apistar.commands.test import test
+ 
+-__all__ = ['new', 'run', 'test', 'create_tables']
++__all__ = ['new', 'run', 'test']

@@ -1,0 +1,9 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict11/left.py b/python_case_studies/reference_repos/errbot/conflict11/right.py
+index 1e9e34d..9928349 100644
+--- a/python_case_studies/reference_repos/errbot/conflict11/left.py
++++ b/python_case_studies/reference_repos/errbot/conflict11/right.py
+@@ -1,3 +1,3 @@
+ # just the current version of err
+ # it is used for deployment on pypi AND for version checking at plugin load time
+-VERSION = '3.1.0'
++VERSION = '3.0.4'

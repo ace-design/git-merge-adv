@@ -1,0 +1,16 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict6/base.py b/python_case_studies/reference_repos/apistar/conflict6/right.py
+index 613a672..3aeaefe 100644
+--- a/python_case_studies/reference_repos/apistar/conflict6/base.py
++++ b/python_case_studies/reference_repos/apistar/conflict6/right.py
+@@ -37,6 +37,11 @@ class MethodNotAllowed(APIException):
+     default_detail = 'Method not allowed'
+ 
+ 
++class UnsupportedMediaType(APIException):
++    default_status_code = 415
++    default_detail = 'Unsupported media type in request'
++
++    
+ class Found(APIException):
+     default_status_code = 302
+     default_detail = 'Found'

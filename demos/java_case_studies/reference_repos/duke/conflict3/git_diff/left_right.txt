@@ -1,0 +1,70 @@
+diff --git a/java_case_studies/reference_repos/duke/conflict3/left.java b/java_case_studies/reference_repos/duke/conflict3/right.java
+index 1fc1822..d0bb6bb 100644
+--- a/java_case_studies/reference_repos/duke/conflict3/left.java
++++ b/java_case_studies/reference_repos/duke/conflict3/right.java
+@@ -27,13 +27,6 @@ public interface Configuration {
+    */
+   public Database getDatabase(boolean overwrite);
+ 
+-  /**
+-   * Returns the database to be used for a specific group.
+-   * @param overwrite Whether to overwrite existing contents or not.
+-   * @since 1.3
+-   */
+-  public Database getDatabase(int groupno, boolean overwrite);
+-
+   /**
+    * The probability threshold used to decide whether two records
+    * represent the same entity. If the probability is higher than this
+@@ -54,7 +47,7 @@ public interface Configuration {
+    * Returns true iff we are in deduplication mode.
+    */
+   public boolean isDeduplicationMode();
+-
++	  
+   /**
+    * The set of properties Duke records can have, and their associated
+    * cleaners, comparators, and probabilities.
+@@ -72,14 +65,14 @@ public interface Configuration {
+    * such property.
+    */
+   public Property getPropertyByName(String name);
+-
++  
+   /**
+    * Returns the properties Duke queries for in the Lucene index. This
+    * is a subset of getProperties(), and is computed based on the
+    * probabilities and the threshold.
+    */
+   public Collection<Property> getLookupProperties();
+-
++  
+   /**
+    * Validates the configuration to verify that it makes sense.
+    * Rejects configurations that will fail during runtime.
+@@ -99,9 +92,19 @@ public interface Configuration {
+   public Configuration copy();
+ 
+   /**
+-   * Adds a database object. Used by ConfigLoader. If called only once
+-   * there is only a single database. Can be called twice.
+-   * @since 1.3
++   * Sets the database object to use. Used by ConfigLoader.
++   * @since 1.2
++   */
++  public void setDatabase(Database database);
++  
++  /**
++   * Adds a custom comparator.
++   */
++  public void addCustomComparator(Comparator comparator);
++  
++  /**
++   * Returns any customized comparators declared using object tags  
++   * in the config file.
+    */
+-  public void addDatabase(Database database);
+-}
++  public List<Comparator> getCustomComparators();  
++}
+\ No newline at end of file

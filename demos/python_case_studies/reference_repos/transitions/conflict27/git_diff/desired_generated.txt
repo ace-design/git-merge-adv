@@ -1,0 +1,47 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict27/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict27.py
+index 561400e..0ec7de9 100644
+--- a/python_case_studies/reference_repos/transitions/conflict27/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict27.py
+@@ -1,16 +1,18 @@
++import time
++from threading import Thread
++from transitions import LockedHierarchicalMachine
++from transitions import LockedMachine
++from test_nesting import TestTransitions as TestsNested
++from test_core import TestTransitions as TestCore
++from utils import Stuff
++from transitions import LockedHierarchicalMachine as Machine
++from unittest import TestCase
+ try:
+     from builtins import object
+ except ImportError:
+     pass
+ 
+-import time
+-from threading import Thread
+ 
+-from transitions import LockedHierarchicalMachine
+-from transitions import LockedMachine
+-from .test_nesting import TestTransitions as TestsNested
+-from .test_core import TestTransitions as TestCore
+-from .utils import Stuff
+ 
+ try:
+     from unittest.mock import MagicMock
+@@ -86,6 +88,7 @@ class TestLockedTransitions(TestCore):
+         self.assertAlmostEqual(blocked-begin, 1, delta=0.1)
+ 
+ 
++<<<<<<< left_content.py
+ # Same as TestLockedTransition but with LockedHierarchicalMachine
+ class TestLockedHierarchicalTransitions(TestsNested, TestLockedTransitions):
+     def setUp(self):
+@@ -140,3 +143,8 @@ class TestLockedHierarchicalTransitions(TestsNested, TestLockedTransitions):
+         blocked = time.time()
+         self.assertAlmostEqual(fast-begin, 0, delta=0.1)
+         self.assertAlmostEqual(blocked-begin, 1, delta=0.1)
++=======
++
++>>>>>>> right_content.py
++
++

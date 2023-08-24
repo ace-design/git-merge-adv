@@ -1,0 +1,545 @@
+diff --git a/python_case_studies/reference_repos/blaze/importC1b/left.py b/python_case_studies/reference_repos/blaze/importC1b/right.py
+index 4baafef..81b4dec 100644
+--- a/python_case_studies/reference_repos/blaze/importC1b/left.py
++++ b/python_case_studies/reference_repos/blaze/importC1b/right.py
+@@ -15,10 +15,12 @@ from odo.backends.csv import CSV
+ from blaze import discover, transform
+ from blaze.compatibility import pickle
+ from blaze.expr import symbol
+-from blaze.interactive import data, compute, concrete_head, expr_repr, to_html, iscoretype, into, coerce_core
++from blaze.interactive import (Data, compute, concrete_head, expr_repr, to_html,
++                               iscorescalar, iscoresequence, iscoretype, into,
++                               coerce_core)
+ from blaze.utils import tmpfile, example
+ 
+-tdata = (('Alice', 100),
++data = (('Alice', 100),
+         ('Bob', 200))
+ 
+ L = [[1, 'Alice',   100],
+@@ -27,15 +29,17 @@ L = [[1, 'Alice',   100],
+      [4, 'Denis',   400],
+      [5, 'Edith',  -500]]
+ 
+-t = data(tdata, fields=['name', 'amount'])
++t = Data(data, fields=['name', 'amount'])
+ 
+ x = np.ones((2, 2))
+ 
+ 
+ def test_table_raises_on_inconsistent_inputs():
+-    with pytest.raises(ValueError):
+-        t = data(tdata, schema='{name: string, amount: float32}',
+-                 dshape=dshape("{name: string, amount: float32}"))
++    with pytest.raises(ValueError) as excinfo:
++        Data(data, schema='{name: string, amount: float32}',
++             dshape=dshape("{name: string, amount: float32}"))
++
++    assert "specify one of schema= or dshape= keyword" in str(excinfo.value)
+ 
+ 
+ def test_resources():
+@@ -50,7 +54,7 @@ def test_resources_fail():
+ 
+ 
+ def test_compute_on_Data_gives_back_data():
+-    assert compute(data([1, 2, 3])) == [1, 2, 3]
++    assert compute(Data([1, 2, 3])) == [1, 2, 3]
+ 
+ 
+ def test_len():
+@@ -63,15 +67,15 @@ def test_compute():
+ 
+ 
+ def test_create_with_schema():
+-    t = data(tdata, schema='{name: string, amount: float32}')
++    t = Data(data, schema='{name: string, amount: float32}')
+     assert t.schema == dshape('{name: string, amount: float32}')
+ 
+ 
+ def test_create_with_raw_data():
+-    t = data(tdata, fields=['name', 'amount'])
++    t = Data(data, fields=['name', 'amount'])
+     assert t.schema == dshape('{name: string, amount: int64}')
+     assert t.name
+-    assert t.data == tdata
++    assert t.data == data
+ 
+ 
+ def test_repr():
+@@ -86,7 +90,7 @@ def test_repr():
+     print(result)
+     assert '101' in result
+ 
+-    t2 = data(tuple((i, i**2) for i in range(100)), fields=['x', 'y'])
++    t2 = Data(tuple((i, i**2) for i in range(100)), fields=['x', 'y'])
+     assert t2.dshape == dshape('100 * {x: int64, y: int64}')
+ 
+     result = expr_repr(t2)
+@@ -97,7 +101,7 @@ def test_repr():
+ 
+ def test_str_does_not_repr():
+     # see GH issue #1240.
+-    d = data([('aa', 1), ('b', 2)], name="ZZZ",
++    d = Data([('aa', 1), ('b', 2)], name="ZZZ",
+              dshape='2 * {a: string, b: int64}')
+     expr = transform(d, c=d.a.strlen() + d.b)
+     assert str(
+@@ -109,13 +113,13 @@ def test_repr_of_scalar():
+ 
+ 
+ def test_mutable_backed_repr():
+-    mutable_backed_table = data([[0]], fields=['col1'])
++    mutable_backed_table = Data([[0]], fields=['col1'])
+     repr(mutable_backed_table)
+ 
+ 
+ def test_dataframe_backed_repr():
+     df = pd.DataFrame(data=[0], columns=['col1'])
+-    dataframe_backed_table = data(df)
++    dataframe_backed_table = Data(df)
+     repr(dataframe_backed_table)
+ 
+ 
+@@ -126,7 +130,7 @@ def test_dataframe_backed_repr_complex():
+                        (4, 'Denis', 400),
+                        (5, 'Edith', -500)],
+                       columns=['id', 'name', 'balance'])
+-    t = data(df)
++    t = Data(df)
+     repr(t[t['balance'] < 0])
+ 
+ 
+@@ -153,7 +157,7 @@ def test_to_html():
+ 
+ 
+ def test_to_html_on_arrays():
+-    s = to_html(data(np.ones((2, 2))))
++    s = to_html(Data(np.ones((2, 2))))
+     assert '1' in s
+     assert 'br>' in s
+ 
+@@ -164,7 +168,7 @@ def test_repr_html():
+ 
+ 
+ def test_into():
+-    assert into(list, t) == into(list, tdata)
++    assert into(list, t) == into(list, data)
+ 
+ 
+ def test_serialization():
+@@ -181,7 +185,7 @@ def test_table_resource():
+         csv = CSV(filename)
+         append(csv, [[1, 2], [10, 20]], dshape=ds)
+ 
+-        t = data(filename)
++        t = Data(filename)
+         assert isinstance(t.data, CSV)
+         assert into(list, compute(t)) == into(list, csv)
+ 
+@@ -194,52 +198,52 @@ def test_concretehead_failure():
+ 
+ 
+ def test_into_np_ndarray_column():
+-    t = data(L, fields=['id', 'name', 'balance'])
++    t = Data(L, fields=['id', 'name', 'balance'])
+     expr = t[t.balance < 0].name
+     colarray = into(np.ndarray, expr)
+     assert len(list(compute(expr))) == len(colarray)
+ 
+ 
+ def test_into_nd_array_selection():
+-    t = data(L, fields=['id', 'name', 'balance'])
++    t = Data(L, fields=['id', 'name', 'balance'])
+     expr = t[t['balance'] < 0]
+     selarray = into(np.ndarray, expr)
+     assert len(list(compute(expr))) == len(selarray)
+ 
+ 
+ def test_into_nd_array_column_failure():
+-    tble = data(L, fields=['id', 'name', 'balance'])
++    tble = Data(L, fields=['id', 'name', 'balance'])
+     expr = tble[tble['balance'] < 0]
+     colarray = into(np.ndarray, expr)
+     assert len(list(compute(expr))) == len(colarray)
+ 
+ 
+ def test_Data_attribute_repr():
+-    t = data(CSV(example('accounts-datetimes.csv')))
++    t = Data(CSV(example('accounts-datetimes.csv')))
+     result = t.when.day
+     expected = pd.DataFrame({'when_day': [1, 2, 3, 4, 5]})
+     assert repr(result) == repr(expected)
+ 
+ 
+-def test_can_trivially_create_csv_data():
+-    data(example('iris.csv'))
++def test_can_trivially_create_csv_Data():
++    Data(example('iris.csv'))
+ 
+     # in context
+-    with data(example('iris.csv')) as d:
++    with Data(example('iris.csv')) as d:
+         assert d is not None
+ 
+ 
+ def test_can_trivially_create_csv_Data_with_unicode():
+     if sys.version[0] == '2':
+-        assert isinstance(data(example(u'iris.csv')).data, CSV)
++        assert isinstance(Data(example(u'iris.csv')).data, CSV)
+ 
+ 
+ def test_can_trivially_create_sqlite_table():
+     pytest.importorskip('sqlalchemy')
+-    data('sqlite:///'+example('iris.db')+'::iris')
++    Data('sqlite:///'+example('iris.db')+'::iris')
+ 
+     # in context
+-    with data('sqlite:///'+example('iris.db')+'::iris') as d:
++    with Data('sqlite:///'+example('iris.db')+'::iris') as d:
+         assert d is not None
+ 
+ 
+@@ -248,47 +252,47 @@ def test_can_trivially_create_sqlite_table():
+                     reason='PyTables + Windows + Python 3.4 crashes')
+ def test_can_trivially_create_pytables():
+     pytest.importorskip('tables')
+-    with data(example('accounts.h5')+'::/accounts') as d:
++    with Data(example('accounts.h5')+'::/accounts') as d:
+         assert d is not None
+ 
+ 
+ def test_data_passes_kwargs_to_resource():
+-    assert data(example('iris.csv'), encoding='ascii').data.encoding == 'ascii'
++    assert Data(example('iris.csv'), encoding='ascii').data.encoding == 'ascii'
+ 
+ 
+ def test_data_on_iterator_refies_data():
+-    tdata = [1, 2, 3]
+-    d = data(iter(tdata))
++    data = [1, 2, 3]
++    d = Data(iter(data))
+ 
+-    assert into(list, d) == tdata
+-    assert into(list, d) == tdata
++    assert into(list, d) == data
++    assert into(list, d) == data
+ 
+     # in context
+-    with data(iter(tdata)) as d:
++    with Data(iter(data)) as d:
+         assert d is not None
+ 
+ 
+ def test_Data_on_json_is_concrete():
+-    d = data(example('accounts-streaming.json'))
++    d = Data(example('accounts-streaming.json'))
+ 
+     assert compute(d.amount.sum()) == 100 - 200 + 300 + 400 - 500
+     assert compute(d.amount.sum()) == 100 - 200 + 300 + 400 - 500
+ 
+ 
+ def test_repr_on_nd_array_doesnt_err():
+-    d = data(np.ones((2, 2, 2)))
++    d = Data(np.ones((2, 2, 2)))
+     repr(d + 1)
+ 
+ 
+ def test_generator_reprs_concretely():
+     x = [1, 2, 3, 4, 5, 6]
+-    d = data(x)
++    d = Data(x)
+     expr = d[d > 2] + 1
+     assert '4' in repr(expr)
+ 
+ 
+ def test_incompatible_types():
+-    d = data(pd.DataFrame(L, columns=['id', 'name', 'amount']))
++    d = Data(pd.DataFrame(L, columns=['id', 'name', 'amount']))
+ 
+     with pytest.raises(ValueError):
+         d.id == 'foo'
+@@ -300,16 +304,16 @@ def test_incompatible_types():
+ 
+ def test___array__():
+     x = np.ones(4)
+-    d = data(x)
++    d = Data(x)
+     assert (np.array(d + 1) == x + 1).all()
+ 
+-    d = data(x[:2])
++    d = Data(x[:2])
+     x[2:] = d + 1
+     assert x.tolist() == [1, 1, 2, 2]
+ 
+ 
+ def test_python_scalar_protocols():
+-    d = data(1)
++    d = Data(1)
+     assert int(d + 1) == 2
+     assert float(d + 1.0) == 2.0
+     assert bool(d > 0) is True
+@@ -318,7 +322,7 @@ def test_python_scalar_protocols():
+ 
+ def test_iter():
+     x = np.ones(4)
+-    d = data(x)
++    d = Data(x)
+     assert list(d + 1) == [2, 2, 2, 2]
+ 
+ 
+@@ -327,16 +331,16 @@ def test_iter():
+ )
+ def test_DataFrame():
+     x = np.array([(1, 2), (1., 2.)], dtype=[('a', 'i4'), ('b', 'f4')])
+-    d = data(x)
++    d = Data(x)
+     assert isinstance(pd.DataFrame(d), pd.DataFrame)
+ 
+ 
+ def test_head_compute():
+-    tdata = tm.makeMixedDataFrame()
+-    t = symbol('t', discover(tdata))
+-    db = into('sqlite:///:memory:::t', tdata, dshape=t.dshape)
++    data = tm.makeMixedDataFrame()
++    t = symbol('t', discover(data))
++    db = into('sqlite:///:memory:::t', data, dshape=t.dshape)
+     n = 2
+-    d = data(db)
++    d = Data(db)
+ 
+     # skip the header and the ... at the end of the repr
+     expr = d.head(n)
+@@ -347,50 +351,50 @@ def test_head_compute():
+ 
+ 
+ def test_scalar_sql_compute():
+-    t = into('sqlite:///:memory:::t', tdata,
++    t = into('sqlite:///:memory:::t', data,
+              dshape=dshape('var * {name: string, amount: int}'))
+-    d = data(t)
++    d = Data(t)
+     assert repr(d.amount.sum()) == '300'
+ 
+ 
+ def test_no_name_for_simple_data():
+-    d = data([1, 2, 3])
++    d = Data([1, 2, 3])
+     assert repr(d) == '    \n0  1\n1  2\n2  3'
+     assert not d._name
+ 
+-    d = data(1)
++    d = Data(1)
+     assert not d._name
+     assert repr(d) == '1'
+ 
+ 
+ def test_coerce_date_and_datetime():
+     x = datetime.datetime.now().date()
+-    d = data(x)
++    d = Data(x)
+     assert repr(d) == repr(x)
+ 
+     x = pd.Timestamp.now()
+-    d = data(x)
++    d = Data(x)
+     assert repr(d) == repr(x)
+ 
+     x = np.nan
+-    d = data(x, dshape='datetime')
++    d = Data(x, dshape='datetime')
+     assert repr(d) == repr(pd.NaT)
+ 
+     x = float('nan')
+-    d = data(x, dshape='datetime')
++    d = Data(x, dshape='datetime')
+     assert repr(d) == repr(pd.NaT)
+ 
+ 
+ def test_coerce_timedelta():
+     x = datetime.timedelta(days=1, hours=2, minutes=3)
+-    d = data(x)
++    d = Data(x)
+ 
+     assert repr(d) == repr(x)
+ 
+ 
+ def test_highly_nested_repr():
+-    tdata = [[0, [[1, 2], [3]], 'abc']]
+-    d = data(tdata)
++    data = [[0, [[1, 2], [3]], 'abc']]
++    d = Data(data)
+     assert 'abc' in repr(d.head())
+ 
+ 
+@@ -399,8 +403,11 @@ def test_asarray_fails_on_different_column_names():
+           'second': [4., 1., 4.],
+           'third': [6., 4., 3.]}
+     df = pd.DataFrame(vs)
+-    with pytest.raises(ValueError):
+-        data(df, fields=list('abc'))
++    with pytest.raises(ValueError) as excinfo:
++        Data(df, fields=list('abc'))
++
++    inmsg = "Data(data).relabel(first='a', second='b', third='c') to rename"
++    assert inmsg in str(excinfo.value)
+ 
+ 
+ def test_functions_as_bound_methods():
+@@ -421,7 +428,7 @@ def test_functions_as_bound_methods():
+ 
+ 
+ def test_all_string_infer_header():
+-    sdata = """x,tl,z
++    data = """x,tl,z
+ Be careful driving.,hy,en
+ Be careful.,hy,en
+ Can you translate this for me?,hy,en
+@@ -429,11 +436,11 @@ Chicago is very different from Boston.,hy,en
+ Don't worry.,hy,en"""
+     with tmpfile('.csv') as fn:
+         with open(fn, 'w') as f:
+-            f.write(sdata)
++            f.write(data)
+ 
+-        tdata = data(fn, has_header=True)
+-        assert tdata.data.has_header
+-        assert tdata.fields == ['x', 'tl', 'z']
++        data = Data(fn, has_header=True)
++        assert data.data.has_header
++        assert data.fields == ['x', 'tl', 'z']
+ 
+ 
+ def test_csv_with_trailing_commas():
+@@ -442,7 +449,7 @@ def test_csv_with_trailing_commas():
+             # note the trailing space in the header
+             f.write('a,b,c, \n1, 2, 3, ')
+         csv = CSV(fn)
+-        assert repr(data(fn))
++        assert repr(Data(fn))
+         assert discover(csv).measure.names == [
+             'a', 'b', 'c', ''
+         ]
+@@ -450,25 +457,25 @@ def test_csv_with_trailing_commas():
+         with open(fn, 'wt') as f:
+             f.write('a,b,c,\n1, 2, 3, ')  # NO trailing space in the header
+         csv = CSV(fn)
+-        assert repr(data(fn))
++        assert repr(Data(fn))
+         assert discover(csv).measure.names == [
+             'a', 'b', 'c', 'Unnamed: 3'
+         ]
+ 
+ 
+ def test_pickle_roundtrip():
+-    ds = data(1)
++    ds = Data(1)
+     assert ds.isidentical(pickle.loads(pickle.dumps(ds)))
+     assert (ds + 1).isidentical(pickle.loads(pickle.dumps(ds + 1)))
+-    es = data(np.array([1, 2, 3]))
++    es = Data(np.array([1, 2, 3]))
+     rs = pickle.loads(pickle.dumps(es))
+     assert (es.data == rs.data).all()
+     assert_dshape_equal(es.dshape, rs.dshape)
+ 
+ 
+ def test_nameless_data():
+-    tdata = [('a', 1)]
+-    assert repr(tdata) in repr(data(tdata))
++    data = [('a', 1)]
++    assert repr(data) in repr(Data(data))
+ 
+ 
+ def test_partially_bound_expr():
+@@ -478,38 +485,71 @@ def test_partially_bound_expr():
+                        (4, 'Denis', 400),
+                        (5, 'Edith', -500)],
+                       columns=['id', 'name', 'balance'])
+-    tdata = data(df, name='data')
++    data = Data(df, name='data')
+     a = symbol('a', 'int')
+-    expr = tdata.name[tdata.balance > a]
++    expr = data.name[data.balance > a]
+     assert repr(expr) == 'data[data.balance > a].name'
+ 
+ 
+ def test_isidentical_regr():
+     # regression test for #1387
+-    tdata = np.array([(np.nan,), (np.nan,)], dtype=[('a', 'float64')])
+-    ds = data(tdata)
++    data = np.array([(np.nan,), (np.nan,)], dtype=[('a', 'float64')])
++    ds = Data(data)
+     assert ds.a.isidentical(ds.a)
+ 
+ 
+-@pytest.mark.parametrize('data,dshape,exp_type', [
+-    (1, symbol('x', 'int').dshape, int),
+-    (into(da.core.Array, [1, 2], chunks=(10,)), symbol('x', '2 * int').dshape, pd.Series),  # test 1-d to series
+-    (into(da.core.Array, [{'a': 1, 'b': 2}, {'a': 3, 'b': 4}], chunks=(10,10)), symbol('x', '2 * {a: int, b: int}').dshape, pd.DataFrame),  # test 2-d tabular to dataframe
+-    (into(da.core.Array, [[1, 2], [3, 4]], chunks=(10, 10)), symbol('x', '2 *  2 * int').dshape, np.ndarray),  # test 2-d non tabular to ndarray
+-])
++@pytest.mark.parametrize('data,dshape,exp_type',
++                         [(1, symbol('x', 'int').dshape, int),
++                          # test 1-d to series
++                          (into(da.core.Array, [1, 2], chunks=(10,)),
++                           dshape('2 * int'),
++                           pd.Series),
++                          # test 2-d tabular to dataframe
++                          (into(da.core.Array,
++                                [{'a': 1, 'b': 2}, {'a': 3, 'b': 4}],
++                                chunks=(10,10)),
++                           dshape('2 * {a: int, b: int}'),
++                           pd.DataFrame),
++                          # test 2-d non tabular to ndarray
++                          (into(da.core.Array, [[1, 2], [3, 4]], chunks=(10, 10)),
++                           dshape('2 *  2 * int'),
++                           np.ndarray)])
+ def test_coerce_core(data, dshape, exp_type):
+     assert isinstance(coerce_core(data, dshape), exp_type)
+ 
+ 
+-@pytest.mark.parametrize('data,res', [
+-    (1, True),
+-    ("foo", True),
+-    ([1, 2], True),
+-    ((1, 2), True),
+-    (pd.Series([1, 2]), True),
+-    (pd.DataFrame([[1, 2], [3, 4]]), True),
+-    (np.ndarray([1, 2]), True),
+-    (into(da.core.Array, [1, 2], chunks=(10,)), False)
+-])
++@pytest.mark.parametrize('data,res',
++                         [(1, True),
++                          (1.1, True),
++                          ("foo", True),
++                          ([1, 2], False),
++                          ((1, 2), False),
++                          (pd.Series([1, 2]), False)])
++def test_iscorescalar(data, res):
++    assert iscorescalar(data) == res
++
++
++@pytest.mark.parametrize('data,res',
++                         [(1, False),
++                          ("foo", False),
++                          ([1, 2], True),
++                          ((1, 2), True),
++                          (pd.Series([1, 2]), True),
++                          (pd.DataFrame([[1, 2], [3, 4]]), True),
++                          (np.ndarray([1, 2]), True),
++                          (into(da.core.Array, [1, 2], chunks=(10,)), False)])
++def test_iscoresequence(data, res):
++    assert iscoresequence(data) == res
++
++
++@pytest.mark.parametrize('data,res',
++                         [(1, True),
++                          ("foo", True),
++                          ([1, 2], True),
++                          ((1, 2), True),
++                          (pd.Series([1, 2]), True),
++                          (pd.DataFrame([[1, 2], [3, 4]]), True),
++                          (np.ndarray([1, 2]), True),
++                          (into(da.core.Array, [1, 2], chunks=(10,)), False)])
+ def test_iscoretype(data, res):
+     assert iscoretype(data) == res

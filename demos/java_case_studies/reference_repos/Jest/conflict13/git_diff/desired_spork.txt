@@ -1,0 +1,98 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict13/desired.java b/java_case_studies/reference_repos/Jest/conflict13/spork_result.java
+old mode 100755
+new mode 100644
+index 293efea..297ced6
+--- a/java_case_studies/reference_repos/Jest/conflict13/desired.java
++++ b/java_case_studies/reference_repos/Jest/conflict13/spork_result.java
+@@ -1,31 +1,24 @@
+ package io.searchbox.client;
+ 
+-
++import com.google.gson.JsonObject;
++import com.google.gson.JsonParser;
+ import io.searchbox.Action;
+ import io.searchbox.client.config.RoundRobinServerList;
+ import io.searchbox.client.config.ServerList;
+ import io.searchbox.client.config.discovery.NodeChecker;
+-
+-import java.util.Iterator;
+-import java.util.LinkedHashSet;
+-
+ import io.searchbox.client.config.exception.NoServerConfiguredException;
+ import io.searchbox.client.util.PaddedAtomicReference;
++import java.util.LinkedHashSet;
++import java.util.Set;
+ import org.apache.http.StatusLine;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+-import com.google.common.collect.Iterators;
+-import com.google.gson.JsonObject;
+-import com.google.gson.JsonParser;
+ 
+ /**
+  * @author Dogukan Sonmez
+  */
+-
+-
+ public abstract class AbstractJestClient implements JestClient {
+-
+     final static Logger log = LoggerFactory.getLogger(AbstractJestClient.class);
+ 
+     private final PaddedAtomicReference<ServerList> listOfServers = new PaddedAtomicReference<ServerList>();
+@@ -42,11 +35,11 @@ public abstract class AbstractJestClient implements JestClient {
+         else return null;
+     }
+ 
+-    public void setServers(LinkedHashSet<String> servers) {
++    public void setServers(Set<String> servers) {
+         try {
+             RoundRobinServerList serverList = new RoundRobinServerList(servers);
+             listOfServers.set(serverList);
+-        } catch(NoServerConfiguredException noServers) {
++        } catch (NoServerConfiguredException noServers) {
+             listOfServers.set(null);
+             log.warn("No servers are currently available for the client to talk to.");
+         }
+@@ -73,7 +66,6 @@ public abstract class AbstractJestClient implements JestClient {
+         result.setJsonString(json);
+         result.setJsonObject(jsonMap);
+         result.setPathToResult(clientRequest.getPathToResult());
+-
+         if ((statusLine.getStatusCode() / 100) == 2) {
+             if (!clientRequest.isOperationSucceed(jsonMap)) {
+                 result.setSucceeded(false);
+@@ -86,10 +78,10 @@ public abstract class AbstractJestClient implements JestClient {
+             result.setSucceeded(false);
+             // provide the generic HTTP status code error, if one hasn't already come in via the JSON response...
+             // eg.
+-            //  IndicesExist will return 404 (with no content at all) for a missing index, but:
+-            //  Update will return 404 (with an error message for DocumentMissingException)
++            // IndicesExist will return 404 (with no content at all) for a missing index, but:
++            // Update will return 404 (with an error message for DocumentMissingException)
+             if (result.getErrorMessage() == null) {
+-                result.setErrorMessage(statusLine.getStatusCode() + " " + statusLine.getReasonPhrase());
++                result.setErrorMessage((statusLine.getStatusCode() + " ") + statusLine.getReasonPhrase());
+             }
+             log.debug("Response is failed");
+         }
+@@ -97,10 +89,10 @@ public abstract class AbstractJestClient implements JestClient {
+     }
+ 
+     protected JsonObject convertJsonStringToMapObject(String jsonTxt) {
+-        if (jsonTxt != null && !jsonTxt.trim().isEmpty()) {
++        if ((jsonTxt != null) && (!jsonTxt.trim().isEmpty())) {
+             try {
+                 return new JsonParser().parse(jsonTxt).getAsJsonObject();
+-            } catch (Exception e) {
++            } catch (java.lang.Exception e) {
+                 log.error("An exception occurred while converting json string to map object");
+             }
+         }
+@@ -115,4 +107,4 @@ public abstract class AbstractJestClient implements JestClient {
+ 
+         return sb.toString();
+     }
+-}
+\ No newline at end of file
++}

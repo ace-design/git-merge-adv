@@ -1,0 +1,242 @@
+diff --git a/java_case_studies/reference_repos/cucumber.jvm/importC4/desired.java b/java_case_studies/reference_repos/cucumber.jvm/importC4/jdime.java
+index 3a67b80..ae63756 100644
+--- a/java_case_studies/reference_repos/cucumber.jvm/importC4/desired.java
++++ b/java_case_studies/reference_repos/cucumber.jvm/importC4/jdime.java
+@@ -1,5 +1,4 @@
+ package io.cucumber.junit;
+-
+ import io.cucumber.core.backend.ObjectFactoryServiceLoader;
+ import io.cucumber.core.event.TestRunFinished;
+ import io.cucumber.core.event.TestRunStarted;
+@@ -39,11 +38,9 @@ import org.junit.runners.ParentRunner;
+ import org.junit.runners.model.InitializationError;
+ import org.junit.runners.model.RunnerScheduler;
+ import org.junit.runners.model.Statement;
+-
+ import java.time.Clock;
+ import java.util.List;
+ import java.util.function.Predicate;
+-
+ import static java.util.stream.Collectors.toList;
+ 
+ /**
+@@ -78,134 +75,98 @@ import static java.util.stream.Collectors.toList;
+  *
+  * @see CucumberOptions
+  */
+-@API(status = API.Status.STABLE)
+-public final class Cucumber extends ParentRunner<FeatureRunner> {
+-    private final List<FeatureRunner> children;
+-    private final EventBus bus;
+-    private final List<CucumberFeature> features;
+-    private final Plugins plugins;
++@API(status = API.Status.STABLE) public final class Cucumber extends ParentRunner<FeatureRunner> {
++  private final List<FeatureRunner> children;
++
++  private final EventBus bus;
+ 
+-    private boolean multiThreadingAssumed = false;
++  private final List<CucumberFeature> features;
+ 
+-    /**
++  private final Plugins plugins;
++
++  private boolean multiThreadingAssumed = false;
++
++  /**
+      * Constructor called by JUnit.
+      *
+      * @param clazz the class with the @RunWith annotation.
+      * @throws org.junit.runners.model.InitializationError if there is another problem
+      */
+-    public Cucumber(Class clazz) throws InitializationError {
+-        super(clazz);
+-        Assertions.assertNoCucumberAnnotatedMethods(clazz);
+-
+-        ClassLoader classLoader = clazz.getClassLoader();
+-        ResourceLoader resourceLoader = new MultiLoader(classLoader);
+-        ClassFinder classFinder = new ResourceLoaderClassFinder(resourceLoader, classLoader);
+-
+-        // Parse the options early to provide fast feedback about invalid options
+-        RuntimeOptions propertiesFileOptions = new CucumberPropertiesParser(resourceLoader)
+-            .parse(CucumberProperties.fromPropertiesFile())
+-            .build();
+-
+-        RuntimeOptions annotationOptions = new CucumberOptionsAnnotationParser(resourceLoader)
+-            .withOptionsProvider(new JUnitCucumberOptionsProvider())
+-            .parse(clazz)
+-            .build(propertiesFileOptions);
+-
+-        RuntimeOptions environmentOptions = new CucumberPropertiesParser(resourceLoader)
+-            .parse(CucumberProperties.fromEnvironment())
+-            .build(annotationOptions);
+-
+-        RuntimeOptions runtimeOptions = new CucumberPropertiesParser(resourceLoader)
+-            .parse(CucumberProperties.fromSystemProperties())
+-            .build(environmentOptions);
+-
+-        // Next parse the junit options
+-        JUnitOptions junitPropertiesFileOptions = new JUnitOptionsParser()
+-            .parse(CucumberProperties.fromPropertiesFile())
+-            .build();
+-
+-        JUnitOptions junitAnnotationOptions = new JUnitOptionsParser()
+-            .parse(clazz)
+-            .build(junitPropertiesFileOptions);
+-
+-        JUnitOptions junitEnvironmentOptions = new JUnitOptionsParser()
+-            .parse(CucumberProperties.fromEnvironment())
+-            .build(junitAnnotationOptions);
+-
+-        JUnitOptions junitOptions = new JUnitOptionsParser()
+-            .parse(CucumberProperties.fromSystemProperties())
+-            .setStrict(runtimeOptions.isStrict())
+-            .build(junitEnvironmentOptions);
+-
+-        // Parse the features early. Don't proceed when there are lexer errors
+-        FeatureLoader featureLoader = new FeatureLoader(resourceLoader);
+-        FeaturePathFeatureSupplier featureSupplier = new FeaturePathFeatureSupplier(featureLoader, runtimeOptions);
+-        this.features = featureSupplier.get();
+-
+-        // Create plugins after feature parsing to avoid the creation of empty files on lexer errors.
+-        this.plugins = new Plugins(new PluginFactory(), runtimeOptions);
+-        this.bus = new TimeServiceEventBus(Clock.systemUTC());
+-
+-        ObjectFactoryServiceLoader objectFactoryServiceLoader = new ObjectFactoryServiceLoader(runtimeOptions);
+-        ObjectFactorySupplier objectFactorySupplier = new ThreadLocalObjectFactorySupplier(objectFactoryServiceLoader);
+-        BackendSupplier backendSupplier = new BackendServiceLoader(resourceLoader, objectFactorySupplier);
+-        TypeRegistryConfigurerSupplier typeRegistryConfigurerSupplier = new ScanningTypeRegistryConfigurerSupplier(classFinder, runtimeOptions);
+-        ThreadLocalRunnerSupplier runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier, objectFactorySupplier, typeRegistryConfigurerSupplier);
+-        Predicate<CucumberPickle> filters = new Filters(runtimeOptions);
+-        this.children = features.stream()
+-                .map(feature -> FeatureRunner.create(feature, filters, runnerSupplier, junitOptions))
+-                .filter(runner -> !runner.isEmpty())
+-                .collect(toList());
+-    }
+-
+-    @Override
+-    protected List<FeatureRunner> getChildren() {
+-        return children;
++  public Cucumber(Class clazz) throws InitializationError {
++    super(clazz);
++    Assertions.assertNoCucumberAnnotatedMethods(clazz);
++    ClassLoader classLoader = clazz.getClassLoader();
++    ResourceLoader resourceLoader = new MultiLoader(classLoader);
++    ClassFinder classFinder = new ResourceLoaderClassFinder(resourceLoader, classLoader);
++    RuntimeOptions propertiesFileOptions = new CucumberPropertiesParser(resourceLoader).parse(CucumberProperties.fromPropertiesFile()).build();
++    RuntimeOptions annotationOptions = new CucumberOptionsAnnotationParser(resourceLoader).withOptionsProvider(new JUnitCucumberOptionsProvider()).parse(clazz).build(propertiesFileOptions);
++    RuntimeOptions environmentOptions = new CucumberPropertiesParser(resourceLoader).parse(CucumberProperties.fromEnvironment()).build(annotationOptions);
++    RuntimeOptions runtimeOptions = new CucumberPropertiesParser(resourceLoader).parse(CucumberProperties.fromSystemProperties()).build(environmentOptions);
++
++<<<<<<< left.java
++    JUnitOptions junitPropertiesFileOptions = new JUnitOptionsParser().parse(CucumberProperties.fromPropertiesFile()).build();
++=======
++    runtimeOptions.addUndefinedStepsPrinterIfSummaryNotDefined();
++>>>>>>> right.java
++
++    JUnitOptions junitAnnotationOptions = new JUnitOptionsParser().parse(clazz).build(junitPropertiesFileOptions);
++    JUnitOptions junitEnvironmentOptions = new JUnitOptionsParser().parse(CucumberProperties.fromEnvironment()).build(junitAnnotationOptions);
++    JUnitOptions junitOptions = new JUnitOptionsParser().parse(CucumberProperties.fromSystemProperties()).setStrict(runtimeOptions.isStrict()).build(junitEnvironmentOptions);
++    FeatureLoader featureLoader = new FeatureLoader(resourceLoader);
++    FeaturePathFeatureSupplier featureSupplier = new FeaturePathFeatureSupplier(featureLoader, runtimeOptions);
++    this.features = featureSupplier.get();
++    this.plugins = new Plugins(new PluginFactory(), runtimeOptions);
++    this.bus = new TimeServiceEventBus(Clock.systemUTC());
++    ObjectFactoryServiceLoader objectFactoryServiceLoader = new ObjectFactoryServiceLoader(runtimeOptions);
++    ObjectFactorySupplier objectFactorySupplier = new ThreadLocalObjectFactorySupplier(objectFactoryServiceLoader);
++    BackendSupplier backendSupplier = new BackendServiceLoader(resourceLoader, objectFactorySupplier);
++    TypeRegistryConfigurerSupplier typeRegistryConfigurerSupplier = new ScanningTypeRegistryConfigurerSupplier(classFinder, runtimeOptions);
++    ThreadLocalRunnerSupplier runnerSupplier = new ThreadLocalRunnerSupplier(runtimeOptions, bus, backendSupplier, objectFactorySupplier, typeRegistryConfigurerSupplier);
++    Predicate<CucumberPickle> filters = new Filters(runtimeOptions);
++    this.children = features.stream().map((feature) -> FeatureRunner.create(feature, filters, runnerSupplier, junitOptions)).filter((runner) -> !runner.isEmpty()).collect(toList());
++  }
++
++  @Override protected List<FeatureRunner> getChildren() {
++    return children;
++  }
++
++  @Override protected Description describeChild(FeatureRunner child) {
++    return child.getDescription();
++  }
++
++  @Override protected void runChild(FeatureRunner child, RunNotifier notifier) {
++    child.run(notifier);
++  }
++
++  @Override protected Statement childrenInvoker(RunNotifier notifier) {
++    Statement runFeatures = super.childrenInvoker(notifier);
++    return new RunCucumber(runFeatures);
++  }
++
++  class RunCucumber extends Statement {
++    private final Statement runFeatures;
++
++    RunCucumber(Statement runFeatures) {
++      this.runFeatures = runFeatures;
+     }
+ 
+-    @Override
+-    protected Description describeChild(FeatureRunner child) {
+-        return child.getDescription();
++    @Override public void evaluate() throws Throwable {
++      if (multiThreadingAssumed) {
++        plugins.setSerialEventBusOnEventListenerPlugins(bus);
++      } else {
++        plugins.setEventBusOnEventListenerPlugins(bus);
++      }
++      bus.send(new TestRunStarted(bus.getInstant()));
++      for (CucumberFeature feature : features) {
++        bus.send(new TestSourceRead(bus.getInstant(), feature.getUri().toString(), feature.getSource()));
++      }
++      runFeatures.evaluate();
++      bus.send(new TestRunFinished(bus.getInstant()));
+     }
++  }
+ 
+-    @Override
+-    protected void runChild(FeatureRunner child, RunNotifier notifier) {
+-        child.run(notifier);
+-    }
+-
+-    @Override
+-    protected Statement childrenInvoker(RunNotifier notifier) {
+-        Statement runFeatures = super.childrenInvoker(notifier);
+-        return new RunCucumber(runFeatures);
+-    }
+-
+-    class RunCucumber extends Statement {
+-        private final Statement runFeatures;
+-
+-        RunCucumber(Statement runFeatures) {
+-            this.runFeatures = runFeatures;
+-        }
+-
+-        @Override
+-        public void evaluate() throws Throwable {
+-            if (multiThreadingAssumed) {
+-                plugins.setSerialEventBusOnEventListenerPlugins(bus);
+-            } else {
+-                plugins.setEventBusOnEventListenerPlugins(bus);
+-            }
+-
+-            bus.send(new TestRunStarted(bus.getInstant()));
+-            for (CucumberFeature feature : features) {
+-                bus.send(new TestSourceRead(bus.getInstant(), feature.getUri().toString(), feature.getSource()));
+-            }
+-            runFeatures.evaluate();
+-            bus.send(new TestRunFinished(bus.getInstant()));
+-        }
+-    }
+-
+-    @Override
+-    public void setScheduler(RunnerScheduler scheduler) {
+-        super.setScheduler(scheduler);
+-        multiThreadingAssumed = true;
+-    }
+-}
++  @Override public void setScheduler(RunnerScheduler scheduler) {
++    super.setScheduler(scheduler);
++    multiThreadingAssumed = true;
++  }
++}
+\ No newline at end of file

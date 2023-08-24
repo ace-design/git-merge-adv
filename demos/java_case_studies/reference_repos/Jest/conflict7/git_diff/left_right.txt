@@ -1,0 +1,116 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict7/left.java b/java_case_studies/reference_repos/Jest/conflict7/right.java
+index 15d9165..e7fe7bc 100644
+--- a/java_case_studies/reference_repos/Jest/conflict7/left.java
++++ b/java_case_studies/reference_repos/Jest/conflict7/right.java
+@@ -6,24 +6,19 @@ import com.google.common.util.concurrent.MoreExecutors;
+ import com.google.common.util.concurrent.ThreadFactoryBuilder;
+ import com.google.gson.JsonElement;
+ import com.google.gson.JsonObject;
+-
+ import io.searchbox.client.JestClient;
+ import io.searchbox.client.JestResult;
+ import io.searchbox.client.config.ClientConfig;
+ import io.searchbox.cluster.NodesInfo;
+-
+ import org.apache.commons.lang3.StringUtils;
+-import org.apache.http.HttpHost;
+-import org.apache.http.conn.HttpHostConnectException;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
++import java.util.concurrent.Executors;
++import java.util.concurrent.ScheduledExecutorService;
+ import java.util.LinkedHashSet;
+ import java.util.Map.Entry;
+ import java.util.Set;
+-import java.util.concurrent.Executors;
+-import java.util.concurrent.ScheduledExecutorService;
+-import java.util.concurrent.TimeUnit;
+ import java.util.regex.Matcher;
+ import java.util.regex.Pattern;
+ 
+@@ -38,28 +33,26 @@ public class NodeChecker extends AbstractScheduledService {
+     private final static String PUBLISH_ADDRESS_KEY = "http_address";
+     private final static Pattern INETSOCKETADDRESS_PATTERN = Pattern.compile("(?:inet\\[)?(?:(?:[^:]+)?\\/)?([^:]+):(\\d+)\\]?");
+ 
+-    private final NodesInfo action = new NodesInfo.Builder().withHttp().build();
++    private final NodesInfo action;
+ 
+     protected JestClient client;
+     protected Scheduler scheduler;
+     protected String defaultScheme;
+     protected Set<String> bootstrapServerList;
+-    protected Set<String> discoveredServerList;
+ 
+     public NodeChecker(JestClient jestClient, ClientConfig clientConfig) {
+-        this(jestClient, clientConfig.getDefaultSchemeForDiscoveredNodes(), clientConfig.getDiscoveryFrequency(), clientConfig.getDiscoveryFrequencyTimeUnit(),
+-				clientConfig.getServerList());
+-    }
+-
+-    public NodeChecker(JestClient jestClient, String defaultScheme, Long discoveryFrequency, TimeUnit discoveryFrequencyTimeUnit, Set<String> servers) {
++        action = new NodesInfo.Builder()
++                .withHttp()
++                .addNode(clientConfig.getDiscoveryFilter())
++                .build();
+         this.client = jestClient;
+-        this.defaultScheme = defaultScheme;
++        this.defaultScheme = clientConfig.getDefaultSchemeForDiscoveredNodes();
+         this.scheduler = Scheduler.newFixedDelaySchedule(
+                 0l,
+-                discoveryFrequency,
+-                discoveryFrequencyTimeUnit
++                clientConfig.getDiscoveryFrequency(),
++                clientConfig.getDiscoveryFrequencyTimeUnit()
+         );
+-		this.bootstrapServerList = ImmutableSet.copyOf(servers);
++		this.bootstrapServerList = ImmutableSet.copyOf(clientConfig.getServerList());
+     }
+ 
+     @Override
+@@ -67,20 +60,13 @@ public class NodeChecker extends AbstractScheduledService {
+         JestResult result;
+         try {
+             result = client.execute(action);
+-        } catch (HttpHostConnectException e) {
+-            // Can't connect to this node, remove it from the list
+-            log.error("Connect exception executing NodesInfo!", e);
+-            removeNodeAndUpdateServers(e.getHost());
+-            return;
+-            // do not elevate the exception since that will stop the scheduled calls.
+-            // throw new RuntimeException("Error executing NodesInfo!", e);
+         } catch (Exception e) {
+             log.error("Error executing NodesInfo!", e);
+             client.setServers(bootstrapServerList);
+             return;
+             // do not elevate the exception since that will stop the scheduled calls.
+             // throw new RuntimeException("Error executing NodesInfo!", e);
+-        }  
++        }
+ 
+         if (result.isSucceeded()) {
+             LinkedHashSet<String> httpHosts = new LinkedHashSet<String>();
+@@ -104,23 +90,13 @@ public class NodeChecker extends AbstractScheduledService {
+             if (log.isDebugEnabled()) {
+                 log.debug("Discovered {} HTTP hosts: {}", httpHosts.size(), StringUtils.join(httpHosts, ","));
+             }
+-            discoveredServerList = httpHosts;
+-            client.setServers(discoveredServerList);
++            client.setServers(httpHosts);
+         } else {
+             log.warn("NodesInfo request resulted in error: {}", result.getErrorMessage());
+             client.setServers(bootstrapServerList);
+         }
+     }
+ 
+-    private void removeNodeAndUpdateServers(final HttpHost hostToRemove) {
+-        discoveredServerList.remove(hostToRemove.toURI());
+-        if (!discoveredServerList.isEmpty()) {
+-          client.setServers(discoveredServerList);
+-        } else {
+-          client.setServers(bootstrapServerList);
+-        }
+-    }
+-
+     @Override
+     protected Scheduler scheduler() {
+         return scheduler;

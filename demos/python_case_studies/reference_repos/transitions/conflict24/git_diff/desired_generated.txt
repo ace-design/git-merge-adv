@@ -1,0 +1,50 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict24/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict24.py
+index 414c651..378f66b 100644
+--- a/python_case_studies/reference_repos/transitions/conflict24/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict24.py
+@@ -1,11 +1,12 @@
++from core import Machine,Transition,State,Event,listify,MachineError,EventData
++from six import string_types
++import copy
++import logging
++from os.path import commonprefix
+ # -*- coding: utf-8 -*-
+ 
+-from ..core import Machine, Transition, State, Event, listify, MachineError, EventData
+ 
+-from six import string_types
+-import copy
+ 
+-import logging
+ logger = logging.getLogger(__name__)
+ logger.addHandler(logging.NullHandler())
+ 
+@@ -227,7 +228,22 @@ class HierarchicalMachine(Machine):
+             self.add_transition(**args)
+ 
+     def add_transition(self, trigger, source, dest, conditions=None,
++<<<<<<< left_content.py
++                       unless=None, before=None, after=None):
++=======
+                        unless=None, before=None, after=None, prepare=None):
++        if not (trigger.startswith('to_') and source == '*'):
++            bp_prepare = prepare
++            bp_before = before
++            bp_after = after
++            if self.before_state_change:
++                bp_before = listify(before) + listify(self.before_state_change)
++            if self.after_state_change:
++                bp_after = listify(after) + listify(self.after_state_change)
++            self.blueprints['transitions'].append({'trigger': trigger, 'source': source, 'dest': dest,
++                                                   'conditions': conditions, 'unless': unless, 'prepare': bp_prepare,
++                                                   'before': bp_before, 'after': bp_after})
++>>>>>>> right_content.py
+         if isinstance(source, string_types):
+             source = [x.name for x in self.states.values()] if source == '*' else [source]
+ 
+@@ -257,3 +273,5 @@ class HierarchicalMachine(Machine):
+         event = EventData(self.current_state, None, self,
+                           self.model, args=args, kwargs=kwargs)
+         NestedTransition(self.current_state.name, state_name).execute(event)
++
++

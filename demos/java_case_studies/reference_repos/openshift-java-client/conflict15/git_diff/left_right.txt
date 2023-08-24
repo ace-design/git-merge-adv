@@ -1,0 +1,501 @@
+diff --git a/java_case_studies/reference_repos/openshift-java-client/conflict15/left.java b/java_case_studies/reference_repos/openshift-java-client/conflict15/right.java
+index d38906b..f744c76 100644
+--- a/java_case_studies/reference_repos/openshift-java-client/conflict15/left.java
++++ b/java_case_studies/reference_repos/openshift-java-client/conflict15/right.java
+@@ -10,10 +10,11 @@
+  ******************************************************************************/
+ package com.openshift.internal.client;
+ 
+-import static com.openshift.client.utils.RequestParametersMatcher.eq;
+ import static com.openshift.client.utils.UrlEndsWithMatcher.urlEndsWith;
++import static org.fest.assertions.Assertions.assertThat;
+ import static org.mockito.Matchers.any;
+ import static org.mockito.Matchers.anyInt;
++import static org.mockito.Matchers.anyMapOf;
+ import static org.mockito.Matchers.eq;
+ import static org.mockito.Mockito.times;
+ import static org.mockito.Mockito.verify;
+@@ -23,8 +24,11 @@ import java.io.UnsupportedEncodingException;
+ import java.net.MalformedURLException;
+ import java.net.SocketTimeoutException;
+ import java.net.URL;
++import java.util.Map;
+ 
+-import org.mockito.Matchers;
++import com.openshift.internal.client.httpclient.EncodingException;
++import com.openshift.internal.client.httpclient.IMediaType;
++import org.mockito.ArgumentCaptor;
+ import org.mockito.Mockito;
+ 
+ import com.openshift.client.IHttpClient;
+@@ -50,6 +54,11 @@ public class HttpClientMockDirector {
+ 		return this;
+ 	}
+ 
++    public HttpClientMockDirector mockMediaType(IMediaType mediaType) throws SocketTimeoutException, HttpClientException {
++        when(client.getRequestMediaType()).thenReturn(mediaType);
++        return this;
++    }
++
+ 	public HttpClientMockDirector mockGetAny(String response) throws SocketTimeoutException, HttpClientException {
+ 		when(client.get(any(URL.class), anyInt())).thenReturn(response);
+ 		return this;
+@@ -61,34 +70,34 @@ public class HttpClientMockDirector {
+ 	}
+ 
+ 	public HttpClientMockDirector mockPostAny(Samples postRequestResponse)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		return mockPostAny(postRequestResponse.getContentAsString());
+ 	}
+ 
+ 	public HttpClientMockDirector mockPostAny(String jsonResponse)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		when(client.post(any(URL.class), anyInt(), Matchers.<RequestParameter[]>anyVararg()))
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		when(client.post(anyMapOf(String.class, Object.class), any(URL.class), anyInt(), any(IMediaType.class)))
+ 				.thenReturn(jsonResponse);
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector mockPostAny(Exception exception)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		when(client.post(any(URL.class), anyInt(), Matchers.<RequestParameter[]>anyVararg()))
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		when(client.post(anyMapOf(String.class, Object.class), any(URL.class), anyInt(), any(IMediaType.class)))
+ 				.thenThrow(exception);
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector mockPutAny(String jsonResponse)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		when(client.put(any(URL.class), Matchers.<RequestParameter[]>anyVararg()))
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		when(client.put(anyMapOf(String.class, Object.class), any(URL.class)))
+ 				.thenReturn(jsonResponse);
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector mockDeleteAny(String jsonResponse)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		when(client.delete(any(URL.class), anyInt(), Matchers.<RequestParameter[]>anyVararg()))
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		when(client.delete(anyMapOf(String.class, Object.class), any(URL.class), anyInt(), any(IMediaType.class)))
+ 				.thenReturn(jsonResponse);
+ 		return this;
+ 	}
+@@ -127,21 +136,23 @@ public class HttpClientMockDirector {
+ 	}
+ 	
+ 	public HttpClientMockDirector mockCreateKey(Samples createKeyRequestResponse) 
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		when(client.post(
++				anyMapOf(String.class, Object.class), 
+ 				urlEndsWith("/user/keys"),
+ 				anyInt(),
+-				Matchers.<RequestParameter[]>anyVararg()))
++                any(IMediaType.class)))
+ 				.thenReturn(createKeyRequestResponse.getContentAsString());
+ 		return this;
+ 	}
+ 
+-	public HttpClientMockDirector mockUpdateKey(String keyName, Samples updateKeyRequestResponse, RequestParameter... parameters) 
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++	public HttpClientMockDirector mockUpdateKey(String keyName, Samples updateKeyRequestResponse, Pair... pairs) 
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		when(client.put(
++				anyMapOf(String.class, Object.class), 
+ 				urlEndsWith("/user/keys/" + keyName),
+ 				anyInt(),
+-				Matchers.<RequestParameter[]>anyVararg()))
++                any(IMediaType.class)))
+ 				.thenReturn(updateKeyRequestResponse.getContentAsString());
+ 		return this;
+ 	}
+@@ -154,29 +165,29 @@ public class HttpClientMockDirector {
+ 	}
+ 
+ 	public HttpClientMockDirector mockCreateDomain(Samples domainResourceResponse)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		when(client.post(urlEndsWith("/domains"), anyInt(), Matchers.<RequestParameter[]>anyVararg()))
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		when(client.post(anyMapOf(String.class, Object.class), urlEndsWith("/domains"), anyInt(), any(IMediaType.class)))
+ 				.thenReturn(domainResourceResponse.getContentAsString());
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector mockDeleteDomain(String domainId, Samples deleteDomainResourceResponse)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		when(client.delete(urlEndsWith("/domains/" + domainId), anyInt(), Matchers.<RequestParameter[]>anyVararg()))
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		when(client.delete(anyMapOf(String.class, Object.class), urlEndsWith("/domains/" + domainId), anyInt(), any(IMediaType.class)))
+ 				.thenReturn(deleteDomainResourceResponse.getContentAsString());
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector mockDeleteDomain(String domainId, Exception exception)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		when(client.delete(urlEndsWith("/domains/" + domainId), anyInt(), Matchers.<RequestParameter[]>anyVararg()))
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		when(client.delete(anyMapOf(String.class, Object.class), urlEndsWith("/domains/" + domainId), anyInt(), any(IMediaType.class)))
+ 				.thenThrow(exception);
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector mockRenameDomain(String domainId, Samples getDomainsResourceResponse)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		when(client.put(urlEndsWith("/domains/" + domainId), anyInt(), Matchers.<RequestParameter[]>anyVararg()))
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		when(client.put(anyMapOf(String.class, Object.class), urlEndsWith("/domains/" + domainId), anyInt(), any(IMediaType.class)))
+ 				.thenReturn(getDomainsResourceResponse.getContentAsString());
+ 		return this;
+ 	}
+@@ -196,28 +207,22 @@ public class HttpClientMockDirector {
+ 		return this;
+ 	}
+ 
+-	public HttpClientMockDirector mockGetApplications(String domainId, Exception exception)
+-			throws SocketTimeoutException, HttpClientException {
+-		when(client.get(urlEndsWith("/domains/" + domainId + "/applications"), anyInt()))
+-				.thenThrow(exception);
+-		return this;
+-	}
+-
+ 	public HttpClientMockDirector mockCreateApplication(String domainId, Samples postDomainsResourceResponse)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		when(client.post(
+-				urlEndsWith("/domains/" + domainId + "/applications"), anyInt(), Matchers.<RequestParameter[]>anyVararg()))
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		when(client.post(anyMapOf(String.class, Object.class),
++				urlEndsWith("/domains/" + domainId + "/applications"), anyInt(), any(IMediaType.class)))
+ 				.thenReturn(postDomainsResourceResponse.getContentAsString());
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector mockPostApplicationEvent(String domainId, String applicationName,
+ 			Samples postApplicationEvent)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		when(client.post(
++				anyMapOf(String.class, Object.class),
+ 				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/events"),
+ 				anyInt(),
+-				Matchers.<RequestParameter[]>anyVararg()))
++                any(IMediaType.class)))
+ 				.thenReturn(postApplicationEvent.getContentAsString());
+ 		return this;
+ 	}
+@@ -230,16 +235,6 @@ public class HttpClientMockDirector {
+ 		return this;
+ 	}
+ 
+-	public HttpClientMockDirector mockGetApplicationCartridges(String domainId, String applicationName,
+-			Samples cartridgesResourceResponse)
+-			throws SocketTimeoutException, HttpClientException {
+-		when(client.get(
+-				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/cartridges"),
+-				anyInt()))
+-				.thenReturn(cartridgesResourceResponse.getContentAsString());
+-		return this;
+-	}
+-
+ 	public HttpClientMockDirector mockGetGearGroups(String domainId, String applicationName,
+ 			Samples gearGroupsResourceResponse)
+ 			throws SocketTimeoutException, HttpClientException {
+@@ -251,33 +246,46 @@ public class HttpClientMockDirector {
+ 	}
+ 
+ 	public HttpClientMockDirector mockPostApplicationEvent(String domainId, String applicationName, Exception exception)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		when(client.post(
++				anyMapOf(String.class, Object.class),
+ 				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/events"),
+ 				anyInt(),
+-				Matchers.<RequestParameter[]>anyVararg()))
++                any(IMediaType.class)))
+ 				.thenThrow(exception);
+ 		return this;
+ 	}
+ 
++	public HttpClientMockDirector mockGetEmbeddableCartridges(String domainId, String applicationName,
++			Samples cartridgesResourcesResponse)
++			throws SocketTimeoutException, HttpClientException {
++		when(client.get(
++				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/cartridges"),
++				anyInt()))
++				.thenReturn(cartridgesResourcesResponse.getContentAsString());
++		return this;
++	}
++
+ 	public HttpClientMockDirector mockAddEmbeddableCartridge(String domainId, String applicationName,
+ 			Samples addEmbeddedCartridgeResponse)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		when(client.post(
++				anyMapOf(String.class, Object.class),
+ 				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/cartridges"),
+ 				anyInt(),
+-				Matchers.<RequestParameter[]>anyVararg()))
++                any(IMediaType.class)))
+ 				.thenReturn(addEmbeddedCartridgeResponse.getContentAsString());
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector mockAddEmbeddableCartridge(String domainId, String applicationName,
+ 			Exception exception)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		when(client.post(
++				anyMapOf(String.class, Object.class),
+ 				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/cartridges"),
+-				anyInt(), 
+-				Matchers.<RequestParameter[]>anyVararg()))
++				anyInt(),
++                any(IMediaType.class)))
+ 				.thenThrow(exception);
+ 		return this;
+ 	}
+@@ -285,59 +293,63 @@ public class HttpClientMockDirector {
+ 	public HttpClientMockDirector mockRemoveEmbeddableCartridge(String domainId, String applicationName,
+ 			String cartridgeName,
+ 			Exception exception)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		when(client.delete(
++				anyMapOf(String.class, Object.class),
+ 				urlEndsWith(
+ 				"/domains/" + domainId + "/applications/" + applicationName + "/cartridges/" + cartridgeName),
+ 				anyInt(),
+-				Matchers.<RequestParameter[]>anyVararg()))
++                any(IMediaType.class)))
+ 				.thenThrow(exception);
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector verifyPostApplicationEvent(String domainId, String applicationName)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		verify(client, times(1)).post(
++				anyMapOf(String.class, Object.class),
+ 				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/events"),
+ 				anyInt(),
+-				Matchers.<RequestParameter[]>anyVararg());
++                any(IMediaType.class));
+ 		return this;
+ 	}
+ 
+-	public HttpClientMockDirector verifyListEmbeddableCartridges(int times, String domainId, String applicationName)
++	public HttpClientMockDirector verifyReloadEmbeddableCartridges(String domainId, String applicationName)
+ 			throws SocketTimeoutException, HttpClientException {
+-		verify(client, times(times)).get(
++		verify(client, times(2)).get(
+ 				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/cartridges"),
+ 				anyInt());
+ 		return this;
+ 
+ 	}
+ 
+-	public HttpClientMockDirector verifyGetApplicationCartridges(int times, String domainId, String applicationName)
++	public HttpClientMockDirector verifyGetEmbeddableCartridges(String domainId, String applicationName)
+ 			throws SocketTimeoutException, HttpClientException {
+-		verify(client, times(times)).get(
++		verify(client, times(1)).get(
+ 				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/cartridges"),
+ 				anyInt());
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector verifyAddEmbeddableCartridge(String domainId, String applicationName)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		verify(client, times(1)).post(
++				anyMapOf(String.class, Object.class),
+ 				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/cartridges"),
+ 				anyInt(),
+-				Matchers.<RequestParameter[]>anyVararg());
++                any(IMediaType.class));
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector verifyDeleteEmbeddableCartridge(String domainId, String applicationName,
+ 			String cartridgeName)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
++			throws SocketTimeoutException, HttpClientException, EncodingException {
+ 		verify(client, times(1)).delete(
++				anyMapOf(String.class, Object.class),
+ 				urlEndsWith("/domains/" + domainId + "/applications/" + applicationName + "/cartridges/"
+ 						+ cartridgeName),
+ 				anyInt(),
+-				Matchers.<RequestParameter[]>anyVararg());
++                any(IMediaType.class));
+ 		return this;
+ 	}
+ 
+@@ -353,44 +365,38 @@ public class HttpClientMockDirector {
+ 	}
+ 
+ 	public HttpClientMockDirector verifyPostAny(int times)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		verify(client, times(times)).post(any(URL.class), anyInt(),Matchers.<RequestParameter[]>anyVararg());
+-		return this;
+-	}
+-
+-	public HttpClientMockDirector verifyPost(RequestParameter... parameters)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		verify(client).post(any(URL.class), anyInt(), eq(parameters));
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		verify(client, times(times)).post(anyMapOf(String.class, Object.class), any(URL.class), anyInt(), any(IMediaType.class));
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector verifyPost(String url, int times)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException, MalformedURLException {
+-		verify(client, times(times)).post(new URL(url), anyInt(), Matchers.<RequestParameter[]>anyVararg());
++			throws SocketTimeoutException, HttpClientException, EncodingException, MalformedURLException {
++		verify(client, times(times)).post(anyMapOf(String.class, Object.class), new URL(url), anyInt(), any(IMediaType.class));
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector verifyPutAny(int times)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		verify(client, times(times)).put(any(URL.class), anyInt(),Matchers.<RequestParameter[]>anyVararg());
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		verify(client, times(times)).put(anyMapOf(String.class, Object.class), any(URL.class), anyInt(), any(IMediaType.class));
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector verifyPut(String url, int times)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException, MalformedURLException {
+-		verify(client, times(times)).put(new URL(url), anyInt(),Matchers.<RequestParameter[]>anyVararg());
++			throws SocketTimeoutException, HttpClientException, EncodingException, MalformedURLException {
++		verify(client, times(times)).put(anyMapOf(String.class, Object.class), new URL(url), anyInt(), any(IMediaType.class));
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector verifyDeleteAny(int times)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		verify(client, times(times)).delete(any(URL.class), anyInt(),Matchers.<RequestParameter[]>anyVararg());
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		verify(client, times(times)).delete(anyMapOf(String.class, Object.class), any(URL.class), anyInt(), any(IMediaType.class));
+ 		return this;
+ 	}
+ 
+ 	public HttpClientMockDirector verifyDelete(String url, int times)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException, MalformedURLException {
+-		verify(client, times(times)).delete(new URL(url), anyInt(), Matchers.<RequestParameter[]>anyVararg());
++			throws SocketTimeoutException, HttpClientException, EncodingException, MalformedURLException {
++		verify(client, times(times)).delete(anyMapOf(String.class, Object.class), new URL(url), anyInt(), any(IMediaType.class));
+ 		return this;
+ 	}
+ 
+@@ -400,8 +406,8 @@ public class HttpClientMockDirector {
+ 	}
+ 
+ 	public HttpClientMockDirector verifyRenameDomain(String domainId)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		verify(client, times(1)).put(urlEndsWith(domainId), anyInt(),Matchers.<RequestParameter[]>anyVararg());
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		verify(client, times(1)).put(anyMapOf(String.class, Object.class), urlEndsWith(domainId), anyInt(), any(IMediaType.class));
+ 		return this;
+ 	}
+ 
+@@ -426,28 +432,85 @@ public class HttpClientMockDirector {
+ 		return this;
+ 	}
+ 
+-	public HttpClientMockDirector verifyCreateKey(RequestParameter... parameters)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		verify(client).post(
+-				urlEndsWith("/user/keys"), eq(IHttpClient.NO_TIMEOUT), eq(parameters));
++	public HttpClientMockDirector verifyCreateKey(Pair... pairs)
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		verify(client).post(anyMapOf(String.class, Object.class),
++				urlEndsWith("/user/keys"), eq(IHttpClient.NO_TIMEOUT), any(IMediaType.class));
++		assertPostParameters(pairs);
+ 		return this;
+ 	}
+ 
+-	public HttpClientMockDirector verifyUpdateKey(String keyName, RequestParameter... parameters)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		verify(client).put(
+-				urlEndsWith("/user/keys/" + keyName), eq(IHttpClient.NO_TIMEOUT), eq(parameters));
++	public HttpClientMockDirector verifyUpdateKey(String keyName, Pair... pairs)
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		verify(client).put(anyMapOf(String.class, Object.class),
++				urlEndsWith("/user/keys/" + keyName), eq(IHttpClient.NO_TIMEOUT), any(IMediaType.class));
++		assertPutParameters(pairs);
+ 		return this;
+ 	}
+ 
+-	public HttpClientMockDirector verifyCreateApplication(String domainId, int timeout, RequestParameter... parameters)
+-			throws SocketTimeoutException, HttpClientException, UnsupportedEncodingException {
+-		verify(client).post(
+-				urlEndsWith("/domains/" + domainId + "/applications"), eq(timeout), eq(parameters));
++	public HttpClientMockDirector verifyCreateApplication(String domainId, int timeout, Pair... pairs)
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		verify(client).post(anyMapOf(String.class, Object.class),
++				urlEndsWith("/domains/" + domainId + "/applications"), eq(timeout), any(IMediaType.class));
++		assertPostParameters(pairs);
+ 		return this;
+ 	}
+ 
++    public HttpClientMockDirector verifyCreateApplication(String domainId, int timeout, Class<? extends IMediaType> mediaType, Pair... pairs)
++            throws SocketTimeoutException, HttpClientException, EncodingException {
++        verify(client).post(anyMapOf(String.class, Object.class),
++                urlEndsWith("/domains/" + domainId + "/applications"), eq(timeout), any(mediaType));
++        assertPostParameters(pairs);
++        return this;
++    }
++
++	@SuppressWarnings({ "unchecked", "rawtypes" })
++	public HttpClientMockDirector assertPostParameters(Pair... pairs)
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
++		verify(client).post(captor.capture(), any(URL.class), anyInt(), any(IMediaType.class));
++		assertParameters(captor.getValue(), pairs);
++		return this;
++	}
++
++	@SuppressWarnings({ "unchecked", "rawtypes" })
++	public HttpClientMockDirector assertPutParameters(Pair... pairs)
++			throws SocketTimeoutException, HttpClientException, EncodingException {
++		ArgumentCaptor<Map> captor = ArgumentCaptor.forClass(Map.class);
++		verify(client).put(captor.capture(), any(URL.class), anyInt(), any(IMediaType.class));
++		assertParameters(captor.getValue(), pairs);
++		return this;
++	}
++
++	private void assertParameters(@SuppressWarnings("rawtypes") Map postedParameters, Pair... pairs) {
++		assertThat(postedParameters).hasSize(pairs.length);
++		for (Pair pair : pairs) {
++			Object value = postedParameters.get(pair.getKey());
++            //It's possible that the value is not a String (e.g. a Map), so we convert to String before checking.
++			assertThat(value.toString()).isNotNull().isEqualTo(pair.getValue());
++		}
++	}
++
+ 	public IHttpClient client() {
+ 		return client;
+ 	}
++
++	public static class Pair {
++
++		private String key;
++		private String value;
++
++		public Pair(String key, String value) {
++			this.key = key;
++			this.value = value;
++		}
++
++		public String getKey() {
++			return key;
++		}
++
++		public String getValue() {
++			return value;
++		}
++	}
+ }

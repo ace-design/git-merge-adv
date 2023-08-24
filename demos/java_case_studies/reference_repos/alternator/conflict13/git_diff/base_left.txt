@@ -1,0 +1,59 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict13/base.java b/java_case_studies/reference_repos/alternator/conflict13/left.java
+index 656db53..2edebb0 100644
+--- a/java_case_studies/reference_repos/alternator/conflict13/base.java
++++ b/java_case_studies/reference_repos/alternator/conflict13/left.java
+@@ -11,7 +11,9 @@ import java.util.Map;
+ import java.util.UUID;
+ import org.junit.AfterClass;
+ import org.junit.BeforeClass;
++import org.junit.Test;
+ import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.util.Assert;
+ 
+ public class AlternatorTest {
+     /**
+@@ -21,6 +23,12 @@ public class AlternatorTest {
+      */
+     private static final boolean RUN_DB_AS_SERVICE = true;
+ 
++    /**
++     * Set to true to spawn the service in a local sub-process.
++     * Set to false if an executable JAR instance of Alternator is running in another process.
++     */
++    private static final boolean SPAWN_LOCAL_DB_SERVICE = true;
++
+ 	static protected AlternatorDBClient client;
+ 	static protected DynamoDBMapper mapper;
+ 
+@@ -39,7 +47,7 @@ public class AlternatorTest {
+ 
+ 	@BeforeClass
+ 	public static void setUpOnce() throws Exception {
+-        if (RUN_DB_AS_SERVICE) {
++        if (RUN_DB_AS_SERVICE && SPAWN_LOCAL_DB_SERVICE) {
+             db = new AlternatorDB().start();
+         }
+ 	}
+@@ -61,6 +69,11 @@ public class AlternatorTest {
+ 		client = value;
+ 	}
+ 
++    @Test
++    public void noOpTest() {
++        Assert.isTrue(true);
++    }
++
+     protected AmazonDynamoDB getClient() {
+         if (RUN_DB_AS_SERVICE) {
+             return client;
+@@ -160,6 +173,10 @@ public class AlternatorTest {
+ 		return new AttributeValue().withN(Math.round(Math.random() * 1000)+"");
+ 	}
+ 
++	protected AttributeValue createNumberAttribute(Integer value) {
++		return new AttributeValue().withN(value.toString());
++	}
++
+ 	protected Map<String, AttributeValue> createGenericItem() {
+ 		return createGenericItem(createStringAttribute(), createStringAttribute());
+ 	}

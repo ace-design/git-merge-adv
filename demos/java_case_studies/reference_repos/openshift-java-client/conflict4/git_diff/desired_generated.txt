@@ -1,0 +1,438 @@
+diff --git a/java_case_studies/reference_repos/openshift-java-client/conflict4/desired.java b/java_case_studies/demo_results/MethodUnion/openshift-java-client-conflict4.java
+index 344fbc1..6a7ed2f 100644
+--- a/java_case_studies/reference_repos/openshift-java-client/conflict4/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/openshift-java-client-conflict4.java
+@@ -9,34 +9,26 @@
+  * Red Hat, Inc. - initial API and implementation 
+  ******************************************************************************/
+ package com.openshift.internal.client;
+-
+-import static com.openshift.client.utils.Cartridges.JBOSSAS_7_NAME;
+-import static com.openshift.client.utils.Cartridges.JENKINS_14_NAME;
+-import static com.openshift.client.utils.Cartridges.MONGODB_22_NAME;
+ import static com.openshift.client.utils.Samples.DELETE_DOMAINS_FOOBARZ;
+ import static com.openshift.client.utils.Samples.GET_DOMAINS;
+ import static com.openshift.client.utils.Samples.GET_DOMAINS_EMPTY;
+ import static com.openshift.client.utils.Samples.GET_DOMAINS_FOOBARS;
+ import static com.openshift.client.utils.Samples.GET_DOMAINS_FOOBARZ;
+ import static com.openshift.client.utils.Samples.GET_DOMAINS_FOOBARZ_APPLICATIONS_1EMBEDDED;
+-import static com.openshift.client.utils.Samples.GET_DOMAINS_FOOBARZ_APPLICATIONS_DOWNLOADABLECART;
+ import static com.openshift.client.utils.Samples.GET_DOMAINS_FOOBARZ_APPLICATIONS_NOAPPS;
+ import static com.openshift.client.utils.Samples.POST_JEKYLL_DOMAINS_FOOBARZ_APPLICATIONS;
+ import static com.openshift.client.utils.Samples.POST_SCALABLE_DOMAINS_FOOBARZ_APPLICATIONS;
+ import static org.fest.assertions.Assertions.assertThat;
+ import static org.junit.Assert.fail;
+ import static org.mockito.Mockito.reset;
+-
+ import java.net.SocketTimeoutException;
+ import java.util.List;
+-
+ import org.junit.Before;
+ import org.junit.Ignore;
+ import org.junit.Rule;
+ import org.junit.Test;
+ import org.junit.rules.ErrorCollector;
+ import org.junit.rules.ExpectedException;
+-
+ import com.openshift.client.ApplicationScale;
+ import com.openshift.client.IApplication;
+ import com.openshift.client.IDomain;
+@@ -63,28 +55,28 @@ import com.openshift.internal.client.httpclient.HttpClientException;
+ import com.openshift.internal.client.httpclient.UnauthorizedException;
+ import com.openshift.internal.client.httpclient.request.Parameter;
+ import com.openshift.internal.client.httpclient.request.ParameterValueArray;
++import com.openshift.client.cartridge.EmbeddableCartridge;
++import com.openshift.client.cartridge.IEmbeddableCartridge;
+ import com.openshift.internal.client.httpclient.request.ParameterValueMap;
+ import com.openshift.internal.client.httpclient.request.StringParameter;
+ import com.openshift.internal.client.utils.IOpenShiftJsonConstants;
+ 
+-/**
+- * @author Xavier Coulon
+- * @author Andre Dietisheim
+- */
+-public class DomainResourceTest {
+-
+-	private IUser user;
+-	private IDomain domain;
+-	private IHttpClient clientMock;
+-	private HttpClientMockDirector mockDirector;
+-	
+-	@Rule
+-	public ExpectedException expectedException = ExpectedException.none();
+-
+-	@Rule
+-	public ErrorCollector errorCollector = new ErrorCollector();
+-
+-	@Before
++public class DomainResourceTest{
++
++    private IUser user;,
++    private static final IStandaloneCartridge CARTRIDGE_JBOSSAS_7 = new StandaloneCartridge("jbossas-7");,
++    private IDomain domain;,
++    private static final IStandaloneCartridge CARTRIDGE_JENKINS_14 = new StandaloneCartridge("jenkins-1.4");,
++    private IHttpClient clientMock;,
++    private static final IEmbeddableCartridge EMBEDDABLE_CARTRIDGE_MYSQL_51 = new EmbeddableCartridge("mysql-5.1");,
++    private HttpClientMockDirector mockDirector;,
++    private static final IEmbeddableCartridge EMBEDDABLE_CARTRIDGE_MONGODB_22 = new EmbeddableCartridge("mongodb-2.2");,
++    @Rule
++	public ExpectedException expectedException = ExpectedException.none();,
++    @Rule
++	public ErrorCollector errorCollector = new ErrorCollector();,
++
++    @Before
+ 	public void setup() throws Throwable {
+ 		this.mockDirector = new HttpClientMockDirector();
+ 		this.clientMock = mockDirector.mockGetDomains(GET_DOMAINS).client();
+@@ -92,7 +84,7 @@ public class DomainResourceTest {
+ 		this.domain = user.getDomain("foobarz");
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldLoadEmptyListOfDomains() throws Throwable {
+ 		// pre-conditions
+ 		HttpClientMockDirector mockBuilder = new HttpClientMockDirector();
+@@ -108,7 +100,7 @@ public class DomainResourceTest {
+ 			.verifyGetDomains();
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldLoadSingleUserDomain() throws Throwable {
+ 		// pre-conditions
+ 		// operation
+@@ -119,7 +111,7 @@ public class DomainResourceTest {
+ 		mockDirector.verifyGetAny(3);
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldCreateNewDomain() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockCreateDomain(GET_DOMAINS_FOOBARS);
+@@ -132,7 +124,7 @@ public class DomainResourceTest {
+ 		assertThat(domain.getSuffix()).isEqualTo("rhcloud.com");
+ 	}
+ 
+-	@Test(expected = OpenShiftException.class)
++    @Test(expected = OpenShiftException.class)
+ 	public void shouldNotRecreateExistingDomain() throws Throwable {
+ 		// pre-conditions
+ 		// operation
+@@ -141,7 +133,7 @@ public class DomainResourceTest {
+ 		// expect an exception
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldDestroyDomain() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockDeleteDomain("foobarz", DELETE_DOMAINS_FOOBARZ);
+@@ -153,7 +145,7 @@ public class DomainResourceTest {
+ 		assertThat(user.getDomains()).isEmpty();
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldNotDestroyDomainWithApp() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockDeleteDomain("foobarz", 
+@@ -171,7 +163,7 @@ public class DomainResourceTest {
+ 		assertThat(user.getDomains()).isNotEmpty().contains(domain);
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldUpdateDomainId() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockRenameDomain("foobarz", GET_DOMAINS_FOOBARS);
+@@ -186,7 +178,7 @@ public class DomainResourceTest {
+ 		mockDirector.verifyRenameDomain("foobarz");
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldListAvailableGearSizes() throws Throwable {
+ 		// pre-conditions
+ 		final IDomain domain = user.getDomain("foobarz");
+@@ -197,7 +189,7 @@ public class DomainResourceTest {
+ 				.contains("small", "micro", "medium", "large", "exlarge", "jumbo");
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldRefreshDomainAndReloadApplications() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector
+@@ -215,7 +207,7 @@ public class DomainResourceTest {
+ 			.verifyGetApplications("foobarz", 2); // two calls, before and while refresh
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldRefreshDomainAndNotReloadApplications() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector
+@@ -231,7 +223,7 @@ public class DomainResourceTest {
+ 			.verifyGetApplications("foobarz", 0); // // no call, neither before and while refresh
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldLoadListOfApplicationsWithNoElement() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_NOAPPS);
+@@ -247,7 +239,7 @@ public class DomainResourceTest {
+ 				.verifyGetAny(4);
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldLoadListOfApplicationsWith2Elements() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_1EMBEDDED);
+@@ -263,7 +255,7 @@ public class DomainResourceTest {
+ 				.verifyGetAny(4);
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldNotLoadApplicationTwice() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_1EMBEDDED);
+@@ -276,8 +268,8 @@ public class DomainResourceTest {
+ 		apps = domain.getApplications(); // dont do new client request
+ 		mockDirector.verifyGetAny(0);
+ 	}
+-	
+-	@Test(expected = InvalidCredentialsOpenShiftException.class)
++
++    @Test(expected = InvalidCredentialsOpenShiftException.class)
+ 	public void shouldNotLoadListOfApplicationsWithInvalidCredentials() 
+ 			throws OpenShiftException, HttpClientException, SocketTimeoutException {
+ 		// pre-conditions
+@@ -290,7 +282,7 @@ public class DomainResourceTest {
+ 			.verifyGetAny(2);
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldCreateApplicationWithDownloadableCartridge() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector
+@@ -318,7 +310,33 @@ public class DomainResourceTest {
+ 				.hasApplications(1);
+ 	}
+ 
+-	@Test
++    @Test
++	public void shouldCreateApplication() throws Throwable {
++		// pre-conditions
++		mockDirector
++				.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_NOAPPS)
++				.mockCreateApplication("foobarz", POST_SCALABLE_DOMAINS_FOOBARZ_APPLICATIONS);
++
++		// operation
++		final IApplication app = domain.createApplication("scalable", CARTRIDGE_JBOSSAS_7, ApplicationScale.NO_SCALE, null);
++
++		// verifications
++		new ApplicationAssert(app)
++			.hasName("scalable")
++			.hasGearProfile(IGearProfile.SMALL)
++			.hasApplicationScale(ApplicationScale.NO_SCALE)
++			.hasApplicationUrl("http://scalable-foobarz.rhcloud.com/")
++			.hasCreationTime()
++			.hasGitUrl("ssh://5183b49f4382ec9a0e000001@scalable-foobarz.rhcloud.com/~/git/scalable.git/")
++			.hasInitialGitUrl("git://github.com/openshift/openshift-java-client.git")
++			.hasCartridge(CARTRIDGE_JBOSSAS_7)
++			.hasUUID("5183b49f4382ec9a0e000001")
++			.hasDomain(domain);
++		assertThat(LinkRetriever.retrieveLinks(app)).hasSize(18);
++		assertThat(domain.getApplications()).hasSize(1).contains(app);
++	}
++
++    @Test
+ 	public void shouldUpdateDownloadableStandaloneCartridgeAfterDeploy() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector
+@@ -345,7 +363,43 @@ public class DomainResourceTest {
+ 			.hasUrl(Cartridges.GO_DOWNLOAD_URL);
+ 	}
+ 
+-	@Test
++    @Test
++	public void shouldCreateApplicationWithEmbeddedCartridges() throws Throwable {
++		// pre-conditions
++		mockDirector
++				.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_NOAPPS)
++				.mockCreateApplication("foobarz", Samples.GET_DOMAINS_FOOBARZ_APPLICATIONS_SPRINGEAP6_2EMBEDDED);
++
++		// operation
++		final IApplication app = domain.createApplication(
++				"scalable", 
++				CARTRIDGE_JBOSSAS_7, 
++				ApplicationScale.NO_SCALE, 
++				IGearProfile.SMALL, 
++				null, 
++				IHttpClient.NO_TIMEOUT, 
++				EMBEDDABLE_CARTRIDGE_MONGODB_22, 
++				EMBEDDABLE_CARTRIDGE_MYSQL_51);
++
++		// verifications
++		new ApplicationAssert(app)
++			.hasName("springeap6")
++			.hasGearProfile(IGearProfile.SMALL)
++			.hasApplicationScale(ApplicationScale.NO_SCALE)
++			.hasApplicationUrl("http://springeap6-foobarz.rhcloud.com/")
++			.hasCreationTime("2013-04-30T17:00:41Z")
++			.hasGitUrl("ssh://517ff8b9500446729b00008e@springeap6-foobarz.rhcloud.com/~/git/springeap6.git/")
++			.hasInitialGitUrl("git://github.com/openshift/spring-eap6-quickstart.git")
++			.hasCartridge(CARTRIDGE_JBOSSAS_7)
++			.hasUUID("517ff8b9500446729b00008e")
++			.hasDomain(domain)
++			.hasEmbeddableCartridges(2)
++			.hasEmbeddableCartridges(EMBEDDABLE_CARTRIDGE_MONGODB_22.getName(), EMBEDDABLE_CARTRIDGE_MYSQL_51.getName());
++		assertThat(LinkRetriever.retrieveLinks(app)).hasSize(18);
++		assertThat(domain.getApplications()).hasSize(1).contains(app);
++	}
++
++    @Test
+     public void shouldRequestCreateApplicationWithDownloadableCartridge() throws Throwable {    	
+         // pre-conditions
+         mockDirector
+@@ -401,7 +455,7 @@ public class DomainResourceTest {
+ 						+ "Note:  You can change your password at: https://jekyll-foobarz.rhcloud.com/me/configure\n");
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldRequestCreateApplicationWithNameAndCartridgeOnly() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector
+@@ -421,7 +475,7 @@ public class DomainResourceTest {
+ 										IOpenShiftJsonConstants.PROPERTY_NAME, Cartridges.JBOSSAS_7_NAME))));
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldRequestCreateApplicationWithNameCartridgeAndScaleOnly() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector
+@@ -439,7 +493,7 @@ public class DomainResourceTest {
+ 				new StringParameter(IOpenShiftJsonConstants.PROPERTY_SCALE, ApplicationScale.SCALE.getValue()));
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldRequestCreateApplicationWithNameCartridgeScaleGearProfileOnly() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector
+@@ -459,7 +513,7 @@ public class DomainResourceTest {
+ 		);
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldRequestCreateApplicationWithNameCartridgeScaleGearProfileAndGitUrl() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector
+@@ -484,7 +538,7 @@ public class DomainResourceTest {
+ 		);
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldRequestCreateApplicationWithEmbeddableCartridges() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector
+@@ -520,7 +574,7 @@ public class DomainResourceTest {
+ 										Cartridges.MYSQL_51_NAME))));
+ 	}
+ 
+-	@Test(expected = OpenShiftException.class)
++    @Test(expected = OpenShiftException.class)
+ 	public void shouldNotCreateApplicationWithMissingName() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_1EMBEDDED);
+@@ -530,7 +584,7 @@ public class DomainResourceTest {
+ 		// expected exception
+ 	}
+ 
+-	@Test(expected = OpenShiftException.class)
++    @Test(expected = OpenShiftException.class)
+ 	public void shouldNotCreateApplicationWithMissingCartridge() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_NOAPPS);
+@@ -540,7 +594,7 @@ public class DomainResourceTest {
+ 		// expected exception
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldNotRecreateExistingApplication() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_1EMBEDDED);
+@@ -556,7 +610,7 @@ public class DomainResourceTest {
+ 		assertThat(domain.getApplications()).hasSize(2);
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldGetApplicationByNameCaseInsensitive() throws Throwable {
+ 		// pre-conditions
+ 		mockDirector.mockGetApplications("foobarz", GET_DOMAINS_FOOBARZ_APPLICATIONS_1EMBEDDED);
+@@ -570,38 +624,38 @@ public class DomainResourceTest {
+ 		assertThat(upperCaseQueryResult).isNotNull();
+ 		assertThat(upperCaseQueryResult.getName()).isEqualTo("springeap6");
+ 	}
+-	
+-	@Test
++
++    @Test
+ 	@Ignore
+ 	public void shouldRefreshDomain() throws Throwable {
+ 		fail("not implemented yet");
+ 	}
+ 
+-	@Test
++    @Test
+ 	@Ignore
+ 	public void shouldNotReloadDomainTwice() throws Throwable {
+ 		fail("not implemented yet");
+ 	}
+ 
+-	@Test
++    @Test
+ 	@Ignore
+ 	public void shouldNotifyAfterDomainCreated() throws Throwable {
+ 		fail("not implemented yet");
+ 	}
+ 
+-	@Test
++    @Test
+ 	@Ignore
+ 	public void shouldNotifyAfterDomainUpdated() throws Throwable {
+ 		fail("not implemented yet");
+ 	}
+ 
+-	@Test
++    @Test
+ 	@Ignore
+ 	public void shouldNotifyAfterDomainDestroyed() throws Throwable {
+ 		fail("not implemented yet");
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void shouldPassTimeoutToClient() throws Throwable {
+ 		// pre-conditions
+ 		int timeout = 42 * 1000;
+@@ -621,4 +675,5 @@ public class DomainResourceTest {
+ 								new ParameterValueMap().add(IOpenShiftJsonConstants.PROPERTY_NAME, JBOSSAS_7_NAME))),
+ 				new StringParameter(IOpenShiftJsonConstants.PROPERTY_NAME, "scalable"));
+ 	}
+-}
++
++}
+\ No newline at end of file

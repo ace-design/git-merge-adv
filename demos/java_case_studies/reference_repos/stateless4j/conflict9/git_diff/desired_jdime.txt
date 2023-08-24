@@ -1,0 +1,30 @@
+diff --git a/java_case_studies/reference_repos/stateless4j/conflict9/desired.java b/java_case_studies/reference_repos/stateless4j/conflict9/jdime.java
+index 9c9c384..5d3e735 100644
+--- a/java_case_studies/reference_repos/stateless4j/conflict9/desired.java
++++ b/java_case_studies/reference_repos/stateless4j/conflict9/jdime.java
+@@ -1,15 +1,13 @@
+ package com.github.oxo42.stateless4j.triggers;
+-
+-import com.github.oxo42.stateless4j.OutVar;
+ import com.github.oxo42.stateless4j.delegates.FuncBoolean;
++import com.github.oxo42.stateless4j.OutVar;
+ 
+-public class IgnoredTriggerBehaviour<TState, TTrigger> extends TriggerBehaviour<TState, TTrigger> {
+-    public IgnoredTriggerBehaviour(TTrigger trigger, FuncBoolean guard) {
+-        super(trigger, guard);
+-    }
++public class IgnoredTriggerBehaviour<TState extends java.lang.Object, TTrigger extends java.lang.Object> extends TriggerBehaviour<TState, TTrigger> {
++  public IgnoredTriggerBehaviour(TTrigger trigger, FuncBoolean guard) {
++    super(trigger, guard);
++  }
+ 
+-    @Override
+-    public boolean resultsInTransitionFrom(TState source, Object[] args, OutVar<TState> dest) {
+-        return false;
+-    }
+-}
++  @Override public boolean resultsInTransitionFrom(TState source, Object[] args, OutVar<TState> dest) {
++    return false;
++  }
++}
+\ No newline at end of file

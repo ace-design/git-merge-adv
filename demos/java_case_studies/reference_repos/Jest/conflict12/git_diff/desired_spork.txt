@@ -1,0 +1,69 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict12/desired.java b/java_case_studies/reference_repos/Jest/conflict12/spork_result.java
+index 5adbb17..64e1c22 100644
+--- a/java_case_studies/reference_repos/Jest/conflict12/desired.java
++++ b/java_case_studies/reference_repos/Jest/conflict12/spork_result.java
+@@ -2,10 +2,12 @@ package io.searchbox.client;
+ 
+ import io.searchbox.client.config.HttpClientConfig;
+ import io.searchbox.client.http.JestHttpClient;
++import java.util.concurrent.TimeUnit;
+ import org.elasticsearch.test.ElasticsearchIntegrationTest;
+ import org.junit.Test;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
+ 
+-import java.util.concurrent.TimeUnit;
+ 
+ /**
+  * @author cihat keser
+@@ -13,6 +15,18 @@ import java.util.concurrent.TimeUnit;
+ @ElasticsearchIntegrationTest.ClusterScope(scope = ElasticsearchIntegrationTest.Scope.TEST, numNodes = 0)
+ public class JestClientFactoryIntegrationTest extends ElasticsearchIntegrationTest {
+ 
++<<<<<<< LEFT
++    final static Logger log = LoggerFactory.getLogger(JestClientFactoryIntegrationTest.class);
++
++    @ElasticsearchNode
++    Node first;
++
++    @ElasticsearchNode(name = "2nd")
++    Node node;
++    @ElasticsearchAdminClient
++    AdminClient adminClient;
++=======
++>>>>>>> RIGHT
+     JestClientFactory factory = new JestClientFactory();
+ 
+     @Test
+@@ -37,8 +51,23 @@ public class JestClientFactoryIntegrationTest extends ElasticsearchIntegrationTe
+                 jestClient.getServers().size()
+         );
+ 
++<<<<<<< LEFT
++        // now close first client
++        first.close();
++=======
+         cluster().ensureAtMostNumNodes(3);
++>>>>>>> RIGHT
+ 
++<<<<<<< LEFT
++        // wait for second node to stop
++        while(!first.isClosed()) {
++            Thread.sleep(500);
++            log.info("Waiting for second node to stop...");
++        }
++
++        // wait for NodeChecker to do the discovery
++        Thread.sleep(1500);
++=======
+         int numServers = 0;
+         int retries = 0;
+         while(numServers != 3 && retries < 30) {
+@@ -46,6 +75,7 @@ public class JestClientFactoryIntegrationTest extends ElasticsearchIntegrationTe
+             retries++;
+             Thread.sleep(1000);
+         }
++>>>>>>> RIGHT
+ 
+         assertEquals(
+                 "Only 3 nodes should be in Jest's list",

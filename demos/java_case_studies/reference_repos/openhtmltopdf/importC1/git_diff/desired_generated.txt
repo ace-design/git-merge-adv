@@ -1,0 +1,467 @@
+diff --git a/java_case_studies/reference_repos/openhtmltopdf/importC1/desired.java b/java_case_studies/demo_results/MethodUnion/openhtmltopdf-importC1.java
+index 5cd8c06..9e49ee9 100644
+--- a/java_case_studies/reference_repos/openhtmltopdf/importC1/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/openhtmltopdf-importC1.java
+@@ -19,15 +19,12 @@
+  * }}}
+  */
+ package com.openhtmltopdf.render;
+-
+ import java.awt.Point;
+ import java.awt.Rectangle;
+ import java.util.Iterator;
+ import java.util.LinkedList;
+ import java.util.List;
+-
+ import org.w3c.dom.Element;
+-
+ import com.openhtmltopdf.css.constants.CSSName;
+ import com.openhtmltopdf.css.constants.IdentValue;
+ import com.openhtmltopdf.css.newmatch.CascadedStyle;
+@@ -55,16 +52,12 @@ import com.openhtmltopdf.layout.Styleable;
+ import com.openhtmltopdf.newtable.TableRowBox;
+ import com.openhtmltopdf.util.ThreadCtx;
+ 
+-/**
+- * A block box as defined in the CSS spec.  It also provides a base class for
+- * other kinds of block content (for example table rows or cells).
+- * See {@link ContentType}
+- */
+-public class BlockBox extends Box implements InlinePaintable {
++public class BlockBox extends Box implements InlinePaintable{
+ 
+-    public static final int POSITION_VERTICALLY = 1;
+-    public static final int POSITION_HORIZONTALLY = 2;
+-    public static final int POSITION_BOTH = POSITION_VERTICALLY | POSITION_HORIZONTALLY;
++    public static final int POSITION_VERTICALLY = 1;,
++    public static final int POSITION_HORIZONTALLY = 2;,
++    public static final int POSITION_BOTH = POSITION_VERTICALLY | POSITION_HORIZONTALLY;,
++    public static final int CONTENT_UNKNOWN = 0;,
+ 
+     /**
+      * What type of direct child content this block box contains.
+@@ -73,7 +66,13 @@ public class BlockBox extends Box implements InlinePaintable {
+      * If this constraint is not met by the original document, the {@link BoxBuilder}
+      * will insert {@link AnonymousBlockBox} with inline content.
+      */
+-    public static enum ContentType {
++    public static final int CONTENT_INLINE = 1;,
++    public static final int CONTENT_BLOCK = 2;,
++    public static final int CONTENT_EMPTY = 4;,
++
++    public static enum ContentType{
++
++
+         /**
+          * The box builder has not yet run to
+          * create our child boxes. The box builder can be run
+@@ -100,53 +99,36 @@ public class BlockBox extends Box implements InlinePaintable {
+         /**
+          * This block box is empty but may still have border, etc.
+          */
+-        EMPTY;
+-    }
+-
+-    protected static final int NO_BASELINE = Integer.MIN_VALUE;
+-
+-    private MarkerData _markerData;
+-
+-    private int _listCounter;
+-
+-    private PersistentBFC _persistentBFC;
+-
+-    private Box _staticEquivalent;
+-
+-    private boolean _needPageClear;
+-
+-    private ReplacedElement _replacedElement;
+-
+-    private ContentType _childrenContentType = ContentType.UNKNOWN;
+-
+-    private List<Styleable> _inlineContent;
+-
+-    private boolean _topMarginCalculated;
+-    private boolean _bottomMarginCalculated;
+-    private MarginCollapseResult _pendingCollapseCalculation;
+-
+-    private int _minWidth;
+-    private int _maxWidth;
+-    private boolean _minMaxCalculated;
+-
+-    private boolean _dimensionsCalculated;
+-    private boolean _needShrinkToFitCalculatation;
+-
+-    private CascadedStyle _firstLineStyle;
+-    private CascadedStyle _firstLetterStyle;
+-
+-    private FloatedBoxData _floatedBoxData;
+-
+-    private int _childrenHeight;
+-
+-    private boolean _fromCaptionedTable;
+-
+-    private boolean _isReplaced;
++        EMPTY,
++
++    }    protected static final int NO_BASELINE = Integer.MIN_VALUE;,
++    private MarkerData _markerData;,
++    private int _listCounter;,
++    private PersistentBFC _persistentBFC;,
++    private Box _staticEquivalent;,
++    private boolean _needPageClear;,
++    private ReplacedElement _replacedElement;,
++    private ContentType _childrenContentType = ContentType.UNKNOWN;,
++    private List<Styleable> _inlineContent;,
++    private boolean _topMarginCalculated;,
++    private boolean _bottomMarginCalculated;,
++    private MarginCollapseResult _pendingCollapseCalculation;,
++    private int _minWidth;,
++    private int _maxWidth;,
++    private boolean _minMaxCalculated;,
++    private boolean _dimensionsCalculated;,
++    private boolean _needShrinkToFitCalculatation;,
++    private CascadedStyle _firstLineStyle;,
++    private CascadedStyle _firstLetterStyle;,
++    private FloatedBoxData _floatedBoxData;,
++    private int _childrenHeight;,
++    private boolean _fromCaptionedTable;,
++    private boolean _isReplaced;,
+ 
+     public BlockBox() {
+         super();
+     }
+-    
++
+     @Override
+     public void setElement(Element element) {
+     	super.setElement(element);
+@@ -396,7 +378,6 @@ public class BlockBox extends Box implements InlinePaintable {
+         return result;
+     }
+ 
+-
+     private MarkerData.ImageMarker makeImageMarker(
+             LayoutContext c, StrutMetrics structMetrics, String image) {
+         FSImage img = null;
+@@ -471,7 +452,7 @@ public class BlockBox extends Box implements InlinePaintable {
+     public boolean shouldBeReplaced() {
+     	return _isReplaced;
+     }
+-    
++
+     public boolean isReplaced() {
+         return _replacedElement != null;
+     }
+@@ -537,7 +518,6 @@ public class BlockBox extends Box implements InlinePaintable {
+         _needPageClear = needPageClear;
+     }
+ 
+-
+     private void alignToStaticEquivalent() {
+         if (_staticEquivalent.getAbsY() != getAbsY()) {
+             setY(_staticEquivalent.getAbsY() - getAbsY());
+@@ -599,7 +579,7 @@ public class BlockBox extends Box implements InlinePaintable {
+         calcChildLocations();
+     }
+ 
+-	/**
++    /**
+      * Using the css:
+      *
+      * -fs-page-break-min-height: 5cm;
+@@ -610,13 +590,13 @@ public class BlockBox extends Box implements InlinePaintable {
+      * @return true if a pagebreak is needed before this block because
+      * there is not enough space left on the current page.
+      */
++
+     public boolean isPageBreakNeededBecauseOfMinHeight(LayoutContext context){
+         float minHeight = getStyle().getFSPageBreakMinHeight(context);
+         PageBox page = context.getRootLayer().getFirstPage(context, this);
+         return page != null && getAbsY() + minHeight > page.getBottom(context);
+     }
+ 
+-
+     public void positionAbsoluteOnPage(LayoutContext c) {
+         if (c.isPrint() &&
+                 (getStyle().isForcePageBreakBefore() || isNeedPageClear() || isPageBreakNeededBecauseOfMinHeight(c))) {
+@@ -756,6 +736,7 @@ public class BlockBox extends Box implements InlinePaintable {
+     /**
+      * Creates the replaced element as required. This method should be idempotent.
+      */
++
+     private void createReplaced(LayoutContext c) {
+         ReplacedElement re = getReplacedElement();
+         
+@@ -787,13 +768,14 @@ public class BlockBox extends Box implements InlinePaintable {
+             }
+         }
+     }
+-    
++
+     /**
+      * Size a replaced element taking into account size properties including min/max,
+      * border-box/content-box and the natural size/aspect ratio of the replaced object.
+      * 
+      * This method may be called multiple times so must be idempotent.
+      */
++
+     private void sizeReplacedElement(LayoutContext c, ReplacedElement re) {
+         int cssWidth = getCSSWidth(c);
+         int cssHeight = getCSSHeight(c);
+@@ -906,7 +888,7 @@ public class BlockBox extends Box implements InlinePaintable {
+         setContentWidth(nw);
+         setHeight(nh);
+     }
+-    
++
+     public void calcDimensions(LayoutContext c) {
+         calcDimensions(c, getCSSWidth(c));
+     }
+@@ -1030,8 +1012,40 @@ public class BlockBox extends Box implements InlinePaintable {
+ 
+     public void layout(LayoutContext c, int contentStart) {
+         CalculatedStyle style = getStyle();
++<<<<<<< left_content.java
+ 
+         boolean pushedLayer = checkPushLayer(c, style);
++=======
++        boolean pushedLayer = false;
++
++        if (isRoot()) {
++            pushedLayer = true;
++            c.pushLayer(this);
++
++            if (c.isPrint()) {
++            	if (!style.isIdent(CSSName.PAGE, IdentValue.AUTO)) {
++            		c.setPageName(style.getStringProperty(CSSName.PAGE));
++            	}
++            	c.getRootLayer().addPage(c);
++            }
++        } else if (style.requiresLayer() && this.getLayer() == null) {
++            pushedLayer = true;
++            c.pushLayer(this);
++        } else if (style.requiresLayer()) {
++            // FIXME: HACK. Some boxes can be layed out many times (to satisfy page constraints for example).
++            // If this happens we just mark our old layer for deletion and create a new layer.
++            // Not sure this is right, but doesn't break any correct tests.
++            boolean isIsolated = getLayer().isIsolated();
++            getLayer().setForDeletion(true);
++
++            pushedLayer = true;
++            if (isIsolated) {
++                c.pushLayerIsolated(this);
++            } else {
++                c.pushLayer(this);
++            }
++        }
++>>>>>>> right_content.java
+ 
+         calcClearance(c);
+ 
+@@ -1126,6 +1140,7 @@ public class BlockBox extends Box implements InlinePaintable {
+         }
+     }
+ 
++
+     protected boolean checkPushLayer(LayoutContext c, CalculatedStyle style) {
+         if (isRoot()) {
+             c.pushLayer(this);
+@@ -1161,6 +1176,7 @@ public class BlockBox extends Box implements InlinePaintable {
+      * removes the last bfc from the stack.
+      * See also {@link #checkPushBfc(LayoutContext)}
+      */
++
+     protected void checkPopBfc(LayoutContext c) {
+         if (isRoot() || getStyle().establishesBFC()) {
+             c.popBFC();
+@@ -1172,6 +1188,7 @@ public class BlockBox extends Box implements InlinePaintable {
+      * so creates one and pushes it to the stack of bfcs.
+      * See also {@link #checkPopBfc(LayoutContext)}
+      */
++
+     protected void checkPushBfc(LayoutContext c) {
+         if (isRoot() || getStyle().establishesBFC() || isMarginAreaRoot()) {
+             BlockFormattingContext bfc = new BlockFormattingContext(this, c);
+@@ -1191,6 +1208,7 @@ public class BlockBox extends Box implements InlinePaintable {
+      * Oh oh! Up to this method height is used to track content height. After this method it is used
+      * to track total layout height! 
+      */
++
+     protected void calcLayoutHeight(
+             LayoutContext c, BorderPropertySet border,
+             RectPropertySet margin, RectPropertySet padding) {
+@@ -1200,7 +1218,6 @@ public class BlockBox extends Box implements InlinePaintable {
+                 (int) padding.bottom() + (int) border.bottom() + (int) margin.bottom()));
+     }
+ 
+-
+     private void calcShrinkToFitWidthIfNeeded(LayoutContext c) {
+         if (isNeedShrinkToFitCalculatation()) {
+             setContentWidth(calcShrinkToFitWidth(c) - getLeftMBP() - getRightMBP());
+@@ -1343,6 +1360,7 @@ public class BlockBox extends Box implements InlinePaintable {
+      * been done on this box. This means that the children of this box will consist
+      * entirely of LineBox objects.
+      */
++
+     private void satisfyWidowsAndOrphans(LayoutContext c, int contentStart, boolean tryAgain) {
+         int orphans = (int) getStyle().asFloat(CSSName.ORPHANS);
+         int widows = (int) getStyle().asFloat(CSSName.WIDOWS);
+@@ -1432,16 +1450,18 @@ public class BlockBox extends Box implements InlinePaintable {
+         }
+     }
+ 
++    public void setChildrenContentType(int contentType) {
++        _childrenContentType = contentType;
++    }
++
+     /**
+      * See {@link ContentType}
+      */
++
+     public ContentType getChildrenContentType() {
+         return _childrenContentType;
+     }
+ 
+-    /**
+-     * See {@link ContentType}
+-     */
+     public void setChildrenContentType(ContentType contentType) {
+         _childrenContentType = contentType;
+     }
+@@ -1449,6 +1469,7 @@ public class BlockBox extends Box implements InlinePaintable {
+     /**
+      * See {@link #setInlineContent(List)}
+      */
++
+     public List<Styleable> getInlineContent() {
+         return _inlineContent;
+     }
+@@ -1468,6 +1489,7 @@ public class BlockBox extends Box implements InlinePaintable {
+      * This method should be called with {@link #setChildrenContentType(ContentType)} set
+      * to {@link ContentType#INLINE} as block boxes can not contain mixed content.
+      */
++
+     public void setInlineContent(List<Styleable> inlineContent) {
+         _inlineContent = inlineContent;
+ 
+@@ -1489,8 +1511,11 @@ public class BlockBox extends Box implements InlinePaintable {
+     }
+ 
+     // This will require a rethink if we ever truly layout incrementally
++
+     // Should only ever collapse top margin and pick up collapsable
++
+     // bottom margins by looking back up the tree.
++
+     protected void collapseMargins(LayoutContext c) {
+         if (! isTopMarginCalculated() || ! isBottomMarginCalculated()) {
+             recalcMargin(c);
+@@ -1790,8 +1815,11 @@ public class BlockBox extends Box implements InlinePaintable {
+     }
+ 
+     // Use only when the height of the containing block is required for
++
+     // resolving percentage values.  Does not represent the actual (resolved) height
++
+     // of the containing block.
++
+     private int getContainingBlockCSSHeight(CssContext c) {
+         if (! getContainingBlock().isStyled() ||
+                 getContainingBlock().getStyle().isAutoHeight()) {
+@@ -1838,6 +1866,20 @@ public class BlockBox extends Box implements InlinePaintable {
+         return false;
+     }
+ 
++    @Deprecated
++    private ReplacedElement fitReplacedElement(LayoutContext c,
++            ReplacedElement re)
++    {
++        int maxImageWidth = getCSSFitToWidth(c);
++        if (maxImageWidth > -1 && re.getIntrinsicWidth() > maxImageWidth)
++        {
++            double oldWidth = (double)re.getIntrinsicWidth();
++            double scale = ((double)maxImageWidth)/oldWidth;
++            re = c.getReplacedElementFactory().createReplacedElement(
++                    c, this, c.getUac(), maxImageWidth, (int)Math.rint(scale * (double)re.getIntrinsicHeight()));
++        }
++        return re;
++    }
+ 
+     private void recalcMargin(LayoutContext c) {
+         if (isTopMarginCalculated() && isBottomMarginCalculated()) {
+@@ -2119,6 +2161,7 @@ public class BlockBox extends Box implements InlinePaintable {
+     }
+ 
+     // FIXME Should be expanded into generic restyle facility
++
+     public void styleText(LayoutContext c, CalculatedStyle style) {
+         if (getChildrenContentType() == ContentType.INLINE) {
+             LinkedList<CalculatedStyle> styles = new LinkedList<>();
+@@ -2172,6 +2215,14 @@ public class BlockBox extends Box implements InlinePaintable {
+         super.calcChildPaintingInfo(c, result, useCache);
+     }
+ 
++    @Override
++                        public void operate(Box floater) {
++                            PaintingInfo info = floater.calcPaintingInfo(c, useCache);
++                            moveIfGreater(
++                                    result.getOuterMarginCorner(),
++                                    info.getOuterMarginCorner());
++                        }
++
+     public CascadedStyle getFirstLetterStyle() {
+         return _firstLetterStyle;
+     }
+@@ -2298,15 +2349,16 @@ public class BlockBox extends Box implements InlinePaintable {
+         return context.line;
+     }
+ 
+-    private static class LastLineBoxContext {
+-        public int current;
+-        public LineBox line;
++    private static class LastLineBoxContext{
++
++        public int current;,
++        public LineBox line;,
+ 
+         public LastLineBoxContext(int i) {
+             this.current = i;
+         }
+-    }
+ 
++    }
+     private void findLastLineBox(LastLineBoxContext context) {
+         ContentType type = getChildrenContentType();
+         int ccount = getChildCount();
+@@ -2480,7 +2532,6 @@ public class BlockBox extends Box implements InlinePaintable {
+             getStyle().isOverflowApplies();
+     }
+ 
+-
+     protected void propagateExtraSpace(
+             LayoutContext c,
+             ContentLimitContainer parentContainer, ContentLimitContainer currentContainer,
+@@ -2511,9 +2562,10 @@ public class BlockBox extends Box implements InlinePaintable {
+         }
+     }
+ 
+-    public static class MarginCollapseResult {
+-        private int maxPositive;
+-        private int maxNegative;
++    public static class MarginCollapseResult{
++
++        private int maxPositive;,
++        private int maxNegative;,
+ 
+         public void update(int value) {
+             if (value < 0 && value < maxNegative) {
+@@ -2532,6 +2584,6 @@ public class BlockBox extends Box implements InlinePaintable {
+         public boolean hasMargin() {
+             return maxPositive != 0 || maxNegative != 0;
+         }
+-    }
+ 
+-}
++    }
++}
+\ No newline at end of file

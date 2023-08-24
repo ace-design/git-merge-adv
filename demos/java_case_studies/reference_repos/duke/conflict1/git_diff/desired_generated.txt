@@ -1,0 +1,120 @@
+diff --git a/java_case_studies/reference_repos/duke/conflict1/desired.java b/java_case_studies/demo_results/MethodUnion/duke-conflict1.java
+index 78051e1..bcfcad4 100644
+--- a/java_case_studies/reference_repos/duke/conflict1/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/duke-conflict1.java
+@@ -1,28 +1,23 @@
+-
+ package no.priv.garshol.duke.test;
+-
+ import static junit.framework.Assert.assertEquals;
+ import static junit.framework.Assert.assertTrue;
+ import static junit.framework.Assert.fail;
+-
+ import java.io.IOException;
+-import java.util.List;
+-
+ import no.priv.garshol.duke.Database;
+ import no.priv.garshol.duke.Property;
+-import no.priv.garshol.duke.Comparator;
+ import no.priv.garshol.duke.ConfigLoader;
++import java.util.List;
+ import no.priv.garshol.duke.Configuration;
++import no.priv.garshol.duke.Comparator;
+ import no.priv.garshol.duke.DukeConfigException;
+ import no.priv.garshol.duke.databases.LuceneDatabase;
+-import no.priv.garshol.duke.comparators.NumericComparator;
+-
+ import org.junit.Test;
+ import org.xml.sax.SAXException;
+ 
+-public class ConfigLoaderTest {
++public class ConfigLoaderTest{
++
+ 
+-  @Test
++    @Test
+   public void testEmpty() throws IOException, SAXException {
+     Configuration config = ConfigLoader.load("classpath:config-empty.xml");
+ 
+@@ -34,7 +29,7 @@ public class ConfigLoaderTest {
+     assertTrue(config.getProperties().isEmpty());
+   }
+ 
+-  @Test
++    @Test
+   public void testString() throws IOException, SAXException {
+     String cfg = "<duke>" +
+       "<schema>" +
+@@ -52,7 +47,7 @@ public class ConfigLoaderTest {
+     assertTrue(config.getProperties().isEmpty());
+   }
+ 
+-  @Test
++    @Test
+   public void testSingleGroup() throws IOException, SAXException {
+     try {
+       ConfigLoader.load("classpath:config-single-group.xml");
+@@ -62,7 +57,7 @@ public class ConfigLoaderTest {
+     }
+   }
+ 
+-  @Test
++    @Test
+   public void testDefaultProbs() throws IOException, SAXException {
+     Configuration config = ConfigLoader.load("classpath:config-default-probs.xml");
+     Property prop = config.getPropertyByName("FIRSTNAME");
+@@ -71,7 +66,7 @@ public class ConfigLoaderTest {
+     assertEquals(Property.Lookup.DEFAULT, prop.getLookupBehaviour());
+   }
+ 
+-  @Test
++    @Test
+   public void testDefaultComparator() throws IOException, SAXException {
+     Configuration config = ConfigLoader.load("classpath:config-no-comparator.xml");
+     Property prop = config.getPropertyByName("LASTNAME");
+@@ -79,7 +74,7 @@ public class ConfigLoaderTest {
+     assertEquals(Property.Lookup.DEFAULT, prop.getLookupBehaviour());
+   }
+ 
+-  @Test
++    @Test
+   public void testLookup() throws IOException, SAXException {
+     Configuration config = ConfigLoader.load("classpath:config-lookup.xml");
+ 
+@@ -90,7 +85,7 @@ public class ConfigLoaderTest {
+     assertEquals(Property.Lookup.DEFAULT, prop.getLookupBehaviour());
+   }
+ 
+-  @Test
++    @Test
+   public void testDatabase() throws IOException, SAXException {
+     Configuration config = ConfigLoader.load("classpath:config-database.xml");
+     Database db = config.getDatabase(false);
+@@ -98,7 +93,7 @@ public class ConfigLoaderTest {
+     assertEquals("/tmp/ct-visma-1", lucene.getPath());
+   }
+ 
+-  @Test
++    @Test
+   public void testParameterOfNothing() throws IOException, SAXException {
+     try {
+       ConfigLoader.load("classpath:config-no-object.xml");
+@@ -108,12 +103,13 @@ public class ConfigLoaderTest {
+     }
+   }
+ 
+-  @Test
++    @Test
+   public void testCustomComparator() throws IOException, SAXException {
+     Configuration config = ConfigLoader.load("classpath:config-custom-comparator.xml");
+-
++    
+     List<Comparator> comparators = config.getCustomComparators();
+-
++    
+     assertEquals(1, comparators.size());
+   }
+-}
++
++}
+\ No newline at end of file

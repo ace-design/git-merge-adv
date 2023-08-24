@@ -1,0 +1,12 @@
+diff --git a/python_case_studies/reference_repos/python-oauth2/conflict5/base.py b/python_case_studies/reference_repos/python-oauth2/conflict5/right.py
+index 064ab65..d66907f 100644
+--- a/python_case_studies/reference_repos/python-oauth2/conflict5/base.py
++++ b/python_case_studies/reference_repos/python-oauth2/conflict5/right.py
+@@ -1,6 +1,6 @@
+ # This is the version of this source code.
+ 
+-verstr = "1.4.131"
++verstr = "1.4.134"
+ try:
+     from pyutil.version_class import Version as pyutil_Version
+     __version__ = pyutil_Version(verstr)

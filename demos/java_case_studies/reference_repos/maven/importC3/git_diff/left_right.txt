@@ -1,0 +1,35 @@
+diff --git a/java_case_studies/reference_repos/maven/importC3/left.java b/java_case_studies/reference_repos/maven/importC3/right.java
+index a2b21a3..f09c768 100644
+--- a/java_case_studies/reference_repos/maven/importC3/left.java
++++ b/java_case_studies/reference_repos/maven/importC3/right.java
+@@ -23,18 +23,25 @@ import java.text.DecimalFormat;
+ import java.text.DecimalFormatSymbols;
+ import java.util.Locale;
+ 
+-import org.eclipse.aether.transfer.AbstractTransferListener;
+-import org.eclipse.aether.transfer.TransferCancelledException;
+-import org.eclipse.aether.transfer.TransferEvent;
+-import org.eclipse.aether.transfer.TransferResource;
+ import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++import org.sonatype.aether.transfer.AbstractTransferListener;
++import org.sonatype.aether.transfer.TransferCancelledException;
++import org.sonatype.aether.transfer.TransferEvent;
++import org.sonatype.aether.transfer.TransferResource;
+ 
+ public class Slf4jMavenTransferListener
+     extends AbstractTransferListener
+ {
+ 
+-    protected Logger out;
++    protected final Logger out;
+ 
++    public Slf4jMavenTransferListener()
++    {
++        this.out = LoggerFactory.getLogger( Slf4jMavenTransferListener.class );
++    }
++
++    // TODO should we deprecate?
+     public Slf4jMavenTransferListener( Logger out )
+     {
+         this.out = out;

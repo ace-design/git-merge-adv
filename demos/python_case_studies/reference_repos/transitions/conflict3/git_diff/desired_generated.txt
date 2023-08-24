@@ -1,0 +1,140 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict3/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict3.py
+index f6ae052..edec248 100644
+--- a/python_case_studies/reference_repos/transitions/conflict3/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict3.py
+@@ -1,3 +1,13 @@
++import itertools
++import logging
++import asyncio
++import contextvars
++import inspect
++from collections import defaultdict,deque
++from functools import partial,reduce
++import copy
++from core import State,Condition,Transition,EventData,listify,Event,MachineError,Machine
++from nesting import HierarchicalMachine,NestedState,NestedEvent,NestedTransition,_resolve_order
+ """
+     transitions.extensions.asyncio
+     ------------------------------
+@@ -14,17 +24,7 @@
+ # and thus increase code complexity and reduce maintainability. If you know a better solution, please file an issue.
+ # pylint: disable=invalid-overridden-method
+ 
+-import logging
+-import asyncio
+-import contextvars
+-import inspect
+-from collections import deque
+-from functools import partial, reduce
+-import copy
+ 
+-from ..core import State, Condition, Transition, EventData, listify
+-from ..core import Event, MachineError, Machine
+-from .nesting import HierarchicalMachine, NestedState, NestedEvent, NestedTransition, _resolve_order
+ 
+ 
+ _LOGGER = logging.getLogger(__name__)
+@@ -212,11 +212,33 @@ class AsyncEvent(Event):
+ 
+     async def _trigger(self, model, *args, **kwargs):
+         state = self.machine.get_state(getattr(model, self.machine.model_attribute))
++<<<<<<< left_content.py
++=======
++        if state.name not in self.transitions:
++            msg = "%sCan't trigger event %s from state %s!" % (self.machine.name, self.name,
++                                                               state.name)
++            ignore = state.ignore_invalid_triggers if state.ignore_invalid_triggers is not None \
++                else self.machine.ignore_invalid_triggers
++            if ignore:
++                _LOGGER.warning(msg)
++                return False
++            raise MachineError(msg)
++>>>>>>> right_content.py
+         event_data = EventData(state, self, self.machine, model, args=args, kwargs=kwargs)
+         try:
++<<<<<<< left_content.py
+             if self._is_valid_trigger(state):
+                 await self._process(event_data)
+         except Exception as err:
++=======
++            for trans in self.transitions[event_data.state.name]:
++                event_data.transition = trans
++                if await trans.execute(event_data):
++                    event_data.result = True
++                    break
++        # we want to catch every exception during the execution of an event and pass it to the user
++        except Exception as err:  # pylint: disable=broad-except
++>>>>>>> right_content.py
+             event_data.error = err
+             if self.machine.on_exception:
+                 await self.machine.callbacks(self.machine.on_exception, event_data)
+@@ -273,11 +295,17 @@ class NestedAsyncEvent(NestedEvent):
+         else:
+             return await self._trigger_scoped(_event_data)
+ 
++<<<<<<< left_content.py
+     async def _trigger_scoped(self, event_data):
+         machine = event_data.machine
+         model = event_data.model
+-        state_tree = machine.build_state_tree(getattr(model, machine.model_attribute), machine.state_cls.separator)
++        state_tree = machine._build_state_tree(getattr(model, machine.model_attribute), machine.state_cls.separator)
+         state_tree = reduce(dict.get, machine.get_global_name(join=False), state_tree)
++=======
++    async def _trigger(self, _model, _machine, *args, **kwargs):
++        state_tree = _machine.build_state_tree(getattr(_model, _machine.model_attribute), _machine.state_cls.separator)
++        state_tree = reduce(dict.get, _machine.get_global_name(join=False), state_tree)
++>>>>>>> right_content.py
+         ordered_states = _resolve_order(state_tree)
+         done = set()
+         event_data.event = self
+@@ -300,11 +328,31 @@ class NestedAsyncEvent(NestedEvent):
+         await machine.callbacks(event_data.machine.prepare_event, event_data)
+         _LOGGER.debug("%sExecuted machine preparation callbacks before conditions.", machine.name)
+ 
++<<<<<<< left_content.py
+         for trans in self.transitions[event_data.source_name]:
+             event_data.transition = trans
+             event_data.result = await trans.execute(event_data)
+             if event_data.result:
+                 break
++=======
++        try:
++            for trans in self.transitions[event_data.source_name]:
++                event_data.transition = trans
++                if await trans.execute(event_data):
++                    event_data.result = True
++                    break
++        # we want to catch every exception during the execution of an event and pass it to the user
++        except Exception as err:  # pylint: disable=broad-except
++            event_data.error = err
++            if self.machine.on_exception:
++                await self.machine.callbacks(self.machine.on_exception, event_data)
++            else:
++                raise
++        finally:
++            await machine.callbacks(machine.finalize_event, event_data)
++            _LOGGER.debug("%sExecuted machine finalize callbacks", machine.name)
++        return event_data.result
++>>>>>>> right_content.py
+ 
+ 
+ class AsyncMachine(Machine):
+@@ -545,8 +593,13 @@ class HierarchicalAsyncMachine(HierarchicalMachine, AsyncMachine):
+     async def _trigger_event(self, event_data, _trigger, _state_tree):
+         model = event_data.model
+         if _state_tree is None:
++<<<<<<< left_content.py
++            _state_tree = self._build_state_tree(listify(getattr(model, self.model_attribute)),
++                                                 self.state_cls.separator)
++=======
+             _state_tree = self.build_state_tree(listify(getattr(_model, self.model_attribute)),
+                                                 self.state_cls.separator)
++>>>>>>> right_content.py
+         res = {}
+         for key, value in _state_tree.items():
+             if value:
+@@ -673,3 +726,4 @@ class _DictionaryMock(dict):
+ 
+     def __repr__(self):
+         return repr("{{'*': {0}}}".format(self._value))
++

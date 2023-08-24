@@ -1,0 +1,550 @@
+diff --git a/java_case_studies/reference_repos/mongojack/conflict1/desired.java b/java_case_studies/demo_results/MethodUnion/mongojack-conflict1.java
+index f79c24b..5038e5c 100644
+--- a/java_case_studies/reference_repos/mongojack/conflict1/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/mongojack-conflict1.java
+@@ -15,7 +15,6 @@
+  * limitations under the License.
+  */
+ package org.mongojack;
+-
+ import com.fasterxml.jackson.databind.JavaType;
+ import com.fasterxml.jackson.databind.ObjectMapper;
+ import com.mongodb.MongoBulkWriteException;
+@@ -53,7 +52,6 @@ import org.mongojack.internal.util.DistinctIterableDecorator;
+ import org.mongojack.internal.util.DocumentSerializationUtils;
+ import org.mongojack.internal.util.FindIterableDecorator;
+ import org.mongojack.internal.util.MapReduceIterableDecorator;
+-
+ import java.lang.reflect.AnnotatedElement;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+@@ -63,64 +61,47 @@ import java.util.Optional;
+ import java.util.concurrent.atomic.AtomicReference;
+ import java.util.stream.Collectors;
+ 
+-/**
+- * A DBCollection that marshals/demarshals objects to/from Jackson annotated
+- * classes. It provides a very thin wrapper over an existing MongoCollection.
+- * <p>
+- * A JacksonMongoCollection is threadsafe, with a few caveats:
+- * <p>
+- * If you pass your own ObjectMapper to it, it is not thread safe to reconfigure
+- * that ObjectMapper at all after creating it. The setWritePreference and a few
+- * other methods on JacksonMongoCollection should not be called from multiple
+- * threads
+- * <p>
+- * Obtain an instance using JacksonMongoCollection.builder()...build()
+- * <p>
+- * Many of these methods accept queries or update documents in Bson format.  You can assemble
+- * the Bson any way you want, including using Document:
+- *
+- * <pre>
+- *     new Document("foo", new Document("$gt", 7))
+- * </pre>
+- * <p>
+- * or using the mongo model builders for these objects:
+- *
+- * <pre>
+- *     Filters.eq("foo", 7))
+- *
+- *     Updates.inc("bar", 3)
+- * </pre>
+- *
+- * @author James Roper
+- * @since 1.0
+- */
+ @SuppressWarnings({"UnusedReturnValue"})
+-public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TResult> {
++public class JacksonMongoCollection <TResult> extends MongoCollectionDecorator<TResult>{
+ 
+-    private static final AtomicReference<ObjectMapper> DEFAULT_OBJECT_MAPPER = new AtomicReference<>();
+-    private final ObjectMapper objectMapper;
+-    private final JacksonCodecRegistry jacksonCodecRegistry;
++    private static final AtomicReference<ObjectMapper> DEFAULT_OBJECT_MAPPER = new AtomicReference<>();,
++    private final ObjectMapper objectMapper;,
++    private final JacksonCodecRegistry jacksonCodecRegistry;,
+     @SuppressWarnings("FieldCanBeLocal")
+-    private final Class<?> view;
+-    private final Class<TResult> valueClass;
+-    private final JavaType type;
+-    private final com.mongodb.client.MongoCollection<TResult> mongoCollection;
+-    private final SerializationOptions serializationOptions;
++    private final Class<?> view;,
++    private final Class<TResult> valueClass;,
++    private final JavaType type;,
++    private final com.mongodb.client.MongoCollection<TResult> mongoCollection;,
++    private final SerializationOptions serializationOptions;,
+ 
+     /**
+      * Private.
+      */
++
+     private JacksonMongoCollection(
+-        MongoCollection<TResult> mongoCollection,
++        com.mongodb.client.MongoCollection<TResult> mongoCollection,
++        ObjectMapper objectMapper,
++        Class<TResult> valueClass,
++        Class<?> view
++    ) {
++        this.objectMapper = objectMapper != null ? objectMapper : getDefaultObjectMapper();
++        this.view = view;
++        jacksonCodecRegistry = new JacksonCodecRegistry(this.objectMapper, this.view);
++        jacksonCodecRegistry.addCodecForClass(valueClass);
++        this.mongoCollection = mongoCollection.withDocumentClass(valueClass).withCodecRegistry(jacksonCodecRegistry);
++        this.valueClass = valueClass;
++        this.type = this.objectMapper.constructType(valueClass);
++    }
++
++    private JacksonMongoCollection(
++        com.mongodb.client.MongoCollection<TResult> mongoCollection,
+         ObjectMapper objectMapper,
+         Class<TResult> valueClass,
+         Class<?> view,
+-        final SerializationOptions serializationOptions,
+         final UuidRepresentation uuidRepresentation
+     ) {
+         this.objectMapper = objectMapper != null ? objectMapper : getDefaultObjectMapper();
+         this.view = view;
+-        this.serializationOptions = serializationOptions;
+         final MongoCollection<TResult> underlyingCollection = mongoCollection.withDocumentClass(valueClass);
+         jacksonCodecRegistry = new JacksonCodecRegistry(this.objectMapper, underlyingCollection.getCodecRegistry(), this.view, uuidRepresentation);
+         jacksonCodecRegistry.addCodecForClass(valueClass);
+@@ -129,9 +110,39 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+         this.type = this.objectMapper.constructType(valueClass);
+     }
+ 
+-    /**
+-     * Private.
+-     */
++    private JacksonMongoCollection(
++        MongoCollection<TResult> mongoCollection,
++        ObjectMapper objectMapper,
++        Class<TResult> valueClass,
++        Class<?> view,
++        final SerializationOptions serializationOptions
++    ) {
++        this.objectMapper = objectMapper != null ? objectMapper : getDefaultObjectMapper();
++        this.view = view;
++        this.serializationOptions = serializationOptions;
++        jacksonCodecRegistry = new JacksonCodecRegistry(this.objectMapper, this.view);
++        jacksonCodecRegistry.addCodecForClass(valueClass);
++        this.mongoCollection = mongoCollection.withDocumentClass(valueClass).withCodecRegistry(jacksonCodecRegistry);
++        this.valueClass = valueClass;
++        this.type = this.objectMapper.constructType(valueClass);
++    }
++
++    private JacksonMongoCollection(
++        final ObjectMapper objectMapper,
++        final JacksonCodecRegistry jacksonCodecRegistry,
++        final Class<?> view,
++        final Class<TResult> valueClass,
++        final JavaType type,
++        final MongoCollection<TResult> mongoCollection
++    ) {
++        this.objectMapper = objectMapper;
++        this.jacksonCodecRegistry = jacksonCodecRegistry;
++        this.view = view;
++        this.valueClass = valueClass;
++        this.type = type;
++        this.mongoCollection = mongoCollection;
++    }
++
+     private JacksonMongoCollection(
+         final ObjectMapper objectMapper,
+         final JacksonCodecRegistry jacksonCodecRegistry,
+@@ -155,6 +166,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      *
+      * @return The default object mapper.
+      */
++
+     private static ObjectMapper getDefaultObjectMapper() {
+         return DEFAULT_OBJECT_MAPPER.updateAndGet((current) -> {
+             if (current == null) {
+@@ -169,6 +181,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      *
+      * @return created builder
+      */
++
+     public static JacksonMongoCollectionBuilder builder() {
+         return new JacksonMongoCollectionBuilder();
+     }
+@@ -179,6 +192,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @return the object found, or <code>null</code> if the collection is empty
+      * @throws MongoException If an error occurred
+      */
++
+     public TResult findOne() throws MongoException {
+         return findOne(new Document());
+     }
+@@ -189,6 +203,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @param query the query object
+      * @return the object found, or <code>null</code> if no such object exists
+      */
++
+     public TResult findOne(Bson query) {
+         return find(query).first();
+     }
+@@ -200,6 +215,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @param projection the projection
+      * @return the object found, or <code>null</code> if no such object exists
+      */
++
+     public TResult findOne(Bson query, Bson projection) {
+         return find(query).projection(projection).first();
+     }
+@@ -211,6 +227,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @return The object
+      * @throws MongoException If an error occurred
+      */
++
+     public TResult findOneById(Object id) throws MongoException {
+         return findOne(createIdQuery(id));
+     }
+@@ -223,6 +240,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @param ids Other ids to search for
+      * @return A Bson query for the id or ids
+      */
++
+     public Bson createIdQuery(Object id, Object... ids) {
+         if (ids.length == 0) {
+             if (id instanceof BsonValue) {
+@@ -255,6 +273,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      *
+      * @return The type
+      */
++
+     public JacksonCollectionKey<TResult> getCollectionKey() {
+         return new JacksonCollectionKey<>(getMongoCollection().getNamespace().getDatabaseName(), getMongoCollection().getNamespace().getCollectionName(), getValueClass());
+     }
+@@ -264,6 +283,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      *
+      * @return The underlying mongo collection
+      */
++
+     public com.mongodb.client.MongoCollection<TResult> getMongoCollection() {
+         return mongoCollection;
+     }
+@@ -273,6 +293,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      *
+      * @return The name of the database in which this collection is being stored.
+      */
++
+     public String getDatabaseName() {
+         return mongoCollection.getNamespace().getDatabaseName();
+     }
+@@ -282,6 +303,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      *
+      * @return the name of the collection
+      */
++
+     public String getName() {
+         return mongoCollection.getNamespace().getCollectionName();
+     }
+@@ -297,6 +319,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @throws MongoBulkWriteException If there's an exception in the bulk write operation
+      * @throws MongoException          If an error occurred
+      */
++
+     @SafeVarargs
+     public final void insert(TResult... objects) throws MongoException, MongoBulkWriteException {
+         ArrayList<TResult> objectList = new ArrayList<>(objects.length);
+@@ -311,6 +334,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @throws MongoBulkWriteException If there's an exception in the bulk write operation
+      * @throws MongoException          If an error occurred
+      */
++
+     public void insert(List<TResult> list) throws MongoException, MongoBulkWriteException {
+         mongoCollection.insertMany(list);
+     }
+@@ -323,6 +347,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @throws MongoBulkWriteException If there's an exception in the bulk write operation
+      * @throws MongoException          If an error occurred
+      */
++
+     @SafeVarargs
+     public final void insert(WriteConcern concern, TResult... objects)
+         throws MongoException, MongoBulkWriteException {
+@@ -339,6 +364,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @throws MongoBulkWriteException If there's an exception in the bulk write operation
+      * @throws MongoException          If an error occurred
+      */
++
+     public void insert(List<TResult> list, WriteConcern concern)
+         throws MongoException {
+         mongoCollection.withWriteConcern(concern).insertMany(list);
+@@ -353,6 +379,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @throws MongoWriteConcernException If the write failed due being unable to fulfill the write concern
+      * @throws MongoException             If an error occurred
+      */
++
+     public DeleteResult removeById(Object _id) throws MongoException, MongoWriteException, MongoWriteConcernException {
+         return deleteOne(createIdQuery(_id));
+     }
+@@ -367,6 +394,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @throws MongoWriteConcernException If the write failed due being unable to fulfill the write concern
+      * @throws MongoException             If an error occurred
+      */
++
+     public UpdateResult replaceOneById(Object _id, TResult object) throws MongoException, MongoWriteException, MongoWriteConcernException {
+         return replaceOne(createIdQuery(_id), object);
+     }
+@@ -381,6 +409,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @throws MongoWriteConcernException If the write failed due being unable to fulfill the write concern
+      * @throws MongoException             If an error occurred
+      */
++
+     public UpdateResult save(TResult object) throws MongoWriteException, MongoWriteConcernException, MongoException {
+         return this.save(object, null);
+     }
+@@ -396,6 +425,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @throws MongoWriteConcernException If the write failed due being unable to fulfill the write concern
+      * @throws MongoException             If an error occurred
+      */
++
+     public UpdateResult save(TResult object, WriteConcern concern) throws MongoWriteException, MongoWriteConcernException, MongoException {
+         final JacksonCodec<TResult> codec = getValueClassCodec();
+         BsonValue _id = codec.getDocumentId(object);
+@@ -420,15 +450,15 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+         return (JacksonCodec<TResult>) jacksonCodecRegistry.get(valueClass);
+     }
+ 
+-    public SerializationOptions getSerializationOptions() {
+-        return serializationOptions;
+-    }
+-
+     @Override
+     protected MongoCollection<TResult> mongoCollection() {
+         return mongoCollection;
+     }
+ 
++    public SerializationOptions getSerializationOptions() {
++        return serializationOptions;
++    }
++
+     /**
+      * Serialize the fields of the given object using the object mapper
+      * for this collection.
+@@ -436,6 +466,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * <p>
+      * {@inheritDoc}
+      */
++
+     @Override
+     protected Bson manageUpdateBson(final Bson update) {
+         initializeIfNecessary(update);
+@@ -450,18 +481,12 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      *
+      * {@inheritDoc}
+      */
++
+     @Override
+     protected List<Bson> manageUpdatePipeline(final List<? extends Bson> update) {
+         return update.stream().map((u) -> u.toBsonDocument(Document.class, jacksonCodecRegistry)).collect(Collectors.toList());
+     }
+ 
+-    /**
+-     * Serialize the fields of the given object using the object mapper
+-     * for this collection.
+-     * This will convert POJOs to DBObjects where necessary.
+-     * <p>
+-     * {@inheritDoc}
+-     */
+     @Override
+     protected Bson manageFilterBson(final Bson filter) {
+         initializeIfNecessary(filter);
+@@ -482,6 +507,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      *
+      * @param pipeline a list of Bson documents making up an aggregation pipeline
+      */
++
+     @Override
+     @SuppressWarnings("unchecked")
+     protected List<Bson> manageAggregationPipeline(final List<? extends Bson> pipeline) {
+@@ -533,18 +559,13 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+     }
+ 
+     @Override
+-    protected <T1> FindIterable<T1> wrapIterable(final FindIterable<T1> input) {
+-        return new FindIterableDecorator<>(input, objectMapper, type, jacksonCodecRegistry, serializationOptions);
+-    }
+-
+-    @Override
+-    protected <T1> MapReduceIterable<T1> wrapIterable(final MapReduceIterable<T1> input) {
+-        return new MapReduceIterableDecorator<>(input, objectMapper, type, jacksonCodecRegistry, serializationOptions);
++    public String toString() {
++        return String.format("%s<%s, %s>", getClass().getName(), getMongoCollection().getNamespace().getFullName(), valueClass.getName());
+     }
+ 
+     @Override
+-    public String toString() {
+-        return String.format("%s<%s, %s>", getClass().getName(), getMongoCollection().getNamespace().getFullName(), valueClass.getName());
++    protected <T1> FindIterable<T1> wrapIterable(final FindIterable<T1> input) {
++        return new FindIterableDecorator<>(input, objectMapper, type, jacksonCodecRegistry, serializationOptions);
+     }
+ 
+     /**
+@@ -557,6 +578,12 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+      * @throws MongoWriteConcernException If the write failed due being unable to fulfill the write concern
+      * @throws MongoException             If an error occurred
+      */
++
++    @Override
++    protected <T1> MapReduceIterable<T1> wrapIterable(final MapReduceIterable<T1> input) {
++        return new MapReduceIterableDecorator<>(input, objectMapper, type, jacksonCodecRegistry, serializationOptions);
++    }
++
+     public UpdateResult updateById(Object _id, Bson update)
+         throws MongoException, MongoWriteException, MongoWriteConcernException {
+         return updateOne(
+@@ -609,6 +636,12 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+         );
+     }
+ 
++    private void initializeIfNecessary(Object maybeInitializable) {
++        if (maybeInitializable instanceof InitializationRequiredForTransformation) {
++            ((InitializationRequiredForTransformation) maybeInitializable).initialize(objectMapper, type, jacksonCodecRegistry);
++        }
++    }
++
+     @Override
+     public JacksonMongoCollection<TResult> withReadConcern(final ReadConcern readConcern) {
+         return new JacksonMongoCollection<>(
+@@ -622,19 +655,14 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+         );
+     }
+ 
+-    private void initializeIfNecessary(Object maybeInitializable) {
+-        if (maybeInitializable instanceof InitializationRequiredForTransformation) {
+-            ((InitializationRequiredForTransformation) maybeInitializable).initialize(objectMapper, type, jacksonCodecRegistry);
+-        }
+-    }
+-
+     /**
+      * Builder to build {@link JacksonMongoCollection}.
+      */
+-    public static final class JacksonMongoCollectionBuilder {
+-        private ObjectMapper objectMapper;
+-        private Class<?> view;
+-        private SerializationOptions serializationOptions = SerializationOptions.builder().build();
++
++    public static final class JacksonMongoCollectionBuilder{
++
++        private ObjectMapper objectMapper;,
++        private Class<?> view;,
+ 
+         private JacksonMongoCollectionBuilder() {
+         }
+@@ -645,27 +673,25 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+          * @param objectMapper The object mapper to use
+          * @return the builder
+          */
++
+         public JacksonMongoCollectionBuilder withObjectMapper(ObjectMapper objectMapper) {
+             this.objectMapper = objectMapper;
+             return this;
+         }
++        private SerializationOptions serializationOptions = SerializationOptions.builder().build();,
+ 
+         /**
+          * Set a view class for this collection.  Optional.
+          * @param view The jackson view class
+          * @return the builder
+          */
++
+         @SuppressWarnings("unused")
+         public JacksonMongoCollectionBuilder withView(Class<?> view) {
+             this.view = view;
+             return this;
+         }
+ 
+-        public JacksonMongoCollectionBuilder withSerializationOptions(final SerializationOptions serializationOptions) {
+-            this.serializationOptions = serializationOptions;
+-            return this;
+-        }
+-
+         /**
+          * Builds a {@link JacksonMongoCollection}. Required parameters are set here.
+          *
+@@ -676,6 +702,7 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+          * @param <CT>           The value type
+          * @return A constructed collection meeting the MongoCollection interface.
+          */
++
+         public <CT> JacksonMongoCollection<CT> build(MongoClient client, String databaseName, String collectionName, Class<CT> valueType, final UuidRepresentation uuidRepresentation) {
+             return build(client.getDatabase(databaseName), collectionName, valueType, uuidRepresentation);
+         }
+@@ -689,6 +716,12 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+          * @param <CT>         The value type
+          * @return A constructed collection meeting the MongoCollection interface.
+          */
++
++        public JacksonMongoCollectionBuilder withSerializationOptions(final SerializationOptions serializationOptions) {
++            this.serializationOptions = serializationOptions;
++            return this;
++        }
++
+         public <CT> JacksonMongoCollection<CT> build(MongoClient client, String databaseName, Class<CT> valueType, final UuidRepresentation uuidRepresentation) {
+             return build(client.getDatabase(databaseName), valueType, uuidRepresentation);
+         }
+@@ -702,6 +735,11 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+          * @param <CT>           The value type
+          * @return A constructed collection meeting the MongoCollection interface.
+          */
++
++        public <CT> JacksonMongoCollection<CT> build(MongoClient client, String databaseName, String collectionName, Class<CT> valueType) {
++            return build(client.getDatabase(databaseName), collectionName, valueType);
++        }
++
+         public <CT> JacksonMongoCollection<CT> build(MongoDatabase database, String collectionName, Class<CT> valueType, final UuidRepresentation uuidRepresentation) {
+             return build(database.getCollection(collectionName, valueType), valueType, uuidRepresentation);
+         }
+@@ -714,6 +752,11 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+          * @param <CT>           The value type
+          * @return A constructed collection meeting the MongoCollection interface.
+          */
++
++        public <CT> JacksonMongoCollection<CT> build(MongoClient client, String databaseName, Class<CT> valueType) {
++            return build(client.getDatabase(databaseName), valueType);
++        }
++
+         public <CT> JacksonMongoCollection<CT> build(MongoDatabase database, Class<CT> valueType, final UuidRepresentation uuidRepresentation) {
+             final org.mongojack.MongoCollection annotation = valueType.getAnnotation(org.mongojack.MongoCollection.class);
+             if (annotation == null) {
+@@ -722,6 +765,10 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+             return build(database.getCollection(annotation.name(), valueType), valueType, uuidRepresentation);
+         }
+ 
++        public <CT> JacksonMongoCollection<CT> build(MongoDatabase database, String collectionName, Class<CT> valueType) {
++            return build(database.getCollection(collectionName, valueType), valueType);
++        }
++
+         /**
+          * Builds a {@link JacksonMongoCollection}. Required parameters are set here.
+          *
+@@ -730,11 +777,22 @@ public class JacksonMongoCollection<TResult> extends MongoCollectionDecorator<TR
+          * @param <CT>            The value type of the collection
+          * @return                A constructed collection
+          */
++
+         public <CT> JacksonMongoCollection<CT> build(com.mongodb.client.MongoCollection<CT> mongoCollection, Class<CT> valueType, final UuidRepresentation uuidRepresentation) {
+-            return new JacksonMongoCollection<>(mongoCollection, this.objectMapper, valueType, view, serializationOptions, uuidRepresentation);
++            return new JacksonMongoCollection<>(mongoCollection, this.objectMapper, valueType, view, uuidRepresentation);
+         }
+ 
+-    }
++        public <CT> JacksonMongoCollection<CT> build(MongoDatabase database, Class<CT> valueType) {
++            final org.mongojack.MongoCollection annotation = valueType.getAnnotation(org.mongojack.MongoCollection.class);
++            if (annotation == null) {
++                throw new IllegalArgumentException("You can only use the builder methods without explicit collection names if you have a class annotated with org.mongojack.MongoCollection");
++            }
++            return build(database.getCollection(annotation.name(), valueType), valueType);
++        }
+ 
+-}
++        public <CT> JacksonMongoCollection<CT> build(com.mongodb.client.MongoCollection<CT> mongoCollection, Class<CT> valueType) {
++            return new JacksonMongoCollection<>(mongoCollection, this.objectMapper, valueType, view, serializationOptions);
++        }
+ 
++    }
++}
+\ No newline at end of file

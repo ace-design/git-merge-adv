@@ -1,0 +1,392 @@
+diff --git a/java_case_studies/reference_repos/stateless4j/conflict3/desired.java b/java_case_studies/reference_repos/stateless4j/conflict3/spork_result.java
+index 64d4dcb..98866e4 100644
+--- a/java_case_studies/reference_repos/stateless4j/conflict3/desired.java
++++ b/java_case_studies/reference_repos/stateless4j/conflict3/spork_result.java
+@@ -5,14 +5,17 @@ import com.github.oxo42.stateless4j.transitions.Transition;
+ import com.github.oxo42.stateless4j.transitions.TransitioningTriggerBehaviour;
+ import com.github.oxo42.stateless4j.triggers.*;
+ 
+-public class StateConfiguration<TState , TTrigger > {
++
++public class StateConfiguration<TState, TTrigger> {
+     private static final FuncBoolean NO_GUARD = new FuncBoolean() {
+         @Override
+         public boolean call() {
+             return true;
+         }
+     };
++
+     private final StateRepresentation<TState, TTrigger> representation;
++
+     private final Func2<TState, StateRepresentation<TState, TTrigger>> lookup;
+ 
+     public StateConfiguration(final StateRepresentation<TState, TTrigger> representation, final Func2<TState, StateRepresentation<TState, TTrigger>> lookup) {
+@@ -22,7 +25,6 @@ public class StateConfiguration<TState , TTrigger > {
+         this.lookup = lookup;
+     }
+ 
+-
+     /**
+      * Accept the specified trigger and transition to the destination state
+      *
+@@ -35,7 +37,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return publicPermit(trigger, destinationState);
+     }
+ 
+-
+     /**
+      * Accept the specified trigger and transition to the destination state
+      *
+@@ -49,7 +50,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return publicPermitIf(trigger, destinationState, guard);
+     }
+ 
+-
+     /**
+      * Accept the specified trigger, execute exit actions and re-execute entry actions. Reentry behaves as though the
+      * configured state transitions to an identical sibling state
+@@ -64,7 +64,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return publicPermit(trigger, representation.getUnderlyingState());
+     }
+ 
+-
+     /**
+      * Accept the specified trigger, execute exit actions and re-execute entry actions. Reentry behaves as though the
+      * configured state transitions to an identical sibling state
+@@ -80,7 +79,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return publicPermitIf(trigger, representation.getUnderlyingState(), guard);
+     }
+ 
+-
+     /**
+      * ignore the specified trigger when in the configured state
+      *
+@@ -91,7 +89,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return ignoreIf(trigger, NO_GUARD);
+     }
+ 
+-
+     /**
+      * ignore the specified trigger when in the configured state, if the guard returns true
+      *
+@@ -99,13 +96,12 @@ public class StateConfiguration<TState , TTrigger > {
+      * @param guard   Function that must return true in order for the trigger to be ignored
+      * @return The receiver
+      */
+-    public StateConfiguration<TState, TTrigger> ignoreIf(TTrigger trigger, Func<Boolean> guard) {
++    public StateConfiguration<TState, TTrigger> ignoreIf(TTrigger trigger, FuncBoolean guard) {
+         assert guard != null : "guard is null";
+         representation.addTriggerBehaviour(new IgnoredTriggerBehaviour<TState, TTrigger>(trigger, guard));
+         return this;
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning into the configured state
+      *
+@@ -121,7 +117,6 @@ public class StateConfiguration<TState , TTrigger > {
+         });
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning into the configured state
+      *
+@@ -138,7 +133,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return this;
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning into the configured state
+      *
+@@ -155,7 +149,6 @@ public class StateConfiguration<TState , TTrigger > {
+         });
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning into the configured state
+      *
+@@ -173,7 +166,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return this;
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning into the configured state
+      *
+@@ -192,7 +184,6 @@ public class StateConfiguration<TState , TTrigger > {
+         }, classe0);
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning into the configured state
+      *
+@@ -208,13 +199,12 @@ public class StateConfiguration<TState , TTrigger > {
+         representation.addEntryAction(trigger.getTrigger(), new Action2<Transition<TState, TTrigger>, Object[]>() {
+             @SuppressWarnings("unchecked")
+             public void doIt(Transition<TState, TTrigger> t, Object[] arg2) {
+-                entryAction.doIt((TArg0) arg2[0], t);
++                entryAction.doIt(((TArg0) (arg2[0])), t);
+             }
+         });
+         return this;
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning into the configured state
+      *
+@@ -235,7 +225,6 @@ public class StateConfiguration<TState , TTrigger > {
+         }, classe0, classe1);
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning into the configured state
+      *
+@@ -253,15 +242,12 @@ public class StateConfiguration<TState , TTrigger > {
+         representation.addEntryAction(trigger.getTrigger(), new Action2<Transition<TState, TTrigger>, Object[]>() {
+             @SuppressWarnings("unchecked")
+             public void doIt(Transition<TState, TTrigger> t, Object[] args) {
+-                entryAction.doIt(
+-                        (TArg0) args[0],
+-                        (TArg1) args[1], t);
++                entryAction.doIt(((TArg0) (args[0])), ((TArg1) (args[1])), t);
+             }
+         });
+         return this;
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning into the configured state
+      *
+@@ -284,7 +270,6 @@ public class StateConfiguration<TState , TTrigger > {
+         }, classe0, classe1, classe2);
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning into the configured state
+      *
+@@ -304,16 +289,12 @@ public class StateConfiguration<TState , TTrigger > {
+         representation.addEntryAction(trigger.getTrigger(), new Action2<Transition<TState, TTrigger>, Object[]>() {
+             @SuppressWarnings("unchecked")
+             public void doIt(Transition<TState, TTrigger> t, Object[] args) {
+-                entryAction.doIt(
+-                        (TArg0) args[0],
+-                        (TArg1) args[1],
+-                        (TArg2) args[2], t);
++                entryAction.doIt(((TArg0) (args[0])), ((TArg1) (args[1])), ((TArg2) (args[2])), t);
+             }
+         });
+         return this;
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning from the configured state
+      *
+@@ -329,7 +310,6 @@ public class StateConfiguration<TState , TTrigger > {
+         });
+     }
+ 
+-
+     /**
+      * Specify an action that will execute when transitioning from the configured state
+      *
+@@ -342,7 +322,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return this;
+     }
+ 
+-
+     /**
+      * Sets the superstate that the configured state is a substate of
+      * <p/>
+@@ -362,7 +341,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return this;
+     }
+ 
+-
+     /**
+      * Accept the specified trigger and transition to the destination state, calculated dynamically by the supplied
+      * function
+@@ -375,7 +353,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return permitDynamicIf(trigger, destinationStateSelector, NO_GUARD);
+     }
+ 
+-
+     /**
+      * Accept the specified trigger and transition to the destination state, calculated dynamically by the supplied
+      * function
+@@ -389,7 +366,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return permitDynamicIf(trigger, destinationStateSelector, NO_GUARD);
+     }
+ 
+-
+     /**
+      * Accept the specified trigger and transition to the destination state, calculated dynamically by the supplied
+      * function
+@@ -400,9 +376,7 @@ public class StateConfiguration<TState , TTrigger > {
+      * @param <TArg1>                  Type of the second trigger argument
+      * @return The receiver
+      */
+-    public <TArg0, TArg1> StateConfiguration<TState, TTrigger> permitDynamic(
+-            TriggerWithParameters2<TArg0, TArg1, TState, TTrigger> trigger,
+-            Func3<TArg0, TArg1, TState> destinationStateSelector) {
++    public <TArg0, TArg1> StateConfiguration<TState, TTrigger> permitDynamic(TriggerWithParameters2<TArg0, TArg1, TState, TTrigger> trigger, Func3<TArg0, TArg1, TState> destinationStateSelector) {
+         return permitDynamicIf(trigger, destinationStateSelector, NO_GUARD);
+     }
+ 
+@@ -421,7 +395,6 @@ public class StateConfiguration<TState , TTrigger > {
+         return permitDynamicIf(trigger, destinationStateSelector, NO_GUARD);
+     }
+ 
+-
+     /**
+      * Accept the specified trigger and transition to the destination state, calculated dynamically by the supplied
+      * function
+@@ -431,13 +404,8 @@ public class StateConfiguration<TState , TTrigger > {
+      * @param guard                    Function that must return true in order for the  trigger to be accepted
+      * @return The reciever
+      */
+-<<<<<<< HEAD
+     public StateConfiguration<TState, TTrigger> permitDynamicIf(TTrigger trigger, final Func<TState> destinationStateSelector, FuncBoolean guard) {
+-        Enforce.argumentNotNull(destinationStateSelector, "destinationStateSelector");
+-=======
+-    public StateConfiguration<TState, TTrigger> permitDynamicIf(TTrigger trigger, final Func<TState> destinationStateSelector, Func<Boolean> guard) {
+         assert destinationStateSelector != null : "destinationStateSelector is null";
+->>>>>>> 6ba3bc5f65b7182fa6a45cac78f141c43eda5378
+         return publicPermitDynamicIf(trigger, new Func2<Object[], TState>() {
+             public TState call(Object[] arg0) {
+                 return destinationStateSelector.call();
+@@ -445,7 +413,6 @@ public class StateConfiguration<TState , TTrigger > {
+         }, guard);
+     }
+ 
+-
+     /**
+      * Accept the specified trigger and transition to the destination state, calculated dynamically by the supplied
+      * function
+@@ -456,25 +423,15 @@ public class StateConfiguration<TState , TTrigger > {
+      * @param <TArg0>                  Type of the first trigger argument
+      * @return The reciever
+      */
+-<<<<<<< HEAD
+     public <TArg0> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters1<TArg0, TState, TTrigger> trigger, final Func2<TArg0, TState> destinationStateSelector, FuncBoolean guard) {
+-        Enforce.argumentNotNull(trigger, "trigger");
+-        Enforce.argumentNotNull(destinationStateSelector, "destinationStateSelector");
+-=======
+-    public <TArg0> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters1<TArg0, TState, TTrigger> trigger, final Func2<TArg0, TState> destinationStateSelector, Func<Boolean> guard) {
+         assert trigger != null : "trigger is null";
+         assert destinationStateSelector != null : "destinationStateSelector is null";
+->>>>>>> 6ba3bc5f65b7182fa6a45cac78f141c43eda5378
+-        return publicPermitDynamicIf(
+-                trigger.getTrigger(), new Func2<Object[], TState>() {
+-                    @SuppressWarnings("unchecked")
+-                    public TState call(Object[] args) {
+-                        return destinationStateSelector.call((TArg0) args[0]);
+-
+-                    }
+-                },
+-                guard
+-        );
++        return publicPermitDynamicIf(trigger.getTrigger(), new Func2<Object[], TState>() {
++            @SuppressWarnings("unchecked")
++            public TState call(Object[] args) {
++                return destinationStateSelector.call(((TArg0) (args[0])));
++            }
++        }, guard);
+     }
+ 
+     /**
+@@ -488,27 +445,15 @@ public class StateConfiguration<TState , TTrigger > {
+      * @param <TArg1>                  Type of the second trigger argument
+      * @return The reciever
+      */
+-<<<<<<< HEAD
+     public <TArg0, TArg1> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters2<TArg0, TArg1, TState, TTrigger> trigger, final Func3<TArg0, TArg1, TState> destinationStateSelector, FuncBoolean guard) {
+-        Enforce.argumentNotNull(trigger, "trigger");
+-        Enforce.argumentNotNull(destinationStateSelector, "destinationStateSelector");
+-=======
+-    public <TArg0, TArg1> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters2<TArg0, TArg1, TState, TTrigger> trigger, final Func3<TArg0, TArg1, TState> destinationStateSelector, Func<Boolean> guard) {
+         assert trigger != null : "trigger is null";
+         assert destinationStateSelector != null : "destinationStateSelector is null";
+->>>>>>> 6ba3bc5f65b7182fa6a45cac78f141c43eda5378
+-        return publicPermitDynamicIf(
+-                trigger.getTrigger(), new Func2<Object[], TState>() {
+-                    @SuppressWarnings("unchecked")
+-
+-                    public TState call(Object[] args) {
+-                        return destinationStateSelector.call(
+-                                (TArg0) args[0],
+-                                (TArg1) args[1]);
+-                    }
+-                },
+-                guard
+-        );
++        return publicPermitDynamicIf(trigger.getTrigger(), new Func2<Object[], TState>() {
++            @SuppressWarnings("unchecked")
++            public TState call(Object[] args) {
++                return destinationStateSelector.call(((TArg0) (args[0])), ((TArg1) (args[1])));
++            }
++        }, guard);
+     }
+ 
+     /**
+@@ -523,28 +468,15 @@ public class StateConfiguration<TState , TTrigger > {
+      * @param <TArg2>                  Type of the third trigger argument
+      * @return The reciever
+      */
+-<<<<<<< HEAD
+     public <TArg0, TArg1, TArg2> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters3<TArg0, TArg1, TArg2, TState, TTrigger> trigger, final Func4<TArg0, TArg1, TArg2, TState> destinationStateSelector, FuncBoolean guard) {
+-        Enforce.argumentNotNull(trigger, "trigger");
+-        Enforce.argumentNotNull(destinationStateSelector, "destinationStateSelector");
+-=======
+-    public <TArg0, TArg1, TArg2> StateConfiguration<TState, TTrigger> permitDynamicIf(TriggerWithParameters3<TArg0, TArg1, TArg2, TState, TTrigger> trigger, final Func4<TArg0, TArg1, TArg2, TState> destinationStateSelector, Func<Boolean> guard) {
+         assert trigger != null : "trigger is null";
+         assert destinationStateSelector != null : "destinationStateSelector is null";
+->>>>>>> 6ba3bc5f65b7182fa6a45cac78f141c43eda5378
+-        return publicPermitDynamicIf(
+-                trigger.getTrigger(), new Func2<Object[], TState>() {
+-                    @SuppressWarnings("unchecked")
+-
+-                    public TState call(Object[] args) {
+-                        return destinationStateSelector.call(
+-                                (TArg0) args[0],
+-                                (TArg1) args[1],
+-                                (TArg2) args[2]
+-                        );
+-                    }
+-                }, guard
+-        );
++        return publicPermitDynamicIf(trigger.getTrigger(), new Func2<Object[], TState>() {
++            @SuppressWarnings("unchecked")
++            public TState call(Object[] args) {
++                return destinationStateSelector.call(((TArg0) (args[0])), ((TArg1) (args[1])), ((TArg2) (args[2])));
++            }
++        }, guard);
+     }
+ 
+     void enforceNotIdentityTransition(TState destination) {
+@@ -557,7 +489,7 @@ public class StateConfiguration<TState , TTrigger > {
+         return publicPermitIf(trigger, destinationState, NO_GUARD);
+     }
+ 
+-    StateConfiguration<TState, TTrigger> publicPermitIf(TTrigger trigger, TState destinationState, Func<Boolean> guard) {
++    StateConfiguration<TState, TTrigger> publicPermitIf(TTrigger trigger, TState destinationState, FuncBoolean guard) {
+         assert guard != null : "guard is null";
+         representation.addTriggerBehaviour(new TransitioningTriggerBehaviour<>(trigger, destinationState, guard));
+         return this;
+@@ -567,7 +499,7 @@ public class StateConfiguration<TState , TTrigger > {
+         return publicPermitDynamicIf(trigger, destinationStateSelector, NO_GUARD);
+     }
+ 
+-    StateConfiguration<TState, TTrigger> publicPermitDynamicIf(TTrigger trigger, Func2<Object[], TState> destinationStateSelector, Func<Boolean> guard) {
++    StateConfiguration<TState, TTrigger> publicPermitDynamicIf(TTrigger trigger, Func2<Object[], TState> destinationStateSelector, FuncBoolean guard) {
+         assert destinationStateSelector != null : "destinationStateSelector is null";
+         assert guard != null : "guard is null";
+         representation.addTriggerBehaviour(new DynamicTriggerBehaviour<>(trigger, destinationStateSelector, guard));

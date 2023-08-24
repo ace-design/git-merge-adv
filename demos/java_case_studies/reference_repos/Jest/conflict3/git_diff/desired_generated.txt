@@ -1,0 +1,80 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict3/desired.java b/java_case_studies/demo_results/MethodUnion/Jest-conflict3.java
+index fd3de0c..4421fb6 100644
+--- a/java_case_studies/reference_repos/Jest/conflict3/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/Jest-conflict3.java
+@@ -1,52 +1,56 @@
+ package io.searchbox.indices.aliases;
+-
+ import io.searchbox.client.config.ElasticsearchVersion;
+ import java.util.Arrays;
+ import org.junit.Test;
+-
+ import static org.junit.Assert.assertEquals;
+ import static org.junit.Assert.assertNotEquals;
+ 
+-public class GetAliasesTest {
++public class GetAliasesTest{
++
+ 
+     @Test
+     public void testBasicUriGeneration() {
+         GetAliases getAliases = new GetAliases.Builder().addIndex("twitter").build();
+ 
+         assertEquals("GET", getAliases.getRestMethodName());
+-        assertEquals("twitter/_alias", getAliases.getURI(ElasticsearchVersion.UNKNOWN));
++<<<<<<< left_content.java
++        assertEquals("twitter/_alias", getAliases.getURI());
++=======
++        assertEquals("twitter/_aliases", getAliases.getURI(ElasticsearchVersion.UNKNOWN));
++>>>>>>> right_content.java
+     }
+ 
++
+     @Test
+-    public void testBasicUriGenerationWithAliases() {
+-        GetAliases getAliases = new GetAliases.Builder().addIndex("twitter").addAlias("alias").build();
++    public void equalsReturnsTrueForSameIndex() {
++        GetAliases getAliases1 = new GetAliases.Builder().addIndex("twitter").build();
++        GetAliases getAliases1Duplicate = new GetAliases.Builder().addIndex("twitter").build();
+ 
+-        assertEquals("GET", getAliases.getRestMethodName());
+-        assertEquals("twitter/_alias/alias", getAliases.getURI(ElasticsearchVersion.UNKNOWN));
++        assertEquals(getAliases1, getAliases1Duplicate);
+     }
+ 
+     @Test
+-    public void testBasicUriGenerationWithMultipleAliases() {
+-        GetAliases getAliases = new GetAliases.Builder().addIndex("twitter").addAliases(Arrays.asList(new String[]{"alias1", "alias2"})).build();
++    public void testBasicUriGenerationWithAliases() {
++        GetAliases getAliases = new GetAliases.Builder().addIndex("twitter").addAlias("alias").build();
+ 
+         assertEquals("GET", getAliases.getRestMethodName());
+-        assertEquals("twitter/_alias/alias1,alias2", getAliases.getURI(ElasticsearchVersion.UNKNOWN));
++        assertEquals("twitter/_alias/alias", getAliases.getURI());
+     }
+ 
+     @Test
+-    public void equalsReturnsTrueForSameIndex() {
++    public void equalsReturnsFalseForDifferentIndex() {
+         GetAliases getAliases1 = new GetAliases.Builder().addIndex("twitter").build();
+-        GetAliases getAliases1Duplicate = new GetAliases.Builder().addIndex("twitter").build();
++        GetAliases getAliases2 = new GetAliases.Builder().addIndex("myspace").build();
+ 
+-        assertEquals(getAliases1, getAliases1Duplicate);
++        assertNotEquals(getAliases1, getAliases2);
+     }
+ 
+     @Test
+-    public void equalsReturnsFalseForDifferentIndex() {
+-        GetAliases getAliases1 = new GetAliases.Builder().addIndex("twitter").build();
+-        GetAliases getAliases2 = new GetAliases.Builder().addIndex("myspace").build();
++    public void testBasicUriGenerationWithMultipleAliases() {
++        GetAliases getAliases = new GetAliases.Builder().addIndex("twitter").addAliases(Arrays.asList(new String[]{"alias1", "alias2"})).build();
+ 
+-        assertNotEquals(getAliases1, getAliases2);
++        assertEquals("GET", getAliases.getRestMethodName());
++        assertEquals("twitter/_alias/alias1,alias2", getAliases.getURI());
+     }
+ 
+ }
+\ No newline at end of file

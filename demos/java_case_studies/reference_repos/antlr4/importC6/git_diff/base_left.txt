@@ -1,0 +1,24 @@
+diff --git a/java_case_studies/reference_repos/antlr4/importC6/base.java b/java_case_studies/reference_repos/antlr4/importC6/left.java
+index 5d72785..a35c6a4 100644
+--- a/java_case_studies/reference_repos/antlr4/importC6/base.java
++++ b/java_case_studies/reference_repos/antlr4/importC6/left.java
+@@ -31,7 +31,18 @@ package org.antlr.v4.automata;
+ 
+ import org.antlr.v4.misc.Utils;
+ import org.antlr.v4.parse.ANTLRParser;
+-import org.antlr.v4.runtime.atn.*;
++import org.antlr.v4.runtime.atn.ATN;
++import org.antlr.v4.runtime.atn.ATNSimulator;
++import org.antlr.v4.runtime.atn.ATNState;
++import org.antlr.v4.runtime.atn.ActionTransition;
++import org.antlr.v4.runtime.atn.AtomTransition;
++import org.antlr.v4.runtime.atn.DecisionState;
++import org.antlr.v4.runtime.atn.LoopEndState;
++import org.antlr.v4.runtime.atn.PredicateTransition;
++import org.antlr.v4.runtime.atn.RangeTransition;
++import org.antlr.v4.runtime.atn.RuleTransition;
++import org.antlr.v4.runtime.atn.SetTransition;
++import org.antlr.v4.runtime.atn.Transition;
+ import org.antlr.v4.runtime.misc.Interval;
+ import org.antlr.v4.runtime.misc.IntervalSet;
+ import org.antlr.v4.tool.Grammar;

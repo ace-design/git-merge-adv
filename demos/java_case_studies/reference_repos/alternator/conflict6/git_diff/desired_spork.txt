@@ -1,0 +1,104 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict6/desired.java b/java_case_studies/reference_repos/alternator/conflict6/spork_result.java
+index a2f8963..6809ed7 100644
+--- a/java_case_studies/reference_repos/alternator/conflict6/desired.java
++++ b/java_case_studies/reference_repos/alternator/conflict6/spork_result.java
+@@ -1,53 +1,42 @@
+ package com.amazonaws.services.dynamodb.model.transform;
+ 
+-
+ import com.amazonaws.AmazonClientException;
+ import com.amazonaws.services.dynamodb.model.AttributeValue;
+ import com.amazonaws.services.dynamodb.model.BatchGetItemResult;
+ import com.amazonaws.services.dynamodb.model.BatchResponse;
+ import com.amazonaws.transform.Marshaller;
+ import com.amazonaws.util.json.JSONWriter;
+-
+ import java.io.StringWriter;
+ import java.util.List;
+ import java.util.Map;
+ 
+-public class BatchGetItemResultMarshaller implements Marshaller<String, BatchGetItemResult> {
+ 
++public class BatchGetItemResultMarshaller implements Marshaller<String, BatchGetItemResult> {
+ 	public String marshall(BatchGetItemResult batchGetItemResult) {
+ 		if (batchGetItemResult == null) {
+ 			throw new AmazonClientException("Invalid argument passed to marshall(...)");
+ 		}
+-
+ 		try {
+ 			StringWriter stringWriter = new StringWriter();
+ 			JSONWriter jsonWriter = new JSONWriter(stringWriter);
+-
+-            //Begin whole object containing both response and unprocessed keys!
++												//Begin whole object containing both response and unprocessed keys!
+ 			jsonWriter.object();
+-
+-            //Begin response object
++												//Begin response object
+ 			jsonWriter.key("Responses").object();
+-
+-            Map<String, BatchResponse> responses = batchGetItemResult.getResponses();
+-
++			Map<String, BatchResponse> responses = batchGetItemResult.getResponses();
+ 			if (responses != null) {
+ 				for (String tableKey : responses.keySet()) {
+-
+-                    //Begin each table object
++																				//Begin each table object
+ 					jsonWriter.key(tableKey).object();
+-                    List<Map<String, AttributeValue>> items = responses.get(tableKey).getItems();
++					List<Map<String, AttributeValue>> items = responses.get(tableKey).getItems();
+ 					if (items != null) {
+-
+-                        //Begin array items (a series of items)
++																								//Begin array items (a series of items)
+ 						jsonWriter.key("Items").array();
+ 						for (Map<String, AttributeValue> item : items) {
+-
+-                            //Begin each objects constituting array items.No keys in these objects
++																												//Begin each objects constituting array items.No keys in these objects
+ 							jsonWriter.object();
+ 							for (String itemKey : item.keySet()) {
+-
+-                                //Begin attribute of each item
++																																//Begin attribute of each item
+ 								jsonWriter.key(itemKey).object();
+ 								AttributeValue value = item.get(itemKey);
+ 								if (value.getN() != null) {
+@@ -59,29 +48,26 @@ public class BatchGetItemResultMarshaller implements Marshaller<String, BatchGet
+ 								} else if (value.getSS() != null) {
+ 									jsonWriter.key("SS").value(value.getSS());
+ 								}
+-                                //End attribute of each item
++																																//End attribute of each item
+ 								jsonWriter.endObject();
+ 							}
+-                            //End each objects constituting array items.No keys in these objects
++																												//End each objects constituting array items.No keys in these objects
+ 							jsonWriter.endObject();
+ 						}
+-                        //End array items (a series of items)
++																								//End array items (a series of items)
+ 						jsonWriter.endArray();
+-
+ 						jsonWriter.key("ConsumedCapacityUnits").value(1);
+ 					}
+-                    //End each table object
++																				//End each table object
+ 					jsonWriter.endObject();
+ 				}
+-
+ 			}
+-            //End response object
++												//End whole object containing both response and unprocessed keys!
+ 			jsonWriter.endObject();
+-            //End whole object containing both response and unprocessed keys!
++												//End response object
+ 			jsonWriter.endObject();
+-
+ 			return stringWriter.toString();
+-		} catch (Throwable t) {
++		} catch (java.lang.Throwable t) {
+ 			throw new AmazonClientException("Unable to marshall request to JSON: " + t.getMessage(), t);
+ 		}
+ 	}

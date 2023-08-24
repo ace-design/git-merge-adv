@@ -1,0 +1,85 @@
+diff --git a/java_case_studies/reference_repos/antlr4/importC5/left.java b/java_case_studies/reference_repos/antlr4/importC5/right.java
+index f4a96b0..eb1b9a1 100644
+--- a/java_case_studies/reference_repos/antlr4/importC5/left.java
++++ b/java_case_studies/reference_repos/antlr4/importC5/right.java
+@@ -32,13 +32,14 @@ package org.antlr.v4.semantics;
+ import org.antlr.v4.analysis.LeftRecursiveRuleTransformer;
+ import org.antlr.v4.parse.ANTLRParser;
+ import org.antlr.v4.runtime.Token;
+-import org.antlr.v4.runtime.misc.Pair;
++import org.antlr.v4.runtime.misc.NotNull;
+ import org.antlr.v4.tool.ErrorType;
+ import org.antlr.v4.tool.Grammar;
+ import org.antlr.v4.tool.Rule;
+ import org.antlr.v4.tool.ast.GrammarAST;
+ 
+ import java.util.List;
++import java.util.Map;
+ 
+ /** Do as much semantic checking as we can and fill in grammar
+  *  with rules, actions, and token definitions.
+@@ -151,28 +152,51 @@ public class SemanticPipeline {
+ 			if ( def.getType()== ANTLRParser.ID ) G.defineTokenName(def.getText());
+ 		}
+ 
+-		// DEFINE TOKEN TYPES FOR NONFRAGMENT RULES
++		/* Define token types for nonfragment rules which do not include a 'type(...)'
++		 * or 'more' lexer command.
++		 */
+ 		for (Rule r : g.rules.values()) {
+-			if ( !r.isFragment() ) G.defineTokenName(r.name);
++			if ( !r.isFragment() && !hasTypeOrMoreCommand(r) ) {
++				G.defineTokenName(r.name);
++			}
+ 		}
+ 
+ 		// FOR ALL X : 'xxx'; RULES, DEFINE 'xxx' AS TYPE X
+-		List<Pair<GrammarAST,GrammarAST>> litAliases = Grammar.getStringLiteralAliasesFromLexerRules(g.ast);
++		Map<String,String> litAliases = Grammar.getStringLiteralAliasesFromLexerRules(g.ast);
+ 		if ( litAliases!=null ) {
+-			for (Pair<GrammarAST,GrammarAST> pair : litAliases) {
+-				GrammarAST nameAST = pair.a;
+-				GrammarAST litAST = pair.b;
+-				if ( !G.stringLiteralToTypeMap.containsKey(litAST.getText()) ) {
+-					G.defineTokenAlias(nameAST.getText(), litAST.getText());
+-				}
+-				else {
+-					g.tool.errMgr.grammarError(ErrorType.ALIAS_REASSIGNMENT,
+-											   g.fileName, nameAST.token,
+-											   litAST.getText(), nameAST.getText());
++			for (String lit : litAliases.keySet()) {
++				G.defineTokenAlias(litAliases.get(lit), lit);
++			}
++		}
++
++	}
++
++	boolean hasTypeOrMoreCommand(@NotNull Rule r) {
++		GrammarAST ast = r.ast;
++		if (ast == null) {
++			return false;
++		}
++
++		GrammarAST altActionAst = (GrammarAST)ast.getFirstDescendantWithType(ANTLRParser.LEXER_ALT_ACTION);
++		if (altActionAst == null) {
++			// the rule isn't followed by any commands
++			return false;
++		}
++
++		// first child is the alt itself, subsequent are the actions
++		for (int i = 1; i < altActionAst.getChildCount(); i++) {
++			GrammarAST node = (GrammarAST)altActionAst.getChild(i);
++			if (node.getType() == ANTLRParser.LEXER_ACTION_CALL) {
++				if ("type".equals(node.getChild(0).getText())) {
++					return true;
+ 				}
+ 			}
++			else if ("more".equals(node.getText())) {
++				return true;
++			}
+ 		}
+ 
++		return false;
+ 	}
+ 
+ 	void assignTokenTypes(Grammar g, List<GrammarAST> tokensDefs,

@@ -1,0 +1,45 @@
+diff --git a/python_case_studies/reference_repos/blaze/importC4/desired.py b/python_case_studies/demo_results/MethodUnion/blaze-importC4.py
+index 0d15065..4aa96a0 100644
+--- a/python_case_studies/reference_repos/blaze/importC4/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/blaze-importC4.py
+@@ -1,17 +1,17 @@
+-from __future__ import absolute_import, division, print_function
+-
++from __future__ import absolute_import,division,print_function
+ import numbers
+-from datetime import date, datetime
++from datetime import date,datetime
+ import toolz
+-from toolz import first, unique, assoc
++from toolz import first,unique,assoc,concat,memoize
+ import itertools
+ from collections import Iterator
++from compatibility import basestring
++from expr import Expr,Field,Symbol,symbol,Join,eval_str
++from dispatch import dispatch
+ import pandas as pd
+ from odo import odo
+ 
+-from ..compatibility import basestring
+-from ..expr import Expr, Field, Symbol, symbol, Join
+-from ..dispatch import dispatch
++
+ 
+ __all__ = ['compute', 'compute_up']
+ 
+@@ -202,6 +202,10 @@ _names = ('leaf_%d' % i for i in itertools.count(1))
+ _leaf_cache = dict()
+ _used_tokens = set()
+ 
++<<<<<<< left_content.py
++
++=======
++>>>>>>> right_content.py
+ def _reset_leaves():
+     _leaf_cache.clear()
+     _used_tokens.clear()
+@@ -423,3 +427,4 @@ def join_dataframe_to_selectable(expr, lhs, rhs, scope=None, **kwargs):
+         },
+         **kwargs
+     )
++

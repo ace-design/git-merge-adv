@@ -1,0 +1,51 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict18/desired.py b/python_case_studies/demo_results/MethodUnion/errbot-conflict18.py
+index da0f3b4..3254d6c 100644
+--- a/python_case_studies/reference_repos/errbot/conflict18/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/errbot-conflict18.py
+@@ -2,14 +2,21 @@ from __future__ import absolute_import
+ import logging
+ import sys
+ import warnings
+-
+ from errbot import holder
+ from errbot.backends.base import (
+-    Identifier, Message, MUCOccupant, MUCRoom, RoomError, RoomNotJoinedError,
+-    build_message, build_text_html_message_pair,
++    Identifier,
++    Message,
++    MUCOccupant,
++    MUCRoom,
++    RoomError,
++    RoomNotJoinedError,
++    build_message,
++    build_text_html_message_pair,
+ )
+ from errbot.errBot import ErrBot
+ from errbot.utils import RateLimited
++import config
++
+ 
+ try:
+     import irc.connection
+@@ -298,5 +305,21 @@ class IRCBackend(ErrBot):
+         channels = self.conn.channels.keys()
+         return [IRCMUCRoom(node=channel) for channel in channels]
+ 
++<<<<<<< left_content.py
+     def groupchat_reply_format(self):
+         return '{0}: {1}'
++=======
++    def send(self, user, text, in_reply_to=None, message_type='chat'):
++        """Sends a simple message to the specified user."""
++
++        nick_reply = config.__dict__.get('IRC_NICK_PREFIX_REPLY', False)
++
++        if in_reply_to and message_type == 'groupchat' and nick_reply:
++            super().send(user,
++                         '{}: {}'.format(in_reply_to.nick, text),
++                         in_reply_to,
++                         message_type)
++        else:
++            super().send(user, text, in_reply_to, message_type)
++>>>>>>> right_content.py
++

@@ -1,0 +1,80 @@
+diff --git a/python_case_studies/reference_repos/python-oauth2/conflict1/desired.py b/python_case_studies/demo_results/MethodUnion/python-oauth2-conflict1.py
+index 38bf520..d7662eb 100644
+--- a/python_case_studies/reference_repos/python-oauth2/conflict1/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/python-oauth2-conflict1.py
+@@ -1,3 +1,25 @@
++import base64
++from hashlib import sha1
++import time
++import random
++import hmac
++import binascii
++import httplib2
++from _compat import PY3
++from _compat import b
++from _compat import parse_qs
++from _compat import quote
++from _compat import STRING_TYPES
++from _compat import TEXT
++from _compat import u
++from _compat import unquote
++from _compat import unquote_to_bytes
++from _compat import urlencode
++from _compat import urlsplit
++from _compat import urlunsplit
++from _compat import urlparse
++from _compat import urlunparse
++from _version import __version__
+ """
+ The MIT License
+ 
+@@ -22,29 +44,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ """
+ 
+-import base64
+-from hashlib import sha1
+-import time
+-import random
+-import hmac
+-import binascii
+-import httplib2
+ 
+-from ._compat import PY3
+-from ._compat import b
+-from ._compat import parse_qs
+-from ._compat import quote
+-from ._compat import STRING_TYPES
+-from ._compat import TEXT
+-from ._compat import u
+-from ._compat import unquote
+-from ._compat import unquote_to_bytes
+-from ._compat import urlencode
+-from ._compat import urlsplit
+-from ._compat import urlunsplit
+-from ._compat import urlparse
+-from ._compat import urlunparse
+-from ._version import __version__
+ 
+ OAUTH_VERSION = '1.0'  # Hi Blaine!
+ HTTP_METHOD = 'GET'
+@@ -491,9 +491,13 @@ class Request(dict):
+             # section 4.1.1 "OAuth Consumers MUST NOT include an
+             # oauth_body_hash parameter on requests with form-encoded
+             # request bodies."
++<<<<<<< left_content.py
+             if not self.body:
+-               self.body = ''
++               self.body = ''.encode('utf-8')
++            self['oauth_body_hash'] = base64.b64encode(sha1(self.body).digest())
++=======
+             self['oauth_body_hash'] = base64.b64encode(sha1(to_utf8(self.body)).digest())
++>>>>>>> right_content.py
+ 
+         if 'oauth_consumer_key' not in self:
+             self['oauth_consumer_key'] = consumer.key
+@@ -864,3 +868,4 @@ class SignatureMethod_PLAINTEXT(SignatureMethod):
+     def sign(self, request, consumer, token):
+         key, raw = self.signing_base(request, consumer, token)
+         return raw.encode('utf8')
++

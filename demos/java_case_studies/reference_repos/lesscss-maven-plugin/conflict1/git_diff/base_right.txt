@@ -1,0 +1,13 @@
+diff --git a/java_case_studies/reference_repos/lesscss-maven-plugin/conflict1/base.java b/java_case_studies/reference_repos/lesscss-maven-plugin/conflict1/right.java
+index 9f8d495..19e71aa 100644
+--- a/java_case_studies/reference_repos/lesscss-maven-plugin/conflict1/base.java
++++ b/java_case_studies/reference_repos/lesscss-maven-plugin/conflict1/right.java
+@@ -126,7 +126,7 @@ public class CompileMojo extends AbstractLessCssMojo {
+ 				try {
+ 					LessSource lessSource = new LessSource(input);
+ 
+-					if (output.lastModified() < lessSource.getLastModifiedIncludingImports()) {
++					if (force || output.lastModified() < lessSource.getLastModifiedIncludingImports()) {
+ 						getLog().info("Compiling LESS source: " + file + "...");
+ 						lessCompiler.compile(lessSource, output, force);
+ 						buildContext.refresh(output);

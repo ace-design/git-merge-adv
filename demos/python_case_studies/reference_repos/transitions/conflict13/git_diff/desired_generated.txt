@@ -1,0 +1,36 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict13/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict13.py
+index cccddf2..10fbb23 100644
+--- a/python_case_studies/reference_repos/transitions/conflict13/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict13.py
+@@ -1,18 +1,17 @@
++import warnings
++import sys
++from utils import InheritedStuff
++from utils import Stuff
++from transitions import Machine,MachineError,State,EventData
++from transitions.core import listify,prep_ordered_arg
++from unittest import TestCase,skipIf
++from functools import partial
+ try:
+     from builtins import object
+ except ImportError:
+     pass
+ 
+-import warnings
+-import sys
+-
+-from .utils import InheritedStuff
+-from .utils import Stuff
+ 
+-from functools import partial
+-from transitions import Machine, MachineError, State, EventData
+-from transitions.core import listify, prep_ordered_arg
+-from unittest import TestCase, skipIf
+ 
+ try:
+     from unittest.mock import MagicMock
+@@ -901,3 +900,4 @@ class TestWarnings(TestCase):
+             self.assertEqual(len(w), 1)
+             for warn in w:
+                 self.assertEqual(warn.category, DeprecationWarning)
++

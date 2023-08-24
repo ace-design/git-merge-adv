@@ -1,0 +1,64 @@
+diff --git a/java_case_studies/reference_repos/maven/importC1/desired.java b/java_case_studies/demo_results/MethodUnion/maven-importC1.java
+index a7ff573..706bb08 100644
+--- a/java_case_studies/reference_repos/maven/importC1/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/maven-importC1.java
+@@ -1,5 +1,4 @@
+ package org.apache.maven.repository.internal;
+-
+ /*
+  * Licensed to the Apache Software Foundation (ASF) under one
+  * or more contributor license agreements.  See the NOTICE file
+@@ -18,17 +17,14 @@ package org.apache.maven.repository.internal;
+  * specific language governing permissions and limitations
+  * under the License.
+  */
+-
+ import java.io.FileInputStream;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.HashMap;
+ import java.util.List;
+ import java.util.Map;
+-
+ import javax.inject.Inject;
+ import javax.inject.Named;
+-
+ import org.apache.maven.artifact.repository.metadata.Versioning;
+ import org.apache.maven.artifact.repository.metadata.io.xpp3.MetadataXpp3Reader;
+ import org.codehaus.plexus.component.annotations.Component;
+@@ -64,29 +60,20 @@ import org.eclipse.aether.version.Version;
+ import org.eclipse.aether.version.VersionConstraint;
+ import org.eclipse.aether.version.VersionScheme;
+ 
+-/**
+- * @author Benjamin Bentmann
+- */
+ @Named
+ @Component( role = VersionRangeResolver.class )
+-public class DefaultVersionRangeResolver
+-    implements VersionRangeResolver, Service
+-{
+-
+-    private static final String MAVEN_METADATA_XML = "maven-metadata.xml";
++public class DefaultVersionRangeResolver implements VersionRangeResolver, Service{
+ 
++    private static final String MAVEN_METADATA_XML = "maven-metadata.xml";,
+     @SuppressWarnings( "unused" )
+     @Requirement( role = LoggerFactory.class )
+-    private Logger logger = NullLoggerFactory.LOGGER;
+-
++    private Logger logger = NullLoggerFactory.LOGGER;,
+     @Requirement
+-    private MetadataResolver metadataResolver;
+-
++    private MetadataResolver metadataResolver;,
+     @Requirement
+-    private SyncContextFactory syncContextFactory;
+-
++    private SyncContextFactory syncContextFactory;,
+     @Requirement
+-    private RepositoryEventDispatcher repositoryEventDispatcher;
++    private RepositoryEventDispatcher repositoryEventDispatcher;,
+ 
+     public DefaultVersionRangeResolver()
+     {

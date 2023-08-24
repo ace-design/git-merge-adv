@@ -1,0 +1,60 @@
+diff --git a/java_case_studies/reference_repos/openshift-java-client/conflict8/desired.java b/java_case_studies/reference_repos/openshift-java-client/conflict8/spork_result.java
+old mode 100755
+new mode 100644
+index 14fb660..24d7657
+--- a/java_case_studies/reference_repos/openshift-java-client/conflict8/desired.java
++++ b/java_case_studies/reference_repos/openshift-java-client/conflict8/spork_result.java
+@@ -10,29 +10,43 @@
+  ******************************************************************************/
+ package com.openshift.internal.client;
+ 
++import com.openshift.client.HttpMethod;
+ import com.openshift.client.OpenShiftException;
+ import com.openshift.internal.client.httpclient.IMediaType;
+ import com.openshift.internal.client.response.Link;
+ import com.openshift.internal.client.response.RestResponse;
+ 
++
+ /**
+  * @author Andre Dietisheim
+  */
+ public interface IRestService {
+-
+ 	public static final String SERVICE_VERSION = "1.2";
+ 
+-	public RestResponse request(Link link, RequestParameter... serviceParameters)
++	public abstract RestResponse request(Link link, RequestParameter... serviceParameters) throws OpenShiftException;
++
++	public abstract RestResponse request(Link link, int timeout, RequestParameter... serviceParameters) throws OpenShiftException;
++
++				public RestResponse request(Link link, int timeout, IMediaType mediaType, ServiceParameter... serviceParameters)
++				        throws OpenShiftException;
++
++	public abstract RestResponse request(Link link, Map<String, Object> parameters)
+ 			throws OpenShiftException;
+-	
+-	public RestResponse request(Link link, int timeout, RequestParameter... serviceParameters)
++
++	public abstract RestResponse request(Link link, int timeout, Map<String, Object> parameters)
+ 			throws OpenShiftException;
+ 
+-    public RestResponse request(Link link, IMediaType mediaType, int timeout, RequestParameter... requestParameters)
+-            throws OpenShiftException;
++				public abstract RestResponse request(Link link, int timeout, IMediaType mediaType, Map<String, Object> parameters)
++				        throws OpenShiftException;
++
++	public abstract String request(String url, HttpMethod httpMethod, RequestParameter... serviceParameters) throws OpenShiftException;
++
++	public abstract String request(String url, HttpMethod httpMethod, int timeout, RequestParameter... serviceParameters) throws OpenShiftException;
+ 
+-	public String getServiceUrl();
++				public abstract String request(String url, HttpMethod httpMethod, int timeout, IMediaType mediaType, Map<String, Object> parameters)
++				        throws OpenShiftException;
+ 
+-	public String getPlatformUrl();
++	public abstract String getServiceUrl();
+ 
+-}
+\ No newline at end of file
++	public abstract String getPlatformUrl();
++}

@@ -1,0 +1,105 @@
+diff --git a/java_case_studies/reference_repos/TwelveMonkeys/importC1/desired.java b/java_case_studies/demo_results/MethodUnion/TwelveMonkeys-importC1.java
+index 08dfc2a..a34b56d 100644
+--- a/java_case_studies/reference_repos/TwelveMonkeys/importC1/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/TwelveMonkeys-importC1.java
+@@ -27,42 +27,37 @@
+  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-
+ package com.twelvemonkeys.imageio.metadata.tiff;
+-
+ import com.twelvemonkeys.imageio.metadata.CompoundDirectory;
+ import com.twelvemonkeys.imageio.metadata.Directory;
+ import com.twelvemonkeys.imageio.metadata.Entry;
+ import com.twelvemonkeys.imageio.metadata.MetadataWriter;
+ import com.twelvemonkeys.lang.Validate;
+-
+ import javax.imageio.IIOException;
+ import javax.imageio.stream.ImageOutputStream;
+ import java.io.IOException;
+ import java.nio.ByteOrder;
+ import java.nio.charset.StandardCharsets;
+ import java.util.*;
+-
+ import static com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry.getType;
+ import static com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry.getValueLength;
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.Collections;
++import java.util.Comparator;
++import java.util.List;
+ 
+-/**
+- * TIFFWriter
+- *
+- * @author <a href="mailto:harald.kuhr@gmail.com">Harald Kuhr</a>
+- * @author last modified by $Author: haraldk$
+- * @version $Id: TIFFWriter.java,v 1.0 17.07.13 10:20 haraldk Exp$
+- */
+-public final class TIFFWriter extends MetadataWriter {
++public final class TIFFWriter extends MetadataWriter{
+ 
+-    private static final int WORD_LENGTH = 2;
+-    private static final int LONGWORD_LENGTH = 4;
++    private static final int WORD_LENGTH = 2;,
++    private static final int LONGWORD_LENGTH = 4;,
+ 
+     // TODO: We probably want to gloss over client code writing IFDs in BigTIFF (or vice versa) somehow... Silently convert IFD -> IFD8
+-    private final boolean longOffsets;
+-    private final int offsetSize;
+-    private final long entryLength;
+-    private final int directoryCountLength;
++    private static final long ENTRY_LENGTH = 12;,
++    private final boolean longOffsets;,
++    private final int offsetSize;,
++    private final long entryLength;,
++    private final int directoryCountLength;,
+ 
+     public TIFFWriter() {
+         this(LONGWORD_LENGTH);
+@@ -187,6 +182,10 @@ public final class TIFFWriter extends MetadataWriter {
+         return ifdOffset;
+     }
+ 
++    public long computeIFDSize(final Collection<Entry> directory) {
++        return WORD_LENGTH + computeDataSize(new IFD(directory)) + directory.size() * ENTRY_LENGTH;
++    }
++
+     private void writeDirectoryCount(ImageOutputStream stream, int count) throws IOException {
+         if (longOffsets) {
+             stream.writeLong(count);
+@@ -253,6 +252,10 @@ public final class TIFFWriter extends MetadataWriter {
+         return directory;
+     }
+ 
++    public int compare(Entry left, Entry right) {
++                    return (Integer) left.getIdentifier() - (Integer) right.getIdentifier();
++                }
++
+     private boolean isSorted(final Directory directory) {
+         int lastTag = 0;
+ 
+@@ -462,6 +465,14 @@ public final class TIFFWriter extends MetadataWriter {
+         }
+     }
+ 
++    private int assertIntegerOffset(long offset) throws IIOException {
++        if (offset > Integer.MAX_VALUE - (long) Integer.MIN_VALUE) {
++            throw new IIOException("Integer overflow for TIFF stream");
++        }
++
++        return (int) offset;
++    }
++
+     private void writeValueAt(final long dataOffset, final Object value, final short type, final ImageOutputStream stream) throws IOException {
+         writeOffset(stream, dataOffset);
+         long position = stream.getStreamPosition();
+@@ -498,4 +509,5 @@ public final class TIFFWriter extends MetadataWriter {
+ 
+         return offset;
+     }
+-}
++
++}
+\ No newline at end of file

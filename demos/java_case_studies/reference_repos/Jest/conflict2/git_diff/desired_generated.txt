@@ -1,0 +1,82 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict2/desired.java b/java_case_studies/demo_results/MethodUnion/Jest-conflict2.java
+index 11e19bf..097f807 100644
+--- a/java_case_studies/reference_repos/Jest/conflict2/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/Jest-conflict2.java
+@@ -1,24 +1,26 @@
+ package io.searchbox.indices.aliases;
+-
+-import com.google.common.base.Joiner;
+ import io.searchbox.action.AbstractMultiIndexActionBuilder;
++import com.google.common.base.Joiner;
+ import io.searchbox.action.GenericResultAbstractAction;
+ import io.searchbox.client.config.ElasticsearchVersion;
+ import java.util.Collection;
+ import java.util.LinkedHashSet;
+ import java.util.Set;
+ 
+-/**
+- * @author cihat keser
+- */
+-public class GetAliases extends GenericResultAbstractAction {
+-    protected String aliasName;
++public class GetAliases extends GenericResultAbstractAction{
++
++    protected String aliasName;,
+ 
+     protected GetAliases(Builder builder) {
+         super(builder);
++<<<<<<< left_content.java
+         aliasName = builder.getJoinedAliases();
++        setURI(buildURI());
++=======
++>>>>>>> right_content.java
+     }
+ 
++
+     @Override
+     public String getRestMethodName() {
+         return "GET";
+@@ -26,16 +28,26 @@ public class GetAliases extends GenericResultAbstractAction {
+ 
+     @Override
+     protected String buildURI(ElasticsearchVersion elasticsearchVersion) {
++        return super.buildURI(elasticsearchVersion) + "/_aliases";
++    }
++
++    @Override
++    protected String buildURI() {
+         if (aliasName == null){
+-            return super.buildURI(elasticsearchVersion) + "/_alias";
++            return super.buildURI() + "/_alias";
+         } else {
+-            return super.buildURI(elasticsearchVersion) + "/_alias/" + aliasName;
++            return super.buildURI() + "/_alias/" + aliasName;
+         }
+     }
+ 
+-    public static class Builder extends AbstractMultiIndexActionBuilder<GetAliases, Builder> {
++    public static class Builder extends AbstractMultiIndexActionBuilder<GetAliases, Builder>{
++
+ 
+-        protected Set<String> aliasNames = new LinkedHashSet<String>();
++        @Override
++        public GetAliases build() {
++            return new GetAliases(this);
++        }
++        protected Set<String> aliasNames = new LinkedHashSet<String>();,
+ 
+         public String getJoinedAliases() {
+             if (aliasNames.size() > 0) {
+@@ -55,10 +67,5 @@ public class GetAliases extends GenericResultAbstractAction {
+             return this;
+         }
+ 
+-
+-        @Override
+-        public GetAliases build() {
+-            return new GetAliases(this);
+-        }
+     }
+-}
++}
+\ No newline at end of file

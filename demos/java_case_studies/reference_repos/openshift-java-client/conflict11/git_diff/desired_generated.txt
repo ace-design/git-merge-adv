@@ -1,0 +1,43 @@
+diff --git a/java_case_studies/reference_repos/openshift-java-client/conflict11/desired.java b/java_case_studies/demo_results/MethodUnion/openshift-java-client-conflict11.java
+index 3f657e8..6f0ac85 100644
+--- a/java_case_studies/reference_repos/openshift-java-client/conflict11/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/openshift-java-client-conflict11.java
+@@ -9,26 +9,23 @@
+  * Red Hat, Inc. - initial API and implementation 
+  ******************************************************************************/
+ package com.openshift.internal.client.httpclient;
+-
+ import java.io.IOException;
+ import java.io.OutputStream;
+ import java.util.List;
++import com.openshift.internal.client.RequestParameter;
+ import java.util.Map;
+ 
+-import com.openshift.internal.client.RequestParameter;
++public interface IMediaType{
++
++
++    public String getType();
++
++    public String encodeParameters(Map<String, Object> parameters) throws EncodingException;
+ 
+-/**
+- * @author Andre Dietisheim
+- */
+-public interface IMediaType {
++    public void write(RequestParameter[] parameters, OutputStream out) throws IOException;
+ 
+-	public String getType();
+-	
+-	public void write(RequestParameter[] parameters, OutputStream out) throws IOException;
++    public void write(String name, String value, OutputStream out) throws IOException;
+ 
+-	public void write(String name, String value, OutputStream out) throws IOException;
+-	
+-	public void write(String name, List<String> values, OutputStream out) throws IOException;
++    public void write(String name, List<String> values, OutputStream out) throws IOException;
+ 
+-	public void write(String name, Map<String, String> values, OutputStream out) throws IOException;
+-}
++}
+\ No newline at end of file

@@ -1,0 +1,394 @@
+diff --git a/java_case_studies/reference_repos/openshift-java-client/conflict12/desired.java b/java_case_studies/reference_repos/openshift-java-client/conflict12/spork_result.java
+old mode 100755
+new mode 100644
+index d814ac6..f1bbb16
+--- a/java_case_studies/reference_repos/openshift-java-client/conflict12/desired.java
++++ b/java_case_studies/reference_repos/openshift-java-client/conflict12/spork_result.java
+@@ -11,6 +11,7 @@
+ package com.openshift.internal.client.httpclient;
+ 
+ import java.io.IOException;
++import java.io.UnsupportedEncodingException;
+ import java.net.HttpURLConnection;
+ import java.net.SocketTimeoutException;
+ import java.net.URL;
+@@ -20,7 +21,6 @@ import java.security.NoSuchAlgorithmException;
+ import java.security.SecureRandom;
+ import java.security.cert.CertificateException;
+ import java.security.cert.X509Certificate;
+-import java.text.MessageFormat;
+ 
+ import javax.net.ssl.HostnameVerifier;
+ import javax.net.ssl.HttpsURLConnection;
+@@ -61,9 +61,9 @@ public class UrlConnectionHttpClient implements IHttpClient {
+ 	private String password;
+ 	private String authKey;
+ 	private String authIV;
+-	private IMediaType requestedMediaType;
++	private IMediaType requestMediaType;
+ 	private String acceptedMediaType;
+-	private String acceptedVersion;
++	private String acceptVersion;
+ 
+ 	public UrlConnectionHttpClient(String username, String password, String userAgent, boolean sslChecks,
+ 			IMediaType requestMediaType, String acceptedMediaType, String version) {
+@@ -76,11 +76,11 @@ public class UrlConnectionHttpClient implements IHttpClient {
+ 		this.password = password;
+ 		this.userAgent = setupUserAgent(authKey, authIV, userAgent);
+ 		this.sslChecks = sslChecks;
+-		this.requestedMediaType = requestMediaType;
++		this.requestMediaType = requestMediaType;
+ 		this.acceptedMediaType = acceptedMediaType;
+-		this.acceptedVersion = version;
+ 		this.authKey = authKey;
+ 		this.authIV = authIV;
++		this.acceptVersion = version;
+ 	}
+ 
+ 	/** TODO: unify with #setUserAgent **/
+@@ -95,47 +95,218 @@ public class UrlConnectionHttpClient implements IHttpClient {
+ 		return userAgent;
+ 	}
+ 
++	@Override
++	public void setAcceptedMediaType(String acceptedMediaType) {
++		this.acceptedMediaType = acceptedMediaType;
++	}
++
++	@Override
++	public String getAcceptedMediaType() {
++		return acceptedMediaType;
++	}
++
++	@Override
++	public void setUserAgent(String userAgent) {
++		this.userAgent = userAgent;
++	}
++
++	@Override
++	public String getUserAgent() {
++		return userAgent;
++	}
++
++	@Override
++	public void setAcceptVersion(String version) {
++		this.acceptVersion = version;
++	}
++
++	@Override
++	public String getAcceptVersion() {
++		return acceptVersion;
++	}
++
++	@Override
++	public String get(URL url) throws HttpClientException, SocketTimeoutException {
++		return get(url, NO_TIMEOUT);
++	}
++
+ 	@Override
+ 	public String get(URL url, int timeout) throws HttpClientException, SocketTimeoutException {
+-		return request(HttpMethod.GET, url, null, timeout);
++<<<<<<< LEFT
++		return request(HttpMethod.GET, url, timeout);
++=======
++
++		HttpURLConnection connection = null;
++		try {
++			return write(null, HttpMethod.GET.toString(), url, timeout, requestMediaType);
++		} catch (SocketTimeoutException e) {
++			throw e;
++		/* TODO: cleanup exception handling */
++		} catch (IOException e) {
++			throw createException(e, connection);
++		} finally {
++			disconnect(connection);
++		}
++	}
++
++	public void setUserAgent(String userAgent) {
++		this.userAgent = userAgent;
++	}
++
++	public String getUserAgent() {
++		return userAgent;
++	}
++
++	public void setAcceptVersion(String version) {
++		this.acceptVersion = version;
++	}
++
++	public String getAcceptVersion() {
++		return acceptVersion;
++	}
++
++    public IMediaType getRequestMediaType() {
++        return requestMediaType;
++    }
++
++    public void setRequestMediaType(IMediaType requestMediaType) {
++        this.requestMediaType = requestMediaType;
++    }
++
++    public String put(Map<String, Object> parameters, URL url)
++			throws SocketTimeoutException, EncodingException, HttpClientException {
++		return put(requestMediaType.encodeParameters(parameters), url);
++>>>>>>> RIGHT
+ 	}
+ 
+ 	@Override
+-	public String put(URL url, IMediaType mediaType, int timeout, RequestParameter... parameters)
++<<<<<<< LEFT
++	public String put(URL url, RequestParameter... parameters)
++			throws SocketTimeoutException, UnsupportedEncodingException, HttpClientException {
++		return put(url, NO_TIMEOUT, parameters);
++=======
++	public String put(Map<String, Object> parameters, URL url, int timeout) 
+ 			throws HttpClientException, SocketTimeoutException, EncodingException {
+-		return request(HttpMethod.PUT, url, mediaType, timeout, parameters);
++		return put(parameters, url, timeout, requestMediaType);
+ 	}
+ 
+-	@Override
+-	public String post(URL url, IMediaType mediaType, int timeout, RequestParameter... parameters)
++    @Override
++    public String put(Map<String, Object> parameters, URL url, int timeout, IMediaType mediaType) throws HttpClientException, SocketTimeoutException, EncodingException {
++        return write(mediaType.encodeParameters(parameters), HttpMethod.PUT.toString(), url, timeout, mediaType);
++    }
++
++    protected String put(String data, URL url) throws HttpClientException, SocketTimeoutException {
++		return write(data, HttpMethod.PUT.toString(), url, NO_TIMEOUT, requestMediaType);
++	}
++
++	public String post(Map<String, Object> parameters, URL url)
++			throws SocketTimeoutException, EncodingException, HttpClientException {
++		return post(requestMediaType.encodeParameters(parameters), url);
++	}
++
++	protected String post(String data, URL url) throws HttpClientException, SocketTimeoutException {
++		return write(data, HttpMethod.POST.toString(), url, NO_TIMEOUT, requestMediaType);
++	}
++
++	public String post(Map<String, Object> data, URL url, int timeout) 
+ 			throws HttpClientException, SocketTimeoutException, EncodingException {
+-		return request(HttpMethod.POST, url, mediaType, timeout, parameters);
++        return post(data, url, timeout, requestMediaType);
+ 	}
+ 
+-	@Override
+-	public String delete(URL url, IMediaType mediaType, int timeout, RequestParameter... parameters)
++    @Override
++    public String post(Map<String, Object> parameters, URL url, int timeout, IMediaType mediaType) throws HttpClientException, SocketTimeoutException, EncodingException {
++        return write(mediaType.encodeParameters(parameters), HttpMethod.POST.toString(), url, timeout, mediaType);
++    }
++
++    public String delete(Map<String, Object> parameters, URL url)
+ 			throws HttpClientException, SocketTimeoutException, EncodingException {
+-		return request(HttpMethod.DELETE, url, mediaType, timeout, parameters);
++		return delete(requestMediaType.encodeParameters(parameters), url);
++>>>>>>> RIGHT
+ 	}
+ 
+ 	@Override
+-	public String delete(URL url, int timeout)
+-			throws HttpClientException, SocketTimeoutException, EncodingException {
+-		return delete(url, null, timeout);
++<<<<<<< LEFT
++	public String put(URL url, int timeout, RequestParameter... parameters)
++			throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException {
++		return request(HttpMethod.PUT, url, timeout, parameters);
++=======
++	public String delete(Map<String, Object> parameters, URL url, int timeout) throws HttpClientException,
++			SocketTimeoutException,
++            EncodingException {
++		return delete(parameters, url, timeout, requestMediaType);
++>>>>>>> RIGHT
++	}
++
++<<<<<<< LEFT
++	protected String put(String data, URL url, RequestParameter... parameters) throws HttpClientException,
++			SocketTimeoutException {
++		return request(HttpMethod.PUT, url, NO_TIMEOUT, parameters);
++	}
++
++	@Override
++	public String post(URL url, RequestParameter... parameters)
++			throws SocketTimeoutException, UnsupportedEncodingException, HttpClientException {
++		return request(HttpMethod.POST, url, NO_TIMEOUT, parameters);
++	}
++
++	@Override
++	public String post(URL url, int timeout, RequestParameter... parameters)
++			throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException {
++		return request(HttpMethod.POST, url, timeout, parameters);
++	}
++
++	@Override
++	public String delete(URL url, RequestParameter... parameters) throws HttpClientException, SocketTimeoutException {
++		return request(HttpMethod.DELETE, url, NO_TIMEOUT, parameters);
++	}
++
++	@Override
++	public String delete(URL url, int timeout, RequestParameter... parameters)
++			throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException {
++		return request(HttpMethod.DELETE, url, timeout, parameters);
+ 	}
+ 
+-	protected String request(HttpMethod httpMethod, URL url, IMediaType requestMediaType, int timeout,
+-			RequestParameter... parameters)
++	@Override
++	public String delete(URL url)
++=======
++    @Override
++    public String delete(Map<String, Object> parameters, URL url, int timeout, IMediaType mediaType) throws HttpClientException, SocketTimeoutException, EncodingException {
++        return write(mediaType.encodeParameters(parameters), HttpMethod.DELETE.toString(), url, timeout, mediaType);
++    }
++
++    public String delete(URL url)
++>>>>>>> RIGHT
++			throws HttpClientException, SocketTimeoutException, UnsupportedEncodingException {
++		return delete(url, NO_TIMEOUT);
++	}
++
++<<<<<<< LEFT
++	protected String request(HttpMethod httpMethod, URL url, int timeout, RequestParameter... parameters)
++=======
++	protected String delete(String data, URL url) throws HttpClientException, SocketTimeoutException {
++		return write(data, HttpMethod.DELETE.toString(), url, NO_TIMEOUT, requestMediaType);
++	}
++
++	protected String write(String data, String requestMethod, URL url, int timeout, IMediaType mediaType)
++>>>>>>> RIGHT
+ 			throws SocketTimeoutException, HttpClientException {
+ 		HttpURLConnection connection = null;
+ 		try {
+-			connection = 
+-					createConnection(url, username, password, authKey, authIV, userAgent, acceptedVersion, acceptedMediaType, timeout);
++<<<<<<< LEFT
++			connection = createConnection(username, password, authKey, authIV, userAgent, url, timeout);
+ 			connection.setRequestMethod(httpMethod.toString());
+ 			if (parameters != null
+ 					&& parameters.length > 0) {
+ 				connection.setDoOutput(true);
+-				getAndValidateRequestMediaType(requestMediaType).write(parameters, connection.getOutputStream());
++				requestMediaType.write(parameters, connection.getOutputStream());
++=======
++			connection = createConnection(username, password, authKey, authIV, userAgent, url, timeout, mediaType);
++			connection.setRequestMethod(requestMethod);
++			connection.setDoOutput(true);
++			if (data != null) {
++				LOGGER.trace("Sending \"{}\" to {}", data, url);
++				StreamUtils.writeTo(data.getBytes(), connection.getOutputStream());
++>>>>>>> RIGHT
+ 			}
+ 			return StreamUtils.readToString(connection.getInputStream());
+ 		} catch (SocketTimeoutException e) {
+@@ -147,17 +318,6 @@ public class UrlConnectionHttpClient implements IHttpClient {
+ 		}
+ 	}
+ 
+-	private IMediaType getAndValidateRequestMediaType(IMediaType requestedMediaType) {
+-		if (requestedMediaType == null) {
+-			if (this.requestedMediaType == null) {
+-				throw new HttpClientException(
+-						MessageFormat.format("Request media type (ex. {0}) is not defined", MEDIATYPE_APPLICATION_FORMURLENCODED));
+-			}
+-			requestedMediaType = this.requestedMediaType;
+-		}
+-		return requestedMediaType;
+-	}
+-
+ 	private void disconnect(HttpURLConnection connection) {
+ 		if (connection != null) {
+ 			connection.disconnect();
+@@ -226,11 +386,16 @@ public class UrlConnectionHttpClient implements IHttpClient {
+ 		}
+ 	}
+ 
+-	protected HttpURLConnection createConnection(URL url, String username, String password, String authKey, String authIV,
+-			String userAgent, String acceptedVersion, String acceptedMediaType, int timeout) throws IOException {
++	protected HttpURLConnection createConnection(String username, String password, String userAgent, URL url)
++			throws IOException {
++		return createConnection(username, password, null, null, userAgent, url, NO_TIMEOUT, requestMediaType);
++	}
++
++	protected HttpURLConnection createConnection(String username, String password, String authKey, String authIV,
++			String userAgent, URL url, int timeout, IMediaType mediaType) throws IOException {
+ 		LOGGER.trace(
+-				"creating connection to {} using username \"{}\" and password \"{}\"", 
+-				new Object[] { url, username, password });
++				"creating connection to {} using username \"{}\" and password \"{}\"", new Object[] { url, username,
++						password });
+ 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+ 		setSSLChecks(url, connection);
+ 		setAuthorisation(username, password, authKey, authIV, connection);
+@@ -242,24 +407,16 @@ public class UrlConnectionHttpClient implements IHttpClient {
+ 		// wont work when switching http->https
+ 		// http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4620571
+ 		connection.setInstanceFollowRedirects(true);
+-		setUserAgent(userAgent, connection);
+-		setAcceptHeader(acceptedVersion, acceptedMediaType, connection);
+-		setAcceptedMediaType(acceptedMediaType, connection);
++		setAcceptHeader(connection);
++		setUserAgent(connection);
+ 
+-		return connection;
+-	}
++		connection.setRequestProperty(PROPERTY_CONTENT_TYPE, mediaType.getType());
+ 
+-	private void setAcceptedMediaType(String acceptedMediaType, HttpURLConnection connection) {
+-		if (acceptedMediaType == null) {
+-			if (this.acceptedMediaType == null) {
+-				throw new HttpClientException(MessageFormat.format(
+-						"Accepted media type (ex. {0}) is not defined", MEDIATYPE_APPLICATION_FORMURLENCODED));
+-			}
+-		}
+-		connection.setRequestProperty(PROPERTY_CONTENT_TYPE, acceptedMediaType);
++		return connection;
+ 	}
+ 
+-	private void setUserAgent(String userAgent, HttpURLConnection connection) {
++	private void setUserAgent(HttpURLConnection connection) {
++		String userAgent = this.userAgent;
+ 		if (!StringUtils.isEmpty(authKey)) {
+ 			userAgent = USERAGENT_FOR_KEYAUTH;
+ 		}
+@@ -269,12 +426,12 @@ public class UrlConnectionHttpClient implements IHttpClient {
+ 		}
+ 	}
+ 
+-	private void setAcceptHeader(String acceptedMediaType, String acceptedVersion, HttpURLConnection connection) {
++	private void setAcceptHeader(HttpURLConnection connection) {
+ 		StringBuilder builder =
+ 				new StringBuilder(acceptedMediaType);
+-		if (acceptedVersion != null) {
++		if (acceptVersion != null) {
+ 			builder.append(SEMICOLON).append(SPACE)
+-					.append(VERSION).append(EQUALS).append(acceptedVersion);
++					.append(VERSION).append(EQUALS).append(acceptVersion);
+ 		}
+ 
+ 		connection.setRequestProperty(PROPERTY_ACCEPT, builder.toString());
+@@ -329,7 +486,7 @@ public class UrlConnectionHttpClient implements IHttpClient {
+ 	}
+ 
+ 	protected IMediaType getMediaType() {
+-		return requestedMediaType;
++		return requestMediaType;
+ 	}
+ 	
+ 	private int getSystemPropertyInteger(String key) {
+@@ -361,14 +518,4 @@ public class UrlConnectionHttpClient implements IHttpClient {
+ 			return true;
+ 		}
+ 	}
+-
+-	@Override
+-	public void setUserAgent(String userAgent) {
+-		this.userAgent = userAgent;
+-	}
+-
+-	@Override
+-	public void setAcceptVersion(String version) {
+-		this.acceptedVersion = version;
+-	}
+ }

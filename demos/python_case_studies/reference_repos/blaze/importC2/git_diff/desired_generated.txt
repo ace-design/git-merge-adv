@@ -1,0 +1,91 @@
+diff --git a/python_case_studies/reference_repos/blaze/importC2/desired.py b/python_case_studies/demo_results/MethodUnion/blaze-importC2.py
+index c35b054..2a8ddcc 100644
+--- a/python_case_studies/reference_repos/blaze/importC2/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/blaze-importC2.py
+@@ -1,26 +1,41 @@
+ from datetime import timedelta
+ from operator import methodcaller
+ import itertools
+-
+ import pytest
+-
+-sa = pytest.importorskip('sqlalchemy')
+-pytest.importorskip('psycopg2')
+-
+ import os
+ import numpy as np
+ import pandas as pd
+-
+ import pandas.util.testing as tm
+-
+-from blaze import (atan2, by, compute, concat, cos, Data, greatest, join,
+-                   least, radians, sin, sqrt, symbol, transform)
+-from blaze.interactive import iscorescalar
+-from blaze.utils import example, normalize
+-
+ from datashape import dshape
+-from odo import odo, resource, drop, discover
++from odo import odo,resource,drop,discover
++from blaze import (
++    Data,
++    atan2,
++    by,
++    compute,
++    concat,
++    cos,
++    greatest,
++    join,
++    least,
++    radians,
++    sin,
++    sqrt,
++    symbol,
++    transform,
++)
++from blaze.utils import example,normalize
++import tempfile
+ from odo.utils import tmpfile
++from blaze.interactive import iscorescalar
++import math
++
++
++sa = pytest.importorskip('sqlalchemy')
++pytest.importorskip('psycopg2')
++
++
++
+ 
+ 
+ names = ('tbl%d' % i for i in itertools.count())
+@@ -573,6 +588,8 @@ def test_interactive_len(sql):
+     assert len(t) == int(t.count())
+ 
+ 
++<<<<<<< left_content.py
++=======
+ def test_core_compute(nyc):
+     t = symbol('t', discover(nyc))
+     assert isinstance(compute(t, nyc, return_type='core'), pd.DataFrame)
+@@ -581,6 +598,7 @@ def test_core_compute(nyc):
+     assert isinstance(compute(t, nyc, return_type=list), list)
+ 
+ 
++>>>>>>> right_content.py
+ def test_sample(sql):
+     t = symbol('t', discover(sql))
+     result = compute(t.sample(n=1), sql)
+@@ -590,6 +608,7 @@ def test_sample(sql):
+     s2 = odo(result2, pd.DataFrame)
+     assert len(s) == len(s2)
+ 
++<<<<<<< left_content.py
+ 
+ @pytest.fixture
+ def gl_data(sql_two_tables):
+@@ -606,3 +625,6 @@ def test_greatest(gl_data):
+ def test_least(gl_data):
+     u, t = gl_data
+     assert odo(least(u.a.max(), t.a.max()), int) == 1
++
++=======
++>>>>>>> right_content.py

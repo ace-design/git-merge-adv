@@ -1,0 +1,19 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict13/base.py b/python_case_studies/reference_repos/apistar/conflict13/left.py
+index a892982..5c14a68 100644
+--- a/python_case_studies/reference_repos/apistar/conflict13/base.py
++++ b/python_case_studies/reference_repos/apistar/conflict13/left.py
+@@ -6,12 +6,13 @@
+    \/     /_/   \_\_|  |___| |____/ \__\__,_|_|        \/
+ """
+ from apistar.app import App
++from apistar.db import DBBackend
+ from apistar.http import Headers, QueryParams, Request, Response
+ from apistar.routing import Route
+ from apistar.wsgi import WSGIEnviron, WSGIResponse
+ 
+ __version__ = '0.1.9'
+ __all__ = [
+-    'App', 'Route',
++    'App', 'Route', 'DBBackend',
+     'WSGIEnviron', 'WSGIResponse', 'Request', 'Response', 'QueryParams', 'Headers'
+ ]

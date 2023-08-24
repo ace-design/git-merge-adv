@@ -1,0 +1,139 @@
+diff --git a/java_case_studies/reference_repos/cucumber.jvm/importC1/desired.java b/java_case_studies/demo_results/MethodUnion/cucumber.jvm-importC1.java
+index ad4e6f7..6a719f7 100644
+--- a/java_case_studies/reference_repos/cucumber.jvm/importC1/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/cucumber.jvm-importC1.java
+@@ -1,5 +1,4 @@
+ package io.cucumber.core.plugin;
+-
+ import io.cucumber.core.exception.CucumberException;
+ import io.cucumber.core.feature.FeatureParser;
+ import io.cucumber.plugin.EventListener;
+@@ -18,7 +17,6 @@ import org.w3c.dom.Document;
+ import org.w3c.dom.Element;
+ import org.w3c.dom.NamedNodeMap;
+ import org.w3c.dom.Node;
+-
+ import javax.xml.XMLConstants;
+ import javax.xml.parsers.DocumentBuilderFactory;
+ import javax.xml.parsers.ParserConfigurationException;
+@@ -31,7 +29,10 @@ import javax.xml.transform.stream.StreamResult;
+ import java.io.Closeable;
+ import java.io.IOException;
+ import java.io.OutputStream;
++import java.io.PrintWriter;
++import java.io.StringWriter;
+ import java.io.Writer;
++import java.net.URL;
+ import java.net.URI;
+ import java.time.Duration;
+ import java.time.Instant;
+@@ -40,29 +41,28 @@ import java.util.HashMap;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.UUID;
+-
+ import static io.cucumber.core.exception.ExceptionUtils.printStackTrace;
+ import static java.time.Duration.ZERO;
+ import static java.time.format.DateTimeFormatter.ISO_INSTANT;
+ import static java.util.Locale.ROOT;
+ 
+-public final class TestNGFormatter implements EventListener, StrictAware {
+-
+-    private final Writer writer;
+-    private final Document document;
+-    private final Element results;
+-    private final Element suite;
+-    private final Element test;
+-    private Element clazz;
+-    private Element root;
+-    private TestCase testCase;
+-    private boolean strict = false;
+-    private URI currentFeatureFile = null;
+-    private String previousTestCaseName;
+-    private int exampleNumber;
+-    private Instant started;
+-    private final Map<URI, String> featuresNames = new HashMap<>();
+-    private final FeatureParser parser = new FeatureParser(UUID::randomUUID);
++public final class TestNGFormatter implements EventListener, StrictAware{
++
++    private final Writer writer;,
++    private final Document document;,
++    private final Element results;,
++    private final Element suite;,
++    private final Element test;,
++    private Element clazz;,
++    private Element root;,
++    private TestCase testCase;,
++    private boolean strict = false;,
++    private URI currentFeatureFile = null;,
++    private String previousTestCaseName;,
++    private int exampleNumber;,
++    private Instant started;,
++    private final Map<URI, String> featuresNames = new HashMap<>();,
++    private final FeatureParser parser = new FeatureParser(UUID::randomUUID);,
+ 
+     public TestNGFormatter(OutputStream out) {
+         this.writer = new UTF8OutputStreamWriter(out);
+@@ -79,6 +79,22 @@ public final class TestNGFormatter implements EventListener, StrictAware {
+         }
+     }
+ 
++    @SuppressWarnings("WeakerAccess") // Used by plugin factory
++    public TestNGFormatter(URL url) throws IOException {
++        this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
++        try {
++            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
++            results = document.createElement("testng-results");
++            suite = document.createElement("suite");
++            test = document.createElement("test");
++            suite.appendChild(test);
++            results.appendChild(suite);
++            document.appendChild(results);
++        } catch (ParserConfigurationException e) {
++            throw new CucumberException("Error initializing DocumentBuilder.", e);
++        }
++    }
++
+     @Override
+     public void setEventPublisher(EventPublisher publisher) {
+         publisher.registerHandlerFor(TestSourceRead.class, this::handleTestSourceRead);
+@@ -185,12 +201,12 @@ public final class TestNGFormatter implements EventListener, StrictAware {
+         return count;
+     }
+ 
+-    final class TestCase {
++    final class TestCase{
+ 
+-        private final List<PickleStepTestStep> steps = new ArrayList<>();
+-        private final List<Result> results = new ArrayList<>();
+-        private final List<Result> hooks = new ArrayList<>();
+-        private final io.cucumber.plugin.event.TestCase testCase;
++        private final List<PickleStepTestStep> steps = new ArrayList<>();,
++        private final List<Result> results = new ArrayList<>();,
++        private final List<Result> hooks = new ArrayList<>();,
++        private final io.cucumber.plugin.event.TestCase testCase;,
+ 
+         TestCase(io.cucumber.plugin.event.TestCase testCase) {
+             this.testCase = testCase;
+@@ -250,6 +266,12 @@ public final class TestNGFormatter implements EventListener, StrictAware {
+             }
+         }
+ 
++        private String printStrackTrace(Result failed) {
++            StringWriter stringWriter = new StringWriter();
++            failed.getError().printStackTrace(new PrintWriter(stringWriter));
++            return stringWriter.toString();
++        }
++
+         private String calculateTotalDurationString() {
+             Duration totalDuration = ZERO;
+             for (Result r : results) {
+@@ -294,5 +316,6 @@ public final class TestNGFormatter implements EventListener, StrictAware {
+ 
+             return exceptionElement;
+         }
++
+     }
+-}
++}
+\ No newline at end of file

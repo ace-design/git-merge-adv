@@ -1,0 +1,163 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict11/desired.java b/java_case_studies/reference_repos/Jest/conflict11/spork_result.java
+old mode 100755
+new mode 100644
+index 9e83391..6996e17
+--- a/java_case_studies/reference_repos/Jest/conflict11/desired.java
++++ b/java_case_studies/reference_repos/Jest/conflict11/spork_result.java
+@@ -1,6 +1,5 @@
+ package io.searchbox.client.http;
+ 
+-
+ import com.google.gson.Gson;
+ import com.google.gson.JsonElement;
+ import com.google.gson.JsonParser;
+@@ -12,6 +11,11 @@ import io.searchbox.client.JestResult;
+ import io.searchbox.client.JestResultHandler;
+ import io.searchbox.client.http.apache.HttpDeleteWithEntity;
+ import io.searchbox.client.http.apache.HttpGetWithEntity;
++import java.io.IOException;
++import java.io.UnsupportedEncodingException;
++import java.nio.charset.Charset;
++import java.util.Map.Entry;
++import java.util.concurrent.ExecutionException;
+ import org.apache.http.HttpResponse;
+ import org.apache.http.HttpStatus;
+ import org.apache.http.StatusLine;
+@@ -24,40 +28,31 @@ import org.apache.http.util.EntityUtils;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+-import java.io.IOException;
+-import java.io.UnsupportedEncodingException;
+-import java.nio.charset.Charset;
+-import java.util.Map.Entry;
+-import java.util.concurrent.ExecutionException;
+-
+ 
+ /**
+  * @author Dogukan Sonmez
+  * @author cihat keser
+  */
+ public class JestHttpClient extends AbstractJestClient implements JestClient {
+-
+     final static Logger log = LoggerFactory.getLogger(JestHttpClient.class);
++
+     private CloseableHttpClient httpClient;
++
+     private CloseableHttpAsyncClient asyncClient;
++
+     private Charset entityEncoding = Charset.forName("utf-8");
+ 
+     @Override
+     public <T extends JestResult> T execute(Action<T> clientRequest) throws IOException {
+-
+         String elasticSearchRestUrl = getRequestURL(getElasticSearchServer(), clientRequest.getURI());
+-
+         HttpUriRequest request = constructHttpMethod(clientRequest.getRestMethodName(), elasticSearchRestUrl, clientRequest.getData(gson));
+-
+         // add headers added to action
+         if (!clientRequest.getHeaders().isEmpty()) {
+             for (Entry<String, Object> header : clientRequest.getHeaders().entrySet()) {
+                 request.addHeader(header.getKey(), header.getValue().toString());
+             }
+         }
+-
+         HttpResponse response = httpClient.execute(request);
+-
+         // If head method returns no content, it is added according to response code thanks to https://github.com/hlassiege
+         if (request.getMethod().equalsIgnoreCase("HEAD")) {
+             if (response.getEntity() == null) {
+@@ -72,26 +67,20 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+     }
+ 
+     @Override
+-    public <T extends JestResult> void executeAsync(final Action<T> clientRequest, final JestResultHandler<T> resultHandler)
+-    throws ExecutionException, InterruptedException, IOException {
+-
+-        synchronized (this) {
++    public <T extends JestResult> void executeAsync(final Action<T> clientRequest, final JestResultHandler<T> resultHandler) throws ExecutionException, InterruptedException, IOException {
++        synchronized(this) {
+             if (!asyncClient.isRunning()) {
+                 asyncClient.start();
+             }
+         }
+-
+         String elasticSearchRestUrl = getRequestURL(getElasticSearchServer(), clientRequest.getURI());
+-
+         final HttpUriRequest request = constructHttpMethod(clientRequest.getRestMethodName(), elasticSearchRestUrl, clientRequest.getData(gson));
+-
+         // add headers added to action
+         if (!clientRequest.getHeaders().isEmpty()) {
+             for (Entry<String, Object> header : clientRequest.getHeaders().entrySet()) {
+                 request.addHeader(header.getKey(), header.getValue() + "");
+             }
+         }
+-
+         asyncClient.execute(request, new FutureCallback<HttpResponse>() {
+             @Override
+             public void completed(final HttpResponse response) {
+@@ -112,7 +101,6 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+             public void cancelled() {
+             }
+         });
+-
+     }
+ 
+     @Override
+@@ -121,14 +109,13 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+         try {
+             asyncClient.close();
+             httpClient.close();
+-        } catch (Exception ex) {
++        } catch (java.lang.Exception ex) {
+             log.error("Exception occurred while shutting down the asynClient. Exception: " + ex.getMessage());
+         }
+     }
+ 
+     protected HttpUriRequest constructHttpMethod(String methodName, String url, Object data) throws UnsupportedEncodingException {
+         HttpUriRequest httpUriRequest = null;
+-
+         if (methodName.equalsIgnoreCase("POST")) {
+             httpUriRequest = new HttpPost(url);
+             log.debug("POST method created based on client request");
+@@ -145,23 +132,19 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+             httpUriRequest = new HttpHead(url);
+             log.debug("HEAD method created based on client request");
+         }
+-
+-        if (httpUriRequest != null && httpUriRequest instanceof HttpEntityEnclosingRequestBase && data != null) {
+-            ((HttpEntityEnclosingRequestBase) httpUriRequest).setEntity(new StringEntity(createJsonStringEntity(data), entityEncoding));
++        if (((httpUriRequest != null) && (httpUriRequest instanceof HttpEntityEnclosingRequestBase)) && (data != null)) {
++            ((HttpEntityEnclosingRequestBase) (httpUriRequest)).setEntity(new StringEntity(createJsonStringEntity(data), entityEncoding));
+         }
+-
+         return httpUriRequest;
+     }
+ 
+     private String createJsonStringEntity(Object data) {
+         String entity;
+-
+-        if (data instanceof String && isJson(data.toString())) {
++        if ((data instanceof String) && isJson(data.toString())) {
+             entity = data.toString();
+         } else {
+             entity = gson.toJson(data);
+         }
+-
+         return entity;
+     }
+ 
+@@ -178,12 +161,7 @@ public class JestHttpClient extends AbstractJestClient implements JestClient {
+ 
+     private <T extends JestResult> T deserializeResponse(HttpResponse response, Action<T> clientRequest) throws IOException {
+         StatusLine statusLine = response.getStatusLine();
+-        return clientRequest.createNewElasticSearchResult(
+-                response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : null,
+-                statusLine.getStatusCode(),
+-                statusLine.getReasonPhrase(),
+-                gson
+-        );
++        return clientRequest.createNewElasticSearchResult(response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : null, statusLine.getStatusCode(), statusLine.getReasonPhrase(), gson);
+     }
+ 
+     public CloseableHttpClient getHttpClient() {

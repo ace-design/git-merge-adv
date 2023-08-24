@@ -1,0 +1,12 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict7/base.py b/python_case_studies/reference_repos/errbot/conflict7/left.py
+index 87c16c5..3edb4a6 100644
+--- a/python_case_studies/reference_repos/errbot/conflict7/base.py
++++ b/python_case_studies/reference_repos/errbot/conflict7/left.py
+@@ -342,6 +342,7 @@ class TestBot(object):
+         __import__('errbot.config-template')
+         config = sys.modules['errbot.config-template']
+         tempdir = mkdtemp()
++        config.STORAGE = 'Memory'
+         config.BOT_DATA_DIR = tempdir
+         config.BOT_LOG_FILE = tempdir + sep + 'log.txt'
+ 

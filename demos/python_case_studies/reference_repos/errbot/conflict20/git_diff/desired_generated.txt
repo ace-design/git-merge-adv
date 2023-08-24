@@ -1,0 +1,58 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict20/desired.py b/python_case_studies/demo_results/MethodUnion/errbot-conflict20.py
+index 3b0ab78..36bd08f 100644
+--- a/python_case_studies/reference_repos/errbot/conflict20/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/errbot-conflict20.py
+@@ -1,6 +1,14 @@
+ import logging
+ import sys
+ from errbot.utils import mess_2_embeddablehtml
++import os
++import errbot
++from errbot.backends.base import Message,build_text_html_message_pair,Identifier
++from errbot.errBot import ErrBot
++import re
++import config
++from config import BOT_DATA_DIR,BOT_PREFIX
++from errbot.backed.text import TextBackend
+ 
+ try:
+     from PySide import QtCore, QtGui, QtWebKit
+@@ -21,10 +29,6 @@ except ImportError:
+     """)
+     sys.exit(-1)
+ 
+-import os
+-import errbot
+-from errbot.backends.base import Message, build_text_html_message_pair, Identifier
+-from errbot.backed.text import TextBackend   # we use that as we emulate MUC there already
+ 
+ 
+ class CommandBox(QtGui.QPlainTextEdit, object):
+@@ -117,7 +121,6 @@ class ConnectionMock(QtCore.QObject):
+             self.newAnswer.emit(content, is_html)
+ 
+ 
+-import re
+ 
+ urlfinder = re.compile(r'http([^\.\s]+\.[^\.\s]*)+[^\.\s]{2,}')
+ 
+@@ -202,8 +205,13 @@ class ChatApplication(QtGui.QApplication):
+         self.output.page().mainFrame().scroll(0, self.output.page().mainFrame().scrollBarMaximum(QtCore.Qt.Vertical))
+ 
+ 
+-class GraphicBackend(TextBackend):
++<<<<<<< left_content.py
++class GraphicBackend(ErrBot):
+     def __init__(self, config):
++=======
++class GraphicBackend(TextBackend):
++    def __init__(self, *args, **kwargs):
++>>>>>>> right_content.py
+         self.conn = None
+         super().__init__(config)
+         self.jid = Identifier('Err')
+@@ -244,3 +252,4 @@ class GraphicBackend(TextBackend):
+     @property
+     def mode(self):
+         return 'graphic'
++

@@ -1,0 +1,53 @@
+diff --git a/java_case_studies/reference_repos/stateless4j/conflict6/base.java b/java_case_studies/reference_repos/stateless4j/conflict6/left.java
+index 3a82bee..c54617d 100644
+--- a/java_case_studies/reference_repos/stateless4j/conflict6/base.java
++++ b/java_case_studies/reference_repos/stateless4j/conflict6/left.java
+@@ -25,7 +25,7 @@ public class StateRepresentation<TState, TTrigger> {
+         return triggerBehaviours;
+     }
+ 
+-    public Boolean canHandle(TTrigger trigger) {
++    public boolean canHandle(TTrigger trigger) {
+         try {
+             tryFindHandler(trigger);
+             return true;
+@@ -165,17 +165,16 @@ public class StateRepresentation<TState, TTrigger> {
+         substates.add(substate);
+     }
+ 
+-    public Boolean includes(TState stateToCheck) {
+-        Boolean isIncluded = false;
++    public boolean includes(TState stateToCheck) {
+         for (StateRepresentation<TState, TTrigger> s : substates) {
+             if (s.includes(stateToCheck)) {
+-                isIncluded = true;
++                return true;
+             }
+         }
+-        return this.state.equals(stateToCheck) || isIncluded;
++        return this.state.equals(stateToCheck);
+     }
+ 
+-    public Boolean isIncludedIn(TState stateToCheck) {
++    public boolean isIncludedIn(TState stateToCheck) {
+         return this.state.equals(stateToCheck) || (superstate != null && superstate.isIncludedIn(stateToCheck));
+     }
+ 
+@@ -184,15 +183,12 @@ public class StateRepresentation<TState, TTrigger> {
+         Set<TTrigger> result = new HashSet<>();
+ 
+         for (TTrigger t : triggerBehaviours.keySet()) {
+-            boolean isOk = false;
+             for (TriggerBehaviour<TState, TTrigger> v : triggerBehaviours.get(t)) {
+                 if (v.isGuardConditionMet()) {
+-                    isOk = true;
++                    result.add(t);
++                    break;
+                 }
+             }
+-            if (isOk) {
+-                result.add(t);
+-            }
+         }
+ 
+         if (getSuperstate() != null) {

@@ -1,0 +1,119 @@
+diff --git a/java_case_studies/reference_repos/stateless4j/conflict6/desired.java b/java_case_studies/reference_repos/stateless4j/conflict6/spork_result.java
+index 904847d..c747921 100644
+--- a/java_case_studies/reference_repos/stateless4j/conflict6/desired.java
++++ b/java_case_studies/reference_repos/stateless4j/conflict6/spork_result.java
+@@ -5,17 +5,22 @@ import com.github.oxo42.stateless4j.delegates.Action2;
+ import com.github.oxo42.stateless4j.transitions.Transition;
+ import com.github.oxo42.stateless4j.triggers.TriggerBehaviour;
+ import com.github.oxo42.stateless4j.validation.Enforce;
+-
+ import java.util.*;
+ 
++
+ public class StateRepresentation<TState, TTrigger> {
+     private final TState state;
+ 
+     private final Map<TTrigger, List<TriggerBehaviour<TState, TTrigger>>> triggerBehaviours = new HashMap<>();
++
+     private final List<Action2<Transition<TState, TTrigger>, Object[]>> entryActions = new ArrayList<>();
++
+     private final List<Action1<Transition<TState, TTrigger>>> exitActions = new ArrayList<>();
++
+     private final List<StateRepresentation<TState, TTrigger>> substates = new ArrayList<>();
+-    private StateRepresentation<TState, TTrigger> superstate; // null
++
++    // null
++    private StateRepresentation<TState, TTrigger> superstate;
+ 
+     public StateRepresentation(TState state) {
+         this.state = state;
+@@ -25,35 +30,33 @@ public class StateRepresentation<TState, TTrigger> {
+         return triggerBehaviours;
+     }
+ 
+-    public Boolean canHandle(TTrigger trigger) {
++    public boolean canHandle(TTrigger trigger) {
+         return tryFindHandler(trigger) != null;
+     }
+ 
+     public TriggerBehaviour<TState, TTrigger> tryFindHandler(TTrigger trigger) {
+         TriggerBehaviour result = tryFindLocalHandler(trigger);
+-        if (result == null && superstate != null) {
++        if ((result == null) && (superstate != null)) {
+             result = superstate.tryFindHandler(trigger);
+         }
+         return result;
+     }
+ 
+-    TriggerBehaviour<TState, TTrigger> tryFindLocalHandler(TTrigger trigger/*, out TriggerBehaviour handler*/) {
++    /*, out TriggerBehaviour handler*/
++    TriggerBehaviour<TState, TTrigger> tryFindLocalHandler(TTrigger trigger) {
+         List<TriggerBehaviour<TState, TTrigger>> possible = triggerBehaviours.get(trigger);
+         if (possible == null) {
+             return null;
+         }
+-
+         List<TriggerBehaviour<TState, TTrigger>> actual = new ArrayList<>();
+         for (TriggerBehaviour<TState, TTrigger> triggerBehaviour : possible) {
+             if (triggerBehaviour.isGuardConditionMet()) {
+                 actual.add(triggerBehaviour);
+             }
+         }
+-
+         if (actual.size() > 1) {
+-            throw new IllegalStateException("Multiple permitted exit transitions are configured from state '" + trigger + "' for trigger '" + state + "'. Guard clauses must be mutually exclusive.");
++            throw new IllegalStateException(((("Multiple permitted exit transitions are configured from state '" + trigger) + "' for trigger '") + state) + "'. Guard clauses must be mutually exclusive.");
+         }
+-
+         return actual.get(0);
+     }
+ 
+@@ -85,21 +88,18 @@ public class StateRepresentation<TState, TTrigger> {
+ 
+     public void enter(Transition<TState, TTrigger> transition, Object... entryArgs) {
+         Enforce.argumentNotNull(transition, "transtion");
+-
+         if (transition.isReentry()) {
+             executeEntryActions(transition, entryArgs);
+         } else if (!includes(transition.getSource())) {
+             if (superstate != null) {
+                 superstate.enter(transition, entryArgs);
+             }
+-
+             executeEntryActions(transition, entryArgs);
+         }
+     }
+ 
+     public void exit(Transition<TState, TTrigger> transition) {
+         Enforce.argumentNotNull(transition, "transtion");
+-
+         if (transition.isReentry()) {
+             executeExitActions(transition);
+         } else if (!includes(transition.getDestination())) {
+@@ -162,13 +162,12 @@ public class StateRepresentation<TState, TTrigger> {
+     }
+ 
+     public boolean isIncludedIn(TState stateToCheck) {
+-        return this.state.equals(stateToCheck) || (superstate != null && superstate.isIncludedIn(stateToCheck));
++        return this.state.equals(stateToCheck) || ((superstate != null) && superstate.isIncludedIn(stateToCheck));
+     }
+ 
+     @SuppressWarnings("unchecked")
+     public List<TTrigger> getPermittedTriggers() {
+         Set<TTrigger> result = new HashSet<>();
+-
+         for (TTrigger t : triggerBehaviours.keySet()) {
+             for (TriggerBehaviour<TState, TTrigger> v : triggerBehaviours.get(t)) {
+                 if (v.isGuardConditionMet()) {
+@@ -177,11 +176,9 @@ public class StateRepresentation<TState, TTrigger> {
+                 }
+             }
+         }
+-
+         if (getSuperstate() != null) {
+             result.addAll(getSuperstate().getPermittedTriggers());
+         }
+-
+         return new ArrayList<>(result);
+     }
+ }

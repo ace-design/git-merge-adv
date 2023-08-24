@@ -1,0 +1,211 @@
+diff --git a/java_case_studies/reference_repos/antlr4/importC3/desired.java b/java_case_studies/demo_results/MethodUnion/antlr4-importC3.java
+index b242736..9e05c46 100644
+--- a/java_case_studies/reference_repos/antlr4/importC3/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/antlr4-importC3.java
+@@ -27,45 +27,38 @@
+  *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+  *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-
+ package org.antlr.v4.semantics;
+-
+ import org.antlr.v4.parse.ANTLRParser;
+-import org.antlr.v4.runtime.misc.NotNull;
+-import org.antlr.v4.runtime.misc.Nullable;
+ import org.antlr.v4.tool.Alternative;
+-import org.antlr.v4.tool.Attribute;
+-import org.antlr.v4.tool.AttributeDict;
+ import org.antlr.v4.tool.ErrorManager;
+ import org.antlr.v4.tool.ErrorType;
+ import org.antlr.v4.tool.Grammar;
+ import org.antlr.v4.tool.LabelElementPair;
+ import org.antlr.v4.tool.Rule;
+ import org.antlr.v4.tool.ast.GrammarAST;
+-
+ import java.util.Collection;
+ import java.util.HashMap;
+ import java.util.HashSet;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
++import org.antlr.v4.runtime.misc.NotNull;
++import org.antlr.v4.runtime.misc.Nullable;
++import org.antlr.v4.tool.Attribute;
++import org.antlr.v4.tool.AttributeDict;
+ 
+-/** Check for symbol problems; no side-effects.  Inefficient to walk rules
+- *  and such multiple times, but I like isolating all error checking outside
+- *  of code that actually defines symbols etc...
+- *
+- *  Side-effect: strip away redef'd rules.
+- */
+-public class SymbolChecks {
+-    Grammar g;
+-    SymbolCollector collector;
+-    Map<String, Rule> nameToRuleMap = new HashMap<String, Rule>();
+-	Set<String> tokenIDs = new HashSet<String>();
+-    Map<String, Set<String>> actionScopeToActionNames = new HashMap<String, Set<String>>();
+-//	DoubleKeyMap<String, String, GrammarAST> namedActions =
+-//		new DoubleKeyMap<String, String, GrammarAST>();
++public class SymbolChecks{
++
++    Grammar g;,
++    SymbolCollector collector;,
++    Map<String, Rule> nameToRuleMap = new HashMap<String, Rule>();,
++    Set<String> tokenIDs = new HashSet<String>();,
++    Map<String, Set<String>> actionScopeToActionNames = new HashMap<String, Set<String>>();,
+ 
+-	public ErrorManager errMgr;
++    //	DoubleKeyMap<String, String, GrammarAST> namedActions =
++
++    //		new DoubleKeyMap<String, String, GrammarAST>();
++    public ErrorManager errMgr;,
+ 
+     public SymbolChecks(Grammar g, SymbolCollector collector) {
+         this.g = g;
+@@ -99,7 +92,7 @@ public class SymbolChecks {
+ 		checkForLabelConflicts(g.rules.values());
+ 	}
+ 
+-	public void checkActionRedefinitions(List<GrammarAST> actions) {
++    public void checkActionRedefinitions(List<GrammarAST> actions) {
+ 		if ( actions==null ) return;
+ 		String scope = g.getDefaultActionScope();
+ 		String name;
+@@ -142,6 +135,7 @@ public class SymbolChecks {
+      *  defined in surrounding rule.  Also they must have same type
+      *  for repeated defs.
+      */
++
+     public void checkForLabelConflicts(Collection<Rule> rules) {
+         for (Rule r : rules) {
+             checkForAttributeConflicts(r);
+@@ -181,7 +175,7 @@ public class SymbolChecks {
+         }
+     }
+ 
+-	public void checkForLabelConflict(Rule r, GrammarAST labelID) {
++    public void checkForLabelConflict(Rule r, GrammarAST labelID) {
+ 		String name = labelID.getText();
+ 		if (nameToRuleMap.containsKey(name)) {
+ 			ErrorType etype = ErrorType.LABEL_CONFLICTS_WITH_RULE;
+@@ -209,7 +203,23 @@ public class SymbolChecks {
+ 		}
+ 	}
+ 
+-	public void checkForAttributeConflicts(Rule r) {
++    public void checkForRuleArgumentAndReturnValueConflicts(Rule r) {
++        if ( r.retvals!=null ) {
++            Set<String> conflictingKeys = r.retvals.intersection(r.args);
++            if (conflictingKeys!=null) {
++				for (String key : conflictingKeys) {
++					errMgr.grammarError(
++						ErrorType.ARG_RETVAL_CONFLICT,
++						g.fileName,
++						((GrammarAST) r.ast.getChild(0)).token,
++						key,
++						r.name);
++				}
++            }
++        }
++    }
++
++    public void checkForAttributeConflicts(Rule r) {
+ 		checkDeclarationRuleConflicts(r, r.args, nameToRuleMap.keySet(), ErrorType.ARG_CONFLICTS_WITH_RULE);
+ 		checkDeclarationRuleConflicts(r, r.args, tokenIDs, ErrorType.ARG_CONFLICTS_WITH_TOKEN);
+ 
+@@ -224,42 +234,9 @@ public class SymbolChecks {
+ 		checkLocalConflictingDeclarations(r, r.locals, r.retvals, ErrorType.LOCAL_CONFLICTS_WITH_RETVAL);
+ 	}
+ 
+-	protected void checkDeclarationRuleConflicts(@NotNull Rule r, @Nullable AttributeDict attributes, @NotNull Set<String> ruleNames, @NotNull ErrorType errorType) {
+-		if (attributes == null) {
+-			return;
+-		}
+-
+-		for (Attribute attribute : attributes.attributes.values()) {
+-			if (ruleNames.contains(attribute.name)) {
+-				errMgr.grammarError(
+-					errorType,
+-					g.fileName,
+-					attribute.token != null ? attribute.token : ((GrammarAST)r.ast.getChild(0)).token,
+-					attribute.name,
+-					r.name);
+-			}
+-		}
+-	}
+-
+-	protected void checkLocalConflictingDeclarations(@NotNull Rule r, @Nullable AttributeDict attributes, @Nullable AttributeDict referenceAttributes, @NotNull ErrorType errorType) {
+-		if (attributes == null || referenceAttributes == null) {
+-			return;
+-		}
+-
+-		Set<String> conflictingKeys = attributes.intersection(referenceAttributes);
+-		for (String key : conflictingKeys) {
+-			errMgr.grammarError(
+-				errorType,
+-				g.fileName,
+-				attributes.get(key).token != null ? attributes.get(key).token : ((GrammarAST) r.ast.getChild(0)).token,
+-				key,
+-				r.name);
+-		}
+-	}
+-
+-	// CAN ONLY CALL THE TWO NEXT METHODS AFTER GRAMMAR HAS RULE DEFS (see semanticpipeline)
++    // CAN ONLY CALL THE TWO NEXT METHODS AFTER GRAMMAR HAS RULE DEFS (see semanticpipeline)
+ 
+-	public void checkRuleArgs(Grammar g, List<GrammarAST> rulerefs) {
++    public void checkRuleArgs(Grammar g, List<GrammarAST> rulerefs) {
+ 		if ( rulerefs==null ) return;
+ 		for (GrammarAST ref : rulerefs) {
+ 			String ruleName = ref.getText();
+@@ -277,7 +254,24 @@ public class SymbolChecks {
+ 		}
+ 	}
+ 
+-	public void checkForQualifiedRuleIssues(Grammar g, List<GrammarAST> qualifiedRuleRefs) {
++    protected void checkDeclarationRuleConflicts(@NotNull Rule r, @Nullable AttributeDict attributes, @NotNull Set<String> ruleNames, @NotNull ErrorType errorType) {
++		if (attributes == null) {
++			return;
++		}
++
++		for (Attribute attribute : attributes.attributes.values()) {
++			if (ruleNames.contains(attribute.name)) {
++				errMgr.grammarError(
++					errorType,
++					g.fileName,
++					attribute.token != null ? attribute.token : ((GrammarAST)r.ast.getChild(0)).token,
++					attribute.name,
++					r.name);
++			}
++		}
++	}
++
++    public void checkForQualifiedRuleIssues(Grammar g, List<GrammarAST> qualifiedRuleRefs) {
+ 		for (GrammarAST dot : qualifiedRuleRefs) {
+ 			GrammarAST grammar = (GrammarAST)dot.getChild(0);
+ 			GrammarAST rule = (GrammarAST)dot.getChild(1);
+@@ -297,4 +291,21 @@ public class SymbolChecks {
+ 			}
+ 		}
+ 	}
+-}
++
++    protected void checkLocalConflictingDeclarations(@NotNull Rule r, @Nullable AttributeDict attributes, @Nullable AttributeDict referenceAttributes, @NotNull ErrorType errorType) {
++		if (attributes == null || referenceAttributes == null) {
++			return;
++		}
++
++		Set<String> conflictingKeys = attributes.intersection(referenceAttributes);
++		for (String key : conflictingKeys) {
++			errMgr.grammarError(
++				errorType,
++				g.fileName,
++				attributes.get(key).token != null ? attributes.get(key).token : ((GrammarAST) r.ast.getChild(0)).token,
++				key,
++				r.name);
++		}
++	}
++
++}
+\ No newline at end of file

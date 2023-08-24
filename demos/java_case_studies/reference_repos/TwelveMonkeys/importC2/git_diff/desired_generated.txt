@@ -1,0 +1,553 @@
+diff --git a/java_case_studies/reference_repos/TwelveMonkeys/importC2/desired.java b/java_case_studies/demo_results/MethodUnion/TwelveMonkeys-importC2.java
+index 10117d3..f2fc8fc 100644
+--- a/java_case_studies/reference_repos/TwelveMonkeys/importC2/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/TwelveMonkeys-importC2.java
+@@ -1,59 +1,48 @@
+ package com.twelvemonkeys.servlet.image;
+-
+-import com.twelvemonkeys.image.BufferedImageIcon;
+ import com.twelvemonkeys.image.ImageUtil;
+-import com.twelvemonkeys.io.FastByteArrayOutputStream;
++import com.twelvemonkeys.image.BufferedImageIcon;
+ import com.twelvemonkeys.io.FileUtil;
++import com.twelvemonkeys.io.FastByteArrayOutputStream;
+ import com.twelvemonkeys.servlet.OutputStreamAdapter;
+ import org.junit.Before;
+ import org.junit.Test;
++import javax.imageio.ImageIO;
+ import org.mockito.invocation.InvocationOnMock;
+ import org.mockito.stubbing.Answer;
+-
+-import javax.imageio.ImageIO;
+ import javax.servlet.ServletContext;
+ import javax.servlet.ServletOutputStream;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+-import javax.swing.*;
+ import java.awt.*;
+ import java.awt.image.BufferedImage;
+-import java.awt.image.IndexColorModel;
++import javax.swing.*;
+ import java.io.ByteArrayInputStream;
++import java.io.ByteArrayOutputStream;
++import java.awt.image.IndexColorModel;
+ import java.io.IOException;
+ import java.io.InputStream;
+ import java.util.Arrays;
+-
++import java.lang.reflect.InvocationTargetException;
+ import static org.junit.Assert.*;
+ import static org.mockito.Mockito.*;
+ 
+-/**
+- * ImageServletResponseImplTestCase
+- *
+- * @author <a href="mailto:harald.kuhr@gmail.com">Harald Kuhr</a>
+- * @author last modified by $Author: haku $
+- * @version $Id: twelvemonkeys-servlet/src/test/java/com/twelvemonkeys/servlet/image/ImageServletResponseImplTestCase.java#6 $
+- */
+-public class ImageServletResponseImplTestCase {
+-    private static final String CONTENT_TYPE_BMP = "image/bmp";
+-    private static final String CONTENT_TYPE_FOO = "foo/bar";
+-    private static final String CONTENT_TYPE_GIF = "image/gif";
+-    private static final String CONTENT_TYPE_JPEG = "image/jpeg";
+-    private static final String CONTENT_TYPE_PNG = "image/png";
+-    private static final String CONTENT_TYPE_TEXT = "text/plain";
+-
+-    private static final String IMAGE_NAME_PNG = "12monkeys-splash.png";
+-    private static final String IMAGE_NAME_GIF = "tux.gif";
+-    private static final String IMAGE_NAME_PNG_INDEXED = "star.png";
+-
+-    private static final Dimension IMAGE_DIMENSION_PNG = new Dimension(300, 410);
+-    private static final Dimension IMAGE_DIMENSION_GIF = new Dimension(250, 250);
+-    private static final Dimension IMAGE_DIMENSION_PNG_INDEXED = new Dimension(199, 192);
+-
+-    private static final int STREAM_DEFAULT_SIZE = 2000;
+-
+-    private HttpServletRequest request;
+-    private ServletContext context;
++public class ImageServletResponseImplTestCase{
++
++    private static final String CONTENT_TYPE_BMP = "image/bmp";,
++    private static final String CONTENT_TYPE_FOO = "foo/bar";,
++    private static final String CONTENT_TYPE_GIF = "image/gif";,
++    private static final String CONTENT_TYPE_JPEG = "image/jpeg";,
++    private static final String CONTENT_TYPE_PNG = "image/png";,
++    private static final String CONTENT_TYPE_TEXT = "text/plain";,
++    private static final String IMAGE_NAME_PNG = "12monkeys-splash.png";,
++    private static final String IMAGE_NAME_GIF = "tux.gif";,
++    private static final String IMAGE_NAME_PNG_INDEXED = "star.png";,
++    private static final Dimension IMAGE_DIMENSION_PNG = new Dimension(300, 410);,
++    private static final Dimension IMAGE_DIMENSION_GIF = new Dimension(250, 250);,
++    private HttpServletRequest request;,
++    private static final Dimension IMAGE_DIMENSION_PNG_INDEXED = new Dimension(199, 192);,
++    private ServletContext context;,
++    private static final int STREAM_DEFAULT_SIZE = 2000;,
+ 
+     @Before
+     public void init() throws Exception {
+@@ -141,7 +130,9 @@ public class ImageServletResponseImplTestCase {
+     }
+ 
+     // Test that wrapper works as a no-op, in case the image does not need to be decoded
++
+     // This is not a very common use case, as filters should avoid wrapping the response
++
+     // for performance reasons, but we still want that to work
+ 
+     @Test
+@@ -168,6 +159,7 @@ public class ImageServletResponseImplTestCase {
+     }
+ 
+     // Transcode original PNG to JPEG with no other changes
++
+     @Test
+     public void testTranscodeResponsePNGToJPEG() throws IOException {
+         FastByteArrayOutputStream out = new FastByteArrayOutputStream(STREAM_DEFAULT_SIZE);
+@@ -224,8 +216,10 @@ public class ImageServletResponseImplTestCase {
+     }
+ 
+     // WORKAROUND: Bug in GIFImageWriteParam, compression type is not set by default
++
+     // (even if there's only one possible compression mode/type combo; MODE_EXPLICIT/"LZW")
+-   @Test
++
++    @Test
+     public void testTranscodeResponsePNGToGIFWithQuality() throws IOException {
+        FastByteArrayOutputStream out = new FastByteArrayOutputStream(STREAM_DEFAULT_SIZE);
+ 
+@@ -270,7 +264,9 @@ public class ImageServletResponseImplTestCase {
+    }
+ 
+     // WORKAROUND: Bug in GIFImageWriter may throw NPE if transparent pixels
++
+     // See: http://bugs.sun.com/view_bug.do?bug_id=6287936
++
+     @Test
+     public void testTranscodeResponsePNGToGIF() throws IOException {
+         FastByteArrayOutputStream out = new FastByteArrayOutputStream(STREAM_DEFAULT_SIZE);
+@@ -304,6 +300,97 @@ public class ImageServletResponseImplTestCase {
+         verify(response).getOutputStream();
+     }
+ 
++    @Test
++    public void testTranscodeResponseIndexedCM() throws IOException {
++        // Custom setup
++        HttpServletRequest request = mock(HttpServletRequest.class);
++        when(request.getContextPath()).thenReturn("/ape");
++        when(request.getRequestURI()).thenReturn("/ape/" + IMAGE_NAME_GIF);
++
++        ByteArrayOutputStream out = new ByteArrayOutputStream();
++        HttpServletResponse response = mock(HttpServletResponse.class);
++        when(response.getOutputStream()).thenReturn(new OutputStreamAdapter(out));
++
++        ImageServletResponseImpl imageResponse = new ImageServletResponseImpl(request, response, context);
++        fakeResponse(request, imageResponse);
++
++        // Force transcode to JPEG
++        imageResponse.setOutputContentType("image/jpeg");
++
++        // Flush image to wrapped response
++        imageResponse.flush();
++
++        assertTrue("Content has no data", out.size() > 0);
++
++        // Test that image data is still readable
++        BufferedImage outImage = ImageIO.read(new ByteArrayInputStream(out.toByteArray()));
++        assertNotNull(outImage);
++        assertEquals(IMAGE_DIMENSION_GIF.width, outImage.getWidth());
++        assertEquals(IMAGE_DIMENSION_GIF.height, outImage.getHeight());
++
++        BufferedImage image = flatten(ImageIO.read(context.getResource("/" + IMAGE_NAME_GIF)), Color.WHITE);
++
++        assertSimilarImage(image, outImage, 96f);
++    }
++
++    private static void showIt(final BufferedImage expected, final BufferedImage actual, final BufferedImage diff) {
++        try {
++            SwingUtilities.invokeAndWait(new Runnable() {
++                public void run() {
++                    JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
++                    panel.add(new BlackLabel("expected", expected));
++                    panel.add(new BlackLabel("actual", actual));
++                    if (diff != null) {
++                        panel.add(new BlackLabel("diff", diff));
++                    }
++                    JScrollPane scroll = new JScrollPane(panel);
++                    scroll.setBorder(BorderFactory.createEmptyBorder());
++                    JOptionPane.showMessageDialog(null, scroll);
++                }
++            });
++        }
++        catch (InterruptedException ignore) {
++        }
++        catch (InvocationTargetException ignore) {
++        }
++    }
++
++    public void run() {
++                    JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
++                    panel.add(new BlackLabel("expected", expected));
++                    panel.add(new BlackLabel("actual", actual));
++                    if (diff != null) {
++                        panel.add(new BlackLabel("diff", diff));
++                    }
++                    JScrollPane scroll = new JScrollPane(panel);
++                    scroll.setBorder(BorderFactory.createEmptyBorder());
++                    JOptionPane.showMessageDialog(null, scroll);
++                }
++
++    private static BufferedImage flatten(final BufferedImage pImage, final Color pBackgroundColor) {
++        BufferedImage image = ImageUtil.toBuffered(pImage, BufferedImage.TYPE_INT_ARGB);
++
++        Graphics2D g = image.createGraphics();
++        try {
++            g.setComposite(AlphaComposite.DstOver);
++            g.setColor(pBackgroundColor);
++            g.fillRect(0, 0, pImage.getWidth(), pImage.getHeight());
++        }
++        finally {
++            g.dispose();
++        }
++
++        return image;
++    }
++
++    /**
++     * Makes sure images are the same, taking JPEG artifacts into account.
++     *
++     * @param pExpected the expected image
++     * @param pActual the actual image
++     * @param pArtifactThreshold the maximum allowed difference between the expected and actual pixel value
++     */
++
+     @Test
+     public void testTranscodeResponseIndexColorModelGIFToJPEG() throws IOException {
+         // Custom setup
+@@ -343,6 +430,22 @@ public class ImageServletResponseImplTestCase {
+         assertSimilarImage(image, outImage, 96f);
+     }
+ 
++    private void assertSimilarImage(final BufferedImage pExpected, final BufferedImage pActual, final float pArtifactThreshold) {
++        for (int y = 0; y < pExpected.getHeight(); y++) {
++            for (int x = 0; x < pExpected.getWidth(); x++) {
++                int expected = pExpected.getRGB(x, y);
++                int actual = pActual.getRGB(x, y);
++
++                // Multiply in the alpha component
++                float alpha = ((expected >> 24) & 0xff) / 255f;
++
++                assertEquals(alpha * ((expected >> 16) & 0xff), (actual >> 16) & 0xff, pArtifactThreshold);
++                assertEquals(alpha * ((expected >> 8) & 0xff), (actual >> 8) & 0xff, pArtifactThreshold);
++                assertEquals(alpha * ((expected) & 0xff), actual & 0xff, pArtifactThreshold);
++            }
++        }
++    }
++
+     @Test
+     // TODO: Insert bug id/reference here for regression tracking
+     public void testIndexedColorModelResizePNG() throws IOException {
+@@ -396,42 +499,61 @@ public class ImageServletResponseImplTestCase {
+         }
+     }
+ 
+-    private static BufferedImage flatten(final BufferedImage pImage, final Color pBackgroundColor) {
+-        BufferedImage image = ImageUtil.toBuffered(pImage, BufferedImage.TYPE_INT_ARGB);
++    // TODO: Test with AOI attributes (rename thes to source-region?)
+ 
+-        Graphics2D g = image.createGraphics();
+-        try {
+-            g.setComposite(AlphaComposite.DstOver);
+-            g.setColor(pBackgroundColor);
+-            g.fillRect(0, 0, pImage.getWidth(), pImage.getHeight());
+-        }
+-        finally {
+-            g.dispose();
+-        }
++    // TODO: Test with scale attributes
+ 
+-        return image;
++    // More?
++
++    // Make sure we don't change semantics here...
++
++    @Test
++    public void testNotFoundInput() throws IOException {
++        // Need special setup
++        request = mock(HttpServletRequest.class);
++        when(request.getContextPath()).thenReturn("/ape");
++        when(request.getRequestURI()).thenReturn("/ape/monkey-business.gif");
++
++        HttpServletResponse response = mock(HttpServletResponse.class);
++
++        ImageServletResponseImpl imageResponse = new ImageServletResponseImpl(request, response, context);
++        fakeResponse(request, imageResponse);
++        
++        verify(response).sendError(eq(HttpServletResponse.SC_NOT_FOUND), anyString());
+     }
+ 
+-    /**
+-     * Makes sure images are the same, taking JPEG artifacts into account.
+-     *
+-     * @param pExpected the expected image
+-     * @param pActual the actual image
+-     * @param pArtifactThreshold the maximum allowed difference between the expected and actual pixel value
+-     */
+-    private void assertSimilarImage(final BufferedImage pExpected, final BufferedImage pActual, final float pArtifactThreshold) {
+-        for (int y = 0; y < pExpected.getHeight(); y++) {
+-            for (int x = 0; x < pExpected.getWidth(); x++) {
+-                int expected = pExpected.getRGB(x, y);
+-                int actual = pActual.getRGB(x, y);
++    // NOTE: This means it's up to some Filter to decide wether we should filter the given request
+ 
+-                // Multiply in the alpha component
+-                float alpha = ((expected >> 24) & 0xff) / 255f;
++    @Test
++    public void testUnsupportedInput() throws IOException {
++        assertFalse("Test is invalid, rewrite test", ImageIO.getImageReadersByFormatName("txt").hasNext());
+ 
+-                assertEquals(alpha * ((expected >> 16) & 0xff), (actual >> 16) & 0xff, pArtifactThreshold);
+-                assertEquals(alpha * ((expected >> 8) & 0xff), (actual >> 8) & 0xff, pArtifactThreshold);
+-                assertEquals(alpha * ((expected) & 0xff), actual & 0xff, pArtifactThreshold);
+-            }
++        // Need special setup
++        request =  mock(HttpServletRequest.class);
++        when(request.getContextPath()).thenReturn("/ape");
++        when(request.getRequestURI()).thenReturn("/ape/foo.txt");
++
++        HttpServletResponse response = mock(HttpServletResponse.class);
++
++        ImageServletResponseImpl imageResponse = new ImageServletResponseImpl(request, response, context);
++
++        fakeResponse(request, imageResponse);
++        try {
++            // Force transcode
++            imageResponse.setOutputContentType("image/png");
++
++            // Flush image to wrapped response
++            imageResponse.flush();
++
++            fail("Should throw IOException in case of unspupported input");
++        }
++        catch (IOException e) {
++            String message = e.getMessage().toLowerCase();
++            assertTrue("Wrong message: " + e.getMessage(), message.contains("transcode"));
++            assertTrue("Wrong message: " + e.getMessage(), message.contains("reader"));
++            assertTrue("Wrong message: " + e.getMessage(), message.contains("text"));
++            
++            // Failure here suggests a different error condition than the one we expected
+         }
+     }
+ 
+@@ -472,6 +594,38 @@ public class ImageServletResponseImplTestCase {
+         }
+     }
+ 
++    @Test
++    public void testUnsupportedOutput() throws IOException {
++        assertFalse("Test is invalid, rewrite test", ImageIO.getImageWritersByFormatName("foo").hasNext());
++
++        HttpServletResponse response = mock(HttpServletResponse.class);
++
++        ImageServletResponseImpl imageResponse = new ImageServletResponseImpl(request, response, context);
++
++        fakeResponse(request, imageResponse);
++        try {
++            // Force transcode to unsupported format
++            imageResponse.setOutputContentType("application/xml+foo");
++
++            // Flush image to wrapped response
++            imageResponse.flush();
++
++            fail("Should throw IOException in case of unspupported output");
++        }
++        catch (IOException e) {
++            String message = e.getMessage().toLowerCase();
++            assertTrue("Wrong message: " + e.getMessage(), message.contains("transcode"));
++            assertTrue("Wrong message: " + e.getMessage(), message.contains("writer"));
++            assertTrue("Wrong message: " + e.getMessage(), message.contains("foo"));
++            
++            // Failure here suggests a different error condition than the one we expected
++        }
++    }
++
++    // TODO: Test that we handle image conversion to a suitable format, before writing response
++
++    // For example: Read a PNG with transparency and store as B/W WBMP
++
+     private void assertRGBEquals(int x, int y, int expected, int actual, float pArtifactThreshold) {
+         int expectedA = (expected >> 24) & 0xff;
+         int expectedR = (expected >> 16) & 0xff;
+@@ -491,6 +645,8 @@ public class ImageServletResponseImplTestCase {
+         }
+     }
+ 
++    // TODO: Create ImageFilter test case, that tests normal use, as well as chaining
++
+     @Test
+     public void testReplaceResponse() throws IOException {
+         FastByteArrayOutputStream out = new FastByteArrayOutputStream(STREAM_DEFAULT_SIZE);
+@@ -527,96 +683,6 @@ public class ImageServletResponseImplTestCase {
+         verify(response).setContentType(CONTENT_TYPE_BMP);
+     }
+ 
+-    // TODO: Test with AOI attributes (rename thes to source-region?)
+-    // TODO: Test with scale attributes
+-    // More?
+-
+-    // Make sure we don't change semantics here...
+-
+-    @Test
+-    public void testNotFoundInput() throws IOException {
+-        // Need special setup
+-        request = mock(HttpServletRequest.class);
+-        when(request.getContextPath()).thenReturn("/ape");
+-        when(request.getRequestURI()).thenReturn("/ape/monkey-business.gif");
+-
+-        HttpServletResponse response = mock(HttpServletResponse.class);
+-
+-        ImageServletResponseImpl imageResponse = new ImageServletResponseImpl(request, response, context);
+-        fakeResponse(request, imageResponse);
+-        
+-        verify(response).sendError(eq(HttpServletResponse.SC_NOT_FOUND), anyString());
+-    }
+-
+-    // NOTE: This means it's up to some Filter to decide wether we should filter the given request
+-
+-    @Test
+-    public void testUnsupportedInput() throws IOException {
+-        assertFalse("Test is invalid, rewrite test", ImageIO.getImageReadersByFormatName("txt").hasNext());
+-
+-        // Need special setup
+-        request =  mock(HttpServletRequest.class);
+-        when(request.getContextPath()).thenReturn("/ape");
+-        when(request.getRequestURI()).thenReturn("/ape/foo.txt");
+-
+-        HttpServletResponse response = mock(HttpServletResponse.class);
+-
+-        ImageServletResponseImpl imageResponse = new ImageServletResponseImpl(request, response, context);
+-
+-        fakeResponse(request, imageResponse);
+-        try {
+-            // Force transcode
+-            imageResponse.setOutputContentType("image/png");
+-
+-            // Flush image to wrapped response
+-            imageResponse.flush();
+-
+-            fail("Should throw IOException in case of unspupported input");
+-        }
+-        catch (IOException e) {
+-            String message = e.getMessage().toLowerCase();
+-            assertTrue("Wrong message: " + e.getMessage(), message.contains("transcode"));
+-            assertTrue("Wrong message: " + e.getMessage(), message.contains("reader"));
+-            assertTrue("Wrong message: " + e.getMessage(), message.contains("text"));
+-            
+-            // Failure here suggests a different error condition than the one we expected
+-        }
+-    }
+-
+-    @Test
+-    public void testUnsupportedOutput() throws IOException {
+-        assertFalse("Test is invalid, rewrite test", ImageIO.getImageWritersByFormatName("foo").hasNext());
+-
+-        HttpServletResponse response = mock(HttpServletResponse.class);
+-
+-        ImageServletResponseImpl imageResponse = new ImageServletResponseImpl(request, response, context);
+-
+-        fakeResponse(request, imageResponse);
+-        try {
+-            // Force transcode to unsupported format
+-            imageResponse.setOutputContentType("application/xml+foo");
+-
+-            // Flush image to wrapped response
+-            imageResponse.flush();
+-
+-            fail("Should throw IOException in case of unspupported output");
+-        }
+-        catch (IOException e) {
+-            String message = e.getMessage().toLowerCase();
+-            assertTrue("Wrong message: " + e.getMessage(), message.contains("transcode"));
+-            assertTrue("Wrong message: " + e.getMessage(), message.contains("writer"));
+-            assertTrue("Wrong message: " + e.getMessage(), message.contains("foo"));
+-            
+-            // Failure here suggests a different error condition than the one we expected
+-        }
+-    }
+-
+-    // TODO: Test that we handle image conversion to a suitable format, before writing response
+-    // For example: Read a PNG with transparency and store as B/W WBMP
+-
+-
+-    // TODO: Create ImageFilter test case, that tests normal use, as well as chaining
+-
+     @Test
+     public void testReadWithSourceRegion() throws IOException {
+         Rectangle sourceRegion = new Rectangle(100, 100, 100, 100);
+@@ -1179,8 +1245,8 @@ public class ImageServletResponseImplTestCase {
+     }
+ 
+     // -----------------------------------------------------------------------------------------------------------------
++
+     // Absolute AOI
+-    // -----------------------------------------------------------------------------------------------------------------
+ 
+     @Test
+     public void testGetAOIAbsolute() {
+@@ -1207,9 +1273,7 @@ public class ImageServletResponseImplTestCase {
+         assertEquals(new Rectangle(10, 0, 100, 100), ImageServletResponseImpl.getAOI(200, 100, 10, 0, 100, 110, false, false));
+     }
+ 
+-    // -----------------------------------------------------------------------------------------------------------------
+     // Uniform AOI centered
+-    // -----------------------------------------------------------------------------------------------------------------
+ 
+     @Test
+     public void testGetAOIUniformCenteredS2SUp() {
+@@ -1336,9 +1400,7 @@ public class ImageServletResponseImplTestCase {
+         assertEquals(new Rectangle(0, 0, 100, 200), ImageServletResponseImpl.getAOI(100, 200, -1, -1, 100, 200, false, true));
+     }
+ 
+-    // -----------------------------------------------------------------------------------------------------------------
+     // Absolute AOI centered
+-    // -----------------------------------------------------------------------------------------------------------------
+ 
+     @Test
+     public void testGetAOICenteredS2SUp() {
+@@ -1499,9 +1561,10 @@ public class ImageServletResponseImplTestCase {
+ 
+     // TODO: Test getSize()...
+ 
+-    private static class BlackLabel extends JLabel {
+-        private final Paint checkeredBG;
+-        private boolean opaque = true;
++    private static class BlackLabel extends JLabel{
++
++        private final Paint checkeredBG;,
++        private boolean opaque = true;,
+ 
+         public BlackLabel(final String text, final BufferedImage outImage) {
+             super(text, new BufferedImageIcon(outImage), JLabel.CENTER);
+@@ -1560,9 +1623,11 @@ public class ImageServletResponseImplTestCase {
+ 
+             return new TexturePaint(pattern, new Rectangle(pattern.getWidth(), pattern.getHeight()));
+         }
++
+     }
++    private static class MockLogger implements Answer<Void>{
++
+ 
+-    private static class MockLogger implements Answer<Void> {
+         public Void answer(InvocationOnMock invocation) throws Throwable {
+             // either log(String), log(String, Throwable) or log(Exception, String)
+             Object[] arguments = invocation.getArguments();
+@@ -1577,6 +1642,6 @@ public class ImageServletResponseImplTestCase {
+ 
+             return null;
+         }
+-    }
+ 
+-}
++    }
++}
+\ No newline at end of file

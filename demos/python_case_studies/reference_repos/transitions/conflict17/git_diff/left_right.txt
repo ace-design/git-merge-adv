@@ -1,0 +1,78 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict17/left.py b/python_case_studies/reference_repos/transitions/conflict17/right.py
+index c37e950..05c75be 100644
+--- a/python_case_studies/reference_repos/transitions/conflict17/left.py
++++ b/python_case_studies/reference_repos/transitions/conflict17/right.py
+@@ -17,7 +17,6 @@ except ImportError:
+ 
+ nested_separator = State.separator
+ 
+-
+ class TestTransitions(TestCase):
+ 
+     def setUp(self):
+@@ -42,7 +41,7 @@ class TestTransitions(TestCase):
+         counter = Machine(states=states, transitions=transitions, before_state_change='check',
+                           after_state_change='clear', initial='1')
+ 
+-        new_states = ['A', 'B', {'name': 'C', 'children': counter}]
++        new_states = ['A', 'B', {'name':'C', 'children': counter}]
+         new_transitions = [
+             {'trigger': 'forward', 'source': 'A', 'dest': 'B'},
+             {'trigger': 'forward', 'source': 'B', 'dest': 'C%s1' % State.separator},
+@@ -87,7 +86,9 @@ class TestTransitions(TestCase):
+ 
+         counter = Machine(states=states, transitions=transitions, initial='1')
+ 
+-        new_states = ['A', 'B', {'name': 'C', 'children': counter, 'remap': {'finished': 'A'}}]
++        new_states = ['A', 'B', {'name': 'C', 'children':
++                      [counter, {'name': 'X', 'children': ['will', 'be', 'filtered', 'out']}],
++                       'remap': {'finished': 'A', 'X': 'A'}}]
+         new_transitions = [
+             {'trigger': 'forward', 'source': 'A', 'dest': 'B'},
+             {'trigger': 'forward', 'source': 'B', 'dest': 'C%s1' % State.separator},
+@@ -135,7 +136,10 @@ class TestTransitions(TestCase):
+         collision = ['A', {'name': 'B', 'children': ['A', self.stuff.machine]}]
+ 
+         m = Machine(None, states=correct)
+-        m.to_B.C.s3.a()
++        if State.separator in '_':
++            m.to_B_C_3_a()
++        else:
++            m.to_B.C.s3.a()
+ 
+         with self.assertRaises(ValueError):
+             m = Machine(None, states=wrong_type)
+@@ -144,8 +148,12 @@ class TestTransitions(TestCase):
+             m = Machine(None, states=collision)
+ 
+         m = Machine(None, states=siblings)
+-        m.to_B.s1()
+-        m.to_B.A()
++        if State.separator in '_':
++            m.to_B_1()
++            m.to_B_A()
++        else:
++            m.to_B.s1()
++            m.to_B.A()
+ 
+     def test_custom_separator(self):
+         State.separator = '.'
+@@ -223,14 +231,14 @@ class TestTransitions(TestCase):
+                 self.prepared = True
+ 
+         ms_model = Model()
+-        ms = Machine(ms_model, states=["C", "D"],
+-                     transitions={"trigger": "go", "source": "*", "dest": "D",
+-                                  "prepare": "preparation"}, initial="C")
++
++        ms = Machine(ms_model, states=["C","D"],
++                     transitions={"trigger":"go","source":"*", "dest":"D","prepare":"preparation"},initial="C")
+         ms_model.go()
+         self.assertTrue(ms_model.prepared)
+ 
+         m_model = Model()
+-        m = Machine(m_model, states=["A", "B", {"name": "NEST", "children": ms}])
++        m = Machine(m_model,states=["A","B",{"name":"NEST","children":ms}])
+         m_model.to('NEST%sC' % State.separator)
+         m_model.go()
+         self.assertTrue(m_model.prepared)

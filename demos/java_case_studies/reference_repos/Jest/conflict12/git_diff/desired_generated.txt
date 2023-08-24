@@ -1,0 +1,37 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict12/desired.java b/java_case_studies/demo_results/MethodUnion/Jest-conflict12.java
+index 5adbb17..f2695cf 100644
+--- a/java_case_studies/reference_repos/Jest/conflict12/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/Jest-conflict12.java
+@@ -1,19 +1,16 @@
+ package io.searchbox.client;
+-
+ import io.searchbox.client.config.HttpClientConfig;
+ import io.searchbox.client.http.JestHttpClient;
+-import org.elasticsearch.test.ElasticsearchIntegrationTest;
+ import org.junit.Test;
+-
++import org.elasticsearch.test.ElasticsearchIntegrationTest;
+ import java.util.concurrent.TimeUnit;
++import static junit.framework.Assert.assertEquals;
++import static junit.framework.Assert.assertNotNull;
+ 
+-/**
+- * @author cihat keser
+- */
+ @ElasticsearchIntegrationTest.ClusterScope(scope = ElasticsearchIntegrationTest.Scope.TEST, numNodes = 0)
+-public class JestClientFactoryIntegrationTest extends ElasticsearchIntegrationTest {
++public class JestClientFactoryIntegrationTest extends ElasticsearchIntegrationTest{
+ 
+-    JestClientFactory factory = new JestClientFactory();
++    JestClientFactory factory = new JestClientFactory();,
+ 
+     @Test
+     public void testDiscovery() throws InterruptedException {
+@@ -53,4 +50,5 @@ public class JestClientFactoryIntegrationTest extends ElasticsearchIntegrationTe
+                 jestClient.getServers().size()
+         );
+     }
+-}
++
++}
+\ No newline at end of file

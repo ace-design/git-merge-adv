@@ -1,0 +1,47 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict16/base.py b/python_case_studies/reference_repos/apistar/conflict16/left.py
+index e8ab936..92fab52 100644
+--- a/python_case_studies/reference_repos/apistar/conflict16/base.py
++++ b/python_case_studies/reference_repos/apistar/conflict16/left.py
+@@ -3,6 +3,7 @@ from collections import OrderedDict
+ import click
+ 
+ from apistar import commands, pipelines, routing
++from apistar.db import DBBackend
+ 
+ 
+ class App(object):
+@@ -10,15 +11,18 @@ class App(object):
+         commands.new,
+         commands.run,
+         commands.test,
++        commands.create_tables,
+     )
+ 
+-    def __init__(self, routes=None, commands=None):
++    def __init__(self, routes=None, commands=None, db_engine_config=None):
+         routes = [] if (routes is None) else routes
+         commands = [] if (commands is None) else commands
+ 
+         self.routes = routes
+         self.commands = list(self.built_in_commands) + commands
+ 
++        self.db_engine_config = db_engine_config
++
+         self.router = routing.Router(self.routes)
+         self.wsgi = get_wsgi_server(app=self)
+         self.click = get_click_client(app=self)
+@@ -41,12 +45,12 @@ def get_wsgi_server(app):
+         lookup_key = method + ' ' + path
+         state = {
+             'wsgi_environ': environ,
+-            'app': app,
+             'method': method,
+             'path': path,
+             'exception': None,
+             'view': None,
+-            'url_path_args': {}
++            'url_path_args': {},
++            'db_backend': DBBackend.build(db_engine_config=app.db_engine_config)
+         }
+ 
+         try:

@@ -1,0 +1,59 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict4/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict4.py
+index c314b7a..6e2d20a 100644
+--- a/python_case_studies/reference_repos/transitions/conflict4/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict4.py
+@@ -1,13 +1,13 @@
+-# -*- coding: utf-8 -*-
+-from collections import OrderedDict, defaultdict
++from collections import OrderedDict,defaultdict
+ import copy
+-from functools import partial, reduce
++from functools import partial,reduce
+ import inspect
+ import logging
+-
+ from six import string_types
++from core import State,Machine,Transition,Event,listify,MachineError,Enum,EnumMeta,EventData
++# -*- coding: utf-8 -*-
++
+ 
+-from ..core import State, Machine, Transition, Event, listify, MachineError, Enum, EnumMeta, EventData
+ 
+ _LOGGER = logging.getLogger(__name__)
+ _LOGGER.addHandler(logging.NullHandler())
+@@ -150,10 +150,15 @@ class NestedEvent(Event):
+         Returns: boolean indicating whether or not a transition was
+             successfully executed (True if successful, False if not).
+         """
++<<<<<<< left_content.py
+         machine = event_data.machine
+         model = event_data.model
+-        state_tree = machine.build_state_tree(getattr(model, machine.model_attribute), machine.state_cls.separator)
++        state_tree = machine._build_state_tree(getattr(model, machine.model_attribute), machine.state_cls.separator)
+         state_tree = reduce(dict.get, machine.get_global_name(join=False), state_tree)
++=======
++        state_tree = _machine.build_state_tree(getattr(_model, _machine.model_attribute), _machine.state_cls.separator)
++        state_tree = reduce(dict.get, _machine.get_global_name(join=False), state_tree)
++>>>>>>> right_content.py
+         ordered_states = _resolve_order(state_tree)
+         done = set()
+         event_data.event = self
+@@ -1035,8 +1040,13 @@ class HierarchicalMachine(Machine):
+     def _trigger_event(self, event_data, trigger, _state_tree):
+         model = event_data.model
+         if _state_tree is None:
++<<<<<<< left_content.py
++            _state_tree = self._build_state_tree(listify(getattr(model, self.model_attribute)),
++                                                 self.state_cls.separator)
++=======
+             _state_tree = self.build_state_tree(listify(getattr(_model, self.model_attribute)),
+                                                 self.state_cls.separator)
++>>>>>>> right_content.py
+         res = {}
+         for key, value in _state_tree.items():
+             if value:
+@@ -1050,3 +1060,4 @@ class HierarchicalMachine(Machine):
+                 if tmp is not None:
+                     res[key] = tmp
+         return None if not res or all(v is None for v in res.values()) else any(res.values())
++

@@ -1,0 +1,59 @@
+diff --git a/java_case_studies/reference_repos/cucumber.jvm/importC1/left.java b/java_case_studies/reference_repos/cucumber.jvm/importC1/right.java
+index 88c6ac7..34271b7 100644
+--- a/java_case_studies/reference_repos/cucumber.jvm/importC1/left.java
++++ b/java_case_studies/reference_repos/cucumber.jvm/importC1/right.java
+@@ -30,11 +30,9 @@ import javax.xml.transform.dom.DOMSource;
+ import javax.xml.transform.stream.StreamResult;
+ import java.io.Closeable;
+ import java.io.IOException;
+-import java.io.OutputStream;
+-import java.io.PrintWriter;
+-import java.io.StringWriter;
+ import java.io.Writer;
+ import java.net.URI;
++import java.net.URL;
+ import java.time.Duration;
+ import java.time.Instant;
+ import java.util.ArrayList;
+@@ -43,6 +41,7 @@ import java.util.List;
+ import java.util.Map;
+ import java.util.UUID;
+ 
++import static io.cucumber.core.exception.ExceptionUtils.printStackTrace;
+ import static java.time.Duration.ZERO;
+ import static java.time.format.DateTimeFormatter.ISO_INSTANT;
+ import static java.util.Locale.ROOT;
+@@ -65,8 +64,9 @@ public final class TestNGFormatter implements EventListener, StrictAware {
+     private final Map<URI, String> featuresNames = new HashMap<>();
+     private final FeatureParser parser = new FeatureParser(UUID::randomUUID);
+ 
+-    public TestNGFormatter(OutputStream out) {
+-        this.writer = new UTF8OutputStreamWriter(out);
++    @SuppressWarnings("WeakerAccess") // Used by plugin factory
++    public TestNGFormatter(URL url) throws IOException {
++        this.writer = new UTF8OutputStreamWriter(new URLOutputStream(url));
+         try {
+             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+             results = document.createElement("testng-results");
+@@ -235,7 +235,7 @@ public final class TestNGFormatter implements EventListener, StrictAware {
+             }
+             if (failed != null) {
+                 element.setAttribute("status", "FAIL");
+-                String stacktrace = printStrackTrace(failed);
++                String stacktrace = printStackTrace(failed.getError());
+                 Element exception = createException(doc, failed.getError().getClass().getName(), stringBuilder.toString(), stacktrace);
+                 element.appendChild(exception);
+             } else if (skipped != null) {
+@@ -251,12 +251,6 @@ public final class TestNGFormatter implements EventListener, StrictAware {
+             }
+         }
+ 
+-        private String printStrackTrace(Result failed) {
+-            StringWriter stringWriter = new StringWriter();
+-            failed.getError().printStackTrace(new PrintWriter(stringWriter));
+-            return stringWriter.toString();
+-        }
+-
+         private String calculateTotalDurationString() {
+             Duration totalDuration = ZERO;
+             for (Result r : results) {

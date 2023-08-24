@@ -1,0 +1,12 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict10/base.java b/java_case_studies/reference_repos/Jest/conflict10/right.java
+index 8133145..81d2e01 100644
+--- a/java_case_studies/reference_repos/Jest/conflict10/base.java
++++ b/java_case_studies/reference_repos/Jest/conflict10/right.java
+@@ -158,6 +158,7 @@ public class JestResult {
+                         }
+                     }
+                 } else if (obj != null) {
++                    ((JsonObject) obj).add(ES_METADATA_ID, jsonObject.get("_id"));
+                     sourceList.add(obj);
+                 }
+             }

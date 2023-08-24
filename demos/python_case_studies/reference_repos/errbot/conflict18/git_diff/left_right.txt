@@ -1,0 +1,98 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict18/left.py b/python_case_studies/reference_repos/errbot/conflict18/right.py
+index da0f3b4..5b23828 100644
+--- a/python_case_studies/reference_repos/errbot/conflict18/left.py
++++ b/python_case_studies/reference_repos/errbot/conflict18/right.py
+@@ -1,4 +1,5 @@
+ from __future__ import absolute_import
++import config
+ import logging
+ import sys
+ import warnings
+@@ -118,8 +119,7 @@ class IRCMUCRoom(MUCRoom):
+         """
+         return self.connection.topic(str(self))
+ 
+-    @topic.setter
+-    def topic(self, topic):
++    def set_topic(self, topic):
+         """
+         Set the room's topic.
+ 
+@@ -160,22 +160,9 @@ class IRCMUCRoom(MUCRoom):
+ 
+ 
+ class IRCConnection(SingleServerIRCBot):
+-    def __init__(self,
+-                 callback,
+-                 nickname,
+-                 server,
+-                 port=6667,
+-                 ssl=False,
+-                 password=None,
+-                 username=None,
+-                 private_rate=1,
+-                 channel_rate=1):
++    def __init__(self, callback, nickname, server, port=6667, ssl=False, password=None, username=None):
+         self.use_ssl = ssl
+         self.callback = callback
+-        # manually decorate functions
+-        self.send_private_message = RateLimited(private_rate)(self.send_private_message)
+-        self.send_public_message = RateLimited(channel_rate)(self.send_private_message)
+-
+         if username is None:
+             username = nickname
+         super().__init__([(server, port, password)], nickname, username)
+@@ -205,30 +192,20 @@ class IRCConnection(SingleServerIRCBot):
+         msg.to = e.target
+         self.callback.callback_message(msg)
+ 
++    @RateLimited(config.__dict__.get('IRC_PRIVATE_RATE', 1))
+     def send_private_message(self, to, line):
+         self.connection.privmsg(to, line)
+ 
++    @RateLimited(config.__dict__.get('IRC_CHANNEL_RATE', 1))
+     def send_public_message(self, to, line):
+         self.connection.privmsg(to, line)
+ 
+ 
+ class IRCBackend(ErrBot):
+-    def __init__(self, config):
+-
+-        identity = config.BOT_IDENTITY
+-        nickname = identity['nickname']
+-        server = identity['server']
+-        port = identity.get('port', 6667)
+-        password = identity.get('password', None)
+-        ssl = identity.get('ssl', False)
+-        username = identity.get('username', None)
+-
+-        private_rate = config.__dict__.get('IRC_PRIVATE_RATE', 1)
+-        channel_rate = config.__dict__.get('IRC_CHANNEL_RATE', 1)
+-
++    def __init__(self, nickname, server, port=6667, password=None, ssl=False, username=None):
+         self.jid = Identifier(node=nickname, domain=server)
+-        super(IRCBackend, self).__init__(config)
+-        self.conn = IRCConnection(self, nickname, server, port, ssl, password, username, private_rate, channel_rate)
++        super(IRCBackend, self).__init__()
++        self.conn = IRCConnection(self, nickname, server, port, ssl, password, username)
+ 
+     def send_message(self, mess):
+         super(IRCBackend, self).send_message(mess)
+@@ -298,5 +275,15 @@ class IRCBackend(ErrBot):
+         channels = self.conn.channels.keys()
+         return [IRCMUCRoom(node=channel) for channel in channels]
+ 
+-    def groupchat_reply_format(self):
+-        return '{0}: {1}'
++    def send(self, user, text, in_reply_to=None, message_type='chat'):
++        """Sends a simple message to the specified user."""
++
++        nick_reply = config.__dict__.get('IRC_NICK_PREFIX_REPLY', False)
++
++        if in_reply_to and message_type == 'groupchat' and nick_reply:
++            super().send(user,
++                         '{}: {}'.format(in_reply_to.nick, text),
++                         in_reply_to,
++                         message_type)
++        else:
++            super().send(user, text, in_reply_to, message_type)

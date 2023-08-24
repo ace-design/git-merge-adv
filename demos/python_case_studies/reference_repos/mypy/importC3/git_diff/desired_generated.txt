@@ -1,0 +1,157 @@
+diff --git a/python_case_studies/reference_repos/mypy/importC3/desired.py b/python_case_studies/demo_results/MethodUnion/mypy-importC3.py
+index 570ae7e..e6019ed 100644
+--- a/python_case_studies/reference_repos/mypy/importC3/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/mypy-importC3.py
+@@ -1,47 +1,120 @@
+-"""Mypy type checker."""
+-
+ import itertools
+-
+-from typing import Undefined, Any, Dict, Set, List, cast, overload, Tuple, Function, typevar, Union
+-
++from typing import Undefined,Any,Dict,Set,List,cast,overload,Tuple,Function,typevar,Union
+ from mypy.errors import Errors
+ from mypy.nodes import (
+-    SymbolTable, Node, MypyFile, VarDef, LDEF, Var,
+-    OverloadedFuncDef, FuncDef, FuncItem, FuncBase, TypeInfo,
+-    ClassDef, GDEF, Block, AssignmentStmt, NameExpr, MemberExpr, IndexExpr,
+-    TupleExpr, ListExpr, ParenExpr, ExpressionStmt, ReturnStmt, IfStmt,
+-    WhileStmt, OperatorAssignmentStmt, YieldStmt, WithStmt, AssertStmt,
+-    RaiseStmt, TryStmt, ForStmt, DelStmt, CallExpr, IntExpr, StrExpr,
+-    BytesExpr, UnicodeExpr, FloatExpr, OpExpr, UnaryExpr, CastExpr, SuperExpr,
+-    TypeApplication, DictExpr, SliceExpr, FuncExpr, TempNode, SymbolTableNode,
+-    Context, ListComprehension, ConditionalExpr, GeneratorExpr,
+-    Decorator, SetExpr, PassStmt, TypeVarExpr, UndefinedExpr, PrintStmt,
+-    LITERAL_TYPE, BreakStmt, ContinueStmt, ComparisonExpr, StarExpr,
+-    YieldFromExpr, YieldFromStmt, NamedTupleExpr, SetComprehension,
+-    DictionaryComprehension, ComplexExpr
++    SymbolTable,
++    Node,
++    MypyFile,
++    VarDef,
++    LDEF,
++    Var,
++    OverloadedFuncDef,
++    FuncDef,
++    FuncItem,
++    FuncBase,
++    TypeInfo,
++    ClassDef,
++    GDEF,
++    Block,
++    AssignmentStmt,
++    NameExpr,
++    MemberExpr,
++    IndexExpr,
++    TupleExpr,
++    ListExpr,
++    ParenExpr,
++    ExpressionStmt,
++    ReturnStmt,
++    IfStmt,
++    WhileStmt,
++    OperatorAssignmentStmt,
++    YieldStmt,
++    WithStmt,
++    AssertStmt,
++    RaiseStmt,
++    TryStmt,
++    ForStmt,
++    DelStmt,
++    CallExpr,
++    IntExpr,
++    StrExpr,
++    BytesExpr,
++    UnicodeExpr,
++    FloatExpr,
++    OpExpr,
++    UnaryExpr,
++    CastExpr,
++    SuperExpr,
++    TypeApplication,
++    DictExpr,
++    SliceExpr,
++    FuncExpr,
++    TempNode,
++    SymbolTableNode,
++    Context,
++    ListComprehension,
++    ConditionalExpr,
++    GeneratorExpr,
++    Decorator,
++    SetExpr,
++    PassStmt,
++    TypeVarExpr,
++    UndefinedExpr,
++    PrintStmt,
++    LITERAL_TYPE,
++    BreakStmt,
++    ContinueStmt,
++    ComparisonExpr,
++    StarExpr,
++    YieldFromExpr,
++    YieldFromStmt,
++    NamedTupleExpr,
++    SetComprehension,
++    DictionaryComprehension,
++    function_type,
++    method_type,
++    ComplexExpr,
+ )
+-from mypy.nodes import function_type, method_type
+ from mypy import nodes
+ from mypy.types import (
+-    Type, AnyType, Callable, Void, FunctionLike, Overloaded, TupleType,
+-    Instance, NoneTyp, UnboundType, ErrorType, TypeTranslator, strip_type, UnionType
++    Type,
++    AnyType,
++    Callable,
++    Void,
++    FunctionLike,
++    Overloaded,
++    TupleType,
++    Instance,
++    NoneTyp,
++    UnboundType,
++    ErrorType,
++    TypeTranslator,
++    strip_type,
++    UnionType,
+ )
+ from mypy.sametypes import is_same_type
+ from mypy.messages import MessageBuilder
+ import mypy.checkexpr
+ from mypy import messages
+ from mypy.subtypes import (
+-    is_subtype, is_equivalent, is_proper_subtype,
+-    is_more_precise, restrict_subtype_away
++    is_subtype,
++    is_equivalent,
++    is_proper_subtype,
++    is_more_precise,
++    restrict_subtype_away,
+ )
+ from mypy.maptype import map_instance_to_supertype
+-from mypy.semanal import self_type, set_callable_name, refers_to_fullname
++from mypy.semanal import self_type,set_callable_name,refers_to_fullname
+ from mypy.erasetype import erase_typevars
+-from mypy.expandtype import expand_type_by_instance, expand_type
++from mypy.expandtype import expand_type_by_instance,expand_type
+ from mypy.visitor import NodeVisitor
+-from mypy.join import join_simple, join_types
++from mypy.join import join_simple,join_types
+ from mypy.treetransform import TransformVisitor
+-from mypy.meet import meet_simple, meet_simple_away, nearest_builtin_ancestor, is_overlapping_types
++from mypy.meet import meet_simple,meet_simple_away,nearest_builtin_ancestor,is_overlapping_types
++"""Mypy type checker."""
++
++
++
+ 
+ 
+ # Kinds of isinstance checks.
+@@ -2144,3 +2217,4 @@ def infer_operator_assignment_method(type: Type, operator: str) -> str:
+             if type.type.has_readable_member(inplace):
+                 method = inplace
+     return method
++

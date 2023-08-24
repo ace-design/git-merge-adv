@@ -1,0 +1,236 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict23/left.py b/python_case_studies/reference_repos/transitions/conflict23/right.py
+index ebac087..bdf52af 100644
+--- a/python_case_studies/reference_repos/transitions/conflict23/left.py
++++ b/python_case_studies/reference_repos/transitions/conflict23/right.py
+@@ -1,5 +1,4 @@
+ from ..core import Transition, Machine
+-from .nesting import NestedState
+ import abc
+ try:
+     import pygraphviz as pgv
+@@ -57,54 +56,37 @@ class AGraph(Diagram):
+         }
+     }
+ 
+-    def __init__(self, *args, **kwargs):
+-        self.seen = []
+-        super(AGraph, self).__init__(*args, **kwargs)
++    def _add_nodes(self, states, container, initial_state=None):
++        # For each state, draw a circle
++        for state in states.keys():
+ 
+-    def _add_nodes(self, states, container):
+-        # to be able to process children recursively as well as the state dict of a machine
+-        states = states.values() if isinstance(states, dict) else states
+-        for state in states:
+-            if state.name in self.seen:
+-                continue
+-            elif hasattr(state, 'children') and len(state.children) > 0:
+-                self.seen.append(state.name)
+-                sub = container.add_subgraph(name="cluster_" + state._name, label=state.name, rank='same')
+-                self._add_nodes(state.children, sub)
+-            else:
+-                try:
+-                    shape = self.style_attributes['node']['default']['shape']
+-                except KeyError:
+-                    shape = 'circle'
++            shape = self.style_attributes['state']['default']['shape']
+ 
+-                self.seen.append(state.name)
+-                container.add_node(n=state.name, shape=shape)
++            container.add_node(n=state, shape=shape)
+ 
+-    def _add_edges(self, events, sub):
++    def _add_edges(self, events, container):
++        # For each event, add an edge
+         for event in events.items():
+             event = event[1]
+             label = str(event.name)
+ 
+             for transitions in event.transitions.items():
+-                src = self.machine.get_state(transitions[0])
+-                ltail = ''
+-                if hasattr(src, 'children') and len(src.children) > 0:
+-                    ltail = 'cluster_' + src.name
+-                    src = src.children[0]
+-                    while len(src.children) > 0:
+-                        src = src.children
+-
++                src = transitions[0]
+                 for t in transitions[1]:
+-                    dst = self.machine.get_state(t.dest)
+-                    lhead = ''
+-                    if hasattr(dst, 'children') and len(dst.children) > 0:
+-                        lhead = 'cluster_' + dst.name
+-                        dst = dst.children[0]
+-                        while len(dst.children) > 0:
+-                            dst = src.children
+-
+-                    if sub.has_edge(src.name, dst.name) is False:
+-                        sub.add_edge(src.name, dst.name, label=label, ltail=ltail, lhead=lhead)
++                    dst = t.dest
++                    lbl = self._transition_label(label, t)
++                    container.add_edge(src, dst, label=lbl)
++
++    def _transition_label(self, edge_label, tran):
++        if self.machine.show_conditions and tran.conditions:
++            return '{edge_label} [{conditions}]'.format(
++                edge_label=edge_label,
++                conditions=' & '.join(
++                    c.func if c.target else '!' + c.func
++                    for c in tran.conditions
++                ),
++            )
++        return edge_label
+ 
+     def get_graph(self, title=None):
+         """ Generate a DOT graph with pygraphviz, returns an AGraph object
+@@ -119,7 +101,7 @@ class AGraph(Diagram):
+         elif title is False:
+             title = ''
+ 
+-        fsm_graph = pgv.AGraph(label=title, compound=True, **self.machine_attributes)
++        fsm_graph = pgv.AGraph(label=title, **self.machine_attributes)
+         fsm_graph.node_attr.update(self.style_attributes['node']['default'])
+ 
+         # For each state, draw a circle
+@@ -132,6 +114,49 @@ class AGraph(Diagram):
+         return fsm_graph
+ 
+ 
++class AAGraph(AGraph):
++
++    def __init__(self, *args, **kwargs):
++        self.seen = []
++        super(AAGraph, self).__init__(*args, **kwargs)
++
++    def _add_nodes(self, states, container):
++        # to be able to process children recursively as well as the state dict of a machine
++        states = states.values() if isinstance(states, dict) else states
++        for state in states:
++            if state.name in self.seen:
++                continue
++            elif hasattr(state, 'children') and state.children is not None:
++                self.seen.append(state.name)
++                sub = container.add_subgraph(name="cluster_" + state.name, label=state.name)
++                self._add_nodes(state.children, sub)
++            else:
++                try:
++                    shape = self.style_attributes['node']['default']['shape']
++                except KeyError:
++                    shape = 'circle'
++
++                state = state.name
++                self.seen.append(state)
++                container.add_node(n=state, shape=shape)
++
++    def _add_edges(self, events, sub):
++        for event in events.items():
++            event = event[1]
++            label = str(event.name)
++
++            for transitions in event.transitions.items():
++                src = transitions[0]
++                for t in transitions[1]:
++                    dst = self.machine.get_state(t.dest)
++                    if hasattr(dst, 'children') and dst.children is not None:
++                        dst = dst.get_initial().name
++                    else:
++                        dst = dst.name
++                    lbl = self._transition_label(label, t)
++                    sub.add_edge(src, dst, label=lbl)
++
++
+ class MachineGraphSupport(Machine):
+     _pickle_blacklist = ['graph']
+ 
+@@ -144,20 +169,22 @@ class MachineGraphSupport(Machine):
+         self.set_node_style(self.graph.get_node(self.current_state.name), 'active')
+ 
+     def __init__(self, *args, **kwargs):
+-        # remove title from keywords
++        # remove graph config from keywords
+         title = kwargs.pop('title', 'State Machine')
++        show_conditions = kwargs.pop('show_conditions', False)
+         super(MachineGraphSupport, self).__init__(*args, **kwargs)
+ 
+         # Create graph at beginnning
+-        self.graph = self.get_graph(title=title)
++        self.show_conditions = show_conditions
+         self.title = title
++        self.graph = self.get_graph(title=title)
+ 
+         # Set initial node as active
+-        self.set_node_state(self.initial, 'active')
++        self.set_node_style(self.graph.get_node(self.initial), 'active')
+ 
+-    def get_graph(self, title=None, force_new=False):
++    def get_graph(self, title=None, diagram_class=AAGraph, force_new=False):
+         if not hasattr(self, 'graph') or force_new:
+-            self.graph = AGraph(self).get_graph(title)
++            self.graph = diagram_class(self).get_graph(title)
+ 
+         return self.graph
+ 
+@@ -185,19 +212,12 @@ class MachineGraphSupport(Machine):
+         if reset:
+             for n in self.graph.nodes_iter():
+                 self.set_node_style(n, 'default')
+-        if self.graph.has_node(node_name):
+-            node = self.graph.get_node(node_name)
+-            func = self.set_node_style
+-        else:
+-            path = node_name.split(NestedState.separator)
+-            node = self.graph
+-            while len(path) > 0:
+-                node = node.get_subgraph('cluster_'+ path.pop(0))
+-            func = self.set_graph_style
++
++        node = self.graph.get_node(node_name)
+         try:
+-            func(node, state)
++            self.set_node_style(node, state)
+         except KeyError:
+-            func(node, 'default')
++            self.set_node_style(node, 'default')
+ 
+     def set_node_style(self, item, style='default'):
+         style_attr = self.graph.style_attributes.get('node', {}).get(style)
+@@ -207,10 +227,6 @@ class MachineGraphSupport(Machine):
+         style_attr = self.graph.style_attributes.get('edge', {}).get(style)
+         item.attr.update(style_attr)
+ 
+-    def set_graph_style(self, item, style='default'):
+-        style_attr = self.graph.style_attributes.get('node', {}).get(style)
+-        item.graph_attr.update(style_attr)
+-
+     @staticmethod
+     def _create_transition(*args, **kwargs):
+         return TransitionGraphSupport(*args, **kwargs)
+@@ -222,20 +238,12 @@ class TransitionGraphSupport(Transition):
+ 
+         # Mark the active node
+         dest = event_data.machine.get_state(self.dest)
+-        event_data.machine.set_node_state(dest.name, state='active', reset=True)
++        dest = dest.name if not hasattr(dest, 'children') else dest.get_initial().name
++        event_data.machine.set_node_state(dest, state='active', reset=True)
+ 
+         # Mark the previous node and path used
+         if self.source is not None:
+-            source = event_data.machine.get_state(self.source)
+-
+-            event_data.machine.set_node_state(source.name, state='previous')
+-
+-            if hasattr(source, 'children'):
+-                while len(source.children) > 0:
+-                    source = source.children[0]
+-                while len(dest.children) > 0:
+-                    dest = dest.children[0]
+-            print(source.name, dest.name)
+-            event_data.machine.set_edge_state(source.name, dest.name, state='previous')
++            event_data.machine.set_node_state(self.source, state='previous')
++            event_data.machine.set_edge_state(self.source, dest, state='previous')
+ 
+-        super(TransitionGraphSupport, self)._change_state(event_data)
+\ No newline at end of file
++        super(TransitionGraphSupport, self)._change_state(event_data)

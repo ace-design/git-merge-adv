@@ -1,0 +1,321 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict2/left.java b/java_case_studies/reference_repos/alternator/conflict2/right.java
+index 04dfe3d..5e51543 100644
+--- a/java_case_studies/reference_repos/alternator/conflict2/left.java
++++ b/java_case_studies/reference_repos/alternator/conflict2/right.java
+@@ -7,69 +7,25 @@ import com.michelboudreau.alternator.models.Limits;
+ import com.michelboudreau.alternator.models.Table;
+ import com.michelboudreau.alternator.parsers.AmazonWebServiceRequestParser;
+ import com.michelboudreau.alternator.validators.*;
+-import org.codehaus.jackson.annotate.JsonAutoDetect;
+-import org.codehaus.jackson.annotate.JsonMethod;
+-import org.codehaus.jackson.map.ObjectMapper;
+-import org.codehaus.jackson.map.SerializationConfig;
+-import org.codehaus.jackson.map.type.TypeFactory;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+ import javax.servlet.http.HttpServletRequest;
+-import java.io.File;
+-import java.io.IOException;
+ import java.util.*;
+ 
+ class AlternatorDBHandler {
+ 
+     private final Logger logger = LoggerFactory.getLogger(AlternatorDBHandler.class);
+-
+     private Map<String, Table> tables = new HashMap<String, Table>();
+     private List<Table> tableList = new ArrayList<Table>();
+ 
+-	// TODO: create constructor that can handle a file
+     public AlternatorDBHandler() {
+-    }
+-
+-	// Maybe save automatically on destroy?
+-    public void save(String persistence){
+-        try {
+-            createObjectMapper().writeValue(new File(persistence), tableList);
+-        } catch (IOException e) {
+-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+-        }
+-    }
+-
+-    public void restore(String persistence){
+-        try {
+-            File dbFile = new File(persistence);
+-            if(dbFile.exists()==false) {
+-                return;
+-            }
+-
+-	        ObjectMapper objectMapper = createObjectMapper();
+-            tableList = objectMapper.readValue(dbFile, objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, Table.class));
+-
+-            for (Table table : tableList){
+-                tables.put(table.getName(), table);
+-            }
+-        } catch (IOException e) {
+-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+-        }
+-    }
+-
+-	// Not sure about this.  If correct and only need one, only create one instance
+-    public ObjectMapper createObjectMapper() {
+-        ObjectMapper mapper = new ObjectMapper();
+-        mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY)
+-                .setVisibility(JsonMethod.CREATOR, JsonAutoDetect.Visibility.ANY)
+-                .setVisibility(JsonMethod.SETTER, JsonAutoDetect.Visibility.NONE)
+-                .setVisibility(JsonMethod.GETTER, JsonAutoDetect.Visibility.NONE)
+-                .setVisibility(JsonMethod.IS_GETTER, JsonAutoDetect.Visibility.NONE);
+-
+-        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+-
+-        return mapper;
++        // Should we save the results
++        /*ObjectMapper mapper = new ObjectMapper();
++                    if (new File(dbName).exists()) {
++                        this.models = mapper.readValue(new File(dbName), AlternatorDB.class);
++                    }
++                    mapper.writeValue(new File(dbName), models);*/
+     }
+ 
+     public String handle(HttpServletRequest request) throws LimitExceededException, InternalServerErrorException, ResourceInUseException, ResourceNotFoundException, ConditionalCheckFailedException {
+@@ -98,10 +54,9 @@ class AlternatorDBHandler {
+                 return new UpdateItemResultMarshaller().marshall(updateItem(parser.getData(UpdateItemRequest.class, UpdateItemRequestJsonUnmarshaller.getInstance())));
+             case DELETE:
+                 return new DeleteItemResultMarshaller().marshall(deleteItem(parser.getData(DeleteItemRequest.class, DeleteItemRequestJsonUnmarshaller.getInstance())));
+-	        case BATCH_GET_ITEM:
+-		        return new BatchGetItemResultMarshaller().marshall((batchGetItem(parser.getData(BatchGetItemRequest.class, BatchGetItemRequestJsonUnmarshaller.getInstance()))));
+             /*
+-                                                                               ;
++                                                                                  case BATCH_GET_ITEM:
++                                                                                      return batchGetItem(parser.getData(BatchGetItemRequest.class, BatchGetItemRequestJsonUnmarshaller.getInstance()));
+                                                                                   case BATCH_WRITE_ITEM:
+                                                                                       return batchWriteItem(parser.getData(BatchWriteItemRequest.class, BatchWriteItemRequestJsonUnmarshaller.getInstance()));
+                                                                                       */
+@@ -425,7 +380,7 @@ class AlternatorDBHandler {
+         return result;
+     }
+ 
+-    protected BatchGetItemResult batchGetItem(BatchGetItemRequest request) {
++    protected Object batchGetItem(BatchGetItemRequest request) {
+         return new BatchGetItemResult();
+     }
+ 
+@@ -451,57 +406,21 @@ class AlternatorDBHandler {
+                         throw new ResourceNotFoundException("There must be a comparisonOperator");
+                     }
+                     if (cond.getComparisonOperator().equals("EQ")) {
+-                        if (cond.getAttributeValueList().size() == 1) {
+-                            EQHandle(items, item, cond.getAttributeValueList().get(0), k);
+-                        }
+-                        else {
+-                            //TODO: throw Exception
+-                        }
++                        EQHandle(items, item, cond, k);
+                     }
+                     if (cond.getComparisonOperator().equals("LE")) {
+-                        if (cond.getAttributeValueList().size() == 1) {
+-                            LEHandle(items, item, cond.getAttributeValueList().get(0), k);
+-                        }
+-                        else {
+-                            //TODO: throw Exception
+-                        }
++                        EQHandle(items, item, cond, k);
++                        LTHandle(items, item, cond, k);
+                     }
+                     if (cond.getComparisonOperator().equals("LT")) {
+-                        if (cond.getAttributeValueList().size() == 1) {
+-                            LTHandle(items, item, cond.getAttributeValueList().get(0), k);
+-                        }
+-                        else {
+-                            //TODO: throw Exception
+-                        }
++                        LTHandle(items, item, cond, k);
+                     }
+                     if (cond.getComparisonOperator().equals("GE")) {
+-                        if (cond.getAttributeValueList().size() == 1) {
+-                            GEHandle(items, item, cond.getAttributeValueList().get(0), k);
+-                        }
+-                        else {
+-                            //TODO: throw Exception
+-                        }
++                        EQHandle(items, item, cond, k);
++                        GTHandle(items, item, cond, k);
+                     }
+                     if (cond.getComparisonOperator().equals("GT")) {
+-                        if (cond.getAttributeValueList().size() == 1) {
+-                            GTHandle(items, item, cond.getAttributeValueList().get(0), k);
+-                        }
+-                        else {
+-                            //TODO: throw Exception
+-                        }
+-                    }
+-                    if (cond.getComparisonOperator().equals("BETWEEN")) {
+-                        if (cond.getAttributeValueList().size() == 2) {
+-                            BETWEENHandle(items, item, cond.getAttributeValueList().get(0), cond.getAttributeValueList().get(1), k);
+-                        }
+-                        else {
+-                            //TODO: throw Exception
+-                        }
+-                    }
+-                    if (cond.getComparisonOperator().equals("IN")) {
+-                        for (AttributeValue attrivuteValue : cond.getAttributeValueList()) {
+-                            EQHandle(items, item, attrivuteValue, k);
+-                        }
++                        GTHandle(items, item, cond, k);
+                     }
+                 }
+             } else {
+@@ -547,6 +466,7 @@ class AlternatorDBHandler {
+         }
+ 
+ 	    String keyValue = getKeyValue(request.getHashKeyValue());
++
+ 	    // Check existence of table
+ 	    Table table = this.tables.get(request.getTableName());
+ 	    if (table == null) {
+@@ -556,11 +476,7 @@ class AlternatorDBHandler {
+ 	    Map<String,AttributeValue> item = table.getItem(keyValue);
+ 
+ 	    QueryResult queryResult = new QueryResult();
+-        List<Map<String,AttributeValue>> list = null;
+-        if(item==null)  {
+-            item = new HashMap<String, AttributeValue>();
+-        }
+-	    list = new ArrayList<Map<String, AttributeValue>>();
++	    List<Map<String,AttributeValue>> list = new ArrayList<Map<String, AttributeValue>>();
+ 	    list.add(item);
+ 		queryResult.setItems(list);
+ 		queryResult.setCount(list.size());
+@@ -727,89 +643,66 @@ class AlternatorDBHandler {
+         return result;
+     }
+ 
+-    private void EQHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
+-        if (item.get(k).equals(attributeValue)) {
+-             items.add(item);
++    private void EQHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, Condition cond, String k) {
++        if (cond.getAttributeValueList().size() == 1) {
++            if (item.get(k).equals(cond.getAttributeValueList().get(0))) {
++                items.add(item);
++            }
++        } else {
++            if (item.get(k).equals(cond.getAttributeValueList())) {
++                items.add(item);
++            }
+         }
+     }
+ 
+-    private void GTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
+-        if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
+-            if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
+-                String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-                String comp = (getAttributeValueType(attributeValue).equals(AttributeValueType.S)) ? attributeValue.getS() : attributeValue.getN();
+-                if (value.compareTo(comp) > 0) {
+-                    items.add(item);
++    private void GTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, Condition cond, String k) {
++        if (cond.getAttributeValueList().size() == 1) {
++            if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
++                if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
++                    String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
++                    String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
++                    if (value.compareTo(comp) > 0) {
++                        items.add(item);
++                    }
+                 }
+-            }
+-            else {
+-                String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-                String comp = (getAttributeValueType(attributeValue).equals(AttributeValueType.S)) ? attributeValue.getS() : attributeValue.getN();
+-                if  (Integer.parseInt(value)>Integer.parseInt(comp)) {
+-                    items.add(item);
++                else {
++                    String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
++                    String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
++                    if  (Integer.parseInt(value)>Integer.parseInt(comp)) {
++                        items.add(item);
++                    }
+                 }
++            } else {
++                //TODO to do
++                //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+             }
++
+         } else {
+             //TODO to do
+-            //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
++            if (item.get(k).equals(cond.getAttributeValueList())) {
++                items.add(item);
++            }
+         }
+     }
+ 
+-    private void LTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
+-        if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
+-            if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
++    private void LTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, Condition cond, String k) {
++        if (cond.getAttributeValueList().size() == 1) {
++            if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
+                 String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-                String comp = (getAttributeValueType(attributeValue).equals(AttributeValueType.S)) ? attributeValue.getS() : attributeValue.getN();
++                String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
+                 if (value.compareTo(comp) < 0) {
+                     items.add(item);
+                 }
++            } else {
++                //TODO to do
++                //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+             }
+-            else {
+-                String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-                String comp = (getAttributeValueType(attributeValue).equals(AttributeValueType.S)) ? attributeValue.getS() : attributeValue.getN();
+-                if  (Integer.parseInt(value) < Integer.parseInt(comp)) {
+-                    items.add(item);
+-                }
+-            }
+-        } else {
+-            //TODO to do
+-            //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+-        }
+-    }
+-
+-    private void GEHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
+-        EQHandle(items, item, attributeValue, k);
+-        GTHandle(items, item, attributeValue, k);
+-    }
+-
+-    private void LEHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
+-        EQHandle(items, item, attributeValue, k);
+-        LTHandle(items, item, attributeValue, k);
+-    }
+ 
+-    private void BETWEENHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue1, AttributeValue attributeValue2, String k) {
+-        if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
+-            if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
+-                String value1 = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-                String comp1 = (getAttributeValueType(attributeValue1).equals(AttributeValueType.S)) ? attributeValue1.getS() : attributeValue1.getN();
+-                String value2 = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-                String comp2 = (getAttributeValueType(attributeValue2).equals(AttributeValueType.S)) ? attributeValue2.getS() : attributeValue2.getN();
+-                if (value1.compareTo(comp1) >= 0 && value2.compareTo(comp2) <= 0) {
+-                    items.add(item);
+-                }
+-            }
+-            else {
+-                String value1 = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-                String comp1 = (getAttributeValueType(attributeValue1).equals(AttributeValueType.S)) ? attributeValue1.getS() : attributeValue1.getN();
+-                String value2 = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
+-                String comp2 = (getAttributeValueType(attributeValue2).equals(AttributeValueType.S)) ? attributeValue2.getS() : attributeValue2.getN();
+-                if  (Integer.parseInt(value1) >= Integer.parseInt(comp1) && Integer.parseInt(value2) <= Integer.parseInt(comp2)) {
+-                    items.add(item);
+-                }
+-            }
+         } else {
+             //TODO to do
+-            //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
++            if (item.get(k).equals(cond.getAttributeValueList())) {
++                items.add(item);
++            }
+         }
+     }
+-}
++}
+\ No newline at end of file

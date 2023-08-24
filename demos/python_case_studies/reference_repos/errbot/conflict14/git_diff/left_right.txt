@@ -1,0 +1,143 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict14/left.py b/python_case_studies/reference_repos/errbot/conflict14/right.py
+index d1eeeb0..c55a647 100644
+--- a/python_case_studies/reference_repos/errbot/conflict14/left.py
++++ b/python_case_studies/reference_repos/errbot/conflict14/right.py
+@@ -10,15 +10,16 @@ import pytest
+ 
+ log = logging.getLogger(__name__)
+ 
++# otherwise generate a temporary one.
+ __import__('errbot.config-template')
+-config_module = sys.modules['errbot.config-template']
+-sys.modules['config'] = config_module
++config = sys.modules['errbot.config-template']
++sys.modules['config'] = config
+ 
+ tempdir = mkdtemp()
+-config_module.BOT_DATA_DIR = tempdir
+-config_module.BOT_LOG_FILE = tempdir + sep + 'log.txt'
+-config_module.BOT_EXTRA_PLUGIN_DIR = []
+-config_module.BOT_LOG_LEVEL = logging.DEBUG
++config.BOT_DATA_DIR = tempdir
++config.BOT_LOG_FILE = tempdir + sep + 'log.txt'
++config.BOT_EXTRA_PLUGIN_DIR = []
++config.BOT_LOG_LEVEL = logging.DEBUG
+ 
+ # Errbot machinery must not be imported before this point
+ # because of the import hackery above.
+@@ -27,7 +28,7 @@ from errbot.backends.base import (
+ )
+ from errbot.core_plugins.wsview import reset_app  # noqa
+ from errbot.errBot import ErrBot  # noqa
+-from errbot.main import setup_bot  # noqa
++from errbot.main import main  # noqa
+ 
+ incoming_stanza_queue = Queue()
+ outgoing_message_queue = Queue()
+@@ -41,7 +42,7 @@ STZ_IQ = 3
+ 
+ 
+ class MUCRoom(MUCRoom):
+-    def __init__(self, jid=None, node='', domain='', resource='', occupants=None, topic=None, bot=None):
++    def __init__(self, jid=None, node='', domain='', resource='', occupants=None, topic=None):
+         """
+         :param jid: See parent class.
+         :param node: See parent class.
+@@ -54,7 +55,7 @@ class MUCRoom(MUCRoom):
+             occupants = []
+         self._occupants = occupants
+         self._topic = topic
+-        super(MUCRoom, self).__init__(jid=jid, node=node, domain=domain, resource=resource, bot=bot)
++        super(MUCRoom, self).__init__(jid=jid, node=node, domain=domain, resource=resource)
+ 
+     @property
+     def occupants(self):
+@@ -63,7 +64,6 @@ class MUCRoom(MUCRoom):
+     @property
+     def joined(self):
+         global rooms
+-        import config
+         bot_itself = config.BOT_IDENTITY['username']
+ 
+         room = [r for r in rooms if str(r) == str(self)]
+@@ -74,7 +74,7 @@ class MUCRoom(MUCRoom):
+ 
+     def join(self, username=None, password=None):
+         global rooms
+-        import config
++        from errbot.holder import bot
+         bot_itself = config.BOT_IDENTITY['username']
+ 
+         if self.joined:
+@@ -88,11 +88,11 @@ class MUCRoom(MUCRoom):
+         room = [r for r in rooms if str(r) == str(self)][0]
+         room._occupants.append(MUCOccupant(bot_itself))
+         log.info("Joined room {!s}".format(self))
+-        self._bot.callback_room_joined(room)
++        bot.callback_room_joined(room)
+ 
+     def leave(self, reason=None):
+         global rooms
+-        import config
++        from errbot.holder import bot
+         bot_itself = config.BOT_IDENTITY['username']
+ 
+         if not self.joined:
+@@ -102,7 +102,7 @@ class MUCRoom(MUCRoom):
+         room = [r for r in rooms if str(r) == str(self)][0]
+         room._occupants = [o for o in room._occupants if str(o) != bot_itself]
+         log.info("Left room {!s}".format(self))
+-        self._bot.callback_room_left(room)
++        bot.callback_room_left(room)
+ 
+     @property
+     def exists(self):
+@@ -136,7 +136,8 @@ class MUCRoom(MUCRoom):
+         room = [r for r in rooms if str(r) == str(self)][0]
+         room._topic = self._topic
+         log.info("Topic for room {!s} set to '{}'".format(self, topic))
+-        self._bot.callback_room_topic(self)
++        from errbot.holder import bot
++        bot.callback_room_topic(self)
+ 
+ 
+ class TestBackend(ErrBot):
+@@ -203,7 +204,7 @@ class TestBackend(ErrBot):
+         try:
+             return [r for r in rooms if str(r) == str(room)][0]
+         except IndexError:
+-            r = MUCRoom(jid=room, bot=self)
++            r = MUCRoom(jid=room)
+             return r
+ 
+     def groupchat_reply_format(self):
+@@ -266,14 +267,14 @@ class TestBot(object):
+         """
+         # reset logging to console
+         logging.basicConfig(format='%(levelname)s:%(message)s')
+-        file = logging.FileHandler(config_module.BOT_LOG_FILE, encoding='utf-8')
++        file = logging.FileHandler(config.BOT_LOG_FILE, encoding='utf-8')
+         self.logger = logging.getLogger('')
+         self.logger.setLevel(loglevel)
+         self.logger.addHandler(file)
+ 
+-        config_module.BOT_EXTRA_PLUGIN_DIR = extra_plugin_dir
+-        config_module.BOT_LOG_LEVEL = loglevel
+-        self.bot_config = config_module
++        config.BOT_EXTRA_PLUGIN_DIR = extra_plugin_dir
++        config.BOT_LOG_LEVEL = loglevel
++        self.bot_config = config
+ 
+     def start(self):
+         """
+@@ -284,8 +285,8 @@ class TestBot(object):
+         """
+         if self.bot_thread is not None:
+             raise Exception("Bot has already been started")
+-        self.bot = setup_bot(TestBackend, self.logger, self.bot_config)
+-        self.bot_thread = Thread(target=self.bot.serve_forever, name='TestBot main thread')
++        self.bot_thread = Thread(target=main, name='TestBot main thread',
++                                 args=(TestBackend, self.logger, self.bot_config))
+         self.bot_thread.setDaemon(True)
+         self.bot_thread.start()
+ 

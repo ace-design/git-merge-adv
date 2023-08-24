@@ -1,0 +1,20 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict3/base.java b/java_case_studies/reference_repos/Jest/conflict3/left.java
+index 733a5b8..30afd77 100644
+--- a/java_case_studies/reference_repos/Jest/conflict3/base.java
++++ b/java_case_studies/reference_repos/Jest/conflict3/left.java
+@@ -1,5 +1,6 @@
+ package io.searchbox.indices.aliases;
+ 
++import io.searchbox.client.config.ElasticsearchVersion;
+ import org.junit.Test;
+ 
+ import static org.junit.Assert.assertEquals;
+@@ -12,7 +13,7 @@ public class GetAliasesTest {
+         GetAliases getAliases = new GetAliases.Builder().addIndex("twitter").build();
+ 
+         assertEquals("GET", getAliases.getRestMethodName());
+-        assertEquals("twitter/_aliases", getAliases.getURI());
++        assertEquals("twitter/_aliases", getAliases.getURI(ElasticsearchVersion.UNKNOWN));
+     }
+ 
+     @Test

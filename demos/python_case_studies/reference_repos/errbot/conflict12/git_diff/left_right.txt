@@ -1,0 +1,35 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict12/left.py b/python_case_studies/reference_repos/errbot/conflict12/right.py
+index 6d81406..3d78ee1 100755
+--- a/python_case_studies/reference_repos/errbot/conflict12/left.py
++++ b/python_case_studies/reference_repos/errbot/conflict12/right.py
+@@ -16,7 +16,6 @@
+ 
+ import os
+ import sys
+-
+ from platform import system
+ from setuptools import setup, find_packages
+ 
+@@ -53,15 +52,13 @@ else:
+     deps += ['dnspython3', ]  # dnspython3 for SRV records
+ 
+ # Extra dependencies for a development environment.
+-# if 'develop' in sys.argv: <- we cannot do that as pip is doing that in 2 steps.
+-# TODO(gbin): find another way to filter those out if we don't need them.
+-
+-deps += ['mock',
+-         'nose',
+-         'pep8',
+-         'pytest',
+-         'pytest-xdist',
+-         'PyOpenSSL']
++if 'develop' in sys.argv:
++    deps += ['mock',
++             'nose',
++             'pep8',
++             'pytest',
++             'pytest-xdist',
++             'PyOpenSSL']
+ 
+ if not ON_WINDOWS:
+     deps += ['daemonize']

@@ -1,0 +1,213 @@
+diff --git a/java_case_studies/reference_repos/cucumber.jvm/importC2/left.java b/java_case_studies/reference_repos/cucumber.jvm/importC2/right.java
+index 06b1161..e68d97c 100644
+--- a/java_case_studies/reference_repos/cucumber.jvm/importC2/left.java
++++ b/java_case_studies/reference_repos/cucumber.jvm/importC2/right.java
+@@ -1,37 +1,33 @@
+ package io.cucumber.core.options;
+ 
+-import io.cucumber.core.backend.ObjectFactory;
+-import io.cucumber.core.feature.FeatureWithLines;
+-import io.cucumber.core.order.PickleOrder;
+-import io.cucumber.core.order.StandardPickleOrders;
+-import io.cucumber.core.snippets.SnippetType;
++import cucumber.api.SnippetType;
++import cucumber.runtime.order.PickleOrder;
++import cucumber.runtime.order.StandardPickleOrders;
++import io.cucumber.core.model.FeatureWithLines;
+ 
+ import java.net.URI;
+ import java.util.ArrayList;
++import java.util.Collections;
+ import java.util.HashMap;
++import java.util.HashSet;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
+ import java.util.SortedSet;
+ import java.util.TreeSet;
+ import java.util.regex.Pattern;
+-import java.util.stream.Collectors;
+ 
+ import static java.util.Collections.unmodifiableList;
+ import static java.util.Collections.unmodifiableMap;
+ 
+-public final class RuntimeOptions implements
+-    io.cucumber.core.feature.Options,
+-    io.cucumber.core.runner.Options,
+-    io.cucumber.core.plugin.Options,
+-    io.cucumber.core.filter.Options,
+-    io.cucumber.core.backend.Options {
++public final class RuntimeOptions implements FeatureOptions, FilterOptions, PluginOptions, RunnerOptions {
+ 
+     private final List<URI> glue = new ArrayList<>();
+-    private final List<String> tagExpressions = new ArrayList<>();
++    private final List<String> tagFilters = new ArrayList<>();
+     private final List<Pattern> nameFilters = new ArrayList<>();
+     private final List<FeatureWithLines> featurePaths = new ArrayList<>();
+ 
++    private final List<String> junitOptions = new ArrayList<>();
+     private boolean dryRun;
+     private boolean strict = false;
+     private boolean monochrome = false;
+@@ -41,9 +37,9 @@ public final class RuntimeOptions implements
+     private PickleOrder pickleOrder = StandardPickleOrders.lexicalUriOrder();
+     private int count = 0;
+ 
+-    private final List<Plugin> formatters = new ArrayList<>();
+-    private final List<Plugin> summaryPrinters = new ArrayList<>();
+-    private Class<? extends ObjectFactory> objectFactoryClass;
++    private final List<String> pluginFormatterNames = new ArrayList<>();
++    private final List<String> pluginStepDefinitionReporterNames = new ArrayList<>();
++    private final List<String> pluginSummaryPrinterNames = new ArrayList<>();
+ 
+     private RuntimeOptions() {
+ 
+@@ -53,16 +49,26 @@ public final class RuntimeOptions implements
+         return new RuntimeOptions();
+     }
+ 
++    public void addUndefinedStepsPrinterIfSummaryNotDefined() {
++        if (pluginSummaryPrinterNames.isEmpty()) {
++            pluginSummaryPrinterNames.add("undefined");
++        }
++    }
++
+     public int getCount() {
+         return count;
+     }
+ 
+-    List<Plugin> getFormatters() {
+-        return formatters;
++    List<String> getPluginFormatterNames() {
++        return pluginFormatterNames;
++    }
++
++    List<String> getPluginStepDefinitionReporterNames() {
++        return pluginStepDefinitionReporterNames;
+     }
+ 
+-    List<Plugin> getSummaryPrinter() {
+-        return summaryPrinters;
++    List<String> getPluginSummaryPrinterNames() {
++        return pluginSummaryPrinterNames;
+     }
+ 
+     public boolean isMultiThreaded() {
+@@ -70,11 +76,12 @@ public final class RuntimeOptions implements
+     }
+ 
+     @Override
+-    public List<Plugin> plugins() {
+-        List<Plugin> plugins = new ArrayList<>();
+-        plugins.addAll(formatters);
+-        plugins.addAll(summaryPrinters);
+-        return plugins;
++    public List<String> getPluginNames() {
++        List<String> pluginNames = new ArrayList<>();
++        pluginNames.addAll(getPluginFormatterNames());
++        pluginNames.addAll(getPluginStepDefinitionReporterNames());
++        pluginNames.addAll(getPluginSummaryPrinterNames());
++        return pluginNames;
+     }
+ 
+     @Override
+@@ -98,21 +105,24 @@ public final class RuntimeOptions implements
+ 
+     @Override
+     public List<URI> getFeaturePaths() {
+-        return unmodifiableList(featurePaths.stream()
+-            .map(FeatureWithLines::uri)
+-            .sorted()
+-            .distinct()
+-            .collect(Collectors.toList()));
++        Set<URI> uris = new HashSet<>();
++        for (FeatureWithLines featurePath : featurePaths) {
++            URI uri = featurePath.uri();
++            uris.add(uri);
++        }
++        ArrayList<URI> toSort = new ArrayList<>(uris);
++        Collections.sort(toSort);
++        return unmodifiableList(toSort);
+     }
+ 
+     @Override
+-    public List<String> getTagExpressions() {
+-        return unmodifiableList(tagExpressions);
++    public List<Pattern> getNameFilters() {
++        return unmodifiableList(nameFilters);
+     }
+ 
+     @Override
+-    public List<Pattern> getNameFilters() {
+-        return unmodifiableList(nameFilters);
++    public List<String> getTagFilters() {
++        return unmodifiableList(tagFilters);
+     }
+ 
+     void setCount(int count) {
+@@ -129,6 +139,11 @@ public final class RuntimeOptions implements
+         glue.addAll(parsedGlue);
+     }
+ 
++    void setJunitOptions(List<String> junitOptions) {
++        this.junitOptions.clear();
++        this.junitOptions.addAll(junitOptions);
++    }
++
+     void setNameFilters(List<Pattern> nameFilters) {
+         this.nameFilters.clear();
+         this.nameFilters.addAll(nameFilters);
+@@ -138,23 +153,25 @@ public final class RuntimeOptions implements
+         this.pickleOrder = pickleOrder;
+     }
+ 
+-    void setTagExpressions(List<String> tagExpressions) {
+-        this.tagExpressions.clear();
+-        this.tagExpressions.addAll(tagExpressions);
++    void setTagFilters(List<String> tagFilters) {
++        this.tagFilters.clear();
++        this.tagFilters.addAll(tagFilters);
+     }
+ 
+     @Override
+     public Map<URI, Set<Integer>> getLineFilters() {
+         Map<URI, Set<Integer>> lineFilters = new HashMap<>();
+-        featurePaths.forEach(featureWithLines -> {
++        for (FeatureWithLines featureWithLines : featurePaths) {
+             SortedSet<Integer> lines = featureWithLines.lines();
+             URI uri = featureWithLines.uri();
+             if (lines.isEmpty()) {
+-                return;
++                continue;
++            }
++            if(!lineFilters.containsKey(uri)){
++                lineFilters.put(uri, new TreeSet<Integer>());
+             }
+-            lineFilters.putIfAbsent(uri, new TreeSet<>());
+             lineFilters.get(uri).addAll(lines);
+-        });
++        }
+         return unmodifiableMap(lineFilters);
+     }
+ 
+@@ -173,9 +190,8 @@ public final class RuntimeOptions implements
+         return snippetType;
+     }
+ 
+-    @Override
+-    public Class<? extends ObjectFactory> getObjectFactoryClass() {
+-        return objectFactoryClass;
++    public List<String> getJunitOptions() {
++        return unmodifiableList(junitOptions);
+     }
+ 
+     public int getThreads() {
+@@ -209,8 +225,4 @@ public final class RuntimeOptions implements
+     void setWip(boolean wip) {
+         this.wip = wip;
+     }
+-
+-    void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
+-        this.objectFactoryClass = objectFactoryClass;
+-    }
+ }

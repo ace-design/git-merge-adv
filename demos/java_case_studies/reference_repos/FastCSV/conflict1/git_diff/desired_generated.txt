@@ -1,0 +1,51 @@
+diff --git a/java_case_studies/reference_repos/FastCSV/conflict1/desired.java b/java_case_studies/demo_results/MethodUnion/FastCSV-conflict1.java
+index 418cccf..495df21 100644
+--- a/java_case_studies/reference_repos/FastCSV/conflict1/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/FastCSV-conflict1.java
+@@ -1,12 +1,10 @@
+ package blackbox.reader;
+-
+ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+ import static org.junit.jupiter.api.Assertions.assertEquals;
+ import static org.junit.jupiter.api.Assertions.assertFalse;
+ import static org.junit.jupiter.api.Assertions.assertNull;
+ import static org.junit.jupiter.api.Assertions.assertThrows;
+ import static org.junit.jupiter.api.Assertions.assertTrue;
+-
+ import java.io.CharArrayReader;
+ import java.io.IOException;
+ import java.io.StringReader;
+@@ -22,13 +20,11 @@ import java.util.function.Consumer;
+ import java.util.function.Supplier;
+ import java.util.stream.Collectors;
+ import java.util.stream.Stream;
+-
+ import org.junit.jupiter.api.Test;
+ import org.junit.jupiter.params.ParameterizedTest;
+ import org.junit.jupiter.params.provider.Arguments;
+ import org.junit.jupiter.params.provider.MethodSource;
+ import org.junit.jupiter.params.provider.ValueSource;
+-
+ import de.siegmar.fastcsv.reader.CloseableIterator;
+ import de.siegmar.fastcsv.reader.CommentStrategy;
+ import de.siegmar.fastcsv.reader.CsvReader;
+@@ -39,10 +35,9 @@ import de.siegmar.fastcsv.reader.MalformedCsvException;
+     "checkstyle:ClassFanOutComplexity",
+     "PMD.AvoidDuplicateLiterals",
+     "PMD.CloseResource"
+-})
+-class CsvReaderTest {
++}) class CsvReaderTest{
+ 
+-    private final CsvReader.CsvReaderBuilder crb = CsvReader.builder();
++    private final CsvReader.CsvReaderBuilder crb = CsvReader.builder();,
+ 
+     @ParameterizedTest
+     @ValueSource(chars = {'\r', '\n'})
+@@ -401,4 +396,4 @@ class CsvReaderTest {
+             .collect(Collectors.toList());
+     }
+ 
+-}
++}
+\ No newline at end of file

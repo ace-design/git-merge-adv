@@ -1,0 +1,14 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict1/base.py b/python_case_studies/reference_repos/errbot/conflict1/left.py
+index 7839ba3..1135c5e 100644
+--- a/python_case_studies/reference_repos/errbot/conflict1/base.py
++++ b/python_case_studies/reference_repos/errbot/conflict1/left.py
+@@ -302,7 +302,8 @@ class XMPPRoomOccupant(XMPPPerson, RoomOccupant):
+ 
+ 
+ class XMPPConnection(object):
+-    def __init__(self, jid, password, feature=None, keepalive=None, ca_cert=None, server=None, use_ipv6=None, bot=None):
++    def __init__(self, jid, password, feature=None, keepalive=None,
++                 ca_cert=None, server=None, use_ipv6=None, bot=None):
+         if feature is None:
+             feature = {}
+         self._bot = bot

@@ -1,0 +1,89 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict4/desired.java b/java_case_studies/demo_results/MethodUnion/alternator-conflict4.java
+index 337bdfe..c8eb69e 100644
+--- a/java_case_studies/reference_repos/alternator/conflict4/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/alternator-conflict4.java
+@@ -1,27 +1,25 @@
+ package com.michelboudreau.test;
+-
+ import com.amazonaws.services.dynamodb.model.*;
+-import junit.framework.Assert;
++import com.amazonaws.services.dynamodb.model.BatchGetItemRequest;
++import com.amazonaws.services.dynamodb.model.BatchGetItemResult;
++import com.amazonaws.services.dynamodb.model.BatchWriteItemRequest;
++import com.amazonaws.services.dynamodb.model.BatchWriteItemResult;
+ import org.junit.Test;
+ import org.junit.runner.RunWith;
+ import org.springframework.test.context.ContextConfiguration;
+ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+-
+ import java.util.List;
+ import java.util.Map;
+ import java.util.HashMap;
+ import java.util.ArrayList;
+-import java.util.ArrayList;
+-import java.util.List;
+-import java.util.Map;
+ 
+ @RunWith(SpringJUnit4ClassRunner.class)
+ @ContextConfiguration(locations = {"classpath:/applicationContext.xml"})
+-public class AlternatorBatchItemTest extends AlternatorTest {
++public class AlternatorBatchItemTest extends AlternatorTest{
+ 
+-    private String tableName;
++    private String tableName;,
+ 
+-  /*  @Before
++    /*  @Before
+     public void setUp() throws Exception {
+         tableName = createTableName();
+     }
+@@ -31,10 +29,26 @@ public class AlternatorBatchItemTest extends AlternatorTest {
+         deleteAllTables();
+     }*/
+ 
+-//	@Test
+-//	public void vanillaBatchGetItemTest() {
+-//		BatchGetItemResult result  = client.batchGetItem(new BatchGetItemRequest());
+-//	}
++    @Test
++	public void vanillaBatchGetItemTest(){
++		BatchGetItemResult result  = client.batchGetItem(new BatchGetItemRequest());
++	}
++
++    //	@Test
++
++    /*
++    @Test
++    public void batchGetItemInTableTest() {
++        BatchGetItemResult result = client.batchGetItem(new BatchGetItemRequest());
++        Assert.assertNotNull(result);
++    }
++    */
++
++    //	public void vanillaBatchGetItemTest() {
++
++    //		BatchGetItemResult result  = client.batchGetItem(new BatchGetItemRequest());
++
++    //	}
+ 
+     @Test
+     public void vanillaBatchWriteItemTest() {
+@@ -76,16 +90,6 @@ public class AlternatorBatchItemTest extends AlternatorTest {
+             System.out.println("Unprocessed Put and Delete requests: \n" + result.getUnprocessedItems());
+             requestItems = result.getUnprocessedItems();
+         } while (result.getUnprocessedItems().size() > 0);
+-
+-    /*
+-    @Test
+-    public void batchGetItemInTableTest() {
+-        BatchGetItemResult result = client.batchGetItem(new BatchGetItemRequest());
+-        Assert.assertNotNull(result);
+->>>>>>> faa37598a99d659e8db521049130d600e03df7fb
+     }
+-    */
+-
+ 
+-    }
+-}
++}
+\ No newline at end of file

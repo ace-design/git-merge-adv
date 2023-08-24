@@ -1,0 +1,43 @@
+diff --git a/java_case_studies/reference_repos/stateless4j/conflict4/desired.java b/java_case_studies/demo_results/MethodUnion/stateless4j-conflict4.java
+index f37ed5f..62a95fc 100644
+--- a/java_case_studies/reference_repos/stateless4j/conflict4/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/stateless4j-conflict4.java
+@@ -1,12 +1,12 @@
+ package com.github.oxo42.stateless4j.triggers;
+-
+-import com.github.oxo42.stateless4j.OutVar;
+ import com.github.oxo42.stateless4j.delegates.Func;
++import com.github.oxo42.stateless4j.OutVar;
+ import com.github.oxo42.stateless4j.delegates.Func2;
++import com.github.oxo42.stateless4j.validation.Enforce;
+ 
+-public class DynamicTriggerBehaviour<TState, TTrigger> extends TriggerBehaviour<TState, TTrigger> {
++public class DynamicTriggerBehaviour <TState, TTrigger> extends TriggerBehaviour<TState, TTrigger>{
+ 
+-    private final Func2<Object[], TState> destination;
++    private final Func2<Object[], TState> destination;,
+ 
+     public DynamicTriggerBehaviour(final TTrigger trigger, final Func2<Object[], TState> destination, final Func<Boolean> guard) {
+         super(trigger, guard);
+@@ -14,9 +14,19 @@ public class DynamicTriggerBehaviour<TState, TTrigger> extends TriggerBehaviour<
+         this.destination = destination;
+     }
+ 
++    public DynamicTriggerBehaviour(TTrigger trigger, Func2<Object[], TState> destination, Func<Boolean> guard) {
++        super(trigger, guard);
++        this.destination = Enforce.argumentNotNull(destination, "destination");
++    }
++
++    public TState resultsInTransitionFrom(TState source, Object... args) {
++        return destination.call(args);
++    }
++
+     @Override
+     public boolean resultsInTransitionFrom(TState source, Object[] args, OutVar<TState> dest) {
+         dest.set(destination.call(args));
+         return true;
+     }
+-}
++
++}
+\ No newline at end of file

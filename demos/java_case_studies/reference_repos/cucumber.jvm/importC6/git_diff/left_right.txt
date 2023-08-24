@@ -1,0 +1,37 @@
+diff --git a/java_case_studies/reference_repos/cucumber.jvm/importC6/left.java b/java_case_studies/reference_repos/cucumber.jvm/importC6/right.java
+index ab3931b..a69e9e4 100644
+--- a/java_case_studies/reference_repos/cucumber.jvm/importC6/left.java
++++ b/java_case_studies/reference_repos/cucumber.jvm/importC6/right.java
+@@ -2,7 +2,9 @@ package io.cucumber.examples.testng;
+ 
+ import io.cucumber.core.api.TypeRegistryConfigurer;
+ import io.cucumber.core.api.TypeRegistry;
++import io.cucumber.examples.testng.ShoppingSteps.Price;
+ import io.cucumber.datatable.DataTableType;
++import io.cucumber.examples.testng.ShoppingSteps.Grocery;
+ import io.cucumber.cucumberexpressions.ParameterType;
+ 
+ import java.text.SimpleDateFormat;
+@@ -10,7 +12,7 @@ import java.util.Date;
+ import java.util.Locale;
+ import java.util.Map;
+ 
+-import static io.cucumber.examples.testng.RpnCalculatorStepdefs.Entry;
++import static io.cucumber.examples.testng.RpnCalculatorSteps.Entry;
+ import static java.text.DateFormat.MEDIUM;
+ import static java.text.DateFormat.getDateInstance;
+ import static java.util.Locale.ENGLISH;
+@@ -44,10 +46,10 @@ public class ParameterTypes implements TypeRegistryConfigurer {
+         ));
+ 
+         typeRegistry.defineDataTableType(new DataTableType(
+-            ShoppingStepdefs.Grocery.class,
+-            (Map<String, String> row) -> new ShoppingStepdefs.Grocery(
++            Grocery.class,
++            (Map<String, String> row) -> new Grocery(
+                 row.get("name"),
+-                ShoppingStepdefs.Price.fromString(row.get("price"))
++                Price.fromString(row.get("price"))
+             )
+         ));
+ 

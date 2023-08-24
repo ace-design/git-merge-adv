@@ -1,0 +1,98 @@
+diff --git a/java_case_studies/reference_repos/cucumber.jvm/importC3/desired.java b/java_case_studies/reference_repos/cucumber.jvm/importC3/spork_result.java
+index de74ff3..30a1b1d 100644
+--- a/java_case_studies/reference_repos/cucumber.jvm/importC3/desired.java
++++ b/java_case_studies/reference_repos/cucumber.jvm/importC3/spork_result.java
+@@ -11,16 +11,29 @@ import java.net.URI;
+ import java.util.ArrayList;
+ import java.util.Collection;
+ import java.util.List;
++<<<<<<< LEFT
+ import java.util.Set;
++=======
++>>>>>>> RIGHT
+ import java.util.regex.Pattern;
+ 
+ public final class RuntimeOptionsBuilder {
++<<<<<<< LEFT
+     private final List<String> parsedTagFilters = new ArrayList<>();
+     private final List<Pattern> parsedNameFilters = new ArrayList<>();
+     private final List<FeatureWithLines> parsedFeaturePaths = new ArrayList<>();
+     private final List<URI> parsedGlue = new ArrayList<>();
+     private final ParsedPluginData parsedPluginData = new ParsedPluginData();
+     private List<FeatureWithLines> parsedRerunPaths = null;
++=======
++    private List<String> parsedTagFilters = new ArrayList<>();
++    private List<Pattern> parsedNameFilters = new ArrayList<>();
++    private List<FeatureWithLines> parsedFeaturePaths = new ArrayList<>();
++    private List<URI> parsedGlue = new ArrayList<>();
++    private ParsedPluginData parsedPluginData = new ParsedPluginData();
++    private List<FeatureWithLines> parsedRerunPaths = null;
++    private List<String> parsedJunitOptions = new ArrayList<>();
++>>>>>>> RIGHT
+     private Integer parsedThreads = null;
+     private Boolean parsedDryRun = null;
+     private Boolean parsedStrict = null;
+@@ -39,6 +52,14 @@ public final class RuntimeOptionsBuilder {
+         return this;
+     }
+ 
++    public RuntimeOptionsBuilder addRerun(Collection<FeatureWithLines> featureWithLines) {
++        if (parsedRerunPaths == null) {
++            parsedRerunPaths = new ArrayList<>();
++        }
++        parsedRerunPaths.addAll(featureWithLines);
++        return this;
++    }
++
+     public RuntimeOptionsBuilder addFeature(FeatureWithLines featureWithLines) {
+         parsedFeaturePaths.add(featureWithLines);
+         return this;
+@@ -49,6 +70,14 @@ public final class RuntimeOptionsBuilder {
+         return this;
+     }
+ 
++<<<<<<< LEFT
++=======
++    public RuntimeOptionsBuilder addJunitOption(String junitOption) {
++        this.parsedJunitOptions.add(junitOption);
++        return this;
++    }
++
++>>>>>>> RIGHT
+     public RuntimeOptionsBuilder addNameFilter(Pattern pattern) {
+         this.parsedNameFilters.add(pattern);
+         return this;
+@@ -102,7 +131,11 @@ public final class RuntimeOptionsBuilder {
+         }
+ 
+         if (!this.parsedTagFilters.isEmpty() || !this.parsedNameFilters.isEmpty() || hasFeaturesWithLineFilters()) {
++<<<<<<< LEFT
+             runtimeOptions.setTagExpressions(this.parsedTagFilters);
++=======
++            runtimeOptions.setTagFilters(this.parsedTagFilters);
++>>>>>>> RIGHT
+             runtimeOptions.setNameFilters(this.parsedNameFilters);
+         }
+         if (!this.parsedFeaturePaths.isEmpty() || this.parsedRerunPaths != null) {
+@@ -128,9 +161,21 @@ public final class RuntimeOptionsBuilder {
+     }
+ 
+     private boolean hasFeaturesWithLineFilters() {
++<<<<<<< LEFT
+         return parsedRerunPaths != null || !parsedFeaturePaths.stream()
+             .map(FeatureWithLines::lines)
+             .allMatch(Set::isEmpty);
++=======
++        if (parsedRerunPaths != null) {
++            return true;
++        }
++        for (FeatureWithLines parsedFeaturePath : parsedFeaturePaths) {
++            if (!parsedFeaturePath.lines().isEmpty()) {
++                return true;
++            }
++        }
++        return false;
++>>>>>>> RIGHT
+     }
+ 
+     public RuntimeOptionsBuilder setCount(int count) {

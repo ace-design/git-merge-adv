@@ -1,0 +1,82 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict8/desired.py b/python_case_studies/demo_results/MethodUnion/errbot-conflict8.py
+index 55be066..a8924d1 100644
+--- a/python_case_studies/reference_repos/errbot/conflict8/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/errbot-conflict8.py
+@@ -1,6 +1,4 @@
+-""" Logic related to plugin loading and lifecycle """
+-
+-from configparser import NoSectionError, NoOptionError, ConfigParser
++from configparser import NoSectionError,NoOptionError,ConfigParser
+ from itertools import chain
+ import importlib
+ import imp
+@@ -11,18 +9,27 @@ import os
+ import subprocess
+ from tarfile import TarFile
+ from urllib.request import urlopen
+-
+ import pip
+-from .botplugin import BotPlugin
+-from .utils import (version2array, PY3, PY2, find_roots_with_extra,
+-                    which, human_name_for_git_url)
+-from .templating import remove_plugin_templates_path, add_plugin_templates_path
+-from .version import VERSION
++from botplugin import BotPlugin
++from utils import (
++    version2array,
++    PY3,
++    PY2,
++    find_roots_with_extra,
++    which,
++    human_name_for_git_url,
++    PLUGINS_SUBDIR,
++)
++from templating import remove_plugin_templates_path,add_plugin_templates_path
++from version import VERSION
+ from yapsy.PluginManager import PluginManager
+-from yapsy.PluginFileLocator import PluginFileLocator, PluginFileAnalyzerWithInfoFile
+-from .core_plugins.wsview import route
+-from .storage import StoreMixin
+-from .repos import KNOWN_PUBLIC_REPOS
++from yapsy.PluginFileLocator import PluginFileLocator,PluginFileAnalyzerWithInfoFile
++from core_plugins.wsview import route
++from storage import StoreMixin
++from repos import KNOWN_PUBLIC_REPOS
++""" Logic related to plugin loading and lifecycle """
++
++
+ 
+ log = logging.getLogger(__name__)
+ 
+@@ -211,14 +218,24 @@ class BotPluginManager(PluginManager, StoreMixin):
+     CONFIGS = b'configs' if PY2 else 'configs'
+     BL_PLUGINS = b'bl_plugins' if PY2 else 'bl_plugins'
+ 
+-    def __init__(self, storage_plugin, plugin_dir, extra, autoinstall_deps, core_plugins):
++    def __init__(self, storage_plugin, plugin_dir, extra, autoinstall_deps):
+         self.bot = None
+         self.autoinstall_deps = autoinstall_deps
+         self.extra = extra
++
++<<<<<<< left_content.py
+         self.open_storage(storage_plugin, 'core')
+         self.plugin_dir = plugin_dir
+-        self.core_plugins = core_plugins
++=======
++    def _init_plugin_manager(self, bot_config):
++        self.plugin_dir = os.path.join(bot_config.BOT_DATA_DIR, PLUGINS_SUBDIR)
++        self.open_storage(os.path.join(bot_config.BOT_DATA_DIR, 'core.db'))
++        if hasattr(bot_config, 'CORE_PLUGINS'):
++            self.core_plugins = bot_config.CORE_PLUGINS
++        else:
++            self.core_plugins = None
+ 
++>>>>>>> right_content.py
+         # be sure we have a configs entry for the plugin configurations
+         if self.CONFIGS not in self:
+             self[self.CONFIGS] = {}
+@@ -574,3 +591,4 @@ class BotPluginManager(PluginManager, StoreMixin):
+         # Presumably the use of mixins causes __hash__ to be
+         # None otherwise.
+         return int(id(self))
++

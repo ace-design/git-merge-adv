@@ -1,0 +1,13 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict10/base.py b/python_case_studies/reference_repos/apistar/conflict10/right.py
+index dff77ac..ac2714c 100644
+--- a/python_case_studies/reference_repos/apistar/conflict10/base.py
++++ b/python_case_studies/reference_repos/apistar/conflict10/right.py
+@@ -12,7 +12,7 @@ from apistar.templating import Template, Templates
+ from apistar.test import TestClient
+ 
+ 
+-__version__ = '0.1.10'
++__version__ = '0.1.11'
+ __all__ = [
+     'App', 'Route', 'Request', 'Response', 'Template', 'Templates', 'TestClient'
+ ]

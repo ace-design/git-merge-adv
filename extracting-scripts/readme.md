@@ -16,9 +16,3 @@
 * Given a cloning url, this script outputs all conflicts with all associated files to the demos folder under the repo name. Usees the Merge_Conflicts and Conflict_Resolving scripts to do so.
 
     `python3 init.py --repo <Git Clone URL> --lang <Desired Language for extraction>`
-
-## Java_Conflicts
-* References spork's case studies in data.csv to extract java case studies. Similar script to conflict_finder, but specific only to case studies that spork used.
-* Can be extended to other languages too. 
-
-    `python3 init.py --reference <Path to Reference CSV> --lang <Desired Language (usually Java)> `

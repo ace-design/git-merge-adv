@@ -1,0 +1,44 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict17/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict17.py
+index d753b95..a10dda1 100644
+--- a/python_case_studies/reference_repos/transitions/conflict17/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict17.py
+@@ -1,14 +1,14 @@
++from transitions import MachineError
++from transitions.extensions import HierarchicalMachine as Machine
++from transitions.extensions.nesting import NestedState as State
++from utils import Stuff
++from unittest import TestCase
+ try:
+     from builtins import object
+ except ImportError:
+     pass
+ 
+-from transitions import MachineError
+-from transitions.extensions import HierarchicalMachine as Machine
+-from transitions.extensions.nesting import NestedState as State
+-from .utils import Stuff
+ 
+-from unittest import TestCase
+ 
+ try:
+     from unittest.mock import MagicMock
+@@ -137,7 +137,14 @@ class TestTransitions(TestCase):
+         collision = ['A', {'name': 'B', 'children': ['A', self.stuff.machine]}]
+ 
+         m = Machine(None, states=correct)
++<<<<<<< left_content.py
+         m.to_B.C.s3.a()
++=======
++        if State.separator in '_':
++            m.to_B_C_3_a()
++        else:
++            m.to_B.C.s3.a()
++>>>>>>> right_content.py
+ 
+         with self.assertRaises(ValueError):
+             m = Machine(None, states=wrong_type)
+@@ -236,3 +243,4 @@ class TestTransitions(TestCase):
+         m_model.to('NEST%sC' % State.separator)
+         m_model.go()
+         self.assertTrue(m_model.prepared)
++

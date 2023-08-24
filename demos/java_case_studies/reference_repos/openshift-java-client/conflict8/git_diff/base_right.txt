@@ -1,0 +1,40 @@
+diff --git a/java_case_studies/reference_repos/openshift-java-client/conflict8/base.java b/java_case_studies/reference_repos/openshift-java-client/conflict8/right.java
+index 00fd70e..009287f 100755
+--- a/java_case_studies/reference_repos/openshift-java-client/conflict8/base.java
++++ b/java_case_studies/reference_repos/openshift-java-client/conflict8/right.java
+@@ -15,6 +15,7 @@ import java.util.Map;
+ 
+ import com.openshift.client.HttpMethod;
+ import com.openshift.client.OpenShiftException;
++import com.openshift.internal.client.httpclient.IMediaType;
+ import com.openshift.internal.client.response.Link;
+ import com.openshift.internal.client.response.RestResponse;
+ 
+@@ -34,18 +35,27 @@ public interface IRestService {
+ 	public RestResponse request(Link link, int timeout, ServiceParameter... serviceParameters)
+ 			throws OpenShiftException;
+ 
++    public RestResponse request(Link link, int timeout, IMediaType mediaType, ServiceParameter... serviceParameters)
++            throws OpenShiftException;
++
+ 	public abstract RestResponse request(Link link, Map<String, Object> parameters)
+ 			throws OpenShiftException;
+ 
+ 	public abstract RestResponse request(Link link, int timeout, Map<String, Object> parameters)
+ 			throws OpenShiftException;
+ 
++    public abstract RestResponse request(Link link, int timeout, IMediaType mediaType, Map<String, Object> parameters)
++            throws OpenShiftException;
++
+ 	public abstract String request(String url, HttpMethod httpMethod, Map<String, Object> parameters)
+ 			throws OpenShiftException;
+ 
+ 	public abstract String request(String url, HttpMethod httpMethod, int timeout, Map<String, Object> parameters)
+ 			throws OpenShiftException;
+ 
++    public abstract String request(String url, HttpMethod httpMethod, int timeout, IMediaType mediaType, Map<String, Object> parameters)
++            throws OpenShiftException;
++
+ 	public abstract String getServiceUrl();
+ 
+ 	public abstract String getPlatformUrl();

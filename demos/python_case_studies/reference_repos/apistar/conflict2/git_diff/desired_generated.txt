@@ -1,0 +1,69 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict2/desired.py b/python_case_studies/demo_results/MethodUnion/apistar-conflict2.py
+index 868fa12..1ac8951 100644
+--- a/python_case_studies/reference_repos/apistar/conflict2/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/apistar-conflict2.py
+@@ -1,7 +1,5 @@
+ import click
+-
+-
+-def create_sqlalchemy_tables() -> None:
++def create_tables() ->None:
+     """
+     Create SQLAlchemy tables.
+     """
+@@ -10,10 +8,20 @@ def create_sqlalchemy_tables() -> None:
+     app = get_current_app()
+     db_backend = SQLAlchemy.build(settings=app.settings)
+     db_backend.create_tables()
+-    click.echo("Tables created")
++    click.echo('Tables created')
+ 
++def create_sqlalchemy_tables() ->None:
++    """
++    Create SQLAlchemy tables.
++    """
++    from apistar.main import get_current_app
++    from apistar.backends.sqlalchemy import SQLAlchemy
++    app = get_current_app()
++    db_backend = SQLAlchemy.build(settings=app.settings)
++    db_backend.create_tables()
++    click.echo('Tables created')
+ 
+-def django_makemigrations() -> None:
++def django_makemigrations() ->None:
+     """
+     Makemigrations DjangoBackend.
+     """
+@@ -22,10 +30,9 @@ def django_makemigrations() -> None:
+     app = get_current_app()
+     db_backend = DjangoBackend.build(settings=app.settings)
+     db_backend.makemigrations()
+-    click.echo("makemigrations")
++    click.echo('makemigrations')
+ 
+-
+-def django_migrate() -> None:
++def django_migrate() ->None:
+     """
+     Migrate DjangoBackend.
+     """
+@@ -34,10 +41,9 @@ def django_migrate() -> None:
+     app = get_current_app()
+     db_backend = DjangoBackend.build(settings=app.settings)
+     db_backend.migrate()
+-    click.echo("migrate")
+-
++    click.echo('migrate')
+ 
+-def django_showmigrations() -> None:
++def django_showmigrations() ->None:
+     """
+     Show Migrations DjangoBackend.
+     """
+@@ -46,4 +52,5 @@ def django_showmigrations() -> None:
+     app = get_current_app()
+     db_backend = DjangoBackend.build(settings=app.settings)
+     db_backend.showmigrations()
+-    click.echo("showmigrations")
++    click.echo('showmigrations')
++

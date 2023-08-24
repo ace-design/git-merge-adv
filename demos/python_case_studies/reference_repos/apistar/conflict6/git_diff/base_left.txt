@@ -1,0 +1,13 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict6/base.py b/python_case_studies/reference_repos/apistar/conflict6/left.py
+index 613a672..fdd1999 100644
+--- a/python_case_studies/reference_repos/apistar/conflict6/base.py
++++ b/python_case_studies/reference_repos/apistar/conflict6/left.py
+@@ -44,3 +44,8 @@ class Found(APIException):
+     def __init__(self, location):
+         self.location = location
+         super().__init__()
++
++
++class UnsupportedMediaType(APIException):
++    default_status_code = 415
++    default_detail = 'Unsupported media type in request'

@@ -1,0 +1,13 @@
+diff --git a/java_case_studies/reference_repos/adt4j/conflict1/base.java b/java_case_studies/reference_repos/adt4j/conflict1/right.java
+index dfe631d..49dd685 100644
+--- a/java_case_studies/reference_repos/adt4j/conflict1/base.java
++++ b/java_case_studies/reference_repos/adt4j/conflict1/right.java
+@@ -34,7 +34,7 @@ import com.github.sviperll.adt4j.model.ValueClassModelFactory;
+ import com.github.sviperll.meta.FilerCodeWriter;
+ import com.github.sviperll.meta.ElementMessage;
+ import com.github.sviperll.meta.ElementMessager;
+-import com.github.sviperll.meta.SourceCodeValidationException;
++import com.github.sviperll.adt4j.model.util.SourceCodeValidationException;
+ import com.helger.jcodemodel.JCodeModel;
+ import com.helger.jcodemodel.JDefinedClass;
+ import com.helger.jcodemodel.meta.JCodeModelJavaxLangModelAdapter;

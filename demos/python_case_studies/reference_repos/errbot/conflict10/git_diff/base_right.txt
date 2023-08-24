@@ -1,0 +1,13 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict10/base.py b/python_case_studies/reference_repos/errbot/conflict10/right.py
+index 23dbce9..c13b3fc 100644
+--- a/python_case_studies/reference_repos/errbot/conflict10/base.py
++++ b/python_case_studies/reference_repos/errbot/conflict10/right.py
+@@ -142,4 +142,8 @@ KNOWN_PUBLIC_REPOS = {
+         'https://github.com/sarlalian/err-shellexec.git',
+         'Allow users to run specifc shell scripts from chat.'
+     ),
++    'err-stopwatch': (
++        'https://github.com/taoistmath/err-stopwatch.git',
++        'Plugin to track elapsed time. Can track multiple timers simultaneously.'
++    ),
+ }

@@ -1,0 +1,28 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict8/base.java b/java_case_studies/reference_repos/Jest/conflict8/left.java
+index 9e00c44..c4b4916 100755
+--- a/java_case_studies/reference_repos/Jest/conflict8/base.java
++++ b/java_case_studies/reference_repos/Jest/conflict8/left.java
+@@ -6,6 +6,7 @@ import io.searchbox.client.config.discovery.NodeChecker;
+ import io.searchbox.client.config.idle.HttpReapableConnectionManager;
+ import io.searchbox.client.config.idle.IdleConnectionReaper;
+ import io.searchbox.client.http.JestHttpClient;
++import org.apache.commons.lang3.StringUtils;
+ import org.apache.http.client.config.RequestConfig;
+ import org.apache.http.config.Registry;
+ import org.apache.http.config.RegistryBuilder;
+@@ -67,6 +68,9 @@ public class JestClientFactory {
+         // set discovery (should be set after setting the httpClient on jestClient)
+         if (httpClientConfig.isDiscoveryEnabled()) {
+             log.info("Node Discovery enabled...");
++            if (StringUtils.isNotEmpty(httpClientConfig.getDiscoveryFilter())) {
++                log.info("Node Discovery filtering nodes on \"{}\"", httpClientConfig.getDiscoveryFilter());
++            }
+             NodeChecker nodeChecker = createNodeChecker(client, httpClientConfig);
+             client.setNodeChecker(nodeChecker);
+             nodeChecker.startAsync();
+@@ -231,5 +235,4 @@ public class JestClientFactory {
+     protected NodeChecker createNodeChecker(JestHttpClient client, HttpClientConfig httpClientConfig) {
+         return new NodeChecker(client, httpClientConfig);
+     }
+-
+ }

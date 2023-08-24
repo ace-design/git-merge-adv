@@ -1,0 +1,31 @@
+diff --git a/java_case_studies/reference_repos/Jest/conflict2/base.java b/java_case_studies/reference_repos/Jest/conflict2/left.java
+index 29b2cf8..ad430dd 100644
+--- a/java_case_studies/reference_repos/Jest/conflict2/base.java
++++ b/java_case_studies/reference_repos/Jest/conflict2/left.java
+@@ -2,6 +2,7 @@ package io.searchbox.indices.aliases;
+ 
+ import io.searchbox.action.AbstractMultiIndexActionBuilder;
+ import io.searchbox.action.GenericResultAbstractAction;
++import io.searchbox.client.config.ElasticsearchVersion;
+ 
+ /**
+  * @author cihat keser
+@@ -10,7 +11,6 @@ public class GetAliases extends GenericResultAbstractAction {
+ 
+     protected GetAliases(Builder builder) {
+         super(builder);
+-        setURI(buildURI());
+     }
+ 
+     @Override
+@@ -19,8 +19,8 @@ public class GetAliases extends GenericResultAbstractAction {
+     }
+ 
+     @Override
+-    protected String buildURI() {
+-        return super.buildURI() + "/_aliases";
++    protected String buildURI(ElasticsearchVersion elasticsearchVersion) {
++        return super.buildURI(elasticsearchVersion) + "/_aliases";
+     }
+ 
+     public static class Builder extends AbstractMultiIndexActionBuilder<GetAliases, Builder> {

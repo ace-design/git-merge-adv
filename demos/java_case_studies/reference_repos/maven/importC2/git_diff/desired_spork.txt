@@ -1,0 +1,567 @@
+diff --git a/java_case_studies/reference_repos/maven/importC2/desired.java b/java_case_studies/reference_repos/maven/importC2/spork_result.java
+index 0835153..908ced2 100644
+--- a/java_case_studies/reference_repos/maven/importC2/desired.java
++++ b/java_case_studies/reference_repos/maven/importC2/spork_result.java
+@@ -1,24 +1,5 @@
+ package org.apache.maven;
+ 
+-/*
+- * Licensed to the Apache Software Foundation (ASF) under one
+- * or more contributor license agreements.  See the NOTICE file
+- * distributed with this work for additional information
+- * regarding copyright ownership.  The ASF licenses this file
+- * to you under the Apache License, Version 2.0 (the
+- * "License"); you may not use this file except in compliance
+- * with the License.  You may obtain a copy of the License at
+- *
+- *  http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing,
+- * software distributed under the License is distributed on an
+- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+- * KIND, either express or implied.  See the License for the
+- * specific language governing permissions and limitations
+- * under the License.
+- */
+-
+ import java.io.File;
+ import java.io.IOException;
+ import java.io.InputStream;
+@@ -34,7 +15,6 @@ import java.util.LinkedHashSet;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Properties;
+-
+ import org.apache.maven.artifact.ArtifactUtils;
+ import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
+ import org.apache.maven.eventspy.internal.EventSpyDispatcher;
+@@ -88,11 +68,9 @@ import org.eclipse.aether.collection.DependencyManager;
+ import org.eclipse.aether.collection.DependencySelector;
+ import org.eclipse.aether.collection.DependencyTraverser;
+ import org.eclipse.aether.repository.LocalRepository;
+-import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
+ import org.eclipse.aether.repository.RepositoryPolicy;
+ import org.eclipse.aether.repository.WorkspaceReader;
+ import org.eclipse.aether.resolution.ResolutionErrorPolicy;
+-import org.eclipse.aether.spi.localrepo.LocalRepositoryManagerFactory;
+ import org.eclipse.aether.util.graph.manager.ClassicDependencyManager;
+ import org.eclipse.aether.util.graph.selector.AndDependencySelector;
+ import org.eclipse.aether.util.graph.selector.ExclusionDependencySelector;
+@@ -100,9 +78,9 @@ import org.eclipse.aether.util.graph.selector.OptionalDependencySelector;
+ import org.eclipse.aether.util.graph.selector.ScopeDependencySelector;
+ import org.eclipse.aether.util.graph.transformer.ChainedDependencyGraphTransformer;
+ import org.eclipse.aether.util.graph.transformer.ConflictResolver;
++import org.eclipse.aether.util.graph.transformer.JavaDependencyContextRefiner;
+ import org.eclipse.aether.util.graph.transformer.JavaScopeDeriver;
+ import org.eclipse.aether.util.graph.transformer.JavaScopeSelector;
+-import org.eclipse.aether.util.graph.transformer.JavaDependencyContextRefiner;
+ import org.eclipse.aether.util.graph.transformer.NearestVersionSelector;
+ import org.eclipse.aether.util.graph.transformer.SimpleOptionalitySelector;
+ import org.eclipse.aether.util.graph.traverser.FatArtifactTraverser;
+@@ -113,15 +91,15 @@ import org.eclipse.aether.util.repository.DefaultMirrorSelector;
+ import org.eclipse.aether.util.repository.DefaultProxySelector;
+ import org.eclipse.aether.util.repository.SimpleArtifactDescriptorPolicy;
+ import org.eclipse.aether.util.repository.SimpleResolutionErrorPolicy;
++import org.sonatype.aether.repository.NoLocalRepositoryManagerException;
++import org.sonatype.aether.spi.localrepo.LocalRepositoryManagerFactory;
++
+ 
+ /**
+  * @author Jason van Zyl
+  */
+-@Component( role = Maven.class )
+-public class DefaultMaven
+-    implements Maven
+-{
+-
++@Component(role = Maven.class)
++public class DefaultMaven implements Maven {
+     @Requirement
+     private Logger logger;
+ 
+@@ -143,13 +121,13 @@ public class DefaultMaven
+     @Requirement
+     private ArtifactHandlerManager artifactHandlerManager;
+ 
+-    @Requirement( optional = true, hint = "ide" )
++    @Requirement(optional = true, hint = "ide")
+     private WorkspaceReader workspaceRepository;
+ 
+     @Requirement
+     private RepositorySystem repoSystem;
+ 
+-    @Requirement( optional = true, hint = "simple" )
++    @Requirement(optional = true, hint = "simple")
+     private LocalRepositoryManagerFactory simpleLocalRepositoryManagerFactory;
+ 
+     @Requirement
+@@ -191,313 +169,190 @@ public class DefaultMaven
+         return result;
+     }
+ 
+-    @SuppressWarnings({"ThrowableInstanceNeverThrown", "ThrowableResultOfMethodCallIgnored"})
+-    private MavenExecutionResult doExecute( MavenExecutionRequest request )
+-    {
+-        //TODO: Need a general way to inject standard properties
+-        if ( request.getStartTime() != null )
+-        {
+-            request.getSystemProperties().put( "${build.timestamp}",
+-                                               new SimpleDateFormat( "yyyyMMdd-hhmm" ).format( request.getStartTime() ) );
+-        }        
+-        
+-        request.setStartTime( new Date() );
+-        
+-        MavenExecutionResult result = new DefaultMavenExecutionResult();
+-
+-        try
+-        {
+-            validateLocalRepository( request );
+-        }
+-        catch ( LocalRepositoryNotAccessibleException e )
+-        {
+-            return processResult( result, e );
++    @SuppressWarnings({ "ThrowableInstanceNeverThrown", "ThrowableResultOfMethodCallIgnored" })
++    private MavenExecutionResult doExecute(MavenExecutionRequest request) {
++        // TODO: Need a general way to inject standard properties
++        if (request.getStartTime() != null) {
++            request.getSystemProperties().put("${build.timestamp}", new SimpleDateFormat("yyyyMMdd-hhmm").format(request.getStartTime()));
+         }
+-
+-        DelegatingLocalArtifactRepository delegatingLocalArtifactRepository =
+-            new DelegatingLocalArtifactRepository( request.getLocalRepository() );
+-        
+-        request.setLocalRepository( delegatingLocalArtifactRepository );        
+-
+-        DefaultRepositorySystemSession repoSession = (DefaultRepositorySystemSession) newRepositorySession( request );
+-
+-        MavenSession session = new MavenSession( container, repoSession, request, result );
+-        legacySupport.setSession( session );
+-
+-        try
+-        {
+-            for ( AbstractMavenLifecycleParticipant listener : getLifecycleParticipants( Collections.<MavenProject> emptyList() ) )
+-            {
+-                listener.afterSessionStart( session );
++        request.setStartTime(new Date());
++        MavenExecutionResult result = new DefaultMavenExecutionResult();
++        try {
++            validateLocalRepository(request);
++        } catch (LocalRepositoryNotAccessibleException e) {
++            return processResult(result, e);
++        }
++        DelegatingLocalArtifactRepository delegatingLocalArtifactRepository = new DelegatingLocalArtifactRepository(request.getLocalRepository());
++        request.setLocalRepository(delegatingLocalArtifactRepository);
++        DefaultRepositorySystemSession repoSession = ((DefaultRepositorySystemSession) (newRepositorySession(request)));
++        MavenSession session = new MavenSession(container, repoSession, request, result);
++        legacySupport.setSession(session);
++        try {
++            for (AbstractMavenLifecycleParticipant listener : getLifecycleParticipants(Collections.<MavenProject>emptyList())) {
++                listener.afterSessionStart(session);
+             }
++        } catch (MavenExecutionException e) {
++            return processResult(result, e);
+         }
+-        catch ( MavenExecutionException e )
+-        {
+-            return processResult( result, e );
+-        }
+-
+-        eventCatapult.fire( ExecutionEvent.Type.ProjectDiscoveryStarted, session, null );
+-
+-        request.getProjectBuildingRequest().setRepositorySession( session.getRepositorySession() );
+-
+-        //TODO: optimize for the single project or no project
+-        
++        eventCatapult.fire(ExecutionEvent.Type.ProjectDiscoveryStarted, session, null);
++        request.getProjectBuildingRequest().setRepositorySession(session.getRepositorySession());
++        // TODO: optimize for the single project or no project
+         List<MavenProject> projects;
+-        try
+-        {
+-            projects = getProjectsForMavenReactor( request );                                                
+-        }
+-        catch ( ProjectBuildingException e )
+-        {
+-            return processResult( result, e );
+-        }
+-
+-        session.setProjects( projects );
+-
+-        result.setTopologicallySortedProjects( session.getProjects() );
+-        
+-        result.setProject( session.getTopLevelProject() );
+-
+-        try
+-        {
++        try {
++            projects = getProjectsForMavenReactor(request);
++        } catch (ProjectBuildingException e) {
++            return processResult(result, e);
++        }
++        session.setProjects(projects);
++        result.setTopologicallySortedProjects(session.getProjects());
++        result.setProject(session.getTopLevelProject());
++        try {
+             Map<String, MavenProject> projectMap;
+-            projectMap = getProjectMap( session.getProjects() );
+-    
++            projectMap = getProjectMap(session.getProjects());
+             // Desired order of precedence for local artifact repositories
+-            //
++            // 
+             // Reactor
+             // Workspace
+             // User Local Repository
+-            ReactorReader reactorRepository = new ReactorReader( projectMap );
+-
+-            repoSession.setWorkspaceReader( ChainedWorkspaceReader.newInstance( reactorRepository,
+-                                                                                repoSession.getWorkspaceReader() ) );
+-        }
+-        catch ( org.apache.maven.DuplicateProjectException e )
+-        {
+-            return processResult( result, e );
++            ReactorReader reactorRepository = new ReactorReader(projectMap);
++            repoSession.setWorkspaceReader(ChainedWorkspaceReader.newInstance(reactorRepository, repoSession.getWorkspaceReader()));
++        } catch (DuplicateProjectException e) {
++            return processResult(result, e);
+         }
+-
+         repoSession.setReadOnly();
+-
+         ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+-        try
+-        {
+-            for ( AbstractMavenLifecycleParticipant listener : getLifecycleParticipants( projects ) )
+-            {
+-                Thread.currentThread().setContextClassLoader( listener.getClass().getClassLoader() );
+-
+-                listener.afterProjectsRead( session );
++        try {
++            for (AbstractMavenLifecycleParticipant listener : getLifecycleParticipants(projects)) {
++                Thread.currentThread().setContextClassLoader(listener.getClass().getClassLoader());
++                listener.afterProjectsRead(session);
+             }
+-        }
+-        catch ( MavenExecutionException e )
+-        {
+-            return processResult( result, e );
+-        }
+-        finally
+-        {
+-            Thread.currentThread().setContextClassLoader( originalClassLoader );
+-        }
+-
+-        try
+-        {
+-            ProjectSorter projectSorter = new ProjectSorter( session.getProjects() );
+-
+-            ProjectDependencyGraph projectDependencyGraph = createDependencyGraph( projectSorter, request );
+-
+-            session.setProjects( projectDependencyGraph.getSortedProjects() );
+-
+-            session.setProjectDependencyGraph( projectDependencyGraph );
+-        }
+-        catch ( CycleDetectedException e )
+-        {            
++        } catch (MavenExecutionException e) {
++            return processResult(result, e);
++        } finally {
++            Thread.currentThread().setContextClassLoader(originalClassLoader);
++        }
++        try {
++            ProjectSorter projectSorter = new ProjectSorter(session.getProjects());
++            ProjectDependencyGraph projectDependencyGraph = createDependencyGraph(projectSorter, request);
++            session.setProjects(projectDependencyGraph.getSortedProjects());
++            session.setProjectDependencyGraph(projectDependencyGraph);
++        } catch (CycleDetectedException e) {
+             String message = "The projects in the reactor contain a cyclic reference: " + e.getMessage();
+-
+-            ProjectCycleException error = new ProjectCycleException( message, e );
+-
+-            return processResult( result, error );
+-        }
+-        catch ( DuplicateProjectException e )
+-        {
+-            return processResult( result, e );
+-        }
+-        catch ( MavenExecutionException e )
+-        {
+-            return processResult( result, e );
+-        }
+-
+-        result.setTopologicallySortedProjects( session.getProjects() );
+-
+-        if ( result.hasExceptions() )
+-        {
++            ProjectCycleException error = new ProjectCycleException(message, e);
++            return processResult(result, error);
++        } catch (DuplicateProjectException e) {
++            return processResult(result, e);
++        } catch (MavenExecutionException e) {
++            return processResult(result, e);
++        }
++        result.setTopologicallySortedProjects(session.getProjects());
++        if (result.hasExceptions()) {
+             return result;
+         }
+-
+-        lifecycleStarter.execute( session );
+-
+-        validateActivatedProfiles( session.getProjects(), request.getActiveProfiles() );
+-
+-        if ( session.getResult().hasExceptions() )
+-        {
+-            return processResult( result, session.getResult().getExceptions().get( 0 ) );
++        lifecycleStarter.execute(session);
++        validateActivatedProfiles(session.getProjects(), request.getActiveProfiles());
++        if (session.getResult().hasExceptions()) {
++            return processResult(result, session.getResult().getExceptions().get(0));
+         }
+-
+         return result;
+     }
+ 
+-    public RepositorySystemSession newRepositorySession( MavenExecutionRequest request )
+-    {
++    public RepositorySystemSession newRepositorySession(MavenExecutionRequest request) {
+         DefaultRepositorySystemSession session = new DefaultRepositorySystemSession();
+-
+-        session.setCache( request.getRepositoryCache() );
+-
+-        session.setArtifactDescriptorPolicy( new SimpleArtifactDescriptorPolicy( true, true ) );
+-
++        session.setCache(request.getRepositoryCache());
++        session.setArtifactDescriptorPolicy(new SimpleArtifactDescriptorPolicy(true, true));
+         Map<Object, Object> configProps = new LinkedHashMap<Object, Object>();
+-        configProps.put( ConfigurationProperties.USER_AGENT, getUserAgent() );
+-        configProps.put( ConfigurationProperties.INTERACTIVE, Boolean.valueOf( request.isInteractiveMode() ) );
+-        configProps.putAll( request.getSystemProperties() );
+-        configProps.putAll( request.getUserProperties() );
+-
+-        session.setOffline( request.isOffline() );
+-        session.setChecksumPolicy( request.getGlobalChecksumPolicy() );
+-        if ( request.isNoSnapshotUpdates() )
+-        {
+-            session.setUpdatePolicy( RepositoryPolicy.UPDATE_POLICY_NEVER );
+-        }
+-        else if ( request.isUpdateSnapshots() )
+-        {
+-            session.setUpdatePolicy( RepositoryPolicy.UPDATE_POLICY_ALWAYS );
+-        }
+-        else
+-        {
+-            session.setUpdatePolicy( null );
++        configProps.put(ConfigurationProperties.USER_AGENT, getUserAgent());
++        configProps.put(ConfigurationProperties.INTERACTIVE, Boolean.valueOf(request.isInteractiveMode()));
++        configProps.putAll(request.getSystemProperties());
++        configProps.putAll(request.getUserProperties());
++        session.setOffline(request.isOffline());
++        session.setChecksumPolicy(request.getGlobalChecksumPolicy());
++        if (request.isNoSnapshotUpdates()) {
++            session.setUpdatePolicy(RepositoryPolicy.UPDATE_POLICY_NEVER);
++        } else if (request.isUpdateSnapshots()) {
++            session.setUpdatePolicy(RepositoryPolicy.UPDATE_POLICY_ALWAYS);
++        } else {
++            session.setUpdatePolicy(null);
+         }
+-
+         int errorPolicy = 0;
+-        errorPolicy |= request.isCacheNotFound() ? ResolutionErrorPolicy.CACHE_NOT_FOUND : 0;
+-        errorPolicy |= request.isCacheTransferError() ? ResolutionErrorPolicy.CACHE_TRANSFER_ERROR : 0;
+-        session.setResolutionErrorPolicy( new SimpleResolutionErrorPolicy( errorPolicy, errorPolicy
+-            | ResolutionErrorPolicy.CACHE_NOT_FOUND ) );
+-
+-        session.setArtifactTypeRegistry( RepositoryUtils.newArtifactTypeRegistry( artifactHandlerManager ) );
+-
+-        LocalRepository localRepo = new LocalRepository( request.getLocalRepository().getBasedir() );
+-
+-        if ( request.isUseLegacyLocalRepository() )
+-        {
+-            logger.warn( "Disabling enhanced local repository: using legacy is stronlgy discouraged to ensure build reproducibility." );
+-            try
+-            {
+-                session.setLocalRepositoryManager( simpleLocalRepositoryManagerFactory.newInstance( localRepo ) );
+-            }
+-            catch ( NoLocalRepositoryManagerException e )
+-            {
+-
+-                logger.warn( "Failed to configure legacy local repository: back to default" );
+-                session.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( localRepo ) );
++        errorPolicy |= (request.isCacheNotFound()) ? ResolutionErrorPolicy.CACHE_NOT_FOUND : 0;
++        errorPolicy |= (request.isCacheTransferError()) ? ResolutionErrorPolicy.CACHE_TRANSFER_ERROR : 0;
++        session.setResolutionErrorPolicy(new SimpleResolutionErrorPolicy(errorPolicy, errorPolicy | ResolutionErrorPolicy.CACHE_NOT_FOUND));
++        session.setArtifactTypeRegistry(RepositoryUtils.newArtifactTypeRegistry(artifactHandlerManager));
++        LocalRepository localRepo = new LocalRepository(request.getLocalRepository().getBasedir());
++        if (request.isUseLegacyLocalRepository()) {
++            logger.warn("Disabling enhanced local repository: using legacy is stronlgy discouraged to ensure build reproducibility.");
++            try {
++                session.setLocalRepositoryManager(simpleLocalRepositoryManagerFactory.newInstance(localRepo));
++            } catch (NoLocalRepositoryManagerException e) {
++                logger.warn("Failed to configure legacy local repository: back to default");
++                session.setLocalRepositoryManager(repoSystem.newLocalRepositoryManager(localRepo));
+             }
++        } else {
++            session.setLocalRepositoryManager(repoSystem.newLocalRepositoryManager(localRepo));
+         }
+-        else
+-        {
+-            session.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( localRepo ) );
++        if (request.getWorkspaceReader() != null) {
++            session.setWorkspaceReader(request.getWorkspaceReader());
++        } else {
++            session.setWorkspaceReader(workspaceRepository);
+         }
+-
+-        if ( request.getWorkspaceReader() != null )
+-        {
+-            session.setWorkspaceReader( request.getWorkspaceReader() );
+-        }
+-        else
+-        {
+-            session.setWorkspaceReader( workspaceRepository );
+-        }
+-
+         DefaultSettingsDecryptionRequest decrypt = new DefaultSettingsDecryptionRequest();
+-        decrypt.setProxies( request.getProxies() );
+-        decrypt.setServers( request.getServers() );
+-        SettingsDecryptionResult decrypted = settingsDecrypter.decrypt( decrypt );
+-
+-        if ( logger.isDebugEnabled() )
+-        {
+-            for ( SettingsProblem problem : decrypted.getProblems() )
+-            {
+-                logger.debug( problem.getMessage(), problem.getException() );
++        decrypt.setProxies(request.getProxies());
++        decrypt.setServers(request.getServers());
++        SettingsDecryptionResult decrypted = settingsDecrypter.decrypt(decrypt);
++        if (logger.isDebugEnabled()) {
++            for (SettingsProblem problem : decrypted.getProblems()) {
++                logger.debug(problem.getMessage(), problem.getException());
+             }
+         }
+-
+         DefaultMirrorSelector mirrorSelector = new DefaultMirrorSelector();
+-        for ( Mirror mirror : request.getMirrors() )
+-        {
+-            mirrorSelector.add( mirror.getId(), mirror.getUrl(), mirror.getLayout(), false, mirror.getMirrorOf(),
+-                                mirror.getMirrorOfLayouts() );
++        for (Mirror mirror : request.getMirrors()) {
++            mirrorSelector.add(mirror.getId(), mirror.getUrl(), mirror.getLayout(), false, mirror.getMirrorOf(), mirror.getMirrorOfLayouts());
+         }
+-        session.setMirrorSelector( mirrorSelector );
+-
++        session.setMirrorSelector(mirrorSelector);
+         DefaultProxySelector proxySelector = new DefaultProxySelector();
+-        for ( Proxy proxy : decrypted.getProxies() )
+-        {
++        for (Proxy proxy : decrypted.getProxies()) {
+             AuthenticationBuilder authBuilder = new AuthenticationBuilder();
+-            authBuilder.addUsername( proxy.getUsername() ).addPassword( proxy.getPassword() );
+-            proxySelector.add( new org.eclipse.aether.repository.Proxy( proxy.getProtocol(), proxy.getHost(),
+-                                                                        proxy.getPort(), authBuilder.build() ),
+-                               proxy.getNonProxyHosts() );
++            authBuilder.addUsername(proxy.getUsername()).addPassword(proxy.getPassword());
++            proxySelector.add(new org.eclipse.aether.repository.Proxy(proxy.getProtocol(), proxy.getHost(), proxy.getPort(), authBuilder.build()), proxy.getNonProxyHosts());
+         }
+-        session.setProxySelector( proxySelector );
+-
++        session.setProxySelector(proxySelector);
+         DefaultAuthenticationSelector authSelector = new DefaultAuthenticationSelector();
+-        for ( Server server : decrypted.getServers() )
+-        {
++        for (Server server : decrypted.getServers()) {
+             AuthenticationBuilder authBuilder = new AuthenticationBuilder();
+-            authBuilder.addUsername( server.getUsername() ).addPassword( server.getPassword() );
+-            authBuilder.addPrivateKey( server.getPrivateKey(), server.getPassphrase() );
+-            authSelector.add( server.getId(), authBuilder.build() );
+-
+-            if ( server.getConfiguration() != null )
+-            {
+-                Xpp3Dom dom = (Xpp3Dom) server.getConfiguration();
+-                for ( int i = dom.getChildCount() - 1; i >= 0; i-- )
+-                {
+-                    Xpp3Dom child = dom.getChild( i );
+-                    if ( "wagonProvider".equals( child.getName() ) )
+-                    {
+-                        dom.removeChild( i );
++            authBuilder.addUsername(server.getUsername()).addPassword(server.getPassword());
++            authBuilder.addPrivateKey(server.getPrivateKey(), server.getPassphrase());
++            authSelector.add(server.getId(), authBuilder.build());
++            if (server.getConfiguration() != null) {
++                Xpp3Dom dom = ((Xpp3Dom) (server.getConfiguration()));
++                for (int i = dom.getChildCount() - 1; i >= 0; i--) {
++                    Xpp3Dom child = dom.getChild(i);
++                    if ("wagonProvider".equals(child.getName())) {
++                        dom.removeChild(i);
+                     }
+                 }
+-
+-                XmlPlexusConfiguration config = new XmlPlexusConfiguration( dom );
+-                configProps.put( "aether.connector.wagon.config." + server.getId(), config );
++                XmlPlexusConfiguration config = new XmlPlexusConfiguration(dom);
++                configProps.put("aether.connector.wagon.config." + server.getId(), config);
+             }
+-
+-            configProps.put( "aether.connector.perms.fileMode." + server.getId(), server.getFilePermissions() );
+-            configProps.put( "aether.connector.perms.dirMode." + server.getId(), server.getDirectoryPermissions() );
++            configProps.put("aether.connector.perms.fileMode." + server.getId(), server.getFilePermissions());
++            configProps.put("aether.connector.perms.dirMode." + server.getId(), server.getDirectoryPermissions());
+         }
+-        session.setAuthenticationSelector( authSelector );
+-
++        session.setAuthenticationSelector(authSelector);
+         DependencyTraverser depTraverser = new FatArtifactTraverser();
+-        session.setDependencyTraverser( depTraverser );
+-
++        session.setDependencyTraverser(depTraverser);
+         DependencyManager depManager = new ClassicDependencyManager();
+-        session.setDependencyManager( depManager );
+-
+-        DependencySelector depFilter =
+-            new AndDependencySelector( new ScopeDependencySelector( "test", "provided" ), new OptionalDependencySelector(),
+-                                     new ExclusionDependencySelector() );
+-        session.setDependencySelector( depFilter );
+-
+-        DependencyGraphTransformer transformer =
+-            new ConflictResolver( new NearestVersionSelector(), new JavaScopeSelector(),
+-                                  new SimpleOptionalitySelector(), new JavaScopeDeriver() );
+-        transformer = new ChainedDependencyGraphTransformer( transformer, new JavaDependencyContextRefiner() );
+-        session.setDependencyGraphTransformer( transformer );
+-
+-        session.setTransferListener( request.getTransferListener() );
+-
+-        session.setRepositoryListener( eventSpyDispatcher.chainListener( new LoggingRepositoryListener( logger ) ) );
+-
+-        session.setUserProperties( request.getUserProperties() );
+-        session.setSystemProperties( request.getSystemProperties() );
+-        session.setConfigProperties( configProps );
+-
++        session.setDependencyManager(depManager);
++        DependencySelector depFilter = new AndDependencySelector(new ScopeDependencySelector("test", "provided"), new OptionalDependencySelector(), new ExclusionDependencySelector());
++        session.setDependencySelector(depFilter);
++        DependencyGraphTransformer transformer = new ConflictResolver(new NearestVersionSelector(), new JavaScopeSelector(), new SimpleOptionalitySelector(), new JavaScopeDeriver());
++        transformer = new ChainedDependencyGraphTransformer(transformer, new JavaDependencyContextRefiner());
++        session.setDependencyGraphTransformer(transformer);
++        session.setTransferListener(request.getTransferListener());
++        session.setRepositoryListener(eventSpyDispatcher.chainListener(new LoggingRepositoryListener(logger)));
++        session.setUserProperties(request.getUserProperties());
++        session.setSystemProperties(request.getSystemProperties());
++        session.setConfigProperties(configProps);
+         return session;
+     }
+ 
+@@ -601,7 +456,7 @@ public class DefaultMaven
+ 
+         return result;
+     }
+-    
++
+     private List<MavenProject> getProjectsForMavenReactor( MavenExecutionRequest request )
+         throws ProjectBuildingException
+     {
+@@ -920,5 +775,4 @@ public class DefaultMaven
+ 
+         return false;
+     }
+-
+ }

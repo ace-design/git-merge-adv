@@ -1,0 +1,407 @@
+diff --git a/java_case_studies/reference_repos/cucumber.jvm/importC2/desired.java b/java_case_studies/reference_repos/cucumber.jvm/importC2/jdime.java
+index 77b1822..14dd91b 100644
+--- a/java_case_studies/reference_repos/cucumber.jvm/importC2/desired.java
++++ b/java_case_studies/reference_repos/cucumber.jvm/importC2/jdime.java
+@@ -1,14 +1,15 @@
+ package io.cucumber.core.options;
+-
+ import io.cucumber.core.backend.ObjectFactory;
+ import io.cucumber.core.feature.FeatureWithLines;
+ import io.cucumber.core.order.PickleOrder;
+ import io.cucumber.core.order.StandardPickleOrders;
++import io.cucumber.core.model.FeatureWithLines;
+ import io.cucumber.core.snippets.SnippetType;
+-
+ import java.net.URI;
+ import java.util.ArrayList;
++import java.util.Collections;
+ import java.util.HashMap;
++import java.util.HashSet;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
+@@ -16,201 +17,218 @@ import java.util.SortedSet;
+ import java.util.TreeSet;
+ import java.util.regex.Pattern;
+ import java.util.stream.Collectors;
+-
+ import static java.util.Collections.unmodifiableList;
+ import static java.util.Collections.unmodifiableMap;
+ 
+-public final class RuntimeOptions implements
+-    io.cucumber.core.feature.Options,
+-    io.cucumber.core.runner.Options,
+-    io.cucumber.core.plugin.Options,
+-    io.cucumber.core.filter.Options,
+-    io.cucumber.core.backend.Options {
+-
+-    private final List<URI> glue = new ArrayList<>();
+-    private final List<String> tagExpressions = new ArrayList<>();
+-    private final List<Pattern> nameFilters = new ArrayList<>();
+-    private final List<FeatureWithLines> featurePaths = new ArrayList<>();
+-
+-    private boolean dryRun;
+-    private boolean strict = false;
+-    private boolean monochrome = false;
+-    private boolean wip = false;
+-    private SnippetType snippetType = SnippetType.UNDERSCORE;
+-    private int threads = 1;
+-    private PickleOrder pickleOrder = StandardPickleOrders.lexicalUriOrder();
+-    private int count = 0;
+-
+-    private final List<Plugin> formatters = new ArrayList<>();
+-    private final List<Plugin> summaryPrinters = new ArrayList<>();
+-    private Class<? extends ObjectFactory> objectFactoryClass;
+-
+-    private RuntimeOptions() {
++public final class RuntimeOptions implements io.cucumber.core.feature.Options, io.cucumber.core.runner.Options, io.cucumber.core.plugin.Options, io.cucumber.core.filter.Options, io.cucumber.core.backend.Options {
++  private final List<URI> glue = new ArrayList<>();
+ 
+-    }
++  private final List<String> tagExpressions = new ArrayList<>();
+ 
+-    public static RuntimeOptions defaultOptions() {
+-        return new RuntimeOptions();
+-    }
++  private final List<Pattern> nameFilters = new ArrayList<>();
+ 
+-    public int getCount() {
+-        return count;
+-    }
++  private final List<FeatureWithLines> featurePaths = new ArrayList<>();
+ 
+-    List<Plugin> getFormatters() {
+-        return formatters;
+-    }
++  private boolean dryRun;
+ 
+-    List<Plugin> getSummaryPrinter() {
+-        return summaryPrinters;
+-    }
++  private final List<Plugin> formatters = new ArrayList<>();
+ 
+-    public boolean isMultiTestNGFThreaded() {
+-        return getThreads() > 1;
+-    }
++  private boolean strict = false;
+ 
+-    @Override
+-    public List<Plugin> plugins() {
+-        List<Plugin> plugins = new ArrayList<>();
+-        plugins.addAll(formatters);
+-        plugins.addAll(summaryPrinters);
+-        return plugins;
+-    }
++  private boolean monochrome = false;
+ 
+-    @Override
+-    public List<URI> getGlue() {
+-        return unmodifiableList(glue);
+-    }
++  private boolean wip = false;
+ 
+-    @Override
+-    public boolean isStrict() {
+-        return strict;
+-    }
++  private SnippetType snippetType = SnippetType.UNDERSCORE;
+ 
+-    @Override
+-    public boolean isDryRun() {
+-        return dryRun;
+-    }
++  private int threads = 1;
+ 
+-    public boolean isWip() {
+-        return wip;
+-    }
++  private PickleOrder pickleOrder = StandardPickleOrders.lexicalUriOrder();
+ 
+-    @Override
+-    public List<URI> getFeaturePaths() {
+-        return unmodifiableList(featurePaths.stream()
+-            .map(FeatureWithLines::uri)
+-            .sorted()
+-            .distinct()
+-            .collect(Collectors.toList()));
+-    }
++  private int count = 0;
+ 
+-    @Override
+-    public List<String> getTagExpressions() {
+-        return unmodifiableList(tagExpressions);
+-    }
++  private final List<Plugin> summaryPrinters = new ArrayList<>();
+ 
+-    @Override
+-    public List<Pattern> getNameFilters() {
+-        return unmodifiableList(nameFilters);
+-    }
++  private Class<? extends ObjectFactory> objectFactoryClass;
+ 
+-    void setCount(int count) {
+-        this.count = count;
+-    }
++  private RuntimeOptions() {
++  }
+ 
+-    void setFeaturePaths(List<FeatureWithLines> featurePaths) {
+-        this.featurePaths.clear();
+-        this.featurePaths.addAll(featurePaths);
+-    }
++  public static RuntimeOptions defaultOptions() {
++    return new RuntimeOptions();
++  }
+ 
+-    void setGlue(List<URI> parsedGlue) {
+-        glue.clear();
+-        glue.addAll(parsedGlue);
+-    }
++  public int getCount() {
++    return count;
++  }
+ 
+-    void setNameFilters(List<Pattern> nameFilters) {
+-        this.nameFilters.clear();
+-        this.nameFilters.addAll(nameFilters);
+-    }
++  List<Plugin> getFormatters() {
++    return formatters;
++  }
+ 
+-    void setPickleOrder(PickleOrder pickleOrder) {
+-        this.pickleOrder = pickleOrder;
+-    }
+-
+-    void setTagExpressions(List<String> tagExpressions) {
+-        this.tagExpressions.clear();
+-        this.tagExpressions.addAll(tagExpressions);
+-    }
+-
+-    @Override
+-    public Map<URI, Set<Integer>> getLineFilters() {
+-        Map<URI, Set<Integer>> lineFilters = new HashMap<>();
+-        featurePaths.forEach(featureWithLines -> {
+-            SortedSet<Integer> lines = featureWithLines.lines();
+-            URI uri = featureWithLines.uri();
+-            if (lines.isEmpty()) {
+-                return;
+-            }
+-            lineFilters.putIfAbsent(uri, new TreeSet<>());
+-            lineFilters.get(uri).addAll(lines);
+-        });
+-        return unmodifiableMap(lineFilters);
+-    }
+-
+-    @Override
+-    public int getLimitCount() {
+-        return getCount();
+-    }
+-
+-    @Override
+-    public boolean isMonochrome() {
+-        return monochrome;
+-    }
+-
+-    @Override
+-    public SnippetType getSnippetType() {
+-        return snippetType;
+-    }
++  List<Plugin> getSummaryPrinter() {
++    return summaryPrinters;
++  }
+ 
+-    @Override
+-    public Class<? extends ObjectFactory> getObjectFactoryClass() {
+-        return objectFactoryClass;
+-    }
++  public boolean isMultiThreaded() {
++    return getThreads() > 1;
++  }
+ 
+-    public int getThreads() {
+-        return threads;
+-    }
++  @Override public List<Plugin> plugins() {
++    List<Plugin> plugins = new ArrayList<>();
++    plugins.addAll(formatters);
++    plugins.addAll(summaryPrinters);
++    return plugins;
++  }
+ 
+-    public PickleOrder getPickleOrder() {
+-        return pickleOrder;
+-    }
++  @Override public List<URI> getGlue() {
++    return unmodifiableList(glue);
++  }
+ 
+-    void setDryRun(boolean dryRun) {
+-        this.dryRun = dryRun;
+-    }
++  @Override public boolean isStrict() {
++    return strict;
++  }
+ 
+-    void setMonochrome(boolean monochrome) {
+-        this.monochrome = monochrome;
+-    }
++  @Override public boolean isDryRun() {
++    return dryRun;
++  }
+ 
+-    void setSnippetType(SnippetType snippetType) {
+-        this.snippetType = snippetType;
+-    }
++  public boolean isWip() {
++    return wip;
++  }
+ 
+-    void setStrict(boolean strict) {
+-        this.strict = strict;
++  @Override public List<URI> getFeaturePaths() {
++    Set<URI> uris = new HashSet<>();
++    for (FeatureWithLines featurePath : featurePaths) {
++      URI uri = featurePath.uri();
++      uris.add(uri);
+     }
++    ArrayList<URI> toSort = new ArrayList<>(uris);
++    Collections.sort(toSort);
++    return unmodifiableList(
++<<<<<<< left.java
++    featurePaths.stream().map(FeatureWithLines::uri).sorted().distinct().collect(Collectors.toList())
++=======
++    toSort
++>>>>>>> right.java
++    );
++  }
+ 
+-    void setThreads(int threads) {
+-        this.threads = threads;
+-    }
++  @Override public List<String> getTagExpressions() {
++    return unmodifiableList(tagExpressions);
++  }
+ 
+-    void setWip(boolean wip) {
+-        this.wip = wip;
+-    }
++  @Override public List<Pattern> getNameFilters() {
++    return unmodifiableList(nameFilters);
++  }
+ 
+-    void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
+-        this.objectFactoryClass = objectFactoryClass;
+-    }
+-}
++  void setCount(int count) {
++    this.count = count;
++  }
++
++  void setFeaturePaths(List<FeatureWithLines> featurePaths) {
++    this.featurePaths.clear();
++    this.featurePaths.addAll(featurePaths);
++  }
++
++  void setGlue(List<URI> parsedGlue) {
++    glue.clear();
++    glue.addAll(parsedGlue);
++  }
++
++  void setNameFilters(List<Pattern> nameFilters) {
++    this.nameFilters.clear();
++    this.nameFilters.addAll(nameFilters);
++  }
++
++  void setPickleOrder(PickleOrder pickleOrder) {
++    this.pickleOrder = pickleOrder;
++  }
++
++  void setTagExpressions(List<String> tagExpressions) {
++    this.tagExpressions.clear();
++    this.tagExpressions.addAll(tagExpressions);
++  }
++
++  @Override public Map<URI, Set<Integer>> getLineFilters() {
++    Map<URI, Set<Integer>> lineFilters = new HashMap<>();
++
++<<<<<<< left.java
++    featurePaths.forEach((featureWithLines) -> {
++      SortedSet<Integer> lines = featureWithLines.lines();
++      URI uri = featureWithLines.uri();
++      if (lines.isEmpty()) {
++        return;
++      }
++      lineFilters.putIfAbsent(uri, new TreeSet<>());
++      lineFilters.get(uri).addAll(lines);
++    });
++=======
++    for (FeatureWithLines featureWithLines : featurePaths) {
++      SortedSet<Integer> lines = featureWithLines.lines();
++      URI uri = featureWithLines.uri();
++      if (lines.isEmpty()) {
++        continue;
++      }
++      if (!lineFilters.containsKey(uri)) {
++        lineFilters.put(uri, new TreeSet<Integer>());
++      }
++      lineFilters.get(uri).addAll(lines);
++    }
++>>>>>>> right.java
++
++    return unmodifiableMap(lineFilters);
++  }
++
++  @Override public int getLimitCount() {
++    return getCount();
++  }
++
++  @Override public boolean isMonochrome() {
++    return monochrome;
++  }
++
++  @Override public SnippetType getSnippetType() {
++    return snippetType;
++  }
++
++  @Override public Class<? extends ObjectFactory> getObjectFactoryClass() {
++    return objectFactoryClass;
++  }
++
++  public int getThreads() {
++    return threads;
++  }
++
++  public PickleOrder getPickleOrder() {
++    return pickleOrder;
++  }
++
++  void setDryRun(boolean dryRun) {
++    this.dryRun = dryRun;
++  }
++
++  void setMonochrome(boolean monochrome) {
++    this.monochrome = monochrome;
++  }
++
++  void setSnippetType(SnippetType snippetType) {
++    this.snippetType = snippetType;
++  }
++
++  void setStrict(boolean strict) {
++    this.strict = strict;
++  }
++
++  void setThreads(int threads) {
++    this.threads = threads;
++  }
++
++  void setWip(boolean wip) {
++    this.wip = wip;
++  }
++
++  void setObjectFactoryClass(Class<? extends ObjectFactory> objectFactoryClass) {
++    this.objectFactoryClass = objectFactoryClass;
++  }
++}
+\ No newline at end of file

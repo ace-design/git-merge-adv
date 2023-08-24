@@ -1,0 +1,173 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict2/desired.java b/java_case_studies/demo_results/MethodUnion/alternator-conflict2.java
+index 04dfe3d..3493d98 100644
+--- a/java_case_studies/reference_repos/alternator/conflict2/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/alternator-conflict2.java
+@@ -1,5 +1,4 @@
+ package com.michelboudreau.alternator;
+-
+ import com.amazonaws.services.dynamodb.model.*;
+ import com.amazonaws.services.dynamodb.model.transform.*;
+ import com.michelboudreau.alternator.enums.AttributeValueType;
+@@ -11,27 +10,26 @@ import org.codehaus.jackson.annotate.JsonAutoDetect;
+ import org.codehaus.jackson.annotate.JsonMethod;
+ import org.codehaus.jackson.map.ObjectMapper;
+ import org.codehaus.jackson.map.SerializationConfig;
+-import org.codehaus.jackson.map.type.TypeFactory;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+-
+ import javax.servlet.http.HttpServletRequest;
+ import java.io.File;
+ import java.io.IOException;
+ import java.util.*;
+ 
+-class AlternatorDBHandler {
++class AlternatorDBHandler{
+ 
+-    private final Logger logger = LoggerFactory.getLogger(AlternatorDBHandler.class);
++    private final Logger logger = LoggerFactory.getLogger(AlternatorDBHandler.class);,
++    private Map<String, Table> tables = new HashMap<String, Table>();,
++    private List<Table> tableList = new ArrayList<Table>();,
+ 
+-    private Map<String, Table> tables = new HashMap<String, Table>();
+-    private List<Table> tableList = new ArrayList<Table>();
++    // TODO: create constructor that can handle a file
+ 
+-	// TODO: create constructor that can handle a file
+     public AlternatorDBHandler() {
+     }
+ 
+-	// Maybe save automatically on destroy?
++    // Maybe save automatically on destroy?
++
+     public void save(String persistence){
+         try {
+             createObjectMapper().writeValue(new File(persistence), tableList);
+@@ -58,7 +56,8 @@ class AlternatorDBHandler {
+         }
+     }
+ 
+-	// Not sure about this.  If correct and only need one, only create one instance
++    // Not sure about this.  If correct and only need one, only create one instance
++
+     public ObjectMapper createObjectMapper() {
+         ObjectMapper mapper = new ObjectMapper();
+         mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY)
+@@ -451,6 +450,23 @@ class AlternatorDBHandler {
+                         throw new ResourceNotFoundException("There must be a comparisonOperator");
+                     }
+                     if (cond.getComparisonOperator().equals("EQ")) {
++<<<<<<< left_content.java
++                        EQHandle(items, item, cond, k);
++                    }
++                    if (cond.getComparisonOperator().equals("LE")) {
++                        EQHandle(items, item, cond, k);
++                        LTHandle(items, item, cond, k);
++                    }
++                    if (cond.getComparisonOperator().equals("LT")) {
++                        LTHandle(items, item, cond, k);
++                    }
++                    if (cond.getComparisonOperator().equals("GE")) {
++                        EQHandle(items, item, cond, k);
++                        GTHandle(items, item, cond, k);
++                    }
++                    if (cond.getComparisonOperator().equals("GT")) {
++                        GTHandle(items, item, cond, k);
++=======
+                         if (cond.getAttributeValueList().size() == 1) {
+                             EQHandle(items, item, cond.getAttributeValueList().get(0), k);
+                         }
+@@ -502,6 +518,7 @@ class AlternatorDBHandler {
+                         for (AttributeValue attrivuteValue : cond.getAttributeValueList()) {
+                             EQHandle(items, item, attrivuteValue, k);
+                         }
++>>>>>>> right_content.java
+                     }
+                 }
+             } else {
+@@ -538,6 +555,7 @@ class AlternatorDBHandler {
+         return result;
+     }
+ 
++
+     public QueryResult query(QueryRequest request) {
+         // Validate data coming in
+         QueryRequestValidator validator = new QueryRequestValidator();
+@@ -727,6 +745,69 @@ class AlternatorDBHandler {
+         return result;
+     }
+ 
++    private void EQHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, Condition cond, String k) {
++        if (cond.getAttributeValueList().size() == 1) {
++            if (item.get(k).equals(cond.getAttributeValueList().get(0))) {
++                items.add(item);
++            }
++        } else {
++            if (item.get(k).equals(cond.getAttributeValueList())) {
++                items.add(item);
++            }
++        }
++    }
++
++    private void GTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, Condition cond, String k) {
++        if (cond.getAttributeValueList().size() == 1) {
++            if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
++                if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) {
++                    String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
++                    String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
++                    if (value.compareTo(comp) > 0) {
++                        items.add(item);
++                    }
++                }
++                else {
++                    String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
++                    String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
++                    if  (Integer.parseInt(value)>Integer.parseInt(comp)) {
++                        items.add(item);
++                    }
++                }
++            } else {
++                //TODO to do
++                //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
++            }
++
++        } else {
++            //TODO to do
++            if (item.get(k).equals(cond.getAttributeValueList())) {
++                items.add(item);
++            }
++        }
++    }
++
++    private void LTHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, Condition cond, String k) {
++        if (cond.getAttributeValueList().size() == 1) {
++            if (getAttributeValueType(item.get(k)).equals(AttributeValueType.S) || getAttributeValueType(item.get(k)).equals(AttributeValueType.N)) {
++                String value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.S)) ? item.get(k).getS() : item.get(k).getN();
++                String comp = (getAttributeValueType(cond.getAttributeValueList().get(0)).equals(AttributeValueType.S)) ? cond.getAttributeValueList().get(0).getS() : cond.getAttributeValueList().get(0).getN();
++                if (value.compareTo(comp) < 0) {
++                    items.add(item);
++                }
++            } else {
++                //TODO to do
++                //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
++            }
++
++        } else {
++            //TODO to do
++            if (item.get(k).equals(cond.getAttributeValueList())) {
++                items.add(item);
++            }
++        }
++    }
++
+     private void EQHandle (List<Map<String, AttributeValue>> items, Map<String, AttributeValue> item, AttributeValue attributeValue, String k) {
+         if (item.get(k).equals(attributeValue)) {
+              items.add(item);
+@@ -812,4 +893,5 @@ class AlternatorDBHandler {
+             //List<String> value = (getAttributeValueType(item.get(k)).equals(AttributeValueType.SS))? item.get(k).getSS() : item.get(k).getNS();
+         }
+     }
+-}
++
++}
+\ No newline at end of file

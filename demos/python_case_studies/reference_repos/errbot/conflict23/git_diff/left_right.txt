@@ -1,0 +1,32 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict23/left.py b/python_case_studies/reference_repos/errbot/conflict23/right.py
+index 7812774..9a43b58 100644
+--- a/python_case_studies/reference_repos/errbot/conflict23/left.py
++++ b/python_case_studies/reference_repos/errbot/conflict23/right.py
+@@ -1,17 +1,11 @@
+ import logging
+-from errbot import BotPlugin, PY3
++from errbot import BotPlugin, PY2
+ from errbot.version import VERSION
+ from errbot.holder import bot
+ 
+ __author__ = 'gbin'
+ from config import CHATROOM_PRESENCE, CHATROOM_FN, CHATROOM_RELAY, REVERSE_CHATROOM_RELAY
+ 
+-# 2to3 hack
+-# thanks to https://github.com/oxplot/fysom/issues/1
+-# which in turn references http://www.rfk.id.au/blog/entry/preparing-pyenchant-for-python-3/
+-if PY3:
+-    basestring = (str, bytes)
+-
+ 
+ class ChatRoom(BotPlugin):
+     min_err_version = VERSION  # don't copy paste that for your plugin, it is just because it is a bundled plugin !
+@@ -25,7 +19,7 @@ class ChatRoom(BotPlugin):
+             self.connected = True
+             for room in CHATROOM_PRESENCE:
+                 logging.info('Join room ' + room)
+-                if isinstance(room, basestring):
++                if (PY2 and isinstance(room, basestring)) or isinstance(room, str):
+                     self.join_room(room, CHATROOM_FN)
+                 else:
+                     self.join_room(room[0], password=room[1])

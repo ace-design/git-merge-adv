@@ -1,0 +1,301 @@
+diff --git a/java_case_studies/reference_repos/TwelveMonkeys/importC1/left.java b/java_case_studies/reference_repos/TwelveMonkeys/importC1/right.java
+index 08dfc2a..843e2be 100644
+--- a/java_case_studies/reference_repos/TwelveMonkeys/importC1/left.java
++++ b/java_case_studies/reference_repos/TwelveMonkeys/importC1/right.java
+@@ -30,21 +30,26 @@
+ 
+ package com.twelvemonkeys.imageio.metadata.tiff;
+ 
+-import com.twelvemonkeys.imageio.metadata.CompoundDirectory;
+-import com.twelvemonkeys.imageio.metadata.Directory;
+-import com.twelvemonkeys.imageio.metadata.Entry;
+-import com.twelvemonkeys.imageio.metadata.MetadataWriter;
+-import com.twelvemonkeys.lang.Validate;
++import static com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry.getType;
++import static com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry.getValueLength;
+ 
+-import javax.imageio.IIOException;
+-import javax.imageio.stream.ImageOutputStream;
+ import java.io.IOException;
+ import java.nio.ByteOrder;
+ import java.nio.charset.StandardCharsets;
+-import java.util.*;
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.Collections;
++import java.util.Comparator;
++import java.util.List;
+ 
+-import static com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry.getType;
+-import static com.twelvemonkeys.imageio.metadata.tiff.TIFFEntry.getValueLength;
++import javax.imageio.IIOException;
++import javax.imageio.stream.ImageOutputStream;
++
++import com.twelvemonkeys.imageio.metadata.CompoundDirectory;
++import com.twelvemonkeys.imageio.metadata.Directory;
++import com.twelvemonkeys.imageio.metadata.Entry;
++import com.twelvemonkeys.imageio.metadata.MetadataWriter;
++import com.twelvemonkeys.lang.Validate;
+ 
+ /**
+  * TIFFWriter
+@@ -57,24 +62,7 @@ public final class TIFFWriter extends MetadataWriter {
+ 
+     private static final int WORD_LENGTH = 2;
+     private static final int LONGWORD_LENGTH = 4;
+-
+-    // TODO: We probably want to gloss over client code writing IFDs in BigTIFF (or vice versa) somehow... Silently convert IFD -> IFD8
+-    private final boolean longOffsets;
+-    private final int offsetSize;
+-    private final long entryLength;
+-    private final int directoryCountLength;
+-
+-    public TIFFWriter() {
+-        this(LONGWORD_LENGTH);
+-    }
+-
+-    public TIFFWriter(int offsetSize) {
+-        this.offsetSize = Validate.isTrue(offsetSize == 4 || offsetSize == 8, offsetSize, "offsetSize must be 4 for TIFF or 8 for BigTIFF");
+-
+-        longOffsets = offsetSize == 8;
+-        directoryCountLength = longOffsets ? 8 : WORD_LENGTH;
+-        entryLength = 2 * WORD_LENGTH + 2 * offsetSize;
+-    }
++    private static final long ENTRY_LENGTH = 12;
+ 
+     public boolean write(final Collection<? extends Entry> entries, final ImageOutputStream stream) throws IOException {
+         return write(new IFD(entries), stream);
+@@ -103,7 +91,7 @@ public final class TIFFWriter extends MetadataWriter {
+         }
+ 
+         // Offset to next IFD (EOF)
+-        writeOffset(stream, 0);
++        stream.writeInt(0);
+ 
+         return true;
+     }
+@@ -112,12 +100,7 @@ public final class TIFFWriter extends MetadataWriter {
+         // Header
+         ByteOrder byteOrder = stream.getByteOrder();
+         stream.writeShort(byteOrder == ByteOrder.BIG_ENDIAN ? TIFF.BYTE_ORDER_MARK_BIG_ENDIAN : TIFF.BYTE_ORDER_MARK_LITTLE_ENDIAN);
+-        stream.writeShort(longOffsets ? TIFF.BIGTIFF_MAGIC : TIFF.TIFF_MAGIC);
+-
+-        if (longOffsets) {
+-            stream.writeShort(offsetSize); // Always 8 in this case
+-            stream.writeShort(0);
+-        }
++        stream.writeShort(42);
+     }
+ 
+     public long writeIFD(final Collection<Entry> entries, final ImageOutputStream stream) throws IOException {
+@@ -139,42 +122,37 @@ public final class TIFFWriter extends MetadataWriter {
+         long dataSize = computeDataSize(ordered);
+ 
+         // Offset to this IFD
+-        final long ifdOffset = stream.getStreamPosition() + dataSize + offsetSize;
++        final long ifdOffset = stream.getStreamPosition() + dataSize + LONGWORD_LENGTH;
+ 
+         if (!isSubIFD) {
+-            writeOffset(stream, ifdOffset);
+-            dataOffset += offsetSize;
++            stream.writeInt(assertIntegerOffset(ifdOffset));
++            dataOffset += LONGWORD_LENGTH;
+ 
+             // Seek to offset
+             stream.seek(ifdOffset);
+         }
+         else {
+-            dataOffset += directoryCountLength + ordered.size() * entryLength;
++            dataOffset += WORD_LENGTH + ordered.size() * ENTRY_LENGTH;
+         }
+ 
+         // Write directory
+-        writeDirectoryCount(stream, ordered.size());
++        stream.writeShort(ordered.size());
+ 
+         for (Entry entry : ordered) {
+-            // Write tag id, type & value count
++            // Write tag id
+             stream.writeShort((Integer) entry.getIdentifier());
++            // Write tag type
+             stream.writeShort(getType(entry));
+-            writeValueCount(stream, getCount(entry));
++            // Write value count
++            stream.writeInt(getCount(entry));
+ 
+             // Write value
+-            Object value = entry.getValue();
+-            if (value instanceof Directory) {
+-                if (value instanceof CompoundDirectory) {
+-                    // Can't have both nested and linked IFDs
+-                    throw new AssertionError("SubIFD cannot contain linked IFDs");
+-                }
+-
+-                // We can't write offset here, we need to write value, as both LONG/IFD and LONG8/IFD8 is allowed
+-                // TODO: Or possibly gloss over, by always writing IFD8 for BigTIFF?
+-                long streamPosition = stream.getStreamPosition() + offsetSize;
+-                writeValueInline(dataOffset, getType(entry), stream);
++            if (entry.getValue() instanceof Directory) {
++                // TODO: This could possibly be a compound directory, in which case the count should be > 1
++                stream.writeInt(assertIntegerOffset(dataOffset));
++                long streamPosition = stream.getStreamPosition();
+                 stream.seek(dataOffset);
+-                Directory subIFD = (Directory) value;
++                Directory subIFD = (Directory) entry.getValue();
+                 writeIFD(subIFD, stream, true);
+                 dataOffset += computeDataSize(subIFD);
+                 stream.seek(streamPosition);
+@@ -187,26 +165,8 @@ public final class TIFFWriter extends MetadataWriter {
+         return ifdOffset;
+     }
+ 
+-    private void writeDirectoryCount(ImageOutputStream stream, int count) throws IOException {
+-        if (longOffsets) {
+-            stream.writeLong(count);
+-        }
+-        else {
+-            stream.writeShort(count);
+-        }
+-    }
+-
+-    private void writeValueCount(ImageOutputStream stream, int count) throws IOException {
+-        if (longOffsets) {
+-            stream.writeLong(count);
+-        }
+-        else {
+-            stream.writeInt(count);
+-        }
+-    }
+-
+-    public long computeIFDSize(final Collection<? extends Entry> directory) {
+-        return directoryCountLength + computeDataSize(new IFD(directory)) + directory.size() * entryLength;
++    public long computeIFDSize(final Collection<Entry> directory) {
++        return WORD_LENGTH + computeDataSize(new IFD(directory)) + directory.size() * ENTRY_LENGTH;
+     }
+ 
+     private long computeDataSize(final Directory directory) {
+@@ -219,13 +179,13 @@ public final class TIFFWriter extends MetadataWriter {
+                 throw new IllegalArgumentException(String.format("Unknown size for entry %s", entry));
+             }
+ 
+-            if (length > offsetSize) {
++            if (length > LONGWORD_LENGTH) {
+                 dataSize += length;
+             }
+ 
+             if (entry.getValue() instanceof Directory) {
+                 Directory subIFD = (Directory) entry.getValue();
+-                long subIFDSize = directoryCountLength + computeDataSize(subIFD) + subIFD.size() * entryLength;
++                long subIFDSize = WORD_LENGTH + subIFD.size() * ENTRY_LENGTH + computeDataSize(subIFD);
+                 dataSize += subIFDSize;
+             }
+         }
+@@ -273,11 +233,11 @@ public final class TIFFWriter extends MetadataWriter {
+         short type = getType(entry);
+         long valueLength = getValueLength(type, getCount(entry));
+ 
+-        if (valueLength <= offsetSize) {
++        if (valueLength <= LONGWORD_LENGTH) {
+             writeValueInline(entry.getValue(), type, stream);
+ 
+             // Pad
+-            for (long i = valueLength; i < offsetSize; i++) {
++            for (long i = valueLength; i < LONGWORD_LENGTH; i++) {
+                 stream.write(0);
+             }
+ 
+@@ -388,28 +348,12 @@ public final class TIFFWriter extends MetadataWriter {
+                         doubles = (double[]) value;
+                     }
+                     else {
+-                        throw new IllegalArgumentException("Unsupported type for TIFF DOUBLE: " + value.getClass());
++                        throw new IllegalArgumentException("Unsupported type for TIFF FLOAT: " + value.getClass());
+                     }
+ 
+                     stream.writeDoubles(doubles, 0, doubles.length);
+ 
+                     break;
+-                case TIFF.TYPE_LONG8:
+-                case TIFF.TYPE_SLONG8:
+-                    if (longOffsets) {
+-                        long[] longs;
+-
+-                        if (value instanceof long[]) {
+-                            longs = (long[]) value;
+-                        }
+-                        else {
+-                            throw new IllegalArgumentException("Unsupported type for TIFF LONG8: " + value.getClass());
+-                        }
+-
+-                        stream.writeLongs(longs, 0, longs.length);
+-
+-                        break;
+-                    }
+ 
+                 default:
+                     throw new IllegalArgumentException("Unsupported TIFF type: " + type);
+@@ -433,7 +377,6 @@ public final class TIFFWriter extends MetadataWriter {
+                     break;
+                 case TIFF.TYPE_LONG:
+                 case TIFF.TYPE_SLONG:
+-                case TIFF.TYPE_IFD:
+                     stream.writeInt(((Number) value).intValue());
+                     break;
+                 case TIFF.TYPE_RATIONAL:
+@@ -448,13 +391,6 @@ public final class TIFFWriter extends MetadataWriter {
+                 case TIFF.TYPE_DOUBLE:
+                     stream.writeDouble(((Number) value).doubleValue());
+                     break;
+-                case TIFF.TYPE_LONG8:
+-                case TIFF.TYPE_SLONG8:
+-                case TIFF.TYPE_IFD8:
+-                    if (longOffsets) {
+-                        stream.writeLong(((Number) value).longValue());
+-                        break;
+-                    }
+ 
+                 default:
+                     throw new IllegalArgumentException("Unsupported TIFF type: " + type);
+@@ -463,39 +399,18 @@ public final class TIFFWriter extends MetadataWriter {
+     }
+ 
+     private void writeValueAt(final long dataOffset, final Object value, final short type, final ImageOutputStream stream) throws IOException {
+-        writeOffset(stream, dataOffset);
++        stream.writeInt(assertIntegerOffset(dataOffset));
+         long position = stream.getStreamPosition();
+         stream.seek(dataOffset);
+         writeValueInline(value, type, stream);
+         stream.seek(position);
+     }
+ 
+-    public void writeOffset(final ImageOutputStream output, long offset) throws IOException {
+-        if (longOffsets) {
+-            output.writeLong(assertLongOffset(offset));
+-        }
+-        else {
+-            output.writeInt(assertIntegerOffset(offset)); // Treated as unsigned
+-        }
+-    }
+-
+-    public int offsetSize() {
+-        return offsetSize;
+-    }
+-
+-    private int assertIntegerOffset(final long offset) throws IIOException {
+-        if (offset < 0 || offset > Integer.MAX_VALUE - (long) Integer.MIN_VALUE) {
++    private int assertIntegerOffset(long offset) throws IIOException {
++        if (offset > Integer.MAX_VALUE - (long) Integer.MIN_VALUE) {
+             throw new IIOException("Integer overflow for TIFF stream");
+         }
+ 
+         return (int) offset;
+     }
+-
+-    private long assertLongOffset(final long offset) throws IIOException {
+-        if (offset < 0) {
+-            throw new IIOException("Long overflow for BigTIFF stream");
+-        }
+-
+-        return offset;
+-    }
+ }

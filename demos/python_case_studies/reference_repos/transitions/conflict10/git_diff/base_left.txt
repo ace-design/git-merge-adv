@@ -1,0 +1,52 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict10/base.py b/python_case_studies/reference_repos/transitions/conflict10/left.py
+index a0d08e8..8a21229 100644
+--- a/python_case_studies/reference_repos/transitions/conflict10/base.py
++++ b/python_case_studies/reference_repos/transitions/conflict10/left.py
+@@ -16,15 +16,11 @@ except ImportError:
+ import inspect
+ import itertools
+ import logging
+-import warnings
+ 
+ from collections import OrderedDict, defaultdict, deque
+ from functools import partial
+ from six import string_types
+ 
+-# make deprecation warnings of transition visible for module users
+-warnings.filterwarnings(action='default', message=r"Starting from transitions version 0\.6\.0 .*")
+-
+ _LOGGER = logging.getLogger(__name__)
+ _LOGGER.addHandler(logging.NullHandler())
+ 
+@@ -95,7 +91,7 @@ class State(object):
+     dynamic_methods = ['on_enter', 'on_exit']
+ 
+     def __init__(self, name, on_enter=None, on_exit=None,
+-                 ignore_invalid_triggers=False):
++                 ignore_invalid_triggers=None):
+         """
+         Args:
+             name (string): The name of the state
+@@ -391,7 +387,9 @@ class Event(object):
+         if state.name not in self.transitions:
+             msg = "%sCan't trigger event %s from state %s!" % (self.machine.name, self.name,
+                                                                state.name)
+-            if state.ignore_invalid_triggers:
++            ignore = state.ignore_invalid_triggers if state.ignore_invalid_triggers is not None \
++                else self.machine.ignore_invalid_triggers
++            if ignore:
+                 _LOGGER.warning(msg)
+                 return False
+             else:
+@@ -521,11 +519,6 @@ class Machine(object):
+             **kwargs additional arguments passed to next class in MRO. This can be ignored in most cases.
+         """
+ 
+-        if kwargs.pop('add_self', None) is not None:
+-            warnings.warn("Starting from transitions version 0.6.0 'add_self' is no longer"
+-                          "supported. To add the machine as a model use the new default "
+-                          "value model='self' instead.", DeprecationWarning)
+-
+         # calling super in case `Machine` is used as a mix in
+         # all keyword arguments should be consumed by now if this is not the case
+         try:

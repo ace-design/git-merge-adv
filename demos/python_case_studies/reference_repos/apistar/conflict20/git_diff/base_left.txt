@@ -1,0 +1,15 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict20/base.py b/python_case_studies/reference_repos/apistar/conflict20/left.py
+index 47ba7bd..a975528 100644
+--- a/python_case_studies/reference_repos/apistar/conflict20/base.py
++++ b/python_case_studies/reference_repos/apistar/conflict20/left.py
+@@ -53,8 +53,9 @@ class Router(object):
+     method_not_allowed = None
+ 
+     def __init__(self, routes: List[Route]):
++        from apistar.app import DBBackend
+         required_type = wsgi.WSGIResponse
+-        initial_types = [wsgi.WSGIEnviron, URLPathArgs]
++        initial_types = [DBBackend, wsgi.WSGIEnviron, URLPathArgs]
+ 
+         rules = []
+         views = {}

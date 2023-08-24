@@ -1,0 +1,91 @@
+diff --git a/python_case_studies/reference_repos/pyjwt/conflict2/desired.py b/python_case_studies/demo_results/MethodUnion/pyjwt-conflict2.py
+index 89d6439..59a9658 100644
+--- a/python_case_studies/reference_repos/pyjwt/conflict2/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/pyjwt-conflict2.py
+@@ -4,9 +4,9 @@ from datetime import datetime
+ import sys
+ import time
+ import unittest
+-
+ import jwt
+ 
++
+ if sys.version_info >= (3, 0, 0):
+     unicode = str
+ 
+@@ -18,8 +18,13 @@ def utc_timestamp():
+ class TestJWT(unittest.TestCase):
+ 
+     def setUp(self):
+-        self.payload = {'iss': 'jeff', 'exp': utc_timestamp() + 15,
++<<<<<<< left_content.py
++        self.payload = {"iss": "jeff", "exp": utc_timestamp() + 15,
++                        "claim": "insanity"}
++=======
++        self.payload = {'iss': 'jeff', 'exp': utc_timestamp() + 1,
+                         'claim': 'insanity'}
++>>>>>>> right_content.py
+ 
+     def test_encode_decode(self):
+         secret = 'secret'
+@@ -81,16 +86,16 @@ class TestJWT(unittest.TestCase):
+     # encoding / decoding operations equally (causing tests
+     # to still pass).
+     def test_decodes_valid_es384_jwt(self):
+-        example_payload = {'hello': 'world'}
++        example_payload = {"hello": "world"}
+         example_pubkey = open('tests/testkey_ec.pub', 'r').read()
+         example_jwt = (
+-            b'eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9'
+-            b'.eyJoZWxsbyI6IndvcmxkIn0'
+-            b'.MIGHAkEdh2kR7IRu5w0tGuY6Xz3Vqa7PHHY2DgXWeee'
+-            b'LXotEqpn9udp2NfVL-XFG0TDoCakzXbIGAWg42S69GFl'
+-            b'KZzxhXAJCAPLPuJoKyAixFnXPBkvkti-UzSIj4s6DePe'
+-            b'uTu7102G_QIXiijY5bx6mdmZa3xUuKeu-zobOIOqR8Zw'
+-            b'FqGjBLZum')
++            b"eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9"
++            b".eyJoZWxsbyI6IndvcmxkIn0"
++            b".MIGHAkEdh2kR7IRu5w0tGuY6Xz3Vqa7PHHY2DgXWeee"
++            b"LXotEqpn9udp2NfVL-XFG0TDoCakzXbIGAWg42S69GFl"
++            b"KZzxhXAJCAPLPuJoKyAixFnXPBkvkti-UzSIj4s6DePe"
++            b"uTu7102G_QIXiijY5bx6mdmZa3xUuKeu-zobOIOqR8Zw"
++            b"FqGjBLZum")
+         decoded_payload = jwt.decode(example_jwt, example_pubkey)
+ 
+         self.assertEqual(decoded_payload, example_payload)
+@@ -100,19 +105,19 @@ class TestJWT(unittest.TestCase):
+     # encoding / decoding operations equally (causing tests
+     # to still pass).
+     def test_decodes_valid_rs384_jwt(self):
+-        example_payload = {'hello': 'world'}
++        example_payload = {"hello": "world"}
+         example_pubkey = open('tests/testkey_rsa.pub', 'r').read()
+         example_jwt = (
+-            b'eyJhbGciOiJSUzM4NCIsInR5cCI6IkpXVCJ9'
+-            b'.eyJoZWxsbyI6IndvcmxkIn0'
+-            b'.yNQ3nI9vEDs7lEh-Cp81McPuiQ4ZRv6FL4evTYYAh1X'
+-            b'lRTTR3Cz8pPA9Stgso8Ra9xGB4X3rlra1c8Jz10nTUju'
+-            b'O06OMm7oXdrnxp1KIiAJDerWHkQ7l3dlizIk1bmMA457'
+-            b'W2fNzNfHViuED5ISM081dgf_a71qBwJ_yShMMrSOfxDx'
+-            b'mX9c4DjRogRJG8SM5PvpLqI_Cm9iQPGMvmYK7gzcq2cJ'
+-            b'urHRJDJHTqIdpLWXkY7zVikeen6FhuGyn060Dz9gYq9t'
+-            b'uwmrtSWCBUjiN8sqJ00CDgycxKqHfUndZbEAOjcCAhBr'
+-            b'qWW3mSVivUfubsYbwUdUG3fSRPjaUPcpe8A')
++            b"eyJhbGciOiJSUzM4NCIsInR5cCI6IkpXVCJ9"
++            b".eyJoZWxsbyI6IndvcmxkIn0"
++            b".yNQ3nI9vEDs7lEh-Cp81McPuiQ4ZRv6FL4evTYYAh1X"
++            b"lRTTR3Cz8pPA9Stgso8Ra9xGB4X3rlra1c8Jz10nTUju"
++            b"O06OMm7oXdrnxp1KIiAJDerWHkQ7l3dlizIk1bmMA457"
++            b"W2fNzNfHViuED5ISM081dgf_a71qBwJ_yShMMrSOfxDx"
++            b"mX9c4DjRogRJG8SM5PvpLqI_Cm9iQPGMvmYK7gzcq2cJ"
++            b"urHRJDJHTqIdpLWXkY7zVikeen6FhuGyn060Dz9gYq9t"
++            b"uwmrtSWCBUjiN8sqJ00CDgycxKqHfUndZbEAOjcCAhBr"
++            b"qWW3mSVivUfubsYbwUdUG3fSRPjaUPcpe8A")
+         decoded_payload = jwt.decode(example_jwt, example_pubkey)
+ 
+         self.assertEqual(decoded_payload, example_payload)
+@@ -635,3 +640,4 @@ class TestJWT(unittest.TestCase):
+ 
+ if __name__ == '__main__':
+     unittest.main()
++

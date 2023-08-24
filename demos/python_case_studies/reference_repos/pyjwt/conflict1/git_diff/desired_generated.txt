@@ -1,0 +1,68 @@
+diff --git a/python_case_studies/reference_repos/pyjwt/conflict1/desired.py b/python_case_studies/demo_results/MethodUnion/pyjwt-conflict1.py
+index ae15503..7512f29 100644
+--- a/python_case_studies/reference_repos/pyjwt/conflict1/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/pyjwt-conflict1.py
+@@ -1,15 +1,11 @@
+ import hashlib
+ import hmac
++from compat import binary_type,constant_time_compare,is_string_type,string_types
++from exceptions import InvalidKeyError
++from utils import der_to_raw_signature,raw_to_der_signature,base64url_decode,base64url_encode,force_bytes,force_unicode,from_base64url_uint,to_base64url_uint
+ import json
+ 
+ 
+-from .compat import constant_time_compare, string_types
+-from .exceptions import InvalidKeyError
+-from .utils import (
+-    base64url_decode, base64url_encode, der_to_raw_signature,
+-    force_bytes, force_unicode, from_base64url_uint, raw_to_der_signature,
+-    to_base64url_uint
+-)
+ 
+ try:
+     from cryptography.hazmat.primitives import hashes
+@@ -39,7 +35,6 @@ def _get_crypto_algorithms():
+         'RS512': None,
+         'ES256': None,
+         'ES384': None,
+-        'ES521': None,
+         'ES512': None,
+         'PS256': None,
+         'PS384': None,
+@@ -52,7 +47,6 @@ def _get_crypto_algorithms():
+         crypto_algorithms['RS512'] = RSAAlgorithm(RSAAlgorithm.SHA512)
+         crypto_algorithms['ES256'] = ECAlgorithm(ECAlgorithm.SHA256)
+         crypto_algorithms['ES384'] = ECAlgorithm(ECAlgorithm.SHA384)
+-        crypto_algorithms['ES521'] = ECAlgorithm(ECAlgorithm.SHA512),
+         crypto_algorithms['ES512'] = ECAlgorithm(ECAlgorithm.SHA512)
+         crypto_algorithms['PS256'] = RSAPSSAlgorithm(RSAPSSAlgorithm.SHA256)
+         crypto_algorithms['PS384'] = RSAPSSAlgorithm(RSAPSSAlgorithm.SHA384)
+@@ -74,8 +68,23 @@ def get_default_algorithms():
+     }
+ 
+     if has_crypto:
++<<<<<<< left_content.py
+         crypto_algorithms = _get_crypto_algorithms()
+         default_algorithms.update(crypto_algorithms)
++=======
++        default_algorithms.update({
++            'RS256': RSAAlgorithm(RSAAlgorithm.SHA256),
++            'RS384': RSAAlgorithm(RSAAlgorithm.SHA384),
++            'RS512': RSAAlgorithm(RSAAlgorithm.SHA512),
++            'ES256': ECAlgorithm(ECAlgorithm.SHA256),
++            'ES384': ECAlgorithm(ECAlgorithm.SHA384),
++            'ES521': ECAlgorithm(ECAlgorithm.SHA512),
++            'ES512': ECAlgorithm(ECAlgorithm.SHA512),  # Backward compat for #219 fix
++            'PS256': RSAPSSAlgorithm(RSAPSSAlgorithm.SHA256),
++            'PS384': RSAPSSAlgorithm(RSAPSSAlgorithm.SHA384),
++            'PS512': RSAPSSAlgorithm(RSAPSSAlgorithm.SHA512)
++        })
++>>>>>>> right_content.py
+ 
+     return default_algorithms
+ 
+@@ -449,3 +458,4 @@ if has_crypto:
+                 return True
+             except InvalidSignature:
+                 return False
++

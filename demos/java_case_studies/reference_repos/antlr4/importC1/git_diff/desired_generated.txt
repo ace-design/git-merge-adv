@@ -1,0 +1,884 @@
+diff --git a/java_case_studies/reference_repos/antlr4/importC1/desired.java b/java_case_studies/demo_results/MethodUnion/antlr4-importC1.java
+index b06de62..f7ae683 100644
+--- a/java_case_studies/reference_repos/antlr4/importC1/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/antlr4-importC1.java
+@@ -28,7 +28,6 @@
+  *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ package org.antlr.v4.test;
+-
+ import org.antlr.v4.Tool;
+ import org.antlr.v4.automata.ATNFactory;
+ import org.antlr.v4.automata.ATNPrinter;
+@@ -58,7 +57,6 @@ import org.antlr.v4.runtime.misc.IntegerList;
+ import org.antlr.v4.runtime.misc.Interval;
+ import org.antlr.v4.runtime.misc.NotNull;
+ import org.antlr.v4.runtime.misc.Nullable;
+-import org.antlr.v4.runtime.misc.Pair;
+ import org.antlr.v4.runtime.tree.ParseTree;
+ import org.antlr.v4.semantics.SemanticPipeline;
+ import org.antlr.v4.tool.ANTLRMessage;
+@@ -75,7 +73,6 @@ import org.junit.runner.Description;
+ import org.stringtemplate.v4.ST;
+ import org.stringtemplate.v4.STGroup;
+ import org.stringtemplate.v4.STGroupString;
+-
+ import javax.tools.JavaCompiler;
+ import javax.tools.JavaFileObject;
+ import javax.tools.StandardJavaFileManager;
+@@ -89,6 +86,7 @@ import java.io.InputStream;
+ import java.io.InputStreamReader;
+ import java.io.PipedInputStream;
+ import java.io.PipedOutputStream;
++import org.antlr.v4.runtime.misc.Pair;
+ import java.io.PrintStream;
+ import java.io.StringReader;
+ import java.lang.reflect.Constructor;
+@@ -108,35 +106,33 @@ import java.util.Set;
+ import java.util.TreeMap;
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
+-
+ import static org.junit.Assert.assertArrayEquals;
+ import static org.junit.Assert.assertEquals;
+ import static org.junit.Assert.assertFalse;
+ import static org.junit.Assert.assertNotNull;
+ import static org.junit.Assert.assertTrue;
++import static org.junit.Assert.*;
+ 
+-public abstract class BaseTest {
+-	// -J-Dorg.antlr.v4.test.BaseTest.level=FINE
+-	private static final Logger LOGGER = Logger.getLogger(BaseTest.class.getName());
++public abstract class BaseTest{
+ 
+-	public static final String newline = System.getProperty("line.separator");
+-	public static final String pathSep = System.getProperty("path.separator");
+ 
+-	public static final boolean TEST_IN_SAME_PROCESS = Boolean.parseBoolean(System.getProperty("antlr.testinprocess"));
++    // -J-Dorg.antlr.v4.test.BaseTest.level=FINE
++    private static final Logger LOGGER = Logger.getLogger(BaseTest.class.getName());,
++    public static final String newline = System.getProperty("line.separator");,
++    public static final String pathSep = System.getProperty("path.separator");,
++    public static final boolean TEST_IN_SAME_PROCESS = Boolean.parseBoolean(System.getProperty("antlr.testinprocess"));,
+ 
+     /**
+      * Build up the full classpath we need, including the surefire path (if present)
+      */
+-    public static final String CLASSPATH = System.getProperty("java.class.path");
+-
+-	public String tmpdir = null;
++    public static final String CLASSPATH = System.getProperty("java.class.path");,
++    public String tmpdir = null;,
+ 
+-	/** If error during parser execution, store stderr here; can't return
++    /** If error during parser execution, store stderr here; can't return
+      *  stdout and stderr.  This doesn't trap errors from running antlr.
+      */
+-	protected String stderrDuringParse;
+-
+-	@org.junit.Rule
++    protected String stderrDuringParse;,
++    @org.junit.Rule
+ 	public final TestRule testWatcher = new TestWatcher() {
+ 
+ 		@Override
+@@ -145,7 +141,13 @@ public abstract class BaseTest {
+ 			eraseTempDir();
+ 		}
+ 
+-	};
++	};,
++
++    @Override
++		protected void succeeded(Description description) {
++			// remove tmpdir if no error.
++			eraseTempDir();
++		}
+ 
+     @Before
+ 	public void setUp() throws Exception {
+@@ -160,12 +162,12 @@ public abstract class BaseTest {
+ 		return tool;
+ 	}
+ 
+-	protected Tool newTool() {
++    protected Tool newTool() {
+ 		org.antlr.v4.Tool tool = new Tool(new String[] {"-o", tmpdir});
+ 		return tool;
+ 	}
+ 
+-	protected ATN createATN(Grammar g, boolean useSerializer) {
++    protected ATN createATN(Grammar g, boolean useSerializer) {
+ 		if ( g.atn==null ) {
+ 			semanticProcess(g);
+ 			assertEquals(0, g.tool.getNumErrors());
+@@ -191,7 +193,7 @@ public abstract class BaseTest {
+ 		return atn;
+ 	}
+ 
+-	protected void semanticProcess(Grammar g) {
++    protected void semanticProcess(Grammar g) {
+ 		if ( g.ast!=null && !g.ast.hasErrors ) {
+ 			System.out.println(g.ast.toStringTree());
+ 			Tool antlr = new Tool();
+@@ -205,7 +207,7 @@ public abstract class BaseTest {
+ 		}
+ 	}
+ 
+-	public DFA createDFA(Grammar g, DecisionState s) {
++    public DFA createDFA(Grammar g, DecisionState s) {
+ //		PredictionDFAFactory conv = new PredictionDFAFactory(g, s);
+ //		DFA dfa = conv.createDFA();
+ //		conv.issueAmbiguityWarnings();
+@@ -214,12 +216,15 @@ public abstract class BaseTest {
+ 		return null;
+ 	}
+ 
+-//	public void minimizeDFA(DFA dfa) {
+-//		DFAMinimizer dmin = new DFAMinimizer(dfa);
+-//		dfa.minimized = dmin.minimize();
+-//	}
++    //	public void minimizeDFA(DFA dfa) {
++
++    //		DFAMinimizer dmin = new DFAMinimizer(dfa);
++
++    //		dfa.minimized = dmin.minimize();
+ 
+-	IntegerList getTypesFromString(Grammar g, String expecting) {
++    //	}
++
++    IntegerList getTypesFromString(Grammar g, String expecting) {
+ 		IntegerList expectingTokenTypes = new IntegerList();
+ 		if ( expecting!=null && !expecting.trim().isEmpty() ) {
+ 			for (String tname : expecting.replace(" ", "").split(",")) {
+@@ -230,7 +235,7 @@ public abstract class BaseTest {
+ 		return expectingTokenTypes;
+ 	}
+ 
+-	public IntegerList getTokenTypesViaATN(String input, LexerATNSimulator lexerATN) {
++    public IntegerList getTokenTypesViaATN(String input, LexerATNSimulator lexerATN) {
+ 		ANTLRInputStream in = new ANTLRInputStream(input);
+ 		IntegerList tokenTypes = new IntegerList();
+ 		int ttype;
+@@ -241,7 +246,7 @@ public abstract class BaseTest {
+ 		return tokenTypes;
+ 	}
+ 
+-	public List<String> getTokenTypes(LexerGrammar lg,
++    public List<String> getTokenTypes(LexerGrammar lg,
+ 									  ATN atn,
+ 									  CharStream input)
+ 	{
+@@ -270,7 +275,7 @@ public abstract class BaseTest {
+ 		return tokenTypes;
+ 	}
+ 
+-	List<ANTLRMessage> checkRuleDFA(String gtext, String ruleName, String expecting)
++    List<ANTLRMessage> checkRuleDFA(String gtext, String ruleName, String expecting)
+ 		throws Exception
+ 	{
+ 		ErrorQueue equeue = new ErrorQueue();
+@@ -291,7 +296,7 @@ public abstract class BaseTest {
+ 		return equeue.all;
+ 	}
+ 
+-	List<ANTLRMessage> checkRuleDFA(String gtext, int decision, String expecting)
++    List<ANTLRMessage> checkRuleDFA(String gtext, int decision, String expecting)
+ 		throws Exception
+ 	{
+ 		ErrorQueue equeue = new ErrorQueue();
+@@ -302,7 +307,7 @@ public abstract class BaseTest {
+ 		return equeue.all;
+ 	}
+ 
+-	void checkRuleDFA(Grammar g, DecisionState blk, String expecting)
++    void checkRuleDFA(Grammar g, DecisionState blk, String expecting)
+ 		throws Exception
+ 	{
+ 		DFA dfa = createDFA(g, blk);
+@@ -311,13 +316,13 @@ public abstract class BaseTest {
+ 		assertEquals(expecting, result);
+ 	}
+ 
+-	List<ANTLRMessage> checkLexerDFA(String gtext, String expecting)
++    List<ANTLRMessage> checkLexerDFA(String gtext, String expecting)
+ 		throws Exception
+ 	{
+ 		return checkLexerDFA(gtext, LexerGrammar.DEFAULT_MODE_NAME, expecting);
+ 	}
+ 
+-	List<ANTLRMessage> checkLexerDFA(String gtext, String modeName, String expecting)
++    List<ANTLRMessage> checkLexerDFA(String gtext, String modeName, String expecting)
+ 		throws Exception
+ 	{
+ 		ErrorQueue equeue = new ErrorQueue();
+@@ -335,10 +340,11 @@ public abstract class BaseTest {
+ 		return null;
+ 	}
+ 
+-	/** Wow! much faster than compiling outside of VM. Finicky though.
++    /** Wow! much faster than compiling outside of VM. Finicky though.
+ 	 *  Had rules called r and modulo. Wouldn't compile til I changed to 'a'.
+ 	 */
+-	protected boolean compile(String... fileNames) {
++
++    protected boolean compile(String... fileNames) {
+ 		List<File> files = new ArrayList<File>();
+ 		for (String fileName : fileNames) {
+ 			File f = new File(tmpdir, fileName);
+@@ -414,8 +420,9 @@ public abstract class BaseTest {
+ 		*/
+ 	}
+ 
+-	/** Return true if all is ok, no errors */
+-	protected ErrorQueue antlr(String fileName, String grammarFileName, String grammarStr, boolean defaultListener, String... extraOptions) {
++    /** Return true if all is ok, no errors */
++
++    protected ErrorQueue antlr(String fileName, String grammarFileName, String grammarStr, boolean defaultListener, String... extraOptions) {
+ 		System.out.println("dir "+tmpdir);
+ 		mkdir(tmpdir);
+ 		writeFile(tmpdir, fileName, grammarStr);
+@@ -458,7 +465,7 @@ public abstract class BaseTest {
+ 		return equeue;
+ 	}
+ 
+-	protected String execLexer(String grammarFileName,
++    protected String execLexer(String grammarFileName,
+ 							   String grammarStr,
+ 							   String lexerName,
+ 							   String input)
+@@ -466,7 +473,7 @@ public abstract class BaseTest {
+ 		return execLexer(grammarFileName, grammarStr, lexerName, input, false);
+ 	}
+ 
+-	protected String execLexer(String grammarFileName,
++    protected String execLexer(String grammarFileName,
+ 							   String grammarStr,
+ 							   String lexerName,
+ 							   String input,
+@@ -487,18 +494,27 @@ public abstract class BaseTest {
+ 		return output;
+ 	}
+ 
+-/*
+-	public ParseTree execParser(String startRuleName, String input,
+-								String parserName, String lexerName)
+-		throws Exception
++    protected String execParser(String grammarFileName,
++								String grammarStr,
++								String parserName,
++								String lexerName,
++								String startRuleName,
++								String input, boolean debug)
+ 	{
+-		Pair<Parser, Lexer> pl = getParserAndLexer(input, parserName, lexerName);
+-		Parser parser = pl.a;
+-		return execStartRule(startRuleName, parser);
++		boolean success = rawGenerateAndBuildRecognizer(grammarFileName,
++														grammarStr,
++														parserName,
++														lexerName,
++														"-visitor");
++		assertTrue(success);
++		writeFile(tmpdir, "input", input);
++		return rawExecRecognizer(parserName,
++								 lexerName,
++								 startRuleName,
++								 debug);
+ 	}
+-	 */
+ 
+-	public ParseTree execStartRule(String startRuleName, Parser parser)
++    public ParseTree execStartRule(String startRuleName, Parser parser)
+ 		throws IllegalAccessException, InvocationTargetException,
+ 			   NoSuchMethodException
+ 	{
+@@ -517,10 +533,15 @@ public abstract class BaseTest {
+ 		return result;
+ 	}
+ 
+-	public Pair<Parser, Lexer> getParserAndLexer(String input,
+-												 String parserName, String lexerName)
++    public ParseTree execParser(String startRuleName, String input,
++								String parserName, String lexerName)
+ 		throws Exception
+ 	{
++<<<<<<< left_content.java
++		Pair<Parser, Lexer> pl = getParserAndLexer(input, parserName, lexerName);
++		Parser parser = pl.a;
++		return execStartRule(startRuleName, parser);
++=======
+ 		final Class<? extends Lexer> lexerClass = loadLexerClassFromTempDir(lexerName);
+ 		final Class<? extends Parser> parserClass = loadParserClassFromTempDir(parserName);
+ 
+@@ -534,31 +555,26 @@ public abstract class BaseTest {
+ 		Constructor<? extends Parser> pctor = pc.getConstructor(TokenStream.class);
+ 		CommonTokenStream tokens = new CommonTokenStream(lexer);
+ 		Parser parser = pctor.newInstance(tokens);
+-		return new Pair<Parser, Lexer>(parser, lexer);
+-	}
+ 
+-	protected String execParser(String grammarFileName,
+-								String grammarStr,
+-								String parserName,
+-								String lexerName,
+-								String startRuleName,
+-								String input, boolean debug)
+-	{
+-		boolean success = rawGenerateAndBuildRecognizer(grammarFileName,
+-														grammarStr,
+-														parserName,
+-														lexerName,
+-														"-visitor");
+-		assertTrue(success);
+-		writeFile(tmpdir, "input", input);
+-		return rawExecRecognizer(parserName,
+-								 lexerName,
+-								 startRuleName,
+-								 debug);
++		Method startRule = null;
++		Object[] args = null;
++		try {
++			startRule = parserClass.getMethod(startRuleName);
++		}
++		catch (NoSuchMethodException nsme) {
++			// try with int _p arg for recursive func
++			startRule = parserClass.getMethod(startRuleName, int.class);
++			args = new Integer[] {0};
++		}
++		ParseTree result = (ParseTree)startRule.invoke(parser, args);
++		System.out.println("parse tree = "+result.toStringTree(parser));
++		return result;
++>>>>>>> right_content.java
+ 	}
+ 
+-	public ParseTree execParser(String startRuleName, String input,
+-								String parserName, String lexerName)
++
++    public Pair<Parser, Lexer> getParserAndLexer(String input,
++												 String parserName, String lexerName)
+ 		throws Exception
+ 	{
+ 		final Class<? extends Lexer> lexerClass = loadLexerClassFromTempDir(lexerName);
+@@ -574,39 +590,37 @@ public abstract class BaseTest {
+ 		Constructor<? extends Parser> pctor = pc.getConstructor(TokenStream.class);
+ 		CommonTokenStream tokens = new CommonTokenStream(lexer);
+ 		Parser parser = pctor.newInstance(tokens);
+-
+-		Method startRule = null;
+-		Object[] args = null;
+-		try {
+-			startRule = parserClass.getMethod(startRuleName);
+-		}
+-		catch (NoSuchMethodException nsme) {
+-			// try with int _p arg for recursive func
+-			startRule = parserClass.getMethod(startRuleName, int.class);
+-			args = new Integer[] {0};
+-		}
+-		ParseTree result = (ParseTree)startRule.invoke(parser, args);
+-		System.out.println("parse tree = "+result.toStringTree(parser));
+-		return result;
++		return new Pair<Parser, Lexer>(parser, lexer);
+ 	}
+ 
+-	public Class<?> loadClassFromTempDir(String name) throws Exception {
++    public Class<?> loadClassFromTempDir(String name) throws Exception {
+ 		ClassLoader loader =
+ 			new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() },
+ 							   ClassLoader.getSystemClassLoader());
+ 		return loader.loadClass(name);
+ 	}
+ 
+-	public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
++    public Class<? extends Lexer> loadLexerClassFromTempDir(String name) throws Exception {
++<<<<<<< left_content.java
++		return loadClassFromTempDir(name).asSubclass(Lexer.class);
++=======
+ 		return (Class<? extends Lexer>)loadClassFromTempDir(name);
++>>>>>>> right_content.java
+ 	}
+ 
+-	public Class<? extends Parser> loadParserClassFromTempDir(String name) throws Exception {
++
++    public Class<? extends Parser> loadParserClassFromTempDir(String name) throws Exception {
++<<<<<<< left_content.java
++		return loadClassFromTempDir(name).asSubclass(Parser.class);
++=======
+ 		return (Class<? extends Parser>)loadClassFromTempDir(name);
++>>>>>>> right_content.java
+ 	}
+ 
+-	/** Return true if all is well */
+-	protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
++
++    /** Return true if all is well */
++
++    protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
+ 													String grammarStr,
+ 													@Nullable String parserName,
+ 													String lexerName,
+@@ -615,8 +629,7 @@ public abstract class BaseTest {
+ 		return rawGenerateAndBuildRecognizer(grammarFileName, grammarStr, parserName, lexerName, false, extraOptions);
+ 	}
+ 
+-	/** Return true if all is well */
+-	protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
++    protected boolean rawGenerateAndBuildRecognizer(String grammarFileName,
+ 													String grammarStr,
+ 													@Nullable String parserName,
+ 													String lexerName,
+@@ -647,7 +660,7 @@ public abstract class BaseTest {
+ 		return allIsWell;
+ 	}
+ 
+-	protected String rawExecRecognizer(String parserName,
++    protected String rawExecRecognizer(String parserName,
+ 									   String lexerName,
+ 									   String parserStartRuleName,
+ 									   boolean debug)
+@@ -667,11 +680,11 @@ public abstract class BaseTest {
+ 		return execClass("Test");
+ 	}
+ 
+-	public String execRecognizer() {
++    public String execRecognizer() {
+ 		return execClass("Test");
+ 	}
+ 
+-	public String execClass(String className) {
++    public String execClass(String className) {
+ 		if (TEST_IN_SAME_PROCESS) {
+ 			try {
+ 				ClassLoader loader = new URLClassLoader(new URL[] { new File(tmpdir).toURI().toURL() }, ClassLoader.getSystemClassLoader());
+@@ -772,7 +785,7 @@ public abstract class BaseTest {
+ 		return null;
+ 	}
+ 
+-	public void testErrors(String[] pairs, boolean printTree) {
++    public void testErrors(String[] pairs, boolean printTree) {
+         for (int i = 0; i < pairs.length; i+=2) {
+             String input = pairs[i];
+             String expect = pairs[i+1];
+@@ -793,7 +806,7 @@ public abstract class BaseTest {
+         }
+     }
+ 
+-	public String getFilenameFromFirstLineOfGrammar(String line) {
++    public String getFilenameFromFirstLineOfGrammar(String line) {
+ 		String fileName = "A" + Tool.GRAMMAR_EXTENSION;
+ 		int grIndex = line.lastIndexOf("grammar");
+ 		int semi = line.lastIndexOf(';');
+@@ -805,42 +818,45 @@ public abstract class BaseTest {
+ 		return fileName;
+ 	}
+ 
+-//	void ambig(List<Message> msgs, int[] expectedAmbigAlts, String expectedAmbigInput)
+-//		throws Exception
+-//	{
+-//		ambig(msgs, 0, expectedAmbigAlts, expectedAmbigInput);
+-//	}
+-
+-//	void ambig(List<Message> msgs, int i, int[] expectedAmbigAlts, String expectedAmbigInput)
+-//		throws Exception
+-//	{
+-//		List<Message> amsgs = getMessagesOfType(msgs, AmbiguityMessage.class);
+-//		AmbiguityMessage a = (AmbiguityMessage)amsgs.get(i);
+-//		if ( a==null ) assertNull(expectedAmbigAlts);
+-//		else {
+-//			assertEquals(a.conflictingAlts.toString(), Arrays.toString(expectedAmbigAlts));
+-//		}
+-//		assertEquals(expectedAmbigInput, a.input);
+-//	}
+-
+-//	void unreachable(List<Message> msgs, int[] expectedUnreachableAlts)
+-//		throws Exception
+-//	{
+-//		unreachable(msgs, 0, expectedUnreachableAlts);
+-//	}
+-
+-//	void unreachable(List<Message> msgs, int i, int[] expectedUnreachableAlts)
+-//		throws Exception
+-//	{
+-//		List<Message> amsgs = getMessagesOfType(msgs, UnreachableAltsMessage.class);
+-//		UnreachableAltsMessage u = (UnreachableAltsMessage)amsgs.get(i);
+-//		if ( u==null ) assertNull(expectedUnreachableAlts);
+-//		else {
+-//			assertEquals(u.conflictingAlts.toString(), Arrays.toString(expectedUnreachableAlts));
+-//		}
+-//	}
++    //	void ambig(List<Message> msgs, int[] expectedAmbigAlts, String expectedAmbigInput)
++
++    //		throws Exception
++
++    //	{
++
++    //		ambig(msgs, 0, expectedAmbigAlts, expectedAmbigInput);
++
++    //	void ambig(List<Message> msgs, int i, int[] expectedAmbigAlts, String expectedAmbigInput)
++
++    //		List<Message> amsgs = getMessagesOfType(msgs, AmbiguityMessage.class);
+ 
+-	List<ANTLRMessage> getMessagesOfType(List<ANTLRMessage> msgs, Class<? extends ANTLRMessage> c) {
++    //		AmbiguityMessage a = (AmbiguityMessage)amsgs.get(i);
++
++    //		if ( a==null ) assertNull(expectedAmbigAlts);
++
++    //		else {
++
++    //			assertEquals(a.conflictingAlts.toString(), Arrays.toString(expectedAmbigAlts));
++
++    //		}
++
++    //		assertEquals(expectedAmbigInput, a.input);
++
++    //	void unreachable(List<Message> msgs, int[] expectedUnreachableAlts)
++
++    //		unreachable(msgs, 0, expectedUnreachableAlts);
++
++    //	void unreachable(List<Message> msgs, int i, int[] expectedUnreachableAlts)
++
++    //		List<Message> amsgs = getMessagesOfType(msgs, UnreachableAltsMessage.class);
++
++    //		UnreachableAltsMessage u = (UnreachableAltsMessage)amsgs.get(i);
++
++    //		if ( u==null ) assertNull(expectedUnreachableAlts);
++
++    //			assertEquals(u.conflictingAlts.toString(), Arrays.toString(expectedUnreachableAlts));
++
++    List<ANTLRMessage> getMessagesOfType(List<ANTLRMessage> msgs, Class<? extends ANTLRMessage> c) {
+ 		List<ANTLRMessage> filtered = new ArrayList<ANTLRMessage>();
+ 		for (ANTLRMessage m : msgs) {
+ 			if ( m.getClass() == c ) filtered.add(m);
+@@ -848,7 +864,7 @@ public abstract class BaseTest {
+ 		return filtered;
+ 	}
+ 
+-	void checkRuleATN(Grammar g, String ruleName, String expecting) {
++    void checkRuleATN(Grammar g, String ruleName, String expecting) {
+ 		ParserATNFactory f = new ParserATNFactory(g);
+ 		ATN atn = f.createATN();
+ 
+@@ -864,7 +880,7 @@ public abstract class BaseTest {
+ 		assertEquals(expecting, result);
+ 	}
+ 
+-	public void testActions(String templates, String actionName, String action, String expected) throws org.antlr.runtime.RecognitionException {
++    public void testActions(String templates, String actionName, String action, String expected) throws org.antlr.runtime.RecognitionException {
+ 		int lp = templates.indexOf('(');
+ 		String name = templates.substring(0, lp);
+ 		STGroup group = new STGroupString(templates);
+@@ -897,18 +913,22 @@ public abstract class BaseTest {
+ 		}
+ 	}
+ 
+-	public static class StreamVacuum implements Runnable {
+-		StringBuilder buf = new StringBuilder();
+-		BufferedReader in;
+-		Thread sucker;
+-		public StreamVacuum(InputStream in) {
++    public static class StreamVacuum implements Runnable{
++
++        StringBuilder buf = new StringBuilder();,
++        BufferedReader in;,
++        Thread sucker;,
++
++        public StreamVacuum(InputStream in) {
+ 			this.in = new BufferedReader( new InputStreamReader(in) );
+ 		}
+-		public void start() {
++
++        public void start() {
+ 			sucker = new Thread(this);
+ 			sucker.start();
+ 		}
+-		@Override
++
++        @Override
+ 		public void run() {
+ 			try {
+ 				String line = in.readLine();
+@@ -922,17 +942,20 @@ public abstract class BaseTest {
+ 				System.err.println("can't read output from process");
+ 			}
+ 		}
+-		/** wait for the thread to finish */
+-		public void join() throws InterruptedException {
++
++        /** wait for the thread to finish */
++
++        public void join() throws InterruptedException {
+ 			sucker.join();
+ 		}
+-		@Override
++
++        @Override
+ 		public String toString() {
+ 			return buf.toString();
+ 		}
+-	}
+ 
+-	protected void checkGrammarSemanticsError(ErrorQueue equeue,
++    }
++    protected void checkGrammarSemanticsError(ErrorQueue equeue,
+ 											  GrammarSemanticsMessage expectedMessage)
+ 		throws Exception
+ 	{
+@@ -952,7 +975,7 @@ public abstract class BaseTest {
+ 		}
+ 	}
+ 
+-	protected void checkGrammarSemanticsWarning(ErrorQueue equeue,
++    protected void checkGrammarSemanticsWarning(ErrorQueue equeue,
+ 											    GrammarSemanticsMessage expectedMessage)
+ 		throws Exception
+ 	{
+@@ -972,7 +995,7 @@ public abstract class BaseTest {
+ 		}
+ 	}
+ 
+-	protected void checkError(ErrorQueue equeue,
++    protected void checkError(ErrorQueue equeue,
+ 							  ANTLRMessage expectedMessage)
+ 		throws Exception
+ 	{
+@@ -994,9 +1017,12 @@ public abstract class BaseTest {
+ 		assertArrayEquals(expectedMessage.getArgs(), foundMsg.getArgs());
+ 	}
+ 
+-    public static class FilteringTokenStream extends CommonTokenStream {
++    public static class FilteringTokenStream extends CommonTokenStream{
++
++
+         public FilteringTokenStream(TokenSource src) { super(src); }
+-        Set<Integer> hide = new HashSet<Integer>();
++        Set<Integer> hide = new HashSet<Integer>();,
++
+         @Override
+         protected boolean sync(int i) {
+             if (!super.sync(i)) {
+@@ -1010,12 +1036,13 @@ public abstract class BaseTest {
+ 
+ 			return true;
+         }
++
+         public void setTokenTypeChannel(int ttype, int channel) {
+             hide.add(ttype);
+         }
+-    }
+ 
+-	public static void writeFile(String dir, String fileName, String content) {
++    }
++    public static void writeFile(String dir, String fileName, String content) {
+ 		try {
+ 			File f = new File(dir, fileName);
+ 			FileWriter w = new FileWriter(f);
+@@ -1030,12 +1057,12 @@ public abstract class BaseTest {
+ 		}
+ 	}
+ 
+-	protected void mkdir(String dir) {
++    protected void mkdir(String dir) {
+ 		File f = new File(dir);
+ 		f.mkdirs();
+ 	}
+ 
+-	protected void writeTestFile(String parserName,
++    protected void writeTestFile(String parserName,
+ 								 String lexerName,
+ 								 String parserStartRuleName,
+ 								 boolean debug)
+@@ -1086,7 +1113,7 @@ public abstract class BaseTest {
+ 		writeFile(tmpdir, "Test.java", outputFileST.render());
+ 	}
+ 
+-	protected void writeLexerTestFile(String lexerName, boolean showDFA) {
++    protected void writeLexerTestFile(String lexerName, boolean showDFA) {
+ 		ST outputFileST = new ST(
+ 			"import org.antlr.v4.runtime.*;\n" +
+ 			"\n" +
+@@ -1106,7 +1133,7 @@ public abstract class BaseTest {
+ 		writeFile(tmpdir, "Test.java", outputFileST.render());
+ 	}
+ 
+-	public void writeRecognizerAndCompile(String parserName, String lexerName,
++    public void writeRecognizerAndCompile(String parserName, String lexerName,
+ 										  String parserStartRuleName,
+ 										  boolean debug) {
+ 		if ( parserName==null ) {
+@@ -1122,7 +1149,6 @@ public abstract class BaseTest {
+ 		compile("Test.java");
+ 	}
+ 
+-
+     protected void eraseFiles(final String filesEndingWith) {
+         File tmpdirF = new File(tmpdir);
+         String[] files = tmpdirF.list();
+@@ -1153,7 +1179,7 @@ public abstract class BaseTest {
+         }
+     }
+ 
+-	public String getFirstLineOfException() {
++    public String getFirstLineOfException() {
+ 		if ( this.stderrDuringParse ==null ) {
+ 			return null;
+ 		}
+@@ -1173,6 +1199,7 @@ public abstract class BaseTest {
+      * @param m The Map that contains keys we wish to return in sorted order
+      * @return A string that represents all the keys in sorted order.
+      */
++
+     public <K, V> String sortMapToString(Map<K, V> m) {
+         // Pass in crap, and get nothing back
+         //
+@@ -1190,60 +1217,62 @@ public abstract class BaseTest {
+         return nset.toString();
+     }
+ 
+-	public List<String> realElements(List<String> elements) {
++    public List<String> realElements(List<String> elements) {
+ 		return elements.subList(Token.MIN_USER_TOKEN_TYPE, elements.size());
+ 	}
+ 
+-	public void assertNotNullOrEmpty(String message, String text) {
++    public void assertNotNullOrEmpty(String message, String text) {
+ 		assertNotNull(message, text);
+ 		assertFalse(message, text.isEmpty());
+ 	}
+ 
+-	public void assertNotNullOrEmpty(String text) {
++    public void assertNotNullOrEmpty(String text) {
+ 		assertNotNull(text);
+ 		assertFalse(text.isEmpty());
+ 	}
+ 
+-	public static class IntTokenStream implements TokenStream {
+-		IntegerList types;
+-		int p=0;
+-		public IntTokenStream(IntegerList types) { this.types = types; }
++    public static class IntTokenStream implements TokenStream{
+ 
+-		@Override
++        IntegerList types;,
++        int p=0;,
++
++        public IntTokenStream(IntegerList types) { this.types = types; }
++
++        @Override
+ 		public void consume() { p++; }
+ 
+-		@Override
++        @Override
+ 		public int LA(int i) { return LT(i).getType(); }
+ 
+-		@Override
++        @Override
+ 		public int mark() {
+ 			return index();
+ 		}
+ 
+-		@Override
++        @Override
+ 		public int index() { return p; }
+ 
+-		@Override
++        @Override
+ 		public void release(int marker) {
+ 			seek(marker);
+ 		}
+ 
+-		@Override
++        @Override
+ 		public void seek(int index) {
+ 			p = index;
+ 		}
+ 
+-		@Override
++        @Override
+ 		public int size() {
+ 			return types.size();
+ 		}
+ 
+-		@Override
++        @Override
+ 		public String getSourceName() {
+ 			return null;
+ 		}
+ 
+-		@Override
++        @Override
+ 		public Token LT(int i) {
+ 			CommonToken t;
+ 			int rawIndex = p + i - 1;
+@@ -1253,51 +1282,53 @@ public abstract class BaseTest {
+ 			return t;
+ 		}
+ 
+-		@Override
++        @Override
+ 		public Token get(int i) {
+ 			return new org.antlr.v4.runtime.CommonToken(types.get(i));
+ 		}
+ 
+-		@Override
++        @Override
+ 		public TokenSource getTokenSource() {
+ 			return null;
+ 		}
+ 
+-		@NotNull
++        @NotNull
+ 		@Override
+ 		public String getText() {
+ 			throw new UnsupportedOperationException("can't give strings");
+ 		}
+ 
+-		@NotNull
++        @NotNull
+ 		@Override
+ 		public String getText(Interval interval) {
+ 			throw new UnsupportedOperationException("can't give strings");
+ 		}
+ 
+-		@NotNull
++        @NotNull
+ 		@Override
+ 		public String getText(RuleContext ctx) {
+ 			throw new UnsupportedOperationException("can't give strings");
+ 		}
+ 
+-		@NotNull
++        @NotNull
+ 		@Override
+ 		public String getText(Token start, Token stop) {
+ 			throw new UnsupportedOperationException("can't give strings");
+ 		}
+-	}
+ 
+-	/** Sort a list */
+-	public <T extends Comparable<? super T>> List<T> sort(List<T> data) {
++    }
++    /** Sort a list */
++
++    public <T extends Comparable<? super T>> List<T> sort(List<T> data) {
+ 		List<T> dup = new ArrayList<T>();
+ 		dup.addAll(data);
+ 		Collections.sort(dup);
+ 		return dup;
+ 	}
+ 
+-	/** Return map sorted by key */
+-	public <K extends Comparable<? super K>,V> LinkedHashMap<K,V> sort(Map<K,V> data) {
++    /** Return map sorted by key */
++
++    public <K extends Comparable<? super K>,V> LinkedHashMap<K,V> sort(Map<K,V> data) {
+ 		LinkedHashMap<K,V> dup = new LinkedHashMap<K, V>();
+ 		List<K> keys = new ArrayList<K>();
+ 		keys.addAll(data.keySet());
+@@ -1307,4 +1338,5 @@ public abstract class BaseTest {
+ 		}
+ 		return dup;
+ 	}
+-}
++
++}
+\ No newline at end of file

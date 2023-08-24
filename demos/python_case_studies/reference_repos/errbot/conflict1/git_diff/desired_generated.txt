@@ -1,0 +1,41 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict1/desired.py b/python_case_studies/demo_results/MethodUnion/errbot-conflict1.py
+index 08f4934..2033858 100644
+--- a/python_case_studies/reference_repos/errbot/conflict1/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/errbot-conflict1.py
+@@ -1,14 +1,13 @@
+ import logging
+ import sys
+ from functools import lru_cache
+-
+ from threading import Thread
+ from time import sleep
+-
+-from errbot.backends.base import Message, Room, Presence, RoomNotJoinedError, Identifier, RoomOccupant, Person
+-from errbot.backends.base import ONLINE, OFFLINE, AWAY, DND
++from errbot.backends.base import Message,Room,Presence,RoomNotJoinedError,Identifier,RoomOccupant,Person,ONLINE,OFFLINE,AWAY,DND
+ from errbot.core import ErrBot
+-from errbot.rendering import text, xhtml, xhtmlim
++from errbot.rendering import text,xhtml,xhtmlim
++
++
+ 
+ log = logging.getLogger(__name__)
+ 
+@@ -302,8 +301,12 @@ class XMPPRoomOccupant(XMPPPerson, RoomOccupant):
+ 
+ 
+ class XMPPConnection(object):
++<<<<<<< left_content.py
+     def __init__(self, jid, password, feature=None, keepalive=None,
+                  ca_cert=None, server=None, use_ipv6=None, bot=None):
++=======
++    def __init__(self, jid, password, feature=None, keepalive=None, ca_cert=None, server=None, use_ipv6=None, bot=None, ssl_version=None):
++>>>>>>> right_content.py
+         if feature is None:
+             feature = {}
+         self._bot = bot
+@@ -601,3 +604,4 @@ class XMPPBackend(ErrBot):
+ 
+     def __hash__(self):
+         return 0
++

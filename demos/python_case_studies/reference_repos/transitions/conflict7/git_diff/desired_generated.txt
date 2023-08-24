@@ -1,0 +1,70 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict7/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict7.py
+index 1c01e56..ad405fa 100644
+--- a/python_case_studies/reference_repos/transitions/conflict7/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict7.py
+@@ -1,3 +1,9 @@
++import inspect
++import itertools
++import logging
++from collections import OrderedDict,defaultdict,deque
++from functools import partial
++from six import string_types
+ """
+     transitions.core
+     ----------------
+@@ -24,13 +30,7 @@ except ImportError:
+     class EnumMeta:
+         pass
+ 
+-import inspect
+-import itertools
+-import logging
+ 
+-from collections import OrderedDict, defaultdict, deque
+-from functools import partial
+-from six import string_types
+ 
+ _LOGGER = logging.getLogger(__name__)
+ _LOGGER.addHandler(logging.NullHandler())
+@@ -119,13 +119,21 @@ class State(object):
+         """ Triggered when a state is entered. """
+         _LOGGER.debug("%sEntering state %s. Processing callbacks...", event_data.machine.name, self.name)
+         event_data.machine.callbacks(self.on_enter, event_data)
++<<<<<<< left_content.py
+         _LOGGER.info("%sFinished processing state %s enter callbacks.", event_data.machine.name, self.name)
++=======
++        _LOGGER.info("%sEntered state %s", event_data.machine.name, self.name)
++>>>>>>> right_content.py
+ 
+     def exit(self, event_data):
+         """ Triggered when a state is exited. """
+         _LOGGER.debug("%sExiting state %s. Processing callbacks...", event_data.machine.name, self.name)
+         event_data.machine.callbacks(self.on_exit, event_data)
++<<<<<<< left_content.py
+         _LOGGER.info("%sFinished processing state %s exit callbacks.", event_data.machine.name, self.name)
++=======
++        _LOGGER.info("%sExited state %s", event_data.machine.name, self.name)
++>>>>>>> right_content.py
+ 
+     def add_callback(self, trigger, func):
+         """ Add a new enter or exit callback.
+@@ -201,10 +209,14 @@ class Transition(object):
+     """
+ 
+     dynamic_methods = ['before', 'after', 'prepare']
++<<<<<<< left_content.py
+     """ A list of dynamic methods which can be resolved by a ``Machine`` instance for convenience functions. """
+     condition_cls = Condition
+     """ The class used to wrap condition checks. Can be replaced to alter condition resolution behaviour
+         (e.g. OR instead of AND for 'conditions' or AND instead of OR for 'unless') """
++=======
++    condition_cls = Condition
++>>>>>>> right_content.py
+ 
+     def __init__(self, source, dest, conditions=None, unless=None, before=None,
+                  after=None, prepare=None):
+@@ -1193,3 +1205,4 @@ class MachineError(Exception):
+ 
+     def __str__(self):
+         return repr(self.value)
++

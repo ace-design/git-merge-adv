@@ -1,0 +1,442 @@
+diff --git a/java_case_studies/reference_repos/antlr4/importC4/desired.java b/java_case_studies/demo_results/MethodUnion/antlr4-importC4.java
+index a17f63f..ab15046 100644
+--- a/java_case_studies/reference_repos/antlr4/importC4/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/antlr4-importC4.java
+@@ -26,91 +26,72 @@
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-
+ package org.antlr.v4.runtime;
+-
+-import org.antlr.v4.runtime.misc.Interval;
+ import org.antlr.v4.runtime.misc.NotNull;
+-
++import java.util.*;
++import org.antlr.v4.runtime.misc.Interval;
+ import java.util.ArrayList;
+ import java.util.HashSet;
+ import java.util.List;
+ import java.util.Set;
+ 
+-/** Buffer all input tokens but do on-demand fetching of new tokens from
+- *  lexer. Useful when the parser or lexer has to set context/mode info before
+- *  proper lexing of future tokens. The ST template parser needs this,
+- *  for example, because it has to constantly flip back and forth between
+- *  inside/output templates. E.g., <names:{hi, <it>}> has to parse names
+- *  as part of an expression but "hi, <it>" as a nested template.
+- *
+- *  You can't use this stream if you pass whitespace or other off-channel
+- *  tokens to the parser. The stream can't ignore off-channel tokens.
+- *  (UnbufferedTokenStream is the same way.)  Use CommonTokenStream.
+- *
+- *  This is not a subclass of UnbufferedTokenStream because I don't want
+- *  to confuse small moving window of tokens it uses for the full buffer.
+- */
+-public class BufferedTokenStream implements TokenStream {
+-	@NotNull
+-    protected TokenSource tokenSource;
++public class BufferedTokenStream implements TokenStream{
++
++    protected TokenSource tokenSource;,
+ 
+     /** Record every single token pulled from the source so we can reproduce
+      *  chunks of it later.  The buffer in LookaheadStream overlaps sometimes
+      *  as its moving window moves through the input.  This list captures
+      *  everything so we can access complete input text.
+      */
+-    protected List<Token> tokens = new ArrayList<Token>(100);
++    protected List<Token> tokens = new ArrayList<Token>(100);,
++
++    /** Track the last mark() call result value for use in rewind(). */
++    protected int lastMarker;,
+ 
+     /** The index into the tokens list of the current token (next token
+      *  to consume).  tokens[p] should be LT(1).  p=-1 indicates need
+      *  to initialize with first token.  The ctor doesn't get a token.
+      *  First call to LT(1) or whatever gets the first token and sets p=0;
+      */
+-    protected int p = -1;
+-
+-	/**
+-	 * Set to {@code true} when the EOF token is fetched. Do not continue fetching
+-	 * tokens after that point, or multiple EOF tokens could end up in the
+-	 * {@link #tokens} array.
+-	 *
+-	 * @see #fetch
+-	 */
+-	protected boolean fetchedEOF;
++    protected int p = -1;,
++
++    public BufferedTokenStream() { }
+ 
+     public BufferedTokenStream(TokenSource tokenSource) {
+-		if (tokenSource == null) {
+-			throw new NullPointerException("tokenSource cannot be null");
+-		}
+         this.tokenSource = tokenSource;
+     }
+ 
+     @Override
+     public TokenSource getTokenSource() { return tokenSource; }
+ 
+-	@Override
++    @Override
+ 	public int index() { return p; }
+ 
+-//	public int range() { return range; }
++    //	public int range() { return range; }
+ 
+     @Override
+     public int mark() {
+ 		return 0;
+ 	}
+ 
+-	@Override
++    @Override
+ 	public void release(int marker) {
+ 		// no resources to release
+ 	}
+ 
+     public void reset() {
+-        seek(0);
++        p = 0;
++        lastMarker = 0;
+     }
+ 
+     @Override
+     public void seek(int index) {
+-        lazyInit();
+-        p = adjustSeekIndex(index);
++        if (p == -1) {
++            setup();
++        }
++
++        p = index;
+     }
+ 
+     @Override
+@@ -119,56 +100,37 @@ public class BufferedTokenStream implements TokenStream {
+     /** Move the input pointer to the next incoming token.  The stream
+      *  must become active with LT(1) available.  consume() simply
+      *  moves the input pointer so that LT(1) points at the next
+-     *  input symbol. Consume at least one token, unless EOF has been reached.
++     *  input symbol. Consume at least one token.
++     *
++     *  Walk past any token not on the channel the parser is listening to.
+      */
++
+     @Override
+     public void consume() {
+-        lazyInit();
+-		if (sync(p + 1)) {
+-			p = adjustSeekIndex(p + 1);
+-		}
++        if ( p == -1 ) setup();
++        p++;
++        sync(p);
+     }
+ 
+-    /** Make sure index {@code i} in tokens has a token.
+-	 *
+-	 * @return {@code true} if a token is located at index {@code i}, otherwise
+-	 *    {@code false}.
+-	 * @see #get(int i)
+-	 */
+-    protected boolean sync(int i) {
+-		assert i >= 0;
++    /** Make sure index i in tokens has a token. */
++
++    protected void sync(int i) {
+         int n = i - tokens.size() + 1; // how many more elements we need?
+         //System.out.println("sync("+i+") needs "+n);
+-        if ( n > 0 ) {
+-			int fetched = fetch(n);
+-			return fetched >= n;
+-		}
+-
+-		return true;
++        if ( n > 0 ) fetch(n);
+     }
+ 
+-    /** Add {@code n} elements to buffer.
+-	 *
+-	 * @return The actual number of elements added to the buffer.
+-	 */
+-    protected int fetch(int n) {
+-		if (fetchedEOF) {
+-			return 0;
+-		}
++    /** add n elements to buffer */
+ 
+-        for (int i = 0; i < n; i++) {
++    protected void fetch(int n) {
++        for (int i=1; i<=n; i++) {
+             Token t = tokenSource.nextToken();
+             if ( t instanceof WritableToken ) {
+                 ((WritableToken)t).setTokenIndex(tokens.size());
+             }
+             tokens.add(t);
+-            if ( t.getType()==Token.EOF ) {
+-				fetchedEOF = true;
+-				return i + 1;
+-			}
++            if ( t.getType()==Token.EOF ) break;
+         }
+-
+-		return n;
+     }
+ 
+     @Override
+@@ -179,10 +141,11 @@ public class BufferedTokenStream implements TokenStream {
+         return tokens.get(i);
+     }
+ 
+-	/** Get all tokens from start..stop inclusively */
+-	public List<Token> get(int start, int stop) {
++    /** Get all tokens from start..stop inclusively */
++
++    public List<Token> get(int start, int stop) {
+ 		if ( start<0 || stop<0 ) return null;
+-		lazyInit();
++		if ( p == -1 ) setup();
+ 		List<Token> subset = new ArrayList<Token>();
+ 		if ( stop>=tokens.size() ) stop = tokens.size()-1;
+ 		for (int i = start; i <= stop; i++) {
+@@ -193,7 +156,7 @@ public class BufferedTokenStream implements TokenStream {
+ 		return subset;
+ 	}
+ 
+-	@Override
++    @Override
+ 	public int LA(int i) { return LT(i).getType(); }
+ 
+     protected Token LB(int k) {
+@@ -203,7 +166,7 @@ public class BufferedTokenStream implements TokenStream {
+ 
+     @Override
+     public Token LT(int k) {
+-        lazyInit();
++        if ( p == -1 ) setup();
+         if ( k==0 ) return null;
+         if ( k < 0 ) return LB(-k);
+ 
+@@ -217,35 +180,10 @@ public class BufferedTokenStream implements TokenStream {
+         return tokens.get(i);
+     }
+ 
+-	/**
+-	 * Allowed derived classes to modify the behavior of operations which change
+-	 * the current stream position by adjusting the target token index of a seek
+-	 * operation. The default implementation simply returns {@code i}. If an
+-	 * exception is thrown in this method, the current stream index should not be
+-	 * changed.
+-	 * <p>
+-	 * For example, {@link CommonTokenStream} overrides this method to ensure that
+-	 * the seek target is always an on-channel token.
+-	 *
+-	 * @param i The target token index.
+-	 * @return The adjusted target token index.
+-	 */
+-	protected int adjustSeekIndex(int i) {
+-		return i;
+-	}
+-
+-	protected final void lazyInit() {
+-		if (p == -1) {
+-			setup();
+-		}
+-	}
+-
+-    protected void setup() {
+-		sync(0);
+-		p = adjustSeekIndex(0);
+-	}
++    protected void setup() { sync(0); p = 0; }
+ 
+     /** Reset this token stream by setting its token source. */
++
+     public void setTokenSource(TokenSource tokenSource) {
+         this.tokenSource = tokenSource;
+         tokens.clear();
+@@ -262,8 +200,9 @@ public class BufferedTokenStream implements TokenStream {
+      *  the token type BitSet.  Return null if no tokens were found.  This
+      *  method looks at both on and off channel tokens.
+      */
++
+     public List<Token> getTokens(int start, int stop, Set<Integer> types) {
+-        lazyInit();
++        if ( p == -1 ) setup();
+ 		if ( start<0 || stop>=tokens.size() ||
+ 			 stop<0  || start>=tokens.size() )
+ 		{
+@@ -292,11 +231,12 @@ public class BufferedTokenStream implements TokenStream {
+ 		return getTokens(start,stop, s);
+     }
+ 
+-	/** Given a starting index, return the index of the next token on channel.
++    /** Given a starting index, return the index of the next token on channel.
+ 	 *  Return i if tokens[i] is on channel.  Return -1 if there are no tokens
+ 	 *  on channel between i and EOF.
+ 	 */
+-	protected int nextTokenOnChannel(int i, int channel) {
++
++    protected int nextTokenOnChannel(int i, int channel) {
+ 		sync(i);
+ 		Token token = tokens.get(i);
+ 		if ( i>=size() ) return -1;
+@@ -309,23 +249,25 @@ public class BufferedTokenStream implements TokenStream {
+ 		return i;
+ 	}
+ 
+-	/** Given a starting index, return the index of the previous token on channel.
++    /** Given a starting index, return the index of the previous token on channel.
+ 	 *  Return i if tokens[i] is on channel. Return -1 if there are no tokens
+ 	 *  on channel between i and 0.
+ 	 */
+-	protected int previousTokenOnChannel(int i, int channel) {
++
++    protected int previousTokenOnChannel(int i, int channel) {
+ 		while ( i>=0 && tokens.get(i).getChannel()!=channel ) {
+ 			i--;
+ 		}
+ 		return i;
+ 	}
+ 
+-	/** Collect all tokens on specified channel to the right of
++    /** Collect all tokens on specified channel to the right of
+ 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL or
+ 	 *  EOF. If channel is -1, find any non default channel token.
+ 	 */
+-	public List<Token> getHiddenTokensToRight(int tokenIndex, int channel) {
+-		lazyInit();
++
++    public List<Token> getHiddenTokensToRight(int tokenIndex, int channel) {
++		if ( p == -1 ) setup();
+ 		if ( tokenIndex<0 || tokenIndex>=tokens.size() ) {
+ 			throw new IndexOutOfBoundsException(tokenIndex+" not in 0.."+(tokens.size()-1));
+ 		}
+@@ -341,20 +283,22 @@ public class BufferedTokenStream implements TokenStream {
+ 		return filterForChannel(from, to, channel);
+ 	}
+ 
+-	/** Collect all hidden tokens (any off-default channel) to the right of
++    /** Collect all hidden tokens (any off-default channel) to the right of
+ 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL
+ 	 *  of EOF.
+ 	 */
+-	public List<Token> getHiddenTokensToRight(int tokenIndex) {
++
++    public List<Token> getHiddenTokensToRight(int tokenIndex) {
+ 		return getHiddenTokensToRight(tokenIndex, -1);
+ 	}
+ 
+-	/** Collect all tokens on specified channel to the left of
++    /** Collect all tokens on specified channel to the left of
+ 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
+ 	 *  If channel is -1, find any non default channel token.
+ 	 */
+-	public List<Token> getHiddenTokensToLeft(int tokenIndex, int channel) {
+-		lazyInit();
++
++    public List<Token> getHiddenTokensToLeft(int tokenIndex, int channel) {
++		if ( p == -1 ) setup();
+ 		if ( tokenIndex<0 || tokenIndex>=tokens.size() ) {
+ 			throw new IndexOutOfBoundsException(tokenIndex+" not in 0.."+(tokens.size()-1));
+ 		}
+@@ -369,14 +313,15 @@ public class BufferedTokenStream implements TokenStream {
+ 		return filterForChannel(from, to, channel);
+ 	}
+ 
+-	/** Collect all hidden tokens (any off-default channel) to the left of
++    /** Collect all hidden tokens (any off-default channel) to the left of
+ 	 *  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL.
+ 	 */
+-	public List<Token> getHiddenTokensToLeft(int tokenIndex) {
++
++    public List<Token> getHiddenTokensToLeft(int tokenIndex) {
+ 		return getHiddenTokensToLeft(tokenIndex, -1);
+ 	}
+ 
+-	protected List<Token> filterForChannel(int from, int to, int channel) {
++    protected List<Token> filterForChannel(int from, int to, int channel) {
+ 		List<Token> hidden = new ArrayList<Token>();
+ 		for (int i=from; i<=to; i++) {
+ 			Token t = tokens.get(i);
+@@ -391,25 +336,26 @@ public class BufferedTokenStream implements TokenStream {
+ 		return hidden;
+ 	}
+ 
+-	@Override
++    @Override
+     public String getSourceName() {	return tokenSource.getSourceName();	}
+ 
+-	/** Get the text of all tokens in this buffer. */
+-	@NotNull
++    /** Get the text of all tokens in this buffer. */
++
++    @NotNull
+ 	@Override
+ 	public String getText() {
+-        lazyInit();
++		if ( p == -1 ) setup();
+ 		fill();
+ 		return getText(Interval.of(0,size()-1));
+ 	}
+ 
+-	@NotNull
++    @NotNull
+     @Override
+     public String getText(Interval interval) {
+ 		int start = interval.a;
+ 		int stop = interval.b;
+         if ( start<0 || stop<0 ) return "";
+-        lazyInit();
++        if ( p == -1 ) setup();
+         if ( stop>=tokens.size() ) stop = tokens.size()-1;
+ 
+ 		StringBuilder buf = new StringBuilder();
+@@ -421,13 +367,13 @@ public class BufferedTokenStream implements TokenStream {
+ 		return buf.toString();
+     }
+ 
+-	@NotNull
++    @NotNull
+ 	@Override
+ 	public String getText(RuleContext ctx) {
+ 		return getText(ctx.getSourceInterval());
+ 	}
+ 
+-	@NotNull
++    @NotNull
+     @Override
+     public String getText(Token start, Token stop) {
+         if ( start!=null && stop!=null ) {
+@@ -438,14 +384,17 @@ public class BufferedTokenStream implements TokenStream {
+     }
+ 
+     /** Get all tokens from lexer until EOF */
++
+     public void fill() {
+-        lazyInit();
+-		final int blockSize = 1000;
+-		while (true) {
+-			int fetched = fetch(blockSize);
+-			if (fetched < blockSize) {
+-				return;
+-			}
+-		}
++        if ( p == -1 ) setup();
++        if ( tokens.get(p).getType()==Token.EOF ) return;
++
++        int i = p+1;
++        sync(i);
++        while ( tokens.get(i).getType()!=Token.EOF ) {
++            i++;
++            sync(i);
++        }
+     }
+-}
++
++}
+\ No newline at end of file

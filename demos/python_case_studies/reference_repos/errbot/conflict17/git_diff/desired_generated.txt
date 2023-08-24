@@ -1,0 +1,144 @@
+diff --git a/python_case_studies/reference_repos/errbot/conflict17/desired.py b/python_case_studies/demo_results/MethodUnion/errbot-conflict17.py
+index 3b699e1..6bf2ab2 100644
+--- a/python_case_studies/reference_repos/errbot/conflict17/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/errbot-conflict17.py
+@@ -3,10 +3,17 @@ import logging
+ import re
+ import time
+ import sys
+-from errbot import PY3
++from errbot import PY3,holder
+ from errbot.backends.base import (
+-    Message, build_message, Identifier, Presence, ONLINE, AWAY,
+-    MUCRoom, RoomDoesNotExistError, UserDoesNotExistError
++    Message,
++    build_message,
++    Identifier,
++    Presence,
++    ONLINE,
++    AWAY,
++    MUCRoom,
++    RoomDoesNotExistError,
++    UserDoesNotExistError,
+ )
+ from errbot.errBot import ErrBot
+ from errbot.utils import deprecated
+@@ -417,33 +424,62 @@ class SlackRoom(MUCRoom):
+         return self._name
+ 
+     def join(self, username=None, password=None):
+-        log.info("Joining channel %s" % str(self))
++<<<<<<< left_content.py
++        logging.info("Joining channel %s" % str(self))
+         self._bot.api_call('channels.join', data={'name': self.name})
+ 
+     def leave(self, reason=None):
+         if self.id.startswith('C'):
+-            log.info("Leaving channel %s (%s)" % (str(self), self.id))
++            logging.info("Leaving channel %s (%s)" % (str(self), self.id))
+             self._bot.api_call('channels.leave', data={'channel': self.id})
+         else:
+-            log.info("Leaving group %s (%s)" % (str(self), self.id))
++            logging.info("Leaving group %s (%s)" % (str(self), self.id))
+             self._bot.api_call('groups.leave', data={'channel': self.id})
++=======
++        log.info("Joining channel %s" % str(self))
++        holder.bot.api_call('channels.join', data={'name': self.name})
++
++    def leave(self, reason=None):
++        if self.id.startswith('C'):
++            log.info("Leaving channel %s (%s)" % (str(self), self.id))
++            holder.bot.api_call('channels.leave', data={'channel': self.id})
++        else:
++            log.info("Leaving group %s (%s)" % (str(self), self.id))
++            holder.bot.api_call('groups.leave', data={'channel': self.id})
++>>>>>>> right_content.py
+         self._id = None
+ 
+     def create(self, private=False):
+         if private:
+-            log.info("Creating group %s" % str(self))
++<<<<<<< left_content.py
++            logging.info("Creating group %s" % str(self))
+             self._bot.api_call('groups.create', data={'name': self.name})
+         else:
+-            log.info("Creating channel %s" % str(self))
++            logging.info("Creating channel %s" % str(self))
+             self._bot.api_call('channels.create', data={'name': self.name})
+ 
+     def destroy(self):
+         if self.id.startswith('C'):
+-            log.info("Archiving channel %s (%s)" % (str(self), self.id))
++            logging.info("Archiving channel %s (%s)" % (str(self), self.id))
+             self._bot.api_call('channels.archive', data={'channel': self.id})
+         else:
+-            log.info("Archiving group %s (%s)" % (str(self), self.id))
++            logging.info("Archiving group %s (%s)" % (str(self), self.id))
+             self._bot.api_call('groups.archive', data={'channel': self.id})
++=======
++            log.info("Creating group %s" % str(self))
++            holder.bot.api_call('groups.create', data={'name': self.name})
++        else:
++            log.info("Creating channel %s" % str(self))
++            holder.bot.api_call('channels.create', data={'name': self.name})
++
++    def destroy(self):
++        if self.id.startswith('C'):
++            log.info("Archiving channel %s (%s)" % (str(self), self.id))
++            holder.bot.api_call('channels.archive', data={'channel': self.id})
++        else:
++            log.info("Archiving group %s (%s)" % (str(self), self.id))
++            holder.bot.api_call('groups.archive', data={'channel': self.id})
++>>>>>>> right_content.py
+         self._id = None
+ 
+     @property
+@@ -466,11 +502,19 @@ class SlackRoom(MUCRoom):
+     @topic.setter
+     def topic(self, topic):
+         if self.private:
+-            log.info("Setting topic of %s (%s) to '%s'" % (str(self), self.id, topic))
++<<<<<<< left_content.py
++            logging.info("Setting topic of %s (%s) to '%s'" % (str(self), self.id, topic))
+             self._bot.api_call('groups.setTopic', data={'channel': self.id, 'topic': topic})
+         else:
+-            log.info("Setting topic of %s (%s) to '%s'" % (str(self), self.id, topic))
++            logging.info("Setting topic of %s (%s) to '%s'" % (str(self), self.id, topic))
+             self._bot.api_call('channels.setTopic', data={'channel': self.id, 'topic': topic})
++=======
++            log.info("Setting topic of %s (%s) to '%s'" % (str(self), self.id, topic))
++            holder.bot.api_call('groups.setTopic', data={'channel': self.id, 'topic': topic})
++        else:
++            log.info("Setting topic of %s (%s) to '%s'" % (str(self), self.id, topic))
++            holder.bot.api_call('channels.setTopic', data={'channel': self.id, 'topic': topic})
++>>>>>>> right_content.py
+ 
+     @property
+     def purpose(self):
+@@ -482,11 +526,19 @@ class SlackRoom(MUCRoom):
+     @purpose.setter
+     def purpose(self, purpose):
+         if self.private:
+-            log.info("Setting purpose of %s (%s) to '%s'" % (str(self), self.id, purpose))
++<<<<<<< left_content.py
++            logging.info("Setting purpose of %s (%s) to '%s'" % (str(self), self.id, purpose))
+             self._bot.api_call('groups.setPurpose', data={'channel': self.id, 'purpose': purpose})
+         else:
+-            log.info("Setting purpose of %s (%s) to '%s'" % (str(self), self.id, purpose))
++            logging.info("Setting purpose of %s (%s) to '%s'" % (str(self), self.id, purpose))
+             self._bot.api_call('channels.setPurpose', data={'channel': self.id, 'purpose': purpose})
++=======
++            log.info("Setting purpose of %s (%s) to '%s'" % (str(self), self.id, purpose))
++            holder.bot.api_call('groups.setPurpose', data={'channel': self.id, 'purpose': purpose})
++        else:
++            log.info("Setting purpose of %s (%s) to '%s'" % (str(self), self.id, purpose))
++            holder.bot.api_call('channels.setPurpose', data={'channel': self.id, 'purpose': purpose})
++>>>>>>> right_content.py
+ 
+     @property
+     def occupants(self):
+@@ -511,3 +563,4 @@ class SlackRoom(MUCRoom):
+             )
+             if not response['ok'] and response['error'] != "already_in_channel":
+                 raise SlackAPIResponseError("Slack API call to %s failed: %s" % (method, response['error']))
++

@@ -1,0 +1,37 @@
+diff --git a/python_case_studies/reference_repos/mypy/importC1/desired.py b/python_case_studies/demo_results/MethodUnion/mypy-importC1.py
+index 73bb12e..2c5d3c5 100644
+--- a/python_case_studies/reference_repos/mypy/importC1/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/mypy-importC1.py
+@@ -1,13 +1,20 @@
+-"""Type parser"""
+-
+-from typing import List, Tuple, Union, cast, Optional
+-
++from typing import List,Tuple,Union,cast,Optional
+ from mypy.types import (
+-    Type, UnboundType, TupleType, TypeList, CallableType, StarType,
+-    EllipsisType
++    Type,
++    UnboundType,
++    TupleType,
++    UnionType,
++    TypeList,
++    AnyType,
++    CallableType,
++    StarType,
++    EllipsisType,
+ )
+-from mypy.lex import Token, Name, StrLit, lex
++from mypy.lex import Token,Name,StrLit,Break,lex
+ from mypy import nodes
++"""Type parser"""
++
++
+ 
+ 
+ none = Token('')  # Empty token
+@@ -261,3 +268,4 @@ def parse_signature(tokens: List[Token]) -> Tuple[CallableType, int]:
+                         [None] * len(arg_types),
+                         ret_type, None,
+                         is_ellipsis_args=encountered_ellipsis), i
++

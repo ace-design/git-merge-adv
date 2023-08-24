@@ -1,0 +1,29 @@
+diff --git a/java_case_studies/reference_repos/openshift-java-client/conflict11/base.java b/java_case_studies/reference_repos/openshift-java-client/conflict11/left.java
+index d1b2512..ce79303 100644
+--- a/java_case_studies/reference_repos/openshift-java-client/conflict11/base.java
++++ b/java_case_studies/reference_repos/openshift-java-client/conflict11/left.java
+@@ -10,8 +10,11 @@
+  ******************************************************************************/
+ package com.openshift.internal.client.httpclient;
+ 
+-import java.io.UnsupportedEncodingException;
+-import java.util.Map;
++import java.io.IOException;
++import java.io.OutputStream;
++import java.util.List;
++
++import com.openshift.internal.client.RequestParameter;
+ 
+ /**
+  * @author Andre Dietisheim
+@@ -20,6 +23,9 @@ public interface IMediaType {
+ 
+ 	public String getType();
+ 	
+-	public String encodeParameters(Map<String, Object> parameters) throws UnsupportedEncodingException;
++	public void write(RequestParameter[] parameters, OutputStream out) throws IOException;
++
++	public void write(String name, String value, OutputStream out) throws IOException;
+ 	
++	public void write(String name, List<String> values, OutputStream out) throws IOException;
+ }

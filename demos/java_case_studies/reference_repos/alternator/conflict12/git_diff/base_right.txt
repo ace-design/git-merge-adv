@@ -1,0 +1,287 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict12/base.java b/java_case_studies/reference_repos/alternator/conflict12/right.java
+index 4131783..28a32c1 100644
+--- a/java_case_studies/reference_repos/alternator/conflict12/base.java
++++ b/java_case_studies/reference_repos/alternator/conflict12/right.java
+@@ -1,6 +1,9 @@
+ package com.michelboudreau.test;
+ 
+-import com.amazonaws.services.dynamodb.model.*;
++import java.util.ArrayList;
++import java.util.List;
++import java.util.Map;
++
+ import org.junit.After;
+ import org.junit.Assert;
+ import org.junit.Before;
+@@ -9,7 +12,15 @@ import org.junit.runner.RunWith;
+ import org.springframework.test.context.ContextConfiguration;
+ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+ 
+-import java.util.*;
++import com.amazonaws.services.dynamodb.model.AttributeValue;
++import com.amazonaws.services.dynamodb.model.ComparisonOperator;
++import com.amazonaws.services.dynamodb.model.Condition;
++import com.amazonaws.services.dynamodb.model.KeySchema;
++import com.amazonaws.services.dynamodb.model.KeySchemaElement;
++import com.amazonaws.services.dynamodb.model.PutItemRequest;
++import com.amazonaws.services.dynamodb.model.QueryRequest;
++import com.amazonaws.services.dynamodb.model.QueryResult;
++import com.amazonaws.services.dynamodb.model.ScalarAttributeType;
+ 
+ @RunWith(SpringJUnit4ClassRunner.class)
+ @ContextConfiguration(locations = {"classpath:/applicationContext.xml"})
+@@ -93,6 +104,38 @@ public class AlternatorQueryTest extends AlternatorTest {
+         return hashKey1;
+     }
+ 
++    private AttributeValue setupNumericRangeTableWithSeveralItems() {
++		KeySchema schema = new KeySchema()
++                .withHashKeyElement(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S))
++                .withRangeKeyElement(new KeySchemaElement().withAttributeName("range").withAttributeType(ScalarAttributeType.N))
++                ;
++		createTable(tableName, schema);
++
++		AttributeValue hashKey1 = createStringAttribute();
++		AttributeValue hashKey2 = createStringAttribute();
++
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(createStringAttribute(), createNumberAttribute())).withTableName(tableName));
++
++        getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey1, createNumberAttribute(4), "attr1", "value14", "attr2", "value24")).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey1, createNumberAttribute(3), "attr1", "value13", "attr2", "value23")).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey1, createNumberAttribute(2), "attr1", "value12", "attr2", "value22")).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey1, createNumberAttribute(1), "attr1", "value11", "attr2", "value21")).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey1, createNumberAttribute(11), "attr1", "value11", "attr2", "value21")).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey1, createNumberAttribute(51), "attr1", "value19", "attr2", "value29")).withTableName(tableName));
++
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey2, createNumberAttribute(51), "attr1", "value19", "attr2", "value29")).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey2, createNumberAttribute(11), "attr1", "value19", "attr2", "value29")).withTableName(tableName));
++        getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey2, createNumberAttribute(1), "attr1", "value11", "attr2", "value21")).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey2, createNumberAttribute(2), "attr1", "value12", "attr2", "value22")).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey2, createNumberAttribute(3), "attr1", "value13", "attr2", "value23")).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey2, createNumberAttribute(4), "attr1", "value14", "attr2", "value24")).withTableName(tableName));
++
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(createStringAttribute(), createNumberAttribute())).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(createStringAttribute(), createNumberAttribute())).withTableName(tableName));
++
++        return hashKey1;
++    }
++
+     @Test
+ 	public void queryWithHashKeyAndAttributesToGetTest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+@@ -130,7 +173,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		QueryResult result = getClient().query(request);
+ 		Assert.assertNotNull("Null result.", result);
+ 		Assert.assertNotNull("No items returned.", result.getItems());
+-        Assert.assertEquals("Should return a one item.", 1, result.getItems().size());
++        Assert.assertEquals("Should return one item.", 1, result.getItems().size());
+ 		for (Map<String, AttributeValue> item : result.getItems()) {
+ 			Assert.assertEquals(item.get("range").getS(), "Range2");
+ 		}
+@@ -152,7 +195,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		QueryResult result = getClient().query(request);
+ 		Assert.assertNotNull("Null result.", result);
+ 		Assert.assertNotNull("No items returned.", result.getItems());
+-        Assert.assertEquals("Should return a two items.", 2, result.getItems().size());
++        Assert.assertEquals("Should return two items.", 2, result.getItems().size());
+ 		for (Map<String, AttributeValue> item : result.getItems()) {
+ 			Assert.assertTrue(item.get("range").getS().compareTo("Range2") < 0);
+ 		}
+@@ -323,6 +366,197 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
++	@Test
++	public void queryWithHashKeyAndNumericRangeKeyConditionEQTest() {
++        AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
++
++        QueryRequest request = new QueryRequest().withTableName(tableName).withHashKeyValue(hashKey);
++
++		Condition rangeKeyCondition = new Condition();
++		List<AttributeValue> attributeValueList = new ArrayList<AttributeValue>();
++		attributeValueList.add(createNumberAttribute(2));
++		rangeKeyCondition.setAttributeValueList(attributeValueList);
++		rangeKeyCondition.setComparisonOperator(ComparisonOperator.EQ);
++		request.setRangeKeyCondition(rangeKeyCondition);
++		QueryResult result = getClient().query(request);
++		Assert.assertNotNull("Null result.", result);
++		Assert.assertNotNull("No items returned.", result.getItems());
++        Assert.assertEquals("Should return one item.", 1, result.getItems().size());
++		for (Map<String, AttributeValue> item : result.getItems()) {
++			Assert.assertEquals(item.get("range").getN(), "2");
++		}
++	}
++
++	@Test
++	public void queryWithHashKeyAndNumericRangeKeyConditionLTTest() {
++        AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
++
++        QueryRequest request = new QueryRequest().withTableName(tableName).withHashKeyValue(hashKey);
++
++		Condition rangeKeyCondition = new Condition();
++		List<AttributeValue> attributeValueList = new ArrayList<AttributeValue>();
++		attributeValueList.add(createNumberAttribute(2));
++		rangeKeyCondition.setAttributeValueList(attributeValueList);
++		rangeKeyCondition.setComparisonOperator(ComparisonOperator.LT);
++		request.setRangeKeyCondition(rangeKeyCondition);
++		QueryResult result = getClient().query(request);
++		Assert.assertNotNull("Null result.", result);
++		Assert.assertNotNull("No items returned.", result.getItems());
++        // NOTE: LT is currently a string comparison, so "11" is < "2".
++        Assert.assertEquals("Should return two items.", 2, result.getItems().size());
++	}
++
++	@Test
++	public void queryWithHashKeyAndNumericRangeKeyConditionLETest() {
++        AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
++
++        QueryRequest request = new QueryRequest().withTableName(tableName).withHashKeyValue(hashKey);
++
++		Condition rangeKeyCondition = new Condition();
++		List<AttributeValue> attributeValueList = new ArrayList<AttributeValue>();
++		attributeValueList.add(createNumberAttribute(2));
++		rangeKeyCondition.setAttributeValueList(attributeValueList);
++		rangeKeyCondition.setComparisonOperator(ComparisonOperator.LE);
++		request.setRangeKeyCondition(rangeKeyCondition);
++		QueryResult result = getClient().query(request);
++		Assert.assertNotNull("Null result.", result);
++		Assert.assertNotNull("No items returned.", result.getItems());
++        // NOTE: LE is currently a string comparison, so "11" is <= "2".
++        Assert.assertEquals("Should return three items.", 3, result.getItems().size());
++	}
++
++	@Test
++	public void queryWithHashKeyAndNumericRangeKeyConditionGTTest() {
++        AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
++
++        QueryRequest request = new QueryRequest().withTableName(tableName).withHashKeyValue(hashKey);
++
++		Condition rangeKeyCondition = new Condition();
++		List<AttributeValue> attributeValueList = new ArrayList<AttributeValue>();
++		attributeValueList.add(createNumberAttribute(2));
++		rangeKeyCondition.setAttributeValueList(attributeValueList);
++		rangeKeyCondition.setComparisonOperator(ComparisonOperator.GT);
++		request.setRangeKeyCondition(rangeKeyCondition);
++		QueryResult result = getClient().query(request);
++		Assert.assertNotNull("Null result.", result);
++		Assert.assertNotNull("No items returned.", result.getItems());
++        // NOTE: GT is currently a string comparison, so "11" is NOT > "2".
++        Assert.assertEquals("Should return three items.", 3, result.getItems().size());
++	}
++
++	@Test
++	public void queryWithHashKeyAndNumericRangeKeyConditionGETest() {
++        AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
++
++        QueryRequest request = new QueryRequest().withTableName(tableName).withHashKeyValue(hashKey);
++
++		Condition rangeKeyCondition = new Condition();
++		List<AttributeValue> attributeValueList = new ArrayList<AttributeValue>();
++		attributeValueList.add(createNumberAttribute(2));
++		rangeKeyCondition.setAttributeValueList(attributeValueList);
++		rangeKeyCondition.setComparisonOperator(ComparisonOperator.GE);
++		request.setRangeKeyCondition(rangeKeyCondition);
++		QueryResult result = getClient().query(request);
++		Assert.assertNotNull("Null result.", result);
++		Assert.assertNotNull("No items returned.", result.getItems());
++        // NOTE: GE is currently a string comparison, so "11" is NOT > "2".
++        Assert.assertEquals("Should return four items.", 4, result.getItems().size());
++	}
++
++	@Test
++	public void queryWithHashKeyAndNumericRangeKeyConditionINTest() {
++        AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
++
++        QueryRequest request = new QueryRequest().withTableName(tableName).withHashKeyValue(hashKey);
++
++		Condition rangeKeyCondition = new Condition();
++		List<AttributeValue> attributeValueList = new ArrayList<AttributeValue>();
++		attributeValueList.add(createNumberAttribute(2));
++		attributeValueList.add(createNumberAttribute(4));
++		attributeValueList.add(createNumberAttribute(0));
++		rangeKeyCondition.setAttributeValueList(attributeValueList);
++		rangeKeyCondition.setComparisonOperator(ComparisonOperator.IN);
++		request.setRangeKeyCondition(rangeKeyCondition);
++		QueryResult result = getClient().query(request);
++		Assert.assertNotNull("Null result.", result);
++		Assert.assertNotNull("No items returned.", result.getItems());
++        Assert.assertEquals("Should return two items.", 2, result.getItems().size());
++		for (Map<String, AttributeValue> item : result.getItems()) {
++			Assert.assertTrue(
++                    (item.get("range").getN().compareTo("2") == 0)
++                    ||
++                    (item.get("range").getN().compareTo("4") == 0)
++                    );
++		}
++	}
++
++	@Test
++	public void queryWithHashKeyAndNumericRangeKeyConditionBETWEENTest() {
++        AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
++
++        QueryRequest request = new QueryRequest().withTableName(tableName).withHashKeyValue(hashKey);
++
++		Condition rangeKeyCondition = new Condition();
++		List<AttributeValue> attributeValueList = new ArrayList<AttributeValue>();
++		attributeValueList.add(createNumberAttribute(2));
++		attributeValueList.add(createNumberAttribute(3));
++		rangeKeyCondition.setAttributeValueList(attributeValueList);
++		rangeKeyCondition.setComparisonOperator(ComparisonOperator.BETWEEN);
++		request.setRangeKeyCondition(rangeKeyCondition);
++		QueryResult result = getClient().query(request);
++		Assert.assertNotNull("Null result.", result);
++		Assert.assertNotNull("No items returned.", result.getItems());
++        Assert.assertEquals("Should return two items.", 2, result.getItems().size());
++	}
++
++	@Test
++	public void queryWithHashKeyAndNumericRangeKeyConditionBEGINSWITHTest() {
++        AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
++
++        QueryRequest request = new QueryRequest().withTableName(tableName).withHashKeyValue(hashKey);
++
++		Condition rangeKeyCondition = new Condition();
++		List<AttributeValue> attributeValueList = new ArrayList<AttributeValue>();
++		attributeValueList.add(createNumberAttribute(1));
++		rangeKeyCondition.setAttributeValueList(attributeValueList);
++		rangeKeyCondition.setComparisonOperator(ComparisonOperator.BEGINS_WITH);
++		request.setRangeKeyCondition(rangeKeyCondition);
++		QueryResult result = getClient().query(request);
++		Assert.assertNotNull("Null result.", result);
++		Assert.assertNotNull("No items returned.", result.getItems());
++        // NOTE: BEGINS_WITH is currently a string comparison, so "11" begins with "1".
++        Assert.assertEquals("Should return two items.", 2, result.getItems().size());
++		for (Map<String, AttributeValue> item : result.getItems()) {
++			Assert.assertTrue(
++                    item.get("range").getN().startsWith("1")
++                    );
++		}
++	}
++
++	@Test
++	public void queryWithHashKeyAndNumericRangeKeyConditionCONTAINSTest() {
++        AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
++
++        QueryRequest request = new QueryRequest().withTableName(tableName).withHashKeyValue(hashKey);
++
++		Condition rangeKeyCondition = new Condition();
++		List<AttributeValue> attributeValueList = new ArrayList<AttributeValue>();
++		attributeValueList.add(createNumberAttribute(1));
++		rangeKeyCondition.setAttributeValueList(attributeValueList);
++		rangeKeyCondition.setComparisonOperator(ComparisonOperator.CONTAINS);
++		request.setRangeKeyCondition(rangeKeyCondition);
++		QueryResult result = getClient().query(request);
++		Assert.assertNotNull("Null result.", result);
++		Assert.assertNotNull("No items returned.", result.getItems());
++        // NOTE: CONTAINS is currently a string comparison, so "1", "11", "51" all contain "1".
++        Assert.assertEquals("Should return three items.", 3, result.getItems().size());
++		for (Map<String, AttributeValue> item : result.getItems()) {
++			Assert.assertTrue(
++                    item.get("range").getN().contains("1")
++                    );
++		}
++	}
++
+     /*
+ 	@Test
+ 	public void queryWithHashKeyAndLimitTest() {

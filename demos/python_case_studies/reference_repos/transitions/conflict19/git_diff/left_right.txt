@@ -1,0 +1,51 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict19/left.py b/python_case_studies/reference_repos/transitions/conflict19/right.py
+index d144cc2..a21d523 100644
+--- a/python_case_studies/reference_repos/transitions/conflict19/left.py
++++ b/python_case_studies/reference_repos/transitions/conflict19/right.py
+@@ -1,8 +1,6 @@
+-import abc
+-
+-from ..core import Machine
+-from ..core import Transition
++from ..core import Transition, Machine
+ from .nesting import NestedState
++import abc
+ try:
+     import pygraphviz as pgv
+ except:
+@@ -101,7 +99,6 @@ class AGraph(Diagram):
+ 
+                 for t in transitions[1]:
+                     dst = self.machine.get_state(t.dest)
+-                    # label = self._transition_label(label, t)
+                     edge_label = self._transition_label(label, t)
+                     lhead = ''
+ 
+@@ -111,13 +108,14 @@ class AGraph(Diagram):
+                         while len(dst.children) > 0:
+                             dst = src.children
+ 
+-                    # if container.has_edge(src.name, dst.name) is False:
+-                        # container.add_edge(src.name, dst.name, label=label, ltail=ltail, lhead=lhead)
++                    # special case in which parent to first child edge is resolved to a self reference.
++                    # will be omitted for now. I have not found a solution for how to fix this yet since having
++                    # cluster to node edges is a bit messy with dot.
+                     if dst.name == src.name and transitions[0] != t.dest:
+                         continue
+-                    if container.has_edge(src.name, dst.name):
++                    elif container.has_edge(src.name, dst.name):
+                         edge = container.get_edge(src.name, dst.name)
+-                        edge.attr['label'] = edge.attr['label'] + ' || ' + edge_label
++                        edge.attr['label'] = edge.attr['label'] + ' | ' + edge_label
+                     else:
+                         container.add_edge(src.name, dst.name, label=edge_label, ltail=ltail, lhead=lhead)
+ 
+@@ -228,7 +226,7 @@ class GraphMachine(Machine):
+             path = node_name.split(NestedState.separator)
+             node = self.graph
+             while len(path) > 0:
+-                node = node.get_subgraph('cluster_' + path.pop(0))
++                node = node.get_subgraph('cluster_'+ path.pop(0))
+             func = self.set_graph_style
+         try:
+             func(node, state)

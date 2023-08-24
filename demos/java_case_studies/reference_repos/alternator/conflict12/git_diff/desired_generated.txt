@@ -1,0 +1,271 @@
+diff --git a/java_case_studies/reference_repos/alternator/conflict12/desired.java b/java_case_studies/demo_results/MethodUnion/alternator-conflict12.java
+index 8a1166e..36f1970 100644
+--- a/java_case_studies/reference_repos/alternator/conflict12/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/alternator-conflict12.java
+@@ -1,9 +1,8 @@
+ package com.michelboudreau.test;
+-
++import com.amazonaws.services.dynamodb.model.*;
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.Map;
+-
+ import org.junit.After;
+ import org.junit.Assert;
+ import org.junit.Before;
+@@ -11,7 +10,7 @@ import org.junit.Test;
+ import org.junit.runner.RunWith;
+ import org.springframework.test.context.ContextConfiguration;
+ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+-
++import java.util.*;
+ import com.amazonaws.services.dynamodb.model.AttributeValue;
+ import com.amazonaws.services.dynamodb.model.ComparisonOperator;
+ import com.amazonaws.services.dynamodb.model.Condition;
+@@ -24,21 +23,21 @@ import com.amazonaws.services.dynamodb.model.ScalarAttributeType;
+ 
+ @RunWith(SpringJUnit4ClassRunner.class)
+ @ContextConfiguration(locations = {"classpath:/applicationContext.xml"})
+-public class AlternatorQueryTest extends AlternatorTest {
++public class AlternatorQueryTest extends AlternatorTest{
+ 
+-	private String tableName;
++    private String tableName;,
+ 
+-	@Before
++    @Before
+ 	public void setUp() throws Exception {
+ 		tableName = createTableName();
+ 	}
+ 
+-	@After
++    @After
+ 	public void tearDown() throws Exception {
+ 		deleteAllTables();
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKey() {
+ 		// Setup table with items
+ 		KeySchema schema = new KeySchema(new KeySchemaElement().withAttributeName("id").withAttributeType(ScalarAttributeType.S));
+@@ -57,6 +56,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 	}
+ 
+     //I do not think this is a good design since
++
+     @Test
+     public void queryWithHashKeyNotExist() {
+         // Setup table with items
+@@ -98,6 +98,9 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey2, createStringAttribute("Range3"), "attr1", "value13", "attr2", "value23")).withTableName(tableName));
+ 		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey2, createStringAttribute("Range4"), "attr1", "value14", "attr2", "value24")).withTableName(tableName));
+ 
++        getClient().putItem(new PutItemRequest().withItem(createGenericItem()).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem()).withTableName(tableName));
++
+         return hashKey1;
+     }
+ 
+@@ -111,8 +114,11 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		AttributeValue hashKey1 = createStringAttribute();
+ 		AttributeValue hashKey2 = createStringAttribute();
+ 
+-		getClient().putItem(new PutItemRequest().withItem(createGenericItem()).withTableName(tableName));
++<<<<<<< left_content.java
+ 		getClient().putItem(new PutItemRequest().withItem(createGenericItem(createStringAttribute(), createNumberAttribute())).withTableName(tableName));
++=======
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem()).withTableName(tableName));
++>>>>>>> right_content.java
+ 
+         getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey1, createNumberAttribute(4), "attr1", "value14", "attr2", "value24")).withTableName(tableName));
+ 		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey1, createNumberAttribute(3), "attr1", "value13", "attr2", "value23")).withTableName(tableName));
+@@ -128,9 +134,18 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey2, createNumberAttribute(3), "attr1", "value13", "attr2", "value23")).withTableName(tableName));
+ 		getClient().putItem(new PutItemRequest().withItem(createGenericItem(hashKey2, createNumberAttribute(4), "attr1", "value14", "attr2", "value24")).withTableName(tableName));
+ 
++<<<<<<< left_content.java
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(createStringAttribute(), createNumberAttribute())).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem(createStringAttribute(), createNumberAttribute())).withTableName(tableName));
++=======
++        getClient().putItem(new PutItemRequest().withItem(createGenericItem()).withTableName(tableName));
++		getClient().putItem(new PutItemRequest().withItem(createGenericItem()).withTableName(tableName));
++>>>>>>> right_content.java
++
+         return hashKey1;
+     }
+ 
++
+     @Test
+ 	public void queryWithHashKeyAndAttributesToGetTest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+@@ -152,7 +167,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		Assert.assertFalse("First item should not contain 'bogusAttr'.", result.getItems().get(0).containsKey("bogusAttr"));
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndRangeKeyConditionEQTest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+ 
+@@ -174,7 +189,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndRangeKeyConditionLTTest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+ 
+@@ -196,7 +211,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndRangeKeyConditionLETest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+ 
+@@ -218,7 +233,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndRangeKeyConditionGTTest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+ 
+@@ -240,7 +255,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndRangeKeyConditionGETest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+ 
+@@ -262,7 +277,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndRangeKeyConditionINTest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+ 
+@@ -289,7 +304,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndRangeKeyConditionBETWEENTest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+ 
+@@ -315,7 +330,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndRangeKeyConditionBEGINSWITHTest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+ 
+@@ -338,7 +353,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndRangeKeyConditionCONTAINSTest() {
+         AttributeValue hashKey = setupTableWithSeveralItems();
+ 
+@@ -361,7 +376,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndNumericRangeKeyConditionEQTest() {
+         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
+ 
+@@ -382,7 +397,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndNumericRangeKeyConditionLTTest() {
+         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
+ 
+@@ -401,7 +416,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+         Assert.assertEquals("Should return two items.", 2, result.getItems().size());
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndNumericRangeKeyConditionLETest() {
+         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
+ 
+@@ -420,7 +435,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+         Assert.assertEquals("Should return three items.", 3, result.getItems().size());
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndNumericRangeKeyConditionGTTest() {
+         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
+ 
+@@ -439,7 +454,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+         Assert.assertEquals("Should return three items.", 3, result.getItems().size());
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndNumericRangeKeyConditionGETest() {
+         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
+ 
+@@ -458,7 +473,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+         Assert.assertEquals("Should return four items.", 4, result.getItems().size());
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndNumericRangeKeyConditionINTest() {
+         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
+ 
+@@ -485,7 +500,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndNumericRangeKeyConditionBETWEENTest() {
+         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
+ 
+@@ -504,7 +519,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+         Assert.assertEquals("Should return two items.", 2, result.getItems().size());
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndNumericRangeKeyConditionBEGINSWITHTest() {
+         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
+ 
+@@ -528,7 +543,7 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		}
+ 	}
+ 
+-	@Test
++    @Test
+ 	public void queryWithHashKeyAndNumericRangeKeyConditionCONTAINSTest() {
+         AttributeValue hashKey = setupNumericRangeTableWithSeveralItems();
+ 
+@@ -569,4 +584,5 @@ public class AlternatorQueryTest extends AlternatorTest {
+ 		QueryResult result = getClient().query(request);
+ 		Assert.assertNull(result.getItems());
+ 	}*/
+-}
++
++}
+\ No newline at end of file

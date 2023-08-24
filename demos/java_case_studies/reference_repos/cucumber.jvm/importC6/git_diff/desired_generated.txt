@@ -1,0 +1,37 @@
+diff --git a/java_case_studies/reference_repos/cucumber.jvm/importC6/desired.java b/java_case_studies/demo_results/MethodUnion/cucumber.jvm-importC6.java
+index ab3931b..26668cb 100644
+--- a/java_case_studies/reference_repos/cucumber.jvm/importC6/desired.java
++++ b/java_case_studies/demo_results/MethodUnion/cucumber.jvm-importC6.java
+@@ -1,21 +1,20 @@
+ package io.cucumber.examples.testng;
+-
+ import io.cucumber.core.api.TypeRegistryConfigurer;
+ import io.cucumber.core.api.TypeRegistry;
+ import io.cucumber.datatable.DataTableType;
+ import io.cucumber.cucumberexpressions.ParameterType;
+-
+ import java.text.SimpleDateFormat;
++import io.cucumber.examples.testng.ShoppingSteps.Grocery;
+ import java.util.Date;
+ import java.util.Locale;
+ import java.util.Map;
+-
+ import static io.cucumber.examples.testng.RpnCalculatorStepdefs.Entry;
+ import static java.text.DateFormat.MEDIUM;
+ import static java.text.DateFormat.getDateInstance;
+ import static java.util.Locale.ENGLISH;
+ 
+-public class ParameterTypes implements TypeRegistryConfigurer {
++public class ParameterTypes implements TypeRegistryConfigurer{
++
+ 
+     @Override
+     public void configureTypeRegistry(TypeRegistry typeRegistry) {
+@@ -57,4 +56,5 @@ public class ParameterTypes implements TypeRegistryConfigurer {
+     public Locale locale() {
+         return ENGLISH;
+     }
+-}
++
++}
+\ No newline at end of file

@@ -1,0 +1,60 @@
+diff --git a/python_case_studies/reference_repos/transitions/conflict18/desired.py b/python_case_studies/demo_results/MethodUnion/transitions-conflict18.py
+index 10856b5..900cf33 100644
+--- a/python_case_studies/reference_repos/transitions/conflict18/desired.py
++++ b/python_case_studies/demo_results/MethodUnion/transitions-conflict18.py
+@@ -1,15 +1,15 @@
+-try:
+-    from builtins import object
+-except ImportError:
+-    pass
+-
+-from .utils import InheritedStuff
+-from .utils import Stuff
++from utils import InheritedStuff
++from utils import Stuff
+ from transitions import Machine
+ from transitions import MachineError
+ from transitions import State
+ from transitions.core import listify
+ from unittest import TestCase
++try:
++    from builtins import object
++except ImportError:
++    pass
++
+ 
+ try:
+     from unittest.mock import MagicMock
+@@ -551,6 +551,25 @@ class TestTransitions(TestCase):
+         self.assertEqual(m.state, 'processed')
+ 
+     def test_multiple_models(self):
++<<<<<<< left_content.py
++        states = ['A', 'B', 'C', 'D']
++        # Define with list of dictionaries
++        transitions = [
++            {'trigger': 'walk', 'source': 'A', 'dest': 'B'},
++            {'trigger': 'run', 'source': 'B', 'dest': 'C'},
++            {'trigger': 'sprint', 'source': 'C', 'dest': 'D'}
++        ]
++
++        class Model(object):
++            pass
++
++        m1 = Model()
++        m2 = Model()
++        m = Machine(model=[m1, m2], states=states, transitions=transitions, initial='A')
++        m1.walk()
++        self.assertTrue(m1.is_B())
++        self.assertTrue(m2.is_A())
++=======
+         s1, s2 = Stuff(), Stuff()
+         m = Machine(model=[s1, s2], states=['A', 'B', 'C'],
+                     initial='A')
+@@ -559,3 +578,6 @@ class TestTransitions(TestCase):
+         s1.advance()
+         self.assertEquals(s1.state, 'B')
+         self.assertEquals(s2.state, 'A')
++>>>>>>> right_content.py
++
++

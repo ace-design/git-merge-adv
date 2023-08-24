@@ -1,0 +1,114 @@
+diff --git a/python_case_studies/reference_repos/apistar/conflict1/base.py b/python_case_studies/reference_repos/apistar/conflict1/right.py
+index 06d9c39..4b56aa3 100644
+--- a/python_case_studies/reference_repos/apistar/conflict1/base.py
++++ b/python_case_studies/reference_repos/apistar/conflict1/right.py
+@@ -1,11 +1,11 @@
+ import inspect
+ from collections import OrderedDict
+-from typing import Any, Callable, Dict, List, Set
++from typing import Any, Callable, Dict, Iterator, List, Mapping, Set
+ 
+ import click
+ 
+ from apistar import commands as cmd
+-from apistar import pipelines, routing, schema
++from apistar import core, routing, schema
+ 
+ DEFAULT_LOOKUP_CACHE_SIZE = 10000
+ 
+@@ -23,6 +23,7 @@ class App(object):
+                  commands: List[Callable] = None,
+                  settings: Dict[str, Any] = None) -> None:
+         from apistar.settings import Settings
++        initial_types = [App, routing.Router]  # type: List[type]
+ 
+         routes = [] if (routes is None) else routes
+         commands = [] if (commands is None) else commands
+@@ -30,23 +31,27 @@ class App(object):
+         self.routes = routes
+         self.commands = list(self.built_in_commands) + commands
+         self.settings = Settings(settings or {})
++        self.router = routing.Router(self.routes, initial_types)
+ 
+-        initial_types = [App]  # type: List[type]
+         self.preloaded = {
+-            'app': self
++            'app': self,
++            'router': self.router,
+         }
+         preload_state(self.preloaded, self.routes)
+         if 'sql_alchemy' in self.preloaded:
+             self.commands += [cmd.create_tables]
+ 
+-        self.router = routing.Router(self.routes, initial_types)
+         self.wsgi = get_wsgi_server(app=self)
+         self.click = get_click_client(app=self)
+ 
++    def __call__(self, *args, **kwargs):
++        return self.wsgi(*args, **kwargs)
++
+ 
+-def get_wsgi_server(app):
++def get_wsgi_server(app: App) -> Callable:
+     lookup = app.router.lookup
+-    lookup_cache = OrderedDict()  # FIFO Cache for URL lookups.
++    # FIFO Cache for URL lookups:
++    lookup_cache = OrderedDict()  # type: OrderedDict
+     lookup_cache_size = app.settings.get(
+         ['ROUTING', 'LOOKUP_CACHE_SIZE'],
+         DEFAULT_LOOKUP_CACHE_SIZE
+@@ -59,7 +64,7 @@ def get_wsgi_server(app):
+             key = method.upper() + ' ' + path
+             lookup_cache[key] = lookup(path, method)
+ 
+-    def func(environ, start_response):
++    def func(environ: Mapping, start_response: Callable) -> Iterator:
+         method = environ['REQUEST_METHOD']
+         path = environ['PATH_INFO']
+         lookup_key = method + ' ' + path
+@@ -93,7 +98,7 @@ def get_wsgi_server(app):
+                 state[output] = function(**kwargs)
+         except Exception as exc:
+             state['exception'] = exc
+-            pipelines.run_pipeline(app.router.exception_pipeline, state)
++            core.run_pipeline(app.router.exception_pipeline, state)
+ 
+         wsgi_response = state['wsgi_response']
+         start_response(wsgi_response.status, wsgi_response.headers)
+@@ -102,11 +107,11 @@ def get_wsgi_server(app):
+     return func
+ 
+ 
+-def get_click_client(app):
++def get_click_client(app: App) -> Callable:
+     @click.group(invoke_without_command=True, help='API Star')
+     @click.option('--version', is_flag=True, help='Display the `apistar` version number.')
+     @click.pass_context
+-    def client(ctx, version):
++    def client(ctx: click.Context, version: bool) -> None:
+         if ctx.invoked_subcommand is not None:
+             return
+ 
+@@ -119,7 +124,7 @@ def get_click_client(app):
+     for command in app.commands:
+ 
+         command_signature = inspect.signature(command)
+-        for param in reversed(command_signature.parameters.values()):
++        for param in reversed(list(command_signature.parameters.values())):
+             name = param.name.replace('_', '-')
+             annotation = param.annotation
+             kwargs = {}
+@@ -161,11 +166,11 @@ def preload_state(state: Dict[str, Any], routes: routing.RoutesConfig) -> None:
+     components = get_preloaded_components(routes)
+     for component in components:
+         builder = getattr(component, 'build')
+-        pipeline = pipelines.build_pipeline(
++        pipeline = core.build_pipeline(
+             function=builder,
+             initial_types=[App]
+         )
+-        pipelines.run_pipeline(pipeline, state)
++        core.run_pipeline(pipeline, state)
+ 
+ 
+ def get_preloaded_components(routes: routing.RoutesConfig) -> Set[type]:
