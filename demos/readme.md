@@ -93,7 +93,7 @@ Logically the difference in Python makes sense since we have yet to add comments
 
 The overall accuracy is measured as the vector distance from the desired version using all measurements.
 
-> Overall = Deletions<sup>2</sup> + Insertions<sup>2</sup> + Moves<sup>2</sup> + Diff_Paths<sup>2</sup> + ...
+> Overall = &#x221A;Deletions<sup>2</sup> + Insertions<sup>2</sup> + Moves<sup>2</sup> + Diff_Paths<sup>2</sup> + ...
 
 ### Assumptions:
 1. All input files are of correct syntax. Any case study with incorrect input files will be eliminated from results.

@@ -28,5 +28,5 @@
 * Import merge works the same way as CompressedTree, however body is merged using our heuristics as well.
 * Running git merge on methods/segments where our heuristic doesn't work. 
 * Import merge and body merge run the same heuristics. 
-
+* Uses tree-sitter to generate the Java CST, and Python AST to generate the AST for Python code. These are then queried and restructured into our abstract data structure.
 
