@@ -23,7 +23,7 @@ Results show that:
 * Tools are removing less necessary code
 * Merged result will include less unused code
 * Original code structure is being preserved better
-*  Tools choose correct changes more often
+* Tools choose correct changes more often
 
 ### Python Results:
 
