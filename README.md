@@ -92,7 +92,7 @@
 ## Usage
 * The [extracting-scripts](extracting-scripts/) directory contains all the tools needed to extract case studies from various github repositories
 * The [merge-algorithms](merge-algorithms/) directory includes all the merge tools that were developed in this project. The two main tools being [CompressedTree](merge-algorithms/CompressedTree/) and [MethodUnion](merge-algorithms/MethodUnion).
-* The [demos](demos/) directory includes all the case studies that were tested, and the overall results obtained from this project.
+* The [demos](demos/) directory includes all the case studies that were tested, and the overall results obtained from this project. It also contains the next steps for the MethodUnion tool, that we couldn't yet get to. 
 
 ## Tool Prerequisites
   <h4>Run Tools:</h4>

@@ -25,13 +25,16 @@ Results show that:
 * Original code structure is being preserved better
 * Tools choose correct changes more often
 
-For the Java Merge, the next steps would include:
+For the Java MethodUnion Merge, the next steps would include:
 * Improving merges associated with overloaded methods:
     *  Currently, our tool simply unions all overloaded methods since it sees each method with a different signature as a different method. 
     * However, we need to come up with a way to compare them with each other in the final merge. 
     * One possible solution that was entertained for this way to see methods with the same name as the same method. However, then our merged file would remove all overloaded methods (which is not what the user wants).
     * Solving this problem would significantly improve the overall accuracy for MethodUnion in Java Case Studies, as we see that all the signficant differences come from these kinds of case studies.
     * Hint: To start solving this problem, maybe play around with the Method equivalence relation. Changing this would change whether two methods are precieved as equivalent.
+* Improving how many developer's comments are kept in the generated file:
+    * Although our tool adequetly retains the developer's comments for Java, it can still be improved as we realized it still doesn't keep all the commnets.
+    * Hint: To resolve this, try experimenting with how comments are queried from the tree-sitter-java's CST. My assumption is that a lot of the comments aren't even being extracted. After this, check how they are being added to the abstract data structure (whether only blocks are being added, or if lines are also being added). 
 
 
 ### Python Results:
@@ -65,6 +68,13 @@ For the Python MethodUnion Merge, the next steps would include:
     * As of now, the python AST library that we used did not include comments, and as such we were unable to include comments in the merged results. 
     * Switching over to tree-sitter would make this problem a lot easier as seen on the Java side. 
 
+
+For the MethodUnion Merge as a whole for both Python and Java code, the next steps would include:
+
+* Improving how code is ordered in the generated file:
+    * This problem is mainly evident in files that contain super classes with numerous methods. From our case studies, we noticed there are a lot of misordered code segments within these classes in our generated version. 
+    * Currently, our tool keeps reference of the code segment's line number in the original file, and simply orders the final list based on the the line numbers
+    * However, I have doubts about how well this works. For example, if two identical methods across two versions have different line numbers, which does it keep? And does this align with the user's desired version? Maybe we should take the average or choose the line number that occurs most often. We must experiment with this. 
 
 The overall difference between CompressedTree and MethodUnion is small in Java meaning our heuristics provide approximately the same accuracy as Git Merge on the body with half the conflicts.
 
