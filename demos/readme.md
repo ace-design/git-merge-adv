@@ -199,8 +199,3 @@ java -jar gumtree.jar -m gumtree-simple-id webdiff <Path to Desired Version> <Pa
 java -jar gumtree.jar -m gumtree-simple-id -g java-jdt webdiff <Path to Desired Version> <Path to Generated Version>
 ```
 
-
-## Acknowledgements
-
-* All quantitative measurements, and visuals obtained from [https://github.com/GumTreeDiff/gumtree]
-

@@ -41,5 +41,4 @@ errbot/conflict3 | 43.78 | Another instance where refactoring the code, creates 
 ### References and Acknowledgements:
 
 * All projects chosen from Python Awesome List: [https://github.com/vinta/awesome-python]
-* Code Differencing results obtained from Gumtree: [https://github.com/GumTreeDiff/gumtree]
 
