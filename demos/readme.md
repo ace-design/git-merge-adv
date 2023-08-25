@@ -25,6 +25,15 @@ Results show that:
 * Original code structure is being preserved better
 * Tools choose correct changes more often
 
+For the Java Merge, the next steps would include:
+* Improving merges associated with overloaded methods:
+    *  Currently, our tool simply unions all overloaded methods since it sees each method with a different signature as a different method. 
+    * However, we need to come up with a way to compare them with each other in the final merge. 
+    * One possible solution that was entertained for this way to see methods with the same name as the same method. However, then our merged file would remove all overloaded methods (which is not what the user wants).
+    * Solving this problem would significantly improve the overall accuracy for MethodUnion in Java Case Studies, as we see that all the signficant differences come from these kinds of case studies.
+    * Hint: To start solving this problem, maybe play around with the Method equivalence relation. Changing this would change whether two methods are precieved as equivalent.
+
+
 ### Python Results:
 
 ![Python Comparison](python_case_studies/images/Comparison.png)
@@ -39,6 +48,23 @@ CompressedTree and MethodUnion also demonstrate strong accuracy for Python
 whereas Python a total of 91 case studies
 * Given this, the ratio of Overall results to case studies
 is better for Python
+
+For the Python MethodUnion Merge, the next steps would include:
+
+* Use Tree-Sitter's CST for Python code extraction instead of the AST library:
+    * From the interesting case studies for Python code we noticed a lot of the differences come from the fact that the AST library reformats the code. This causes a lot of differences between the developer's code and our tool's generated code.
+    * Hint: To do this, simply add the tree-sitter-python repository as a submodule of the project like we did with Java. Then follow what was done for tree-sitter-java in the spec.py file of MethodUnion but for Python.
+    * Useful tool in facilitating this process is to use [https://tree-sitter.github.io/tree-sitter/playground] to determine how to query certain code segments from the generated CST.
+* Actually using Field objects to compare class attributes instead of strings.
+    * Will improve which field to choose when merging classes. 
+    * Right now, the tool is basically just unioning all the fields across the 3 versions.
+* Extend the code that arranges the order of methods and code segments in Java to Python. 
+    * Currently, the merged result for Python code is not ordered which is one of the reasons why there is a significant difference between CompressedTree and MethodUnion results.
+    * Hint: The method that arranges this is already written in the Node file. Just make the python code use it as well.
+* Retain the developer's comments in the merged result.
+    * As of now, the python AST library that we used did not include comments, and as such we were unable to include comments in the merged results. 
+    * Switching over to tree-sitter would make this problem a lot easier as seen on the Java side. 
+
 
 The overall difference between CompressedTree and MethodUnion is small in Java meaning our heuristics provide approximately the same accuracy as Git Merge on the body with half the conflicts.
 
